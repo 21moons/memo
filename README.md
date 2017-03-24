@@ -9,6 +9,9 @@
 [\-\-集中式日志系统 ELK 协议栈详解](https://www.ibm.com/developerworks/cn/opensource/os-cn-elk/  "Title")
 
 
+##大运维
+[\-\-数据处理平台架构中的SMACK组合：Spark、Mesos、Akka、Cassandra以及Kafka](http://blog.dataman-inc.com/untitled-23/  "Title")
+
 ```javascript
   var ihubo
 ```
