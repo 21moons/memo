@@ -27,7 +27,7 @@ var ihubo
 
 * [yosuke-furukawa](https://github.com/yosuke-furukawa) -
 **Yosuke Furukawa** &lt;yosuke.furukawa@gmail.com&gt;
-    
+
 Use the `printf()` function.
 
 - 1
@@ -36,4 +36,4 @@ Use the `printf()` function.
 - 4
 
 ## 其他
-- [布局天下](http://bbs.feng.com/read-htm-tid-8302536.html) 
+- [布局天下](http://bbs.feng.com/read-htm-tid-8302536.html)
