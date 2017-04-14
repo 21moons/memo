@@ -29,12 +29,19 @@
 
 
 
-##论文下载
-- [arxiv](https://arxiv.org/)
+##论文
+- [arxiv 论文下载网站](https://arxiv.org/)
+- [Concurrent Programming for Scalable Web Architectures](https://github.com/tpn/pdfs/blob/master/Concurrent%20Programming%20for%20Scalable%20Web%20Architectures%20-%20Benjamin%20Erb%20-%20Thesis%20(April%202012)%20(vts_8082_11772).pdf)
 
 
 ##C++
 - [Foundations of C++](http://www.stroustrup.com/ETAPS-corrected-draft.pdf)
+
+
+
+##技术Blog
+- [martinfowler](https://martinfowler.com/)
+- [张逸](http://zhangyi.farbox.com/)
 
 ---
 
@@ -59,9 +66,18 @@ Use the `printf()` function.
 - [布局天下](http://bbs.feng.com/read-htm-tid-8302536.html)
 
 
+## 设计模式
+- [Domain-driven design](http://dddcommunity.org/)
+
 
 ## java
 - 在Java中，构造方法无法被继承，无法设置默认值
 - Jboss同时是Web容器和EJB容器。Tomcat只是Web容器
 - HashMap几乎可以等价于Hashtable，除了HashMap是非synchronized的，并可以接受null(HashMap可以接受为null的键值(key)和值(value)，而Hashtable则不行)
 - HashMap是非synchronized，而Hashtable是synchronized，这意味着Hashtable是线程安全的，多个线程可以共享一个Hashtable；而如果没有正确的同步的话，多个线程是不能共享HashMap的。
+
+
+## docker
+- docker 要求必须部署在64位机器上
+- 容器内的数据是临时性的，它会随着容器生命周期的结束而消失
+- 默认的 Docker volume （driver = ‘loclal’）不管是哪种形式，本质上都是将容器所在的主机上的一个目录 mount 到容器内的一个目录，因此，它不具备可移植性。
