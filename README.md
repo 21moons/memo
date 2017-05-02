@@ -38,6 +38,11 @@
 - [Foundations of C++](http://www.stroustrup.com/ETAPS-corrected-draft.pdf)
 
 
+##JAVA
+- [servlet-3-1-specification](https://waylau.gitbooks.io/servlet-3-1-specification/)
+- [spring-framework-4-reference](https://www.gitbook.com/book/waylau/spring-framework-4-reference/details)
+- [Essential Netty in Action](https://www.gitbook.com/book/waylau/essential-netty-in-action/details)
+
 
 ##技术Blog
 - [martinfowler](https://martinfowler.com/)
