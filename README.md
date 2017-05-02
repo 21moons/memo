@@ -26,23 +26,26 @@
 - [【机器学习笔记3】Stanford公开课Exercise 2——Linear Regression](http://blog.csdn.net/dongtingzhizi/article/details/16949755)
 - [【机器学习笔记4】Stanford公开课Exercise 3——Multivariate Linear Regression](http://blog.csdn.net/dongtingzhizi/article/details/16979103)
 
-
+---
 
 
 ##论文
 - [arxiv 论文下载网站](https://arxiv.org/)
 - [Concurrent Programming for Scalable Web Architectures](https://github.com/tpn/pdfs/blob/master/Concurrent%20Programming%20for%20Scalable%20Web%20Architectures%20-%20Benjamin%20Erb%20-%20Thesis%20(April%202012)%20(vts_8082_11772).pdf)
 
+---
 
 ##C++
 - [Foundations of C++](http://www.stroustrup.com/ETAPS-corrected-draft.pdf)
 
+---
 
 ##JAVA
 - [servlet-3-1-specification](https://waylau.gitbooks.io/servlet-3-1-specification/)
 - [spring-framework-4-reference](https://www.gitbook.com/book/waylau/spring-framework-4-reference/details)
 - [Essential Netty in Action](https://www.gitbook.com/book/waylau/essential-netty-in-action/details)
 
+---
 
 ##技术Blog
 - [martinfowler](https://martinfowler.com/)
