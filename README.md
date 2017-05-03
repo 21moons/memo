@@ -76,6 +76,7 @@ Use the `printf()` function.
 
 ## 设计模式
 - [Domain-driven design](http://dddcommunity.org/)
+- [图说设计模式](http://design-patterns.readthedocs.io)
 
 
 ## java
