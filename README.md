@@ -25,6 +25,7 @@
 - [【机器学习笔记2】Linear Regression总结](http://blog.csdn.net/dongtingzhizi/article/details/16884215)
 - [【机器学习笔记3】Stanford公开课Exercise 2——Linear Regression](http://blog.csdn.net/dongtingzhizi/article/details/16949755)
 - [【机器学习笔记4】Stanford公开课Exercise 3——Multivariate Linear Regression](http://blog.csdn.net/dongtingzhizi/article/details/16979103)
+- [DeepLearningBook](https://github.com/HFTrader/DeepLearningBook)
 
 ---
 
