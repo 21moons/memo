@@ -48,6 +48,7 @@
 - [Essential Netty in Action](https://www.gitbook.com/book/waylau/essential-netty-in-action/details)
 - [OSGI specifications](https://www.osgi.org/developer/specifications/)
 - [OSGI企业应用开发](http://blog.csdn.net/masusan/article/details/69951536)
+- [OSGi的缘起缘灭](http://lanlingzi.cn/post/technical/2015/0422_remove_osgi/)
 
 ---
 
