@@ -58,7 +58,10 @@
 
 ---
 
+##trading ststem
+- [trading ststem -Urban Jaekle](http://jamescarl.github.io/CEN4020/assets/pdf/013.pdf)
 
+---
 
 
 ```javascript
