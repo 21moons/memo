@@ -59,6 +59,7 @@
 - [martinfowler](https://martinfowler.com/)
 - [张逸](http://zhangyi.farbox.com/)
 - [阮一峰](http://www.ruanyifeng.com/blog/)
+- [结构之法](http://blog.csdn.net/v_july_v) 专注算法、机器学习
 
 ---
 
