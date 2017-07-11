@@ -26,6 +26,7 @@
 - [【机器学习笔记3】Stanford公开课Exercise 2——Linear Regression](http://blog.csdn.net/dongtingzhizi/article/details/16949755)
 - [【机器学习笔记4】Stanford公开课Exercise 3——Multivariate Linear Regression](http://blog.csdn.net/dongtingzhizi/article/details/16979103)
 - [DeepLearningBook](https://github.com/HFTrader/DeepLearningBook)
+- [monkeylearn](https://monkeylearn.com/)
 
 ---
 
@@ -84,7 +85,7 @@ Use the `printf()` function.
 - 4
 
 ## 其他
-- [布局天下](http://bbs.feng.com/read-htm-tid-8302536.html)
+- [响应式编程](http://reactivex.io/)
 
 
 ## 设计模式
