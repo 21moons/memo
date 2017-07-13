@@ -25,6 +25,7 @@
 - [【机器学习笔记2】Linear Regression总结](http://blog.csdn.net/dongtingzhizi/article/details/16884215)
 - [【机器学习笔记3】Stanford公开课Exercise 2——Linear Regression](http://blog.csdn.net/dongtingzhizi/article/details/16949755)
 - [【机器学习笔记4】Stanford公开课Exercise 3——Multivariate Linear Regression](http://blog.csdn.net/dongtingzhizi/article/details/16979103)
+- [卷积神经网络介绍](https://yjango.gitbooks.io/superorganism/content/juan-ji-shen-jing-wang-luo-2014-2014-jie-shao.html)
 - [DeepLearningBook](https://github.com/HFTrader/DeepLearningBook)
 - [monkeylearn](https://monkeylearn.com/)
 
