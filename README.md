@@ -31,6 +31,11 @@
 
 ---
 
+##量化交易
+
+- [Trading Systems: a new approach to system development and portfolio optimisation](http://jamescarl.github.io/CEN4020/assets/pdf/013.pdf)
+---
+
 
 ##论文
 - [arxiv 论文下载网站](https://arxiv.org/)
