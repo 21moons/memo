@@ -69,6 +69,11 @@
 - [结构之法](http://blog.csdn.net/v_july_v) 专注算法、机器学习
 
 ---
+##前端
+- [redux 教程](http://cn.redux.js.org/)
+- [AngularJS Guide](https://docs.angularjs.org/guide/)
+- [AngularJS API](https://docs.angularjs.org/api)
+---
 
 ##trading ststem
 - [trading ststem -Urban Jaekle](http://jamescarl.github.io/CEN4020/assets/pdf/013.pdf)
