@@ -38,25 +38,48 @@
 
 #2.矩阵代数
 3D计算机图形学中，我们使用各种矩阵来描述几何转换和在不同的frame中转换坐标
-矩阵可以被视为向量集合
+矩阵可以被视为向量的集合
 
 ##2.1 定义
 * 介绍矩阵的相等,相加,标量乘法和减法
 * 相加的矩阵必须是行和列相同的矩阵
 
+$\begin{pmatrix} A_{11}&A_{12}&A_{13}\\ A_{21}&A_{22}&A_{23} \\ A_{31}&A_{32}&A_{33} \end{pmatrix} =\begin{pmatrix} \leftarrow A_{1,*}\rightarrow \\ \leftarrow A_{2,*}\rightarrow \\ \leftarrow A_{3,*}\rightarrow \end{pmatrix}$
+
+$A_{1,*} = [A_{11},\; A_{12},\; A_{13}]$
+$A_{2,*} = [A_{21},\; A_{22},\; A_{23}]$
+$A_{3,*} = [A_{31},\; A_{32},\; A_{33}]$
+
+
+$\begin{pmatrix} A_{11}&A_{12}&A_{13}\\ A_{21}&A_{22}&A_{23} \\ A_{31}&A_{32}&A_{33} \end{pmatrix} =\begin{pmatrix} \uparrow&\uparrow&\uparrow\\ A_{*,1}&A_{*,2}&A_{*,3} \\ \downarrow&\downarrow&\downarrow \end{pmatrix}$
+
+$A_{*,1} = \begin{pmatrix}A_{11} \\ A_{21} \\ A_{31}\end{pmatrix}$
+$A_{*,2} = \begin{pmatrix}A_{12} \\ A_{22} \\ A_{32}\end{pmatrix}$
+$A_{*,3} = \begin{pmatrix}A_{13} \\ A_{23} \\ A_{33}\end{pmatrix}$
+
+
 ##2.2 矩阵乘法
 * 两个矩阵 A,B 相乘的前提条件是A的列数与B的行数相同
 * 矩阵乘法不满足交换律 $AB \neq BA$
 
+###2.2.1 定义
+A 为 $m \times n$ 矩阵, B 为 $n \times p$ 矩阵, A与B叉乘的结果为 $m \times p$ 矩阵 C
+矩阵 C 中的元素 $C_{ij}$ 即为 $A_{i,*}$ 与 $B_{*,j}$ 的点乘
+$C_{ij} = A_{i,*} \cdot B_{*,j}$ 
+
 ###2.2.2 向量与矩阵的乘法
-向量 u 为 [x,y,z]
+向量 u 为 $[x,\;y,\;z]$
 矩阵A 大小为 3*3
 $A_{1,*}$  $A_{2,*}$  $A_{3,*}$ 为矩阵A的行向量
 $A_{*,1}$  $A_{*,2}$  $A_{*,3}$ 为矩阵A的列向量
 
-可以推导出 $uA = xA_{1,*} + yA_{2,*}+ zA_{3,*}$
+$uA = [x,y,z] \begin{pmatrix} A_{11}&A_{12}&A_{13} \\ A_{21}&A_{22}&A_{23} \\ A_{31}&A_{32}&A_{33} \end{pmatrix} = [x,y,z] \begin{pmatrix} \uparrow&\uparrow&\uparrow\\ A_{*,1}&A_{*,2}&A_{*,3} \\ \downarrow&\downarrow&\downarrow \end{pmatrix}$
+$\quad\;\,\,= [u \cdot A_{*,1},\quad u \cdot A_{*,2},\quad u \cdot A_{*,3}]$
+$\quad\;\,\,=xA_{1,*} + yA_{2,*} + zA_{3,*}$
+
+结论 $\quad uA = xA_{1,*} + yA_{2,*}+ zA_{3,*}$
 向量与矩阵的叉乘可以转化为标量与矩阵行向量的乘法
-u为标量系数,$A_{1,*}$ 为矩阵A的列向量, uA被称为两者的线性组合
+u为标量系数,$A_{1,*}$ 为矩阵 A 的列向量, uA被称为两者的线性组合
 
 ###2.2.2 结合律
 矩阵乘法满足结合律
@@ -136,7 +159,6 @@ $\tau(ku) = k\tau(u)$
 $\tau(au + bv + cw) = \tau(au + (bv + cw)) $
 $\quad\quad\quad\quad\quad\quad\quad\,\,= a\tau(u) + \tau(bv + cw) $ 
 $\quad\quad\quad\quad\quad\quad\quad\,\, = a\tau(u) + b\tau(v) + c\tau(w) $
-该公式的意义是在下文中证明三维空间中的任意向量都可以由三个基向量的线性组合来表示
 
 线性变换从几何上直观的来看有三个要点：
 1.变换前是直线的，变换后依然是直线
@@ -144,39 +166,66 @@ $\quad\quad\quad\quad\quad\quad\quad\,\, = a\tau(u) + b\tau(v) + c\tau(w) $
 3.变换前是原点的，变换后依然是原点
 
 
-###3.1.2 线性转换的矩阵表现
+###3.1.2 向量线性变换的矩阵表达
+待变换向量 u 的定义如下:
 $u = (x, \,\,y, \,\,z)$
 $u = (x, \,\,y, \,\,z) = xi + yi + zk = x(1,0,0)+y(0,1,0)+z(0,0,1)$
+(上面公式的推导参考 2.2.2 向量与矩阵的乘法)
 
-$\mathbb{R}$
-$\mathbb{R}^3$
+该公式的意义是证明了三维空间中的任意向量都可以由三个向量的线性组合来表示，这里的 i, j, k 被称为 $\mathbb{R}^3$ (指所有三维向量的集合) 的 `单位基向量`(standard basis vector)
+
+标准基向量表示一组长度为1的基
+标准正交基表示一组长度为1且两两正交的基<br><br>
+
+
+下面引入线性变换函数 $\tau(u)$ 的定义:
 
 $\tau(u) = x\tau(i) + y\tau(j) + z\tau(k) $
-$\quad\quad\,=uA=[x,y,z] \begin{pmatrix} \leftarrow \tau(i)\rightarrow \\ \leftarrow \tau(j)\rightarrow \\ \leftarrow \tau(k)\rightarrow \end{pmatrix}=[x,y,z] \begin{pmatrix} A_{11}&A_{12}&A_{13} \\ A_{21}&A_{22}&A_{23} \\ A_{31}&A_{32}&A_{33} \end{pmatrix}$ 
 
-
-线性变换就是线性映射，矩阵只不过是线性映射的系数而已。
-选定基底实际是选定坐标轴(不一定正交),内积空间中的任意向量都是基向量的线性组合。
-定义 i, j, k 都是标准基向量 (standard basis vector)
-标准基向量表示一组长度为1的基
-标准正交基表示一组长度为1且两两正交的基
+如果<br>
 $\tau(i) = \left(A_{11},\,A_{12},\,A_{13}\right)$
 $\tau(j) = (A_{21},\,A_{22},\,A_{23})$
 $\tau(k) = (A_{31},\,A_{32},\,A_{33})$
-行向量 $\tau(i),\,\,  \tau(j),\,\,  \tau(k)$ 组成的矩阵 A 称为线性转换的矩阵表现
 
+那么可以得到<br>
+
+$\tau(u) =uA=[x,y,z] \begin{pmatrix} \leftarrow \tau(i)\rightarrow \\ \leftarrow \tau(j)\rightarrow \\ \leftarrow \tau(k)\rightarrow \end{pmatrix}=[x,y,z] \begin{pmatrix} A_{11}&A_{12}&A_{13} \\ A_{21}&A_{22}&A_{23} \\ A_{31}&A_{32}&A_{33} \end{pmatrix}$ 
+<br>
+
+此时由行向量 $\tau(i),\,\,  \tau(j),\,\,  \tau(k)$ 组成的矩阵 A 称为线性变换的矩阵表达, 矩阵 A 在这里可以看做线性变换的系数,选定基底实际是选定坐标轴(不一定正交),三维空间中的任意向量都是基向量的线性组合。
 
 ###3.1.3 缩放
 缩放操作的数学定义
 $S(x, y, z) = (s_{x}x, \;s_{y}y, \;s_{z}z)$
-$s_x \; s_y \; s_z$ 分别是 x y z 轴上的缩放单位，都是标量
+$s_x, \; s_y, \; s_z$ 分别是 x, y, z 轴上的缩放单位，都是标量
 
-缩放操作的矩阵表达，又名缩放矩阵
+缩放交换律推导:
+
+$S(u+v)=\begin{pmatrix} S_x(u_x+v_x),&S_y(u_y+v_y),&S_z(u_z+v_z) \end{pmatrix}$
+$\quad\quad\quad\quad=\begin{pmatrix} S_xu_x+S_xv_x,&S_yu_y+S_yv_y),&S_zu_z+S_zv_z) \end{pmatrix}$
+$\quad\quad\quad\quad=\begin{pmatrix} S_xu_x,&S_yu_y,&S_zu_z \end{pmatrix} + \begin{pmatrix} S_xv_x,&S_yv_y,&S_zv_z \end{pmatrix}$
+$\quad\quad\quad\quad=S(u) + S(v)$
+
+对于标量 k,则有<br>
+$S(ku)=\begin{pmatrix} S_xku_x,&S_yku_y,&S_zku_z \end{pmatrix}$
+$\quad\quad\;\;\;=k\begin{pmatrix} S_xku_x,&S_yku_y,&S_zku_z \end{pmatrix}$
+$\quad\quad\;\;\;=kS(u)$
+<br>
+由上可知, S 也是线性的，并且存在矩阵表达:
+<br>
+$S(i)=\begin{pmatrix} S_x \cdot 1,&S_y \cdot 0,&S_z \cdot 0 \end{pmatrix}=\begin{pmatrix} S_x,0,0 \end{pmatrix}$
+$S(j)=\begin{pmatrix} S_x \cdot 0,&S_y \cdot 1,&S_z \cdot 0 \end{pmatrix}=\begin{pmatrix} 0,S_y,0 \end{pmatrix}$
+$S(k)=\begin{pmatrix} S_x \cdot 0,&S_y \cdot 0,&S_z \cdot 1 \end{pmatrix}=\begin{pmatrix} 0,0,S_z \end{pmatrix}$
+<br>
+缩放操作的矩阵表达如下，又名缩放矩阵:
+<br>
 $\begin{pmatrix} S_x&0&0 \\ 0&S_y&0 \\ 0&0&S_z \end{pmatrix}$
-
-对应的逆矩阵
+<br>
+缩放矩阵对应的逆矩阵为:
+<br>
 $\begin{pmatrix} 1/Sx&0&0 \\ 0&1/S_y&0 \\ 0&0&1/S_z \end{pmatrix}$
-
+<br>
+<br>
 
 ###3.1.4 旋转
 场景: 向量 v 绕坐标 n 旋转了 θ 角度
