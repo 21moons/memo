@@ -124,35 +124,52 @@ $p'M^{-1} = p$
 
 ###3.1.1 定义
 对于向量 u, v，标量 k
-$u = (u_x, u_y, u_z)$
-$v = (v_x, v_y, v_z)$
-定义函数 $\tau (v)  = \tau(x, y, z) = (x', y', c')$
-如果下面两个等式成立，那么我们把 τ 叫做线性转换
+$u = (u_x, \,u_y, \,u_z)$
+$v = (v_x, \,v_y, \,v_z)$
+定义函数 $\tau (v)  = \tau(x, y, z) = (x', y', c')$, 该函数的输入和输出都是三维向量
+
+如果下面两个等式成立，那么我们把 τ 称为线性转换
 $\tau(u + v) = \tau(u) + \tau(v)$
 $\tau(ku) = k\tau(u)$ 
 
-线性变换从几何直观有三个要点：
+公式推导, a,b,v 为标量, u,v,w 为向量:
+$\tau(au + bv + cw) = \tau(au + (bv + cw)) $
+$\quad\quad\quad\quad\quad\quad\quad\,\,= a\tau(u) + \tau(bv + cw) $ 
+$\quad\quad\quad\quad\quad\quad\quad\,\, = a\tau(u) + b\tau(v) + c\tau(w) $
+该公式的意义是在下文中证明三维空间中的任意向量都可以由三个基向量的线性组合来表示
+
+线性变换从几何上直观的来看有三个要点：
 1.变换前是直线的，变换后依然是直线
 2.直线比例保持不变
 3.变换前是原点的，变换后依然是原点
 
 
 ###3.1.2 线性转换的矩阵表现
+$u = (x, \,\,y, \,\,z)$
+$u = (x, \,\,y, \,\,z) = xi + yi + zk = x(1,0,0)+y(0,1,0)+z(0,0,1)$
+
+$\mathbb{R}$
+$\mathbb{R}^3$
+
+$\tau(u) = x\tau(i) + y\tau(j) + z\tau(k) $
+$\quad\quad\,=uA=[x,y,z] \begin{pmatrix} \leftarrow \tau(i)\rightarrow \\ \leftarrow \tau(j)\rightarrow \\ \leftarrow \tau(k)\rightarrow \end{pmatrix}=[x,y,z] \begin{pmatrix} A_{11}&A_{12}&A_{13} \\ A_{21}&A_{22}&A_{23} \\ A_{31}&A_{32}&A_{33} \end{pmatrix}$ 
+
+
 线性变换就是线性映射，矩阵只不过是线性映射的系数而已。
 选定基底实际是选定坐标轴(不一定正交),内积空间中的任意向量都是基向量的线性组合。
 定义 i, j, k 都是标准基向量 (standard basis vector)
 标准基向量表示一组长度为1的基
 标准正交基表示一组长度为1且两两正交的基
-$\tau(i) = \left(A_{11}, A_{12}, A_{13}\right)$
-$\tau(j) = (A_{21}, A_{22}, A_{23})$
-$\tau(k) = (A_{31}, A_{32}, A_{33})$
-行向量 $\tau(i)$ , $ \tau(j)$ , $\tau(k)$ 组成的矩阵 A 称为线性转换的矩阵表现
+$\tau(i) = \left(A_{11},\,A_{12},\,A_{13}\right)$
+$\tau(j) = (A_{21},\,A_{22},\,A_{23})$
+$\tau(k) = (A_{31},\,A_{32},\,A_{33})$
+行向量 $\tau(i),\,\,  \tau(j),\,\,  \tau(k)$ 组成的矩阵 A 称为线性转换的矩阵表现
 
 
 ###3.1.3 缩放
 缩放操作的数学定义
-$S(x, y, z) = (s_{xx}, s_{yy}, s_{zz})$
-$s_x s_y s_z$ 分别是 x y z 轴上的缩放单位，都是标量
+$S(x, y, z) = (s_{x}x, \;s_{y}y, \;s_{z}z)$
+$s_x \; s_y \; s_z$ 分别是 x y z 轴上的缩放单位，都是标量
 
 缩放操作的矩阵表达，又名缩放矩阵
 $\begin{pmatrix} S_x&0&0 \\ 0&S_y&0 \\ 0&0&S_z \end{pmatrix}$

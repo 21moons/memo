@@ -84,37 +84,22 @@
 
 ---
 
-
-```javascript
-var ihubo
-```
-
-* [yosuke-furukawa](https://github.com/yosuke-furukawa) -
-**Yosuke Furukawa** &lt;yosuke.furukawa@gmail.com&gt;
-
-Use the `printf()` function.
-
-- 1
-- 2
-- 3
-- 4
-
 ## 其他
 - [响应式编程](http://reactivex.io/)
 
-
+---
 ## 设计模式
 - [Domain-driven design](http://dddcommunity.org/)
 - [图说设计模式](http://design-patterns.readthedocs.io)
 
-
+---
 ## java
 - 在Java中，构造方法无法被继承，无法设置默认值
 - Jboss同时是Web容器和EJB容器。Tomcat只是Web容器
 - HashMap几乎可以等价于Hashtable，除了HashMap是非synchronized的，并可以接受null(HashMap可以接受为null的键值(key)和值(value)，而Hashtable则不行)
 - HashMap是非synchronized，而Hashtable是synchronized，这意味着Hashtable是线程安全的，多个线程可以共享一个Hashtable；而如果没有正确的同步的话，多个线程是不能共享HashMap的。
 
-
+---
 ## docker
 - docker 要求必须部署在64位机器上
 - 容器内的数据是临时性的，它会随着容器生命周期的结束而消失
