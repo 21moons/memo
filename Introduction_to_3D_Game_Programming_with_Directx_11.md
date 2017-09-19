@@ -245,17 +245,36 @@ $\begin{pmatrix} 1/Sx&0&0 \\ 0&1/S_y&0 \\ 0&0&1/S_z \end{pmatrix}$
 <br>
 
 ###3.1.4 旋转
+* 旋转公式 $R_n(v)$ 的推导
+
 场景: 向量 v 绕 n 轴旋转了 θ 角度, 假设 $||n||=1$
 根据上述场景推导向量旋转矩阵，并证明旋转也属于线性转换
 
 将向量f分解为两个子向量, 其中一个与 n 轴平行, 记为 $proj_n(v)$, 
 另外一个子向量与 n 轴垂直, 记为 $v\bot=perp_n(v)=v-proj_n(v)$
-因为 n 是一个单位向量, 存在 $proj_n(v)=(n \cdot v)v$
+因为 n 是一个单位向量, 存在 $proj_n(v)=(n \cdot v)v\quad\quad$ (参考 1.3)
 在旋转过程中, 子向量 $proj_n(v)$ 是不变的, 所以我们得到旋转公式:
-$R_n(v)=proj_n(v)+R_n(v \bot)=$
+$R_n(v)=proj_n(v)+R_n(v \bot)$
+<br>
+* $R_n(v \bot)$ 的推导
 
+$R_n(v \bot)=\cos\theta \, v\bot + \sin\theta(n \times v)$
+<br>
+* 总结
 
+$R_n(v)=proj_n(v)+R_n(v \bot)$
+$\quad\quad\;\;\;=(n \cdot v)n+\cos\theta v\bot+\sin\theta(n\times v)$
+$\quad\quad\;\;\;=(n \cdot v)n+\cos\theta (v-(n\cdot v)n)+\sin\theta(n\times v)$
+$\quad\quad\;\;\;=\cos\theta v+(1- \cos\theta) (n\cdot v)n+\sin\theta(n\times v)$
 
+使 $c  = \cos \theta$ , $s  = \sin \theta$ , 根据线性变换公式可得:
+$R_n=\begin{pmatrix} c+(1-c)x^2&(1-c)xy+sz&(1-c)xz-sy \\(1-c)xy-sz&c+(1-c)y^2&(1-c)yz+sx \\ (1-c)xz+sy&(1-c)yz-sx&c+(1-c)z^2 \end{pmatrix}$
+<br>
+$R_x=\begin{pmatrix} 1&0&0&0 \\0&\cos\theta&\sin\theta&0\\ 0&-\sin\theta&\cos\theta&0\\ 0&0&0&1 \end{pmatrix}$
+<br>
+$R_y=\begin{pmatrix} \cos\theta&0&-\sin\theta&0 \\0&1&0&0 \\\sin\theta&0&\cos\theta&0\\ 0&0&0&1 \end{pmatrix}$
+<br>
+$R_z=\begin{pmatrix} \cos\theta&\sin\theta&0&0 \\-\sin\theta&\cos\theta&0&0 \\0&0&1&0\\ 0&0&0&1 \end{pmatrix}$
 
 ##3.2 仿射转换(Affine Transformations)
 指在几何中，一个向量空间进行一次线性变换并接上一个平移，变换为另一个向量空间。
