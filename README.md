@@ -1,29 +1,29 @@
 # memo
 
-##算法
+## 算法
 - [**算法**图示](http://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
 - [算法学习笔记](https://brandeath.gitbooks.io/al/content/index.html)
 
 ---
-##云
+## 云
 - [Docker Doc](https://docs.docker.com/)
 
 ---
 
 
-##运维
+## 运维
 - [集中式日志系统 ELK 协议栈详解](https://www.ibm.com/developerworks/cn/opensource/os-cn-elk/  "Title")
 
 ---
 
 
-##大数据
+## 大数据
 - [数据处理平台架构中的SMACK组合：`Spark`、Mesos、Akka、Cassandra以及Kafka](http://blog.dataman-inc.com/untitled-23/  "Title")
 
 ---
 
 
-##机器学习
+## 机器学习
 - [【机器学习笔记1】Logistic回归总结](http://blog.csdn.net/dongtingzhizi/article/details/15962797)
 - [【机器学习笔记2】Linear Regression总结](http://blog.csdn.net/dongtingzhizi/article/details/16884215)
 - [【机器学习笔记3】Stanford公开课Exercise 2——Linear Regression](http://blog.csdn.net/dongtingzhizi/article/details/16949755)
@@ -34,25 +34,25 @@
 
 ---
 
-##量化交易
+## 量化交易
 
 - [Trading Systems: a new approach to system development and portfolio optimisation](http://jamescarl.github.io/CEN4020/assets/pdf/013.pdf)
 ---
 
 
-##论文
+## 论文
 - [arxiv 论文下载网站](https://arxiv.org/)
 - [Concurrent Programming for Scalable Web Architectures](https://github.com/tpn/pdfs/blob/master/Concurrent%20Programming%20for%20Scalable%20Web%20Architectures%20-%20Benjamin%20Erb%20-%20Thesis%20(April%202012)%20(vts_8082_11772).pdf)
 
 ---
 
-##C++
+## C++
 - [Foundations of C++](http://www.stroustrup.com/ETAPS-corrected-draft.pdf)
 - [cppreference.com](http://en.cppreference.com)
 
 ---
 
-##JAVA
+## JAVA
 - [servlet-3-1-specification](https://waylau.gitbooks.io/servlet-3-1-specification/)
 - [spring-framework-4-reference](https://www.gitbook.com/book/waylau/spring-framework-4-reference/details)
 - [Essential Netty in Action](https://www.gitbook.com/book/waylau/essential-netty-in-action/details)
@@ -61,11 +61,11 @@
 - [OSGi的缘起缘灭](http://lanlingzi.cn/post/technical/2015/0422_remove_osgi/)
 
 ---
-##Protocol buffers
+## Protocol buffers
 - [Protocol buffers](https://developers.google.com/protocol-buffers/)
 ---
 
-##技术Blog
+## 技术Blog
 - [martinfowler](https://martinfowler.com/)
 - [张逸](http://zhangyi.farbox.com/)
 - [阮一峰](http://www.ruanyifeng.com/blog/)
@@ -73,14 +73,20 @@
 - [王垠](http://www.yinwang.org/)
 
 ---
-##前端
+## 前端
 - [redux 教程](http://cn.redux.js.org/)
 - [AngularJS Guide](https://docs.angularjs.org/guide/)
 - [AngularJS API](https://docs.angularjs.org/api)
 ---
 
-##trading ststem
+## trading ststem
 - [trading ststem -Urban Jaekle](http://jamescarl.github.io/CEN4020/assets/pdf/013.pdf)
+
+---
+
+## Linux
+- [Linux进程描述符task_struct结构体详解](http://blog.csdn.net/gatieme/article/details/51383272)
+- [进程间通信-创建管道实现机制](http://blog.csdn.net/tiankong_/article/details/76468140)
 
 ---
 
