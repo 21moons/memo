@@ -77,6 +77,7 @@
 - [redux 教程](http://cn.redux.js.org/)
 - [AngularJS Guide](https://docs.angularjs.org/guide/)
 - [AngularJS API](https://docs.angularjs.org/api)
+- [ECMAScript 6 入门](http://es6.ruanyifeng.com/)
 ---
 
 ## trading ststem
