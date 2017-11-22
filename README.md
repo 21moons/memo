@@ -19,6 +19,7 @@
 
 ## 大数据
 - [数据处理平台架构中的SMACK组合：`Spark`、Mesos、Akka、Cassandra以及Kafka](http://blog.dataman-inc.com/untitled-23/  "Title")
+- [Hadoop: The Definitive Guide, 4th Edition](http://javaarm.com/file/apache/Hadoop/books/Hadoop-The.Definitive.Guide_4.edition_a_Tom.White_April-2015.pdf)
 
 ---
 
