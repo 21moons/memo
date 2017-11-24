@@ -1,3 +1,5 @@
+## 浏览器安全机制:同源策略
+
 ## XSS 攻击(Cross-site Scripting)
 
 * 反射型XSS
