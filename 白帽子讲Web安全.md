@@ -57,9 +57,16 @@ XSS的本质是一种 "HTML注入", 用户的数据被当成了HTML代码一部�
 安全的编码函数
 Html 的编码使用 HtmlEncode, HtmlEncode 是一种函数实现. 它的作用是将字符转换成 HTMLEntities, 对应的标准是 ISO-8859-1.
 相应地，JavaScript的编码方式可以使用JavascriptEncode.
+其他的包括 XMLEn-code (其实现与HtmlEncode类似), JSONEn-code, URLEncode
 <br>
 <br>
 <br>
 
 
 ## 跨站点请求伪造(CSRF Cross Site RequestForgery)
+攻击者伪造的请求之所以能够被网站服务器验证通过, 是因为用户的浏览器成功发送了相关 Cookie 的缘故.
+浏览器所持有的 Cookie 分为两种: 一种是 "Third-party Cookie" ,也称
+"本地Cookie"; 另一种是 "Session Cookie", 又称 "临时Cookie".
+两者的区别在于, Third-party Cookie 是服务器在 Set-Cookie 时指定了 Expire 时间, 只有到了 Expire 时间后 Cookie 才会失效, 所以这种 Cookie 会保存在本地；而 Session Cookie 则没有指定 Expire 时间, 所以浏览器关闭后, Session Cookie 就失效了.
+在浏览网站的过程中, 若是一个网站设置了 Session Cookie, 那么在浏览器进程的生命周期内, 即使浏览器新打开了 Tab 页, Session Cookie也都是有效的. Session Cookie保存在浏览器进程的内存空间中; 而Third-party Cookie则保存在本地.
+如果浏览器从一个域的页面中, 要加载另一个域的资源, 由于安全原因, 某些浏览器, 如 IE 会阻止Third-party Cookie的发送, 而另外一些浏览器, 比如说 firefox 则不会.
