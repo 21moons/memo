@@ -33,7 +33,30 @@ The CORS mechanism supports secure cross-domain requests and data transfers betw
 * 存储型XSS
 * DOM Based XSS
 
-对于XSS攻击来说，JavaScript工作在渲染后的浏览器环境中，无法控制用户浏览器发出的HTTP头.因为浏览器同源策略的原因，XSS也受到同源策略的限制——发生在A域上的XSS很难影响到B域的用户.
+XSS的本质是一种 "HTML注入", 用户的数据被当成了HTML代码一部分来执行, 从而混淆了原本的语义, 产生了新的语义.
+对于XSS攻击来说, JavaScript工作在渲染后的浏览器环境中, 无法控制用户浏览器发出的HTTP头.因为浏览器同源策略的原因, XSS也受到同源策略的限制——发生在A域上的XSS很难影响到B域的用户.
+
+#### XSS的防御
+* 浏览器将禁止页面的 JavaScript 访问带有 HttpOnly 属性的 Cookie, HttpOnly 解决 XSS 后的 Cookie 劫持攻击
+<br>
+  一个Cookie的使用过程如下:
+  Step1：浏览器向服务器发起请求，这时候没有Cookie。
+  Step2：服务器返回时发送Set-Cookie头，向客户端浏览器写入Cookie。
+  Step3：在该Cookie到期前，浏览器访问该域下的所有页面，都将发送该Cookie。
+  HttpOnly 是在 Set-Cookie 时标记的,需要注意的是，服务器可能会设置多个Cookie(多个key-value对), 而 HttpOnly 可以有选择性地加在任何一个Cookie值上.在某些时候，应用可能需要 JavaScript 访问某几项 Cookie ,这种 Cookie 可以不设置 HttpOnly 标记;而仅把 HttpOnly 标记给用于认证的关键 Cookie.
+<br>
+* 输入检查
+<br>
+  常见的Web漏洞如 XSS、SQL Injection 等, 都要求攻击者构造一些特殊字符,这些特殊字符可能是正常用户不会用到的, 所以输入检查就有存在的必要了.输入检查的逻辑,必须放在服务器端代码中实现. 如果只是在客户端使用JavaScript 进行输入检查, 很容易被攻击者绕过. 目前Web开发的普遍做法,是同时在客户端 JavaScript 中和服务器端代码中实现相同的输入检查. 客户端 JavaScript 的输入检查, 可以阻挡大部分误操作的正常用户, 从而节约服务器资源.
+  输入检查一般是检查用户输入的数据中是否包含一些特殊字符, 如<,>,’,” 等. 如果发现存在特殊字符, 则将这些字符过滤或者编码.
+  比较智能的“输入检查”, 可能还会匹配XSS的特征. 比如查找用户数据中是否包含了 "\<script\>", "javascript" 等敏感字符.
+  这种输入检查的方式, 称为 "XSS Filter".
+<br>
+* 输出检查
+<br>
+安全的编码函数
+Html 的编码使用 HtmlEncode, HtmlEncode 是一种函数实现. 它的作用是将字符转换成 HTMLEntities, 对应的标准是 ISO-8859-1.
+相应地，JavaScript的编码方式可以使用JavascriptEncode.
 <br>
 <br>
 <br>
