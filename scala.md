@@ -16,5 +16,7 @@ var 声明的变量是可变的
 scala 的所有类都是从 any 类派生而来的
 scala 所有 value 都是 object, 所有运算符实际上都是方法
 scala 中无论类型如何, == 都表示基于值的引用
+!     actor 发送消息
+!!    调用外部命令
 
 * Traits 类似于 java 中的 interface, can then be mixed together
