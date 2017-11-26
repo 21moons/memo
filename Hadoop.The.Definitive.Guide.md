@@ -20,15 +20,7 @@ Hadoop上的SQL查询可以实现低延迟响应
 * Search
 Solr 搜索平台可以在 Hadoop 集群上运行, 索引 HDFS 中的文档, 并基于 HDFS 中的索引中提供搜索服务.
 ### Relational Database Management Systems
-* MapReduce is a good fit for problems that need to analyze the whole dataset
-in a batch fashion, particularly for ad hoc analysis. An RDBMS is good for point queries
-or updates, where the dataset has been indexed to deliver low-latency retrieval and
-update times of a relatively small amount of data. 
-* MapReduce suits applications where
-the data is written once and read many times, whereas a relational database is good for
-datasets that are continually updated. 
-
-
+### RDBMS(Relational Database Management System) compared to MapReduce
 |  | Traditional RDBMS | MapReduce |
 | ------| ------ | ------ |
 | Data size | Gigabytes | Petabytes |
@@ -38,6 +30,30 @@ datasets that are continually updated.
 | Structure | Schema-on-write | Schema-on-read |
 | Integrity | High | Low |
 | Scaling | Nonlinear | Linear |
+<br>
+关于传统关系数据库(RDBMS) 与 Hadoop 的区别, 这里提到了关键的四点:
+1. 为什么需要 Hadoop, 为什么不能在传统数据库中加入更多硬盘来实现大数据分析? 因为硬盘的 IO 响应速度受寻道时间限制, 传统关系数据库读取大量数据的速度远远小于 MapReduce. MapReduce 流式读写的读取速度仅仅受传输速率的限制. 
+2. MapReduce is a good fit for problems that need to analyze the whole dataset
+in a batch fashion, particularly for ad hoc analysis. An RDBMS is good for point queries or updates, where the dataset has been indexed to deliver low-latency retrieval and update times of a relatively small amount of data. 
+3. MapReduce suits applications where the data is written once and read many times, whereas a relational database is good for datasets that are continually updated.
+4. Hadoop 和 RDBMS 之间的另一个区别在于其操作的数据集. 
+在 RDBMS 中, 结构化数据被组织成定义好的格式, 例如 XML 文档或数据库表. 另一方面, 半结构化数据则比较松散, 虽然可能有格式, 但经常被忽略, 可能仅作为数据结构的指导: 例如 spreadsheet, 其结构是 cells 组成的网格, 虽然 cells 本身可以保存任何形式的数据.
+非结构化数据没有任何特定的内部结构: 例如普通文本或图像数据. Hadoop 在非结构化或半结构化数据上工作良好, 因为它被设计成在处理阶段才解释数据(所谓的模式读取 schema-on-read). 这种机制提供了灵活性并避开了 RDBMS 耗时的数据加载阶段, 因为在  <font color=#fd0209 size=4 >Hadoop 中数据加载只是一个文件复制操作</font>.
+
+关系数据通常被标准化(normalized)以保持其完整性并消除冗余. 但是规范化通常会给 Hadoop 处理带来问题, 因为它会将读取记录变为一个一个非本地操作, 而本地操作是 Hadoop 能够执行(高速)流式读写的一个重要假设.
+
+Web服务器日志是未规范化的一组记录的一个很好的例子（例如，
+即使客户端可能是同一个客户端，每次都会指定客户端主机名
+出现很多次），这就是各种日志文件特别好的原因之一
+适合用Hadoop进行分析。 请注意，Hadoop可以执行连接; 只是他们
+并没有像关系世界那样被使用。
+
+MapReduce和Hadoop中的其他处理模型随尺寸呈线性变化
+的数据。 数据是分区的，功能原语（如map和reduce）可以
+在单独的分区上并行工作。 这意味着如果你加倍的大小
+输入数据，一项工作将会以两倍的速度运行。 但是，如果您还将群集的大小加倍，
+工作将会像原来一样快。 SQL查询通常不是这样。
+
 <br>
 <br>
 ## CHAPTER 2 MapReduce
