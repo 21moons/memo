@@ -19,7 +19,6 @@ Hadoop上的SQL查询可以实现低延迟响应
 像 Storm, Spark Streaming 或 Samza 等流媒体系统可以运行实时分布式计算, 并将结果发送到 Hadoop 存储或外部系统
 * Search
 Solr 搜索平台可以在 Hadoop 集群上运行, 索引 HDFS 中的文档, 并基于 HDFS 中的索引中提供搜索服务.
-### Relational Database Management Systems
 ### RDBMS(Relational Database Management System) compared to MapReduce
 |  | Traditional RDBMS | MapReduce |
 | ------| ------ | ------ |
@@ -42,17 +41,11 @@ in a batch fashion, particularly for ad hoc analysis. An RDBMS is good for point
 
 关系数据通常被标准化(normalized)以保持其完整性并消除冗余. 但是规范化通常会给 Hadoop 处理带来问题, 因为它会将读取记录变为一个一个非本地操作, 而本地操作是 Hadoop 能够执行(高速)流式读写的一个重要假设.
 
-Web服务器日志是未规范化的一组记录的一个很好的例子（例如，
-即使客户端可能是同一个客户端，每次都会指定客户端主机名
-出现很多次），这就是各种日志文件特别好的原因之一
-适合用Hadoop进行分析。 请注意，Hadoop可以执行连接; 只是他们
-并没有像关系世界那样被使用。
+Web 服务器日志是一个未规范化的记录集合(例如, 即使客户端是同一个客户端, 每次都记录完整的客户端主机名), 这就是各种日志文件特别适合用 Hadoop 进行分析的原因之一. 请注意，Hadoop 可以执行 join 操作; 只是并没有关系数据库中用的那么频繁。
 
-MapReduce和Hadoop中的其他处理模型随尺寸呈线性变化
-的数据。 数据是分区的，功能原语（如map和reduce）可以
-在单独的分区上并行工作。 这意味着如果你加倍的大小
-输入数据，一项工作将会以两倍的速度运行。 但是，如果您还将群集的大小加倍，
-工作将会像原来一样快。 SQL查询通常不是这样。
+MapReduce 和 Hadoop 中的其他处理模型, 处理时间随数据量大小线性变化. 数据是分区的, 功能原语(如 map 和 reduce)可以在所有的分区上并行工作. 这意味着如果你输入的数据量翻倍, 分析需要的时间也将会是原来的两倍. 但是, 如果你同时还将集群的大小加倍, 那么分析工作将会像原来一样快. 而 RDBMS 中的 SQL 查询通常不是这样.
+### Grid Computing (网格计算)
+
 
 <br>
 <br>
