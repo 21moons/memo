@@ -59,6 +59,50 @@ MapReduce 旨在在一个由可信的硬件组成的高带宽数据中心上运�
 <br>
 ## CHAPTER 2 MapReduce
 MapReduce 是关于数据处理的 <font color=#fd0209 size=5 >编程模型</font>.
+Hadoop 支持运行多种语言写的 MapReduce 程序, 包括 Java, Ruby, 和 Python. 更重要的是, Most MapReduce 程序天生就是并行的.
 
+### A Weather Dataset
+### Analyzing the Data with Hadoop
+#### Map and Reduce
+MapReduce 任务分为两个阶段: map 阶段和 reduce 阶段. 每个阶段输入和输出的格式都是键值对; 类型可以由程序员自行指定. 程序员还实现了两个函数: map 函数和reduce 函数.
 
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/???.png)
+<font size=2>Figure 2-1. MapReduce logical data flow</font>
+
+#### Java MapReduce
+``` java
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+public class MaxTemperatureMapper
+        extends Mapper<LongWritable, Text, Text, IntWritable> {
+
+    private static final int MISSING = 9999;
+
+    @Override
+    public void map(LongWritable key, Text value, Context context)
+        throws IOException, InterruptedException {
+        String line = value.toString();
+        String year = line.substring(15, 19);
+        int airTemperature;
+
+        if (line.charAt(87) == '+') { // parseInt doesn't like leading plus signs
+            airTemperature = Integer.parseInt(line.substring(88, 92));
+        } else {
+            airTemperature = Integer.parseInt(line.substring(87, 92));
+        }
+
+        String quality = line.substring(92, 93);
+
+        if (airTemperature != MISSING && quality.matches("[01459]")) {
+            context.write(new Text(year), new IntWritable(airTemperature));
+        }
+    }
+}
+```
+
+Mapper 类包括四个参数:  input key, input value, output key, output value
 
