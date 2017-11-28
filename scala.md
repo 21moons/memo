@@ -37,7 +37,9 @@ Scala 有一个非常复杂的类型推断系统, 几乎可以让你省略代码
 Scala 中的类型推断可以走得更远. 事实上，用户代码中完全没有显式的类型信息并不罕见. 因此, Scala 程序通常看起来有点像动态脚本语言编写的程序. 这特别适用于构建客户侧应用程序代码, 因为它们通常用来粘合已完成的库. 然而对于库本身来说, 这种机制则是不太适合的, 因为库为了支持灵活的使用模式, 经常采用相当复杂的类型. 这是很自然的. 毕竟, 对于构成可重用组件接口的成员来说, 它的类型签名应该是明确的, 因为它们是组件与客户之间契约的重要组成部分。
 <br>
 <br>
+
 ## Chapter 2 First Steps in Scala
+
 Packages in Scala are similar to packages in Java: They partition the global namespace and provide a mechanism for information hiding.
 all of Java's primitive types have corresponding classes in the scala package.And when you compile your Scala code to Java bytecodes, the Scala compiler will use Java's primitive types where possible to give you the performance benefits of the primitive types.
 
@@ -80,10 +82,14 @@ args.foreach(println)
 for (arg <- args)
   println(arg)
 ```
+
 "<-" 号在这里是 in 的意思, arg 是 val, for (arg <- args) 的意思是 "for arg in args." 
 <br>
 <br>
+
 ## Chapter 3 Next Steps in Scala
+
+Parameterization means "configuring" an instance when you create it. You parameterize an instance with values by passing objects to a constructor in parentheses.
 
 ``` scala
 val greetStrings = new Array[String](3)
@@ -95,8 +101,20 @@ for (i <- 0 to 2)
   print(greetStrings(i))
 ```
 
+<font size=2>Listing 3.1 - Parameterizing an array with a type.</font>
 
+When you define a variable with val, the variable can't be reassigned, but the object to which it refers could potentially still be changed. 
 
+``` scala
+for (i <- 0 to 2)
+  print(greetStrings(i))
+```
 
+上面代码中的第一行说明了 Scala 的另一个通用规则: 如果一个方法只有一个参数, 调用它的时候可以不加圆点或圆括号. 在这个例子中, 实际上是调用了一个参数类型为 Int 的方法. **代码 "0 to 2" 被转换成方法调用 "(0).to(2)"**. 请注意, 只有在显式的指明方法调用者的情况下, 此语法才有效. 你不能这样写 "println 10", 但是可以写成 "Console println 10".
+
+Scala 并没有实现运算符重载技术, 因为它实际上并没有传统意义上的运算符. 作为替代, scala 中可以使用 +, - , * 和 / 等字符作为方法名称. 因此, 当你将 "1 + 2" 键入到Scala解释器中时, 实际上是在 Int object 1 上调用名为 "+" 的方法, 传入 2 作为方法参数。 "1 + 2" 与 "(1).+(2)" 是等价的.
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/All_operations_are_method_calls.png)
+<font size=2>Figure 3.1 - All operations are method calls in Scala.</font>
 
 
