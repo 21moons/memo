@@ -20,3 +20,9 @@ scala 中无论类型如何, == 都表示基于值的引用
 !!    调用外部命令
 
 * Traits 类似于 java 中的 interface, can then be mixed together
+
+
+# Programming in Scala, 3rd Edition
+
+### 1.3 WHY SCALA?
+Scala 的函数式特性也为编程提供了更高层次的思考. 其中最核心的理念是"函数是引用透明(referentially transparent)的"(引用透明指的是表达式可以在不影响程序行为的情况下被其计算后的值完全替换), 这意味着程序仅仅通过函数的返回结果来感知他. 
