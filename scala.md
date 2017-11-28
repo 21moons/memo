@@ -89,6 +89,8 @@ for (arg <- args)
 
 ## Chapter 3 Next Steps in Scala
 
+### PARAMETERIZE ARRAYS WITH TYPES
+
 Parameterization means "configuring" an instance when you create it. You parameterize an instance with values by passing objects to a constructor in parentheses.
 
 ``` scala
@@ -117,4 +119,21 @@ Scala 并没有实现运算符重载技术, 因为它实际上并没有传统意
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/All_operations_are_method_calls.png)
 <font size=2>Figure 3.1 - All operations are method calls in Scala.</font>
 
+这个例子另一个重要的方面是让你了解为什么要用括号访问数组中的元素. 与Java相比，Scala的特例更少. 数组不过是类的实例, 就像 Scala 中的其他类一样. 当你将包含一个或多个值的括号应用于变量时, Scala 会将代码转换成在该变量上调用 apply 方法. 所以 greetStrings(i) 会被转换为 greetStrings.apply(i). 因此在 scala 中访问数组中的元素也是通过调用方法. 这个原则不仅限于数组: **任何对象后面如果跟着括号括起来的参数(作为右值), 都将被转换为 apply 方法调用.** 当然这个只有当该对象定义了 apply 方法时才会通过编译. 所以这不是特例. 这是一条通用规则.
+
+类似的,**对象后面如果跟着括号括起来的参数, 当赋值给它时(作为左值), 编译器会把它转换成一个 update 方法调用, 调用参数就是括号中的值和等号右边的值.**
+
+``` scala
+greetStrings(0) = "Hello"
+greetStrings.update(0, "Hello")
+```
+
+Scala 通过将从数组到表达式的所有一切都视为带有方法的对象, 来实现概念上的简化.
+
+``` scala
+val numNames = Array("zero", "one", "two")
+val numNames2 = Array.apply("zero", "one", "two")
+```
+
+### USE LISTS
 
