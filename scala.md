@@ -57,7 +57,7 @@ def max(x: Int, y: Int): Int = {
 }
 ```
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/?????)
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/basic_form_of_a_function_definition.png)
 <font size=2>Figure 2.1 - The basic form of a function definition in Scala.</font>
 
 如果函数是递归的, 必须显式的指定函数返回值的类型.
@@ -73,7 +73,7 @@ args.foreach((arg: String) => println(arg))
 args.foreach(println)
 ```
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/?????)
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/syntax_of_a_function_literal.png)
 <font size=2>Figure 2.2 - The syntax of a function literal in Scala.</font>
 
 ``` scala
