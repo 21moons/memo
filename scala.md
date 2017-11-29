@@ -140,8 +140,125 @@ val numNames2 = Array.apply("zero", "one", "two")
 函数式编程的一个重要思想就是方法调用不应该有副作用(side effects). 一个方法的唯一行为应该是计算并返回一个值. 采取这种编程范式获得的好处是方法变得更独立(方法之间依赖变少), 逻辑变得更清晰, 因此更可靠和更容易重用. 另一个好处(对于静态类型语言来说)是方法的入参和返回值都由类型检查器进行检查, 这样的话逻辑错误可以以类型错误的形式被检测出来. 将函数式编程的哲学应用到对象的世界(world of objects), 意味着使对象不可变(没有状态了, 实际上不是没有状态, 命令式编程中的状态变化转换为函数式编程中的新状态替换旧
 状态).
 
+正如你所看到的, 一个 Scala 数组是一个可变的对象序列, 它们都是相同的类型. 例如, 数组一旦初始化后, 就不能更改数组的长度, 但是你可以更改数组元素的值. 因此, 我们认为数组是可变对象.
+
+对于由一组类型相同的对象组成的不可变序列, 可以使用 Scala 的 List 类. 与 Array[String] 一样, List[String] 只包含字符串. Scala 的 List 类 scala.List, 与 Java 的 java.util.List 类是不同的, Scala 中的 list 类是不可变的(而Java 的 list 类是可变的). 换句话说, Scala 的 list 类生来就是为了支持函数式编程的.
+
+``` scala
+val oneTwoThree = List(1, 2, 3)
+```
+
+List 中的 ":::" 方法用于连接两个 List, 该方法返回一个新的 List.
+
+``` scala
+val oneTwo = List(1, 2)
+val threeFour = List(3, 4)
+val oneTwoThreeFour = oneTwo ::: threeFour
+```
+
+List 中的 "::" 方法用于在 List 头部加入一个新的元素, 该方法也返回一个新的 List.
+
+``` scala
+val twoThree = List(2, 3)
+val oneTwoThree = 1 :: twoThree
+```
+
+如果方法名以冒号结尾, 方法在右操作数上调用, 如果方法名不是以冒号结尾, 方法在左操作数上调用.
+
+Nil 用来指定一个空 List, 初始化新 List 的一种方法是用 "::" 方法连接各个元素, Nil 作为最后一个元素.
+下面的两个表达式是等价的: 
+
+``` scala
+val oneTwoThree = List(1, 2, 3)
+val oneTwoThree = 1 :: 2 :: 3 :: Nil
+```
 
 
+| What it is | What it does | 
+| ---------- | ------------ | 
+| List() or Nil | The empty List |
+| List("Cool", "tools", "rule") | Creates a new List[String] with the three values"Cool", "tools", and "rule" |
+| val thrill = "Will" :: "fill" :: "until" :: Nil | Creates a new List[String] with the three values"Will", "fill", and "until" |
+| List("a", "b") ::: List("c", "d") | Concatenates two lists (returns a new List[String] with values "a", "b", "c", and "d") |
+| thrill(2) | Returns the element at index 2 (zero based) of thethrill list (returns "until") |
+| thrill.count(s => s.length == 4) | Counts the number of string elements in thrill that have length 4 (returns 2) |
+| thrill.drop(2) | Returns the thrill list without its first 2 elements (returns List("until")) |
+| thrill.dropRight(2) | Returns the thrill list without its rightmost 2 elements (returns List("Will")) |
+| thrill.exists(s => s == "until") | Determines whether a string element exists in thrillthat has the value "until" (returns true) |
+| thrill.filter(s => s.length == 4) | Returns a list of all elements, in order, of the thrilllist that have length 4 (returns List("Will", "fill")) |
+| thrill.forall(s => s.endsWith("l")) | Indicates whether all elements in the thrill list end with the letter "l" (returns true) |
+| thrill.foreach(s => print(s)) | Executes the print statement on each of the strings in the thrill list (prints "Willfilluntil") |
+| thrill.foreach(print) | Same as the previous, but more concise (also prints"Willfilluntil") |
+| thrill.head | Returns the first element in the thrill list (returns"Will") |
+| thrill.init | Returns a list of all but the last element in the thrilllist (returns List("Will", "fill")) |
+| thrill.isEmpty | Indicates whether the thrill list is empty (returnsfalse) |
+| thrill.last | Returns the last element in the thrill list (returns"until") |
+| thrill.length | Returns the number of elements in the thrill list (returns 3) |
+| thrill.map(s => s + "y") | Returns a list resulting from adding a "y" to each string element in the thrill list (returnsList("Willy", "filly", "untily")) |
+| thrill.mkString(", ") | Makes a string with the elements of the list (returns"Will, fill, until") |
+| thrill.filterNot(s => s.length == 4) | Returns a list of all elements, in order, of the thrilllist except those that have length 4 (returnsList("until")) |
+| thrill.reverse | Returns a list containing all elements of the thrilllist in reverse order(returnsList("until", "fill", "Will")) |
+| thrill.sort((s, t) => s.charAt(0).toLower < t.charAt(0).toLower)| Returns a list containing all elements of the thrilllist in alphabetical order of the first character lowercased (returns List("fill", "until", "Will")) |
+| thrill.tail | Returns the thrill list minus its first element (returns List("fill", "until")) |
 
+### USE TUPLES
 
+另一个有用的容器对象是元组(tuple). 像 List 一样, 元组是不可改变的, 但是与 List 不同, 元组可以包含不同类型的元素. List 可以是一个 List[Int] 或者 List [String], 而元组可以同时包含整数和字符串. 例如, 如果你需要在方法中返回多个对象, 那么元组将非常有用. Java 通常会创建一个类似 JavaBean 的类来保存多个返回值, 而在 Scala 中你可以直接返回一个元组. 要实例化一个新的元组来保存一些对象, 只需将对象放在括号中, 对象之间用逗号隔开. 一旦元组实例化成功, 你可以点, 下划线和索引(**索引从1开始**)组成的标记来访问元组中的元素.
 
+``` scala
+val pair = (99, "Luftballons")
+println(pair._1)
+println(pair._2)
+```
+
+### USE SETS AND MAPS
+
+因为 Scala 旨在帮助你同时利用函数式和命令式编程风格, 所以集合相关的库特别注重区分可变集合和不可变集合. 例如, arrays 总是可变的; lists 总是不变的. Scala 还为 sets 和 maps 同时提供了可变和不可变的备选方案, 但是两个版本都使用相同的简单名称. 对于 sets 和 maps, Scala 通过类的层次结构对可变/不可变进行了建模.
+
+例如, Scala API 将 sets 作为一个基础 trait(trait 类似于 Java 中的接口). 然后 Scala 又提供两个 subtraits, 一个用于可变集, 另一个用于不可变集. 
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/Class_hierarchy_for_Scala_sets.png)
+<font size=2>Figure 3.2 - Class hierarchy for Scala sets.</font>
+
+* immutable sets
+``` scala
+var jetSet = Set("Boeing", "Airbus")
+jetSet += "Lear"
+println(jetSet.contains("Cessna"))
+```
+
+*  mutable set ("+=" 是方法名)
+
+``` scala
+import scala.collection.mutable
+
+val movieSet = mutable.Set("Hitch", "Poltergeist")
+movieSet += "Shrek"
+println(movieSet)
+```
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/Class_hierarchy_for_Scala_maps.png)
+<font size=2>Figure 3.2 - Class hierarchy for Scala maps.</font>
+
+*  immutable map (没有指定导入的包, 默认的 map 就是 immutable map )
+``` scala
+val romanNumeral = Map(
+  1 -> "I", 2 -> "II", 3 -> "III", 4 -> "IV", 5 -> "V"
+)
+println(romanNumeral(4))
+```
+
+*  mutable map ("+=" 是方法名)
+1 -> "Go to island." 和 (1).->("Go to island.")) 等价
+
+``` scala
+import scala.collection.mutable
+
+val treasureMap = mutable.Map[Int, String]()
+treasureMap += (1 -> "Go to island.")
+treasureMap += (2 -> "Find big X on ground.")
+treasureMap += (3 -> "Dig.")
+println(treasureMap(2))
+```
+
+### LEARN TO RECOGNIZE THE FUNCTIONAL STYLE
