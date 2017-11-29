@@ -227,7 +227,7 @@ jetSet += "Lear"
 println(jetSet.contains("Cessna"))
 ```
 
-*  mutable set ("+=" 是方法名)
+* mutable set ("+=" 是方法名)
 
 ``` scala
 import scala.collection.mutable
@@ -240,7 +240,7 @@ println(movieSet)
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/Class_hierarchy_for_Scala_maps.png)
 <font size=2>Figure 3.2 - Class hierarchy for Scala maps.</font>
 
-*  immutable map (没有指定导入的包, 默认的 map 就是 immutable map )
+* immutable map (没有指定导入的包, 默认的 map 就是 immutable map )
 ``` scala
 val romanNumeral = Map(
   1 -> "I", 2 -> "II", 3 -> "III", 4 -> "IV", 5 -> "V"
@@ -248,7 +248,7 @@ val romanNumeral = Map(
 println(romanNumeral(4))
 ```
 
-*  mutable map ("+=" 是方法名)
+* mutable map ("+=" 是方法名)
 1 -> "Go to island." 和 (1).->("Go to island.")) 等价
 
 ``` scala
@@ -262,3 +262,40 @@ println(treasureMap(2))
 ```
 
 ### LEARN TO RECOGNIZE THE FUNCTIONAL STYLE
+正如第1章所提到的, Scala 允许程序员以命令式的风格进行编程, 但是也鼓励你采用更偏向于函数式的风格. 如果你是 Java 程序员, 那么在学习 Scala 时可能会面临的主要挑战之一是如何进行函数式编程.
+
+首先是识别两种编程风格之间的区别. 如果代码包含任何变量, 它可能是命令式编程. 如果代码根本不包含变量, 比如说只包含 vals, 那么则可能是功能性风格. 走向函数式编程的一种方式就是在编程时不使用变量.
+
+* 命令式风格
+
+``` scala
+def printArgs(args: Array[String]): Unit = {
+  var i = 0
+  while (i < args.length) {
+    println(args(i))
+    i += 1
+  }
+}
+```
+
+* 函数式风格
+
+``` scala
+def printArgs(args: Array[String]): Unit = {
+  for (arg <- args)
+    println(arg)
+}
+```
+
+printArgs 并不是纯函数, 因为它依然有 side effects -- 打印到标准输出流, 另外一个 side effects 就是返回值是 Unit, 如果一个函数什么值都不返回, 那么它肯定在世界上做了一些其他的事情(暗示). 更偏向于函数化的编码是仅仅格式化参数，然后返回格式化后的字符串
+
+``` scala
+def formatArgs(args: Array[String]) = args.mkString("\n")
+```
+
+每个有用的程序都可能有某种形式的副作用(side effects); 否则, 它将无法为使用者提供价值. 编写没有副作用的方法, 鼓励你设计副作用最小的程序. 这种方法的好处之一是它可以让你的程序更容易测试.
+
+要记住, 无论是变量还是副作用都不是生来就是邪恶的. scala 不是一个纯粹的函数式的语言. scala 是函数式/命令式的混合体. 你可能会发现, 在某些情况下, 命令式编程风格更适合解决手头的问题, 在这种情况下, 你应该毫不犹豫地使用它(命令式编程). 
+
+
+## Chapter 4 Classes and Objects
