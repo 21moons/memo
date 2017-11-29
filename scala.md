@@ -240,7 +240,7 @@ println(movieSet)
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/Class_hierarchy_for_Scala_maps.png)
 <font size=2>Figure 3.2 - Class hierarchy for Scala maps.</font>
 
-* immutable map (没有指定导入的包, 默认的 map 就是 immutable map )
+* immutable map (没有指定导入的包, 默认的 map 就是 immutable map, map 中的元素是元组)
 ``` scala
 val romanNumeral = Map(
   1 -> "I", 2 -> "II", 3 -> "III", 4 -> "IV", 5 -> "V"
@@ -299,3 +299,6 @@ def formatArgs(args: Array[String]) = args.mkString("\n")
 
 
 ## Chapter 4 Classes and Objects
+### 4.1 CLASSES, FIELDS, AND METHODS
+* private fields can only be accessed by methods defined in the same class, all the code that can update the state will be localized to the class.
+* Public is Scala's default access level.
