@@ -302,3 +302,30 @@ def formatArgs(args: Array[String]) = args.mkString("\n")
 ### 4.1 CLASSES, FIELDS, AND METHODS
 * private fields can only be accessed by methods defined in the same class, all the code that can update the state will be localized to the class.
 * Public is Scala's default access level.
+* 在 Scala 中, 方法的参数都是 vals, 而不是 vars, 如果你尝试在方法内部修改参数, 将会导致编译失败.
+* 如果方法中没有显式的返回语句, 那么将默认返回最后出现的变量. scala 建议编码时不要显式的指定返回值.
+* 如果方法只有一行表达式, 那么可以将方法的大括号省略.
+* 方法的 side effect 主要指改变了方法外部变量的状态或做了 I/O 操作.
+A side effect is generally defined as mutating state somewhere external to the method or
+performing an I/O action.
+* 一个仅为了其 side effect 而存在的方法称为过程(procedure).
+* ";" 号用来分隔语句, 如果一行只有一个语句, 则可以省略 ";" 号.
+* 如果你链接多行包含类似 "+" 符合的语句，通常会将操作符放在行尾而不行首.
+
+``` scala
+x
++ y
+```
+scala 会将上面的代码解析为两行语句
+
+``` scala
+x +
+y +
+z
+```
+scala 会将上面的代码解析为一行语句
+
+### 4.3 SINGLETON OBJECTS
+* scala 中的类不能含有静态成员, 单例(singleton)对象则是一个替换方案.
+
+
