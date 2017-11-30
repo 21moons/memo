@@ -86,6 +86,15 @@
 
 ---
 
+## 高性能服务器架构思路
+- [高性能服务器架构思路：缓冲策略(一)](https://www.qcloud.com/community/article/164816001481011875?fromSource=gwzcw.59428.59428.59428)
+- [高性能服务器架构思路：缓冲清理策略(二)](https://www.qcloud.com/community/article/164816001481011876?fromSource=gwzcw.59407.59407.59407)
+- [高性能服务器架构思路：分布式系统概念(三)](https://www.qcloud.com/community/article/164816001481011877?fromSource=gwzcw.59429.59429.59429)
+- [高性能服务器架构思路：编码复杂度和通信(四)](https://www.qcloud.com/community/article/164816001481011878?fromSource=gwzcw.59432.59432.59432)
+- [高性能服务器架构思路：分布式缓存(五)](https://www.qcloud.com/community/article/164816001481011879?fromSource=gwzcw.59438.59438.59438)
+
+---
+
 ## Linux
 - [Linux进程描述符task_struct结构体详解](http://blog.csdn.net/gatieme/article/details/51383272)
 - [进程间通信-创建管道实现机制](http://blog.csdn.net/tiankong_/article/details/76468140)
