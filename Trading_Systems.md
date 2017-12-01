@@ -67,14 +67,31 @@ quantitative traders 量化交易者
 
 ####开始
 
+书单：
+1. Traders www.traders-mag.co.uk
+2. Active Trader www.activetradermag.com
+3. Futures www.futuresmag.com
+4. The Technical Analyst www.technicalanalyst.co.uk
+5. Technical Analysis of Stocks & Commodities www.traders.com
+
+TradeStation 论坛
+“System Traders and Development Club” (STAD)
+
 ####编程目标
 
-####交易时机
+一个系统由一个入场公式，一个离场公式和一个资金管理公式组成。 离场公式与 “风险管理” 有关，即初始止损，追踪止损，目标退出，通俗一点来讲就是我们承担多少风险以及在每一笔交易如何承担风险。 “资金管理”关心的是我们在每笔交易中投资多少，就是我们买或卖多少股票或期货合约。 系统交易的初学者不愿意相信的是，只要积极地使用杠杆和资金管理技术，回报就会是惊人的，换句话来说，如果没有合适的资金和风险管理工具，即使交易系统优秀的令人屏息，也不会成为可行的投资工具。
 
+####交易时机
+期货价格系列没有任何问题, 股票要考虑回购，分红，增发
 
 ###2.2 测试
 ####市场数据的重要性
-####后台测试时区长度
+
+####回测时间长度
+
+文献指出，一个交易系统，为了确保健壮性和一致性，在多时段多市场测试(multi-period multi-market test)中必须有一定的成功率。
+一些机械交易者(mechanical traders)声称，支持多市场的交易规则是不存在的，因为交易系统有自己的个性，交易系统只能适合部分而非全部市场。如果多市场测试是指在许多不同的市场 (债券，股票，商品，货币，股票，等等) 表现的都一样好，从这个角度来讲，能够通过多市场测试的系统确实很少。我们与这些交易者看法一致 - 拥有20年的行业经验，今天的我们称得上是屈指可数的真正多市场交易系统之一。
+
 ####规则复杂度和自由度
 
 
