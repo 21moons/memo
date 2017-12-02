@@ -106,6 +106,14 @@ TradeStation 论坛
 
 测试系统时最重要的是测试窗口大小的选择; 也就是说，我们需要将系统应用到什么样的价格序列。这个决定并不遵循明确的时间表或经验法则，而是需要遵守两个统计要求：价格系列必须足够长才能囊括不同的市场走势，并随之产生大量的交易信号。
 
+the number of variables and the data they cousume are also considered in relation to the whole data sample under an approach known as "degrees of freedom" - that is, the number of variables and conditions and the data they use should not be more than a 10% fraction of the whole data sample considered. it is of critical importance to avoid a situation where we have 500 trading days and a trading system with 500 different conditions, it could be that each condition is different from the remaining 499 and it only fits to that particular trading day, so that every day will have its own proper conditon that will make the most money from the market in sample. but it will have no forecasting power.
+
+Rule complexity and degrees of freedom are a hard topic for those not mathematically oriented.but even among mathematicians there are many that would not be at ease in explaining what degrees of freedom arc.when explaining degrees of freedom(usually indicated as df)maybe the most appropriate and easy to grasp explanation is the joke of the married man that comments, "there is only one subject, my wife, and my degree of freedom is zero.I should increase my "sample size" by looking at other women."
+
+Coming to a more serious approach we should say there are many definitions of the concept "degree of freedom" varying from statistics to mathematics, geometry, physics and mechanies. An interesting paper available free on the internet performs the difficult tash of making the concept simple. A first definition could be "the number of independent components minus the number of estimated parameters" this definition is based upon the Walker definition: "the number of observations minus the number of necessary relations among these observations". But the best practical way to explain the concept is an illustratioin intraduced by Dr.Robert Schulle(University of Oklahoma) 
+
+In a scatter plot when there is only one data point, you cannot make any estimation of the regression line.
+
 
 ###2.3 交易系统的预测能力
 ####最优解
