@@ -106,14 +106,166 @@ TradeStation 论坛
 
 测试系统时最重要的是测试窗口大小的选择; 也就是说，我们需要将系统应用到什么样的价格序列。这个决定并不遵循明确的时间表或经验法则，而是需要遵守两个统计要求：价格系列必须足够长才能囊括不同的市场走势，并随之产生大量的交易信号。
 
-the number of variables and the data they cousume are also considered in relation to the whole data sample under an approach known as "degrees of freedom" - that is, the number of variables and conditions and the data they use should not be more than a 10% fraction of the whole data sample considered. it is of critical importance to avoid a situation where we have 500 trading days and a trading system with 500 different conditions, it could be that each condition is different from the remaining 499 and it only fits to that particular trading day, so that every day will have its own proper conditon that will make the most money from the market in sample. but it will have no forecasting power.
+The number of variables and the data they consume are also considered in relation to the
+whole data sample under an approach known as “degrees of freedom” – that is, the
+number of variables and conditions and the data they use should not be more than a 10%
+fraction of the whole data sample considered. It is of critical importance to avoid a
+situation where we have 500 trading days and a trading system with 500 different
+conditions. It could be that each condition is different from the remaining 499 and it only
+fits to that particular trading day, so that every day will have its own proper condition
+that will make the most money from the market in sample, but it will have no forecasting
+power (see Chapter 5).
 
-Rule complexity and degrees of freedom are a hard topic for those not mathematically oriented.but even among mathematicians there are many that would not be at ease in explaining what degrees of freedom arc.when explaining degrees of freedom(usually indicated as df)maybe the most appropriate and easy to grasp explanation is the joke of the married man that comments, "there is only one subject, my wife, and my degree of freedom is zero.I should increase my "sample size" by looking at other women."
+Rule complexity and degrees of freedom are a hard topic for those not mathematically
+oriented. But even among mathematicians there are many that would not be at ease in
+explaining what degrees of freedom are. When explaining degrees of freedom (usually
+indicated as df) maybe the most appropriate and easy to grasp explanation is the joke of
+the married man that comments, ‘There is only one subject, my wife, and my degree of
+freedom is zero. I should increase my “sample size” by looking at other women.’
 
-Coming to a more serious approach we should say there are many definitions of the concept "degree of freedom" varying from statistics to mathematics, geometry, physics and mechanies. An interesting paper available free on the internet performs the difficult tash of making the concept simple. A first definition could be "the number of independent components minus the number of estimated parameters" this definition is based upon the Walker definition: "the number of observations minus the number of necessary relations among these observations". But the best practical way to explain the concept is an illustratioin intraduced by Dr.Robert Schulle(University of Oklahoma) 
+Coming to a more serious approach we should say that there are many definitions of the
+concept “degrees of freedom” varying from statistics to mathematics, geometry, physics
+and mechanics. An interesting paper available free on the internet performs the difficult
+task of making the concept simple[3]. A first definition (Larry Toothaker, 1986) could be
+‘the number of independent components minus the number of estimated parameters’.
+This definition is based upon the Walker (1940) definition: ‘The number of observations
+minus the number of necessary relations among these observations’. But the best practical
+way to explain the concept is an illustration introduced by Dr. Robert Schulle (University
+of Oklahoma):
 
-In a scatter plot when there is only one data point, you cannot make any estimation of the regression line.
+In a scatter plot when there is only one data point, you cannot make any estimation of the
+regression line. The line can go in any direction … Here you have no degrees of freedom
+(n-1 = 0 where n = 1) for estimation (this may remind you of the joke about the married
+man). In order to plot a regression line you must have at least two data points (a wife and
+a mistress). In this case you have one degree of freedom for estimation (n-1 = 1 where n =
+2). In other words, the degree of freedom tells you the number of useful data for estimation.
+However, when you have two data points only, you can always join them to be a straight
+regression line and get a perfect correlation (determination index = 1.00). Thus the lower
+the degree of freedom is, the poorer the estimation is.
 
+So even in an intuitive way we arrive at the conclusion that the wider the sample size
+and the lower the number of variables, the better the estimation. Robert Pardo is the only
+author in the current literature that is able to keep the topic manageable and he gives the
+following short-cut guidelines in his book [4]:
+
+Calculation of the degrees of freedom = whole data sample –
+rules and conditions – data consumed by rules and conditions
+
+Generally, less than 90% remaining degrees of freedom is considered too few. Beyond
+the Pardo’s formulas that can help from a practical standpoint it is important to remember
+that a system with 20 variables cannot be tested on just 6 months of daily data in order
+to decide, if going ahead with a proper optimisation. The number of variables and
+conditions of the trading system are intimately connected to the length of the testing
+period. Put in another way, some estimates are based on more information than others.
+The number of degrees of freedom of an estimate is the number of independent pieces of
+information on which the estimate is based. The more information, the more accurate the
+estimate. The more information the higher the number of the degrees of freedom.
+
+The same concept of the at least 90% degrees of freedom left could be applied in reverse
+as a rule of thumb with a multiple of 10 to the relationship between data used by the
+system’s calculations and the testing window length. If you apply a 30-day moving
+average of the closing price you need to test it over at least 300 days (30 x 10).
+
+Let’s make one example: we consider a data sample of three years of highs, lows, opens
+and closing prices for a total 260 day per year x 3 x 4 = 3120 data points. We consider
+then a trading strategy uses a 20-day average of highs and a 60-day average of lows. The
+first average uses 21 degrees of freedom: 20 highs plus 1 more as a rule, and the second
+average uses 61 degrees of freedom: 60 lows plus 1 as a rule. The total is 82 degrees of
+freedom used in the example. The result in percentage terms is 82/3120 = 2.6% so that
+97.4% degrees of freedom are left.
+
+Data points used twice in calculations are counted once so that if you are using a 5-day
+moving average of the closes and a 10-day moving average of the closes you will have
+for the latter condition 10 data + 1 rule while for the first condition you will have just 1
+rule. The total is 12 data consumed. It is obvious that since the 5-day moving average is
+included into the longer one only the latter will be relevant for the degrees of freedom
+calculations.
+
+The number of trades required in order to trust a system is also connected to the length
+of the testing windows. A test is significant if it produces a number of trades that will
+allow the risk of being wrong to be kept at the lowest level. The test window’s length
+should take care of this. Let’s say that the obvious standard error should be added to or
+subtracted from all the trading system’s report parameters according to the trade sample.
+Standard error is:
+Standard Error = square root of n + 1
+Where n = number of the trades
+
+The higher the number of trades, the lower the possible error in the trading system’s
+metrics. In other words if we have few trades, the risk that these trades are profitable by
+accident is high. If you shoot once and you hit the bull’s-eye it is possible either that you
+are a good marksman or simply that you are lucky. Conversely if you shoot 100 times
+and you hit the mark every time the probabilities that you are a good marksman are higher.
+
+To be considered trustworthy, a system needs at least 100 trades, so that its standard error
+will be the square root of 100 + 1 = + - 10.04%.
+
+All the trading system metrics will vary in between the boundaries of +10% and - 10%.
+That is, if the net profit is $100 the possible real net profit will vary more or less as a rule
+of thumb from a high at $110 to a low at $90.
+
+Optimisation
+
+Optimisation has earned a bad reputation among many traders. It can even be an offense
+for a systematic trader. Optimising a system means to find those inputs in the system’s
+variables that maximise profits or that fulfill whichever constraints a trader decides to be
+the leading criteria for optimisation (for instance instead of maximising profits a system
+could tend to minimise drawdown). Let us give an example: you have a moving average
+crossover system; that is, the system buys when the short-term moving average crosses
+the long-term moving average. The question optimisation replies to is how many days
+will be the input of the short-term moving average and how many days will be the input
+of the long-term moving average. Optimisation means “to make fit” a system; that is, to
+adapt a system to the market we intend to trade [4].
+
+But optimisation is a two-edged sword: it is one thing to adapt a system to a market in
+terms of volatility, initial risk, return, etc. But it is another thing to look for those inputs
+that by chance made the most money in the past but have no forecasting power. Let’s
+assume that we have a system that every day will buy at the lowest price and sell at the
+highest price with two inputs that will have the precise entry and exit price by which the
+maximum profit is reaped. This is a wrong kind of optimisation since we looked for a
+value that changes every day and only with hindsight is the best value for that particular
+day able to be defined. This system has no forecasting power.
+
+It is absolutely impossible to avoid optimisation in trading systems’ development. Just
+think of what every trader is currently doing and you will understand that optimisation is
+something we need to face. There are traders that refuse the inputs optimisation process
+since, according to their view, a system should work forever with the same inputs. But
+then they decide to trade a system among a batch of other systems simply because in the
+past it made more money than other systems. Isn’t this a kind of optimisation? Again
+they change the original system code adding constraints and conditions in order to adjust
+the system to market price behaviour and then they chose the variation of the system that
+worked the best in the past: isn’t this also a kind of optimisation? If you are currently not
+so much inclined towards optimisation please review your standpoint and consider how
+many times you have used optimisation involuntarily.
+
+Optimisation is something useful in system trading and we need to distinguish between
+the normal optimisation process and its aberration, namely curve fitting or over-
+optimisation. For example: we trade a daily system on bond futures that will be
+consequently affected by monetary policy. Monetary policy is not something that changes
+every day but it suits the economic cycle of expansion-recession so that we are talking
+about something that lasts years. It will be clear in this case that we need to have an
+optimisation window that is 6, 12 or 18 months long – something of a reasonable length
+in order to fine-tune the system with the market and the monetary policy.
+
+Provided the system produces a significant number of trades, we will test the system on
+the preceding two years at the beginning and then we will fine-tune the system, re-
+optimising it every 6, 12 or 18 months. This approach is directed toward real trading and
+not a theoretical appraisal of the system. Surely the system must be tested on the longest
+price series we have at our disposal and optimised accordingly in order to check at a first
+glance if the system is viable. But this process is not something that will help us in finding
+the appropriate parameters to place the next trades. It is simply an evaluation process that
+will help us in deciding if the system is suitable for that particular market; that is, if the
+equity line is growing (the equity line may not be growing in a smooth way as we would
+wish, but it should at least be decisively on the upside).
+
+In other words during testing over the longest price series available we check if the system
+is adapted to catch the moves of a particular market, while during optimisation we see if
+there is room for improvement with a change of inputs. Then through periodic re-
+optimisation within a 6 to 12 month window we fine-tune the system, in terms of inputs,
+to the characteristics of that particular market and keep the system abreast of the market
+changes.
+
+For an intraday system all the testing, optimising and re-optimising periods will be shorter
+than for daily or weekly systems.
 
 ###2.3 交易系统的预测能力
 ####最优解
