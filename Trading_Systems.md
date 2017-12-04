@@ -116,12 +116,16 @@ fits to that particular trading day, so that every day will have its own proper 
 that will make the most money from the market in sample, but it will have no forecasting
 power (see Chapter 5).
 
+变量的数量和它们消耗哪些数据，一般认为与整个数据样本相关的，我们采用一种被称为“自由度”的方法来决定 - 也就是说，变量和条件的数量和他们使用的数据不应超过考虑整个数据样本的 10%。 避免一件事情是至关重要的，那就是在我们有500个交易日数据的情况下，为交易系统选取500个不同的条件。 可能每个条件都不同于其余的499个，而且只适合于那个特定的交易日，这样每一天都会有最适当自己的条件，理论上从样本数据构成市场上赚到最多的钱，但是却对未来的市场没有任何预测能力(详见第5章)。
+
 Rule complexity and degrees of freedom are a hard topic for those not mathematically
 oriented. But even among mathematicians there are many that would not be at ease in
 explaining what degrees of freedom are. When explaining degrees of freedom (usually
 indicated as df) maybe the most appropriate and easy to grasp explanation is the joke of
 the married man that comments, ‘There is only one subject, my wife, and my degree of
 freedom is zero. I should increase my “sample size” by looking at other women.’
+
+对于那些没有数学思维的人，规则的复杂性和自由度是一个难题。 但是即使在数学家中，也有许多人不能轻易的解释什么是自由度。 在解释自由度时(通常表示为df)，也许最恰当和容易理解的解释就是笑话了那个已婚的男人说：“我只有的妻子，我的自由度是零。 我应该通过观察其他女性来增加我的‘样本量’。”
 
 Coming to a more serious approach we should say that there are many definitions of the
 concept “degrees of freedom” varying from statistics to mathematics, geometry, physics
@@ -133,6 +137,8 @@ minus the number of necessary relations among these observations’. But the bes
 way to explain the concept is an illustration introduced by Dr. Robert Schulle (University
 of Oklahoma):
 
+严格来讲，自由度这个概念有很多定义，从统计到数学，几何，物理，和力学。 在互联网上有一篇免费的论文可以让这个概念变得简单，当然这是个困难的任务。 自由度的第一个定义(Larry Toothaker，1986)可能是 “独立部分的数量减去估计参数的数量”。这个定义源于Walker(1940)的定义：“观察次数减去这些观察之间必要关系的数量“。 但最好的实际解释这个概念的方法是Robert Schulle博士(俄克拉荷马大学)介绍的一个例子：
+
 In a scatter plot when there is only one data point, you cannot make any estimation of the
 regression line. The line can go in any direction … Here you have no degrees of freedom
 (n-1 = 0 where n = 1) for estimation (this may remind you of the joke about the married
@@ -143,13 +149,19 @@ However, when you have two data points only, you can always join them to be a st
 regression line and get a perfect correlation (determination index = 1.00). Thus the lower
 the degree of freedom is, the poorer the estimation is.
 
+在只有一个数据点的散点图中，你不可能在图上对完成回归线的估计。 这条线可以走向任何方向...此时你没有自由度(n - 1 = 0，其中 n = 1)用于估计。 为了绘制回归线，你必须至少有两个数据点(妻子和情妇)。 在这种情况下，你有一个自由度用于估计 (n - 1 = 1，其中 n = 2)。 换句话说，自由度告诉你用于估计的有效数据数量。但是，如果只有两个数据点，则可以将它们连成一条直线回归线，并得到完美的相关性 (确定指数 = 1.00)。因此自由度越低，评估效果越差。
+
 So even in an intuitive way we arrive at the conclusion that the wider the sample size
 and the lower the number of variables, the better the estimation. Robert Pardo is the only
 author in the current literature that is able to keep the topic manageable and he gives the
 following short-cut guidelines in his book [4]:
 
+所以我们从直觉上就能得出结论，样本规模越大变量的数量越少，评估效果越好。 罗伯特·帕尔多是当前唯一能在文献中把这事讲清楚的作者，他在自己的书中给出了精辟的描述：
+
 Calculation of the degrees of freedom = whole data sample –
 rules and conditions – data consumed by rules and conditions
+
+自由度的计算 = 整个数据样本 - 规则和条件 - 规则和条件消耗的数据
 
 Generally, less than 90% remaining degrees of freedom is considered too few. Beyond
 the Pardo’s formulas that can help from a practical standpoint it is important to remember
@@ -161,10 +173,14 @@ The number of degrees of freedom of an estimate is the number of independent pie
 information on which the estimate is based. The more information, the more accurate the
 estimate. The more information the higher the number of the degrees of freedom.
 
+一般来说，剩余自由度少于 90% 都被认为是太少了。除了帕尔多的公式，从实践的角度来看，如果要在一个有20个变量的系统上进行适当的优化，不能仅仅在6个月的日线数据上进行，这一点非常重要。 变量的数量以及交易系统的条件集合，与测试周期的长度密切相关。 换句话说，一些评估需要更多的信息。评估所需自由度的值，是基于信息独立片段的数量。信息越多，评估越准确。 信息越多，自由度越高。
+
 The same concept of the at least 90% degrees of freedom left could be applied in reverse
 as a rule of thumb with a multiple of 10 to the relationship between data used by the
 system’s calculations and the testing window length. If you apply a 30-day moving
 average of the closing price you need to test it over at least 300 days (30 x 10).
+
+剩下至少 90% 自由度的理念，也可以反过来应用，这就是用来表示系统计算使用数据与测试窗口长度之间关系的 10 倍法则。 如果你使用30天移动平均收盘价格，测试时至少需要 300天 (30 x 10) 的数据。
 
 Let’s make one example: we consider a data sample of three years of highs, lows, opens
 and closing prices for a total 260 day per year x 3 x 4 = 3120 data points. We consider
@@ -174,12 +190,16 @@ average uses 61 degrees of freedom: 60 lows plus 1 as a rule. The total is 82 de
 freedom used in the example. The result in percentage terms is 82/3120 = 2.6% so that
 97.4% degrees of freedom are left.
 
+举一个例子：我们现在有一个数据集，包括三年内每个交易日的最高价格，最低价格，开盘价格和收盘价格，这样共有(每年260个交易日)260 x 3 x 4 = 3120 个数据点。 我们假设有一个交易策略使用最高价格的20日均线和最低价格的60日均线。第一个均线使用21个自由度：20个最高价格加上另外1个作为一条规则，第二个均线使用61个自由度：60个最低价格加上1个作为一条规则。 合起来总共是82个自由度。 以百分比计，结果是82/3120 = 2.6%，剩下97.4% 的自由度。
+
 Data points used twice in calculations are counted once so that if you are using a 5-day
 moving average of the closes and a 10-day moving average of the closes you will have
 for the latter condition 10 data + 1 rule while for the first condition you will have just 1
 rule. The total is 12 data consumed. It is obvious that since the 5-day moving average is
 included into the longer one only the latter will be relevant for the degrees of freedom
 calculations.
+
+在计算中使用两次的数据点仅被计为一次，如果你同时使用收盘价5日均线和10日均线，对于后一个条件来说你将有10数据+1规则，而对于第一个条件，你将只有1规则。 总共消耗了12个数据。 很显然，因为5日均线包括在10日均线中，只有后者才会参与自由度的度量。
 
 The number of trades required in order to trust a system is also connected to the length
 of the testing windows. A test is significant if it produces a number of trades that will
@@ -190,20 +210,31 @@ Standard error is:
 Standard Error = square root of n + 1
 Where n = number of the trades
 
+可信系统需要的交易数量也与测试窗口的长度有关。 如果一个测试在产生多笔交易的过程中，始终让错误的风险保持在最低水平，这样的测试结果对于验证系统是否可信是非常重要的。 测试窗口的长度应该考虑到这个因素。 标准错误应该依据交易样本从交易系统的报告范围中添加或减去。标准错误是：
+标准误差 = n + 1 的平方根
+其中 n = 交易的数量
+
 The higher the number of trades, the lower the possible error in the trading system’s
 metrics. In other words if we have few trades, the risk that these trades are profitable by
 accident is high. If you shoot once and you hit the bull’s-eye it is possible either that you
 are a good marksman or simply that you are lucky. Conversely if you shoot 100 times
 and you hit the mark every time the probabilities that you are a good marksman are higher.
 
+交易笔数越多，交易系统度量时可能出现的错误就越低。 换句话说，如果我们很少交易，那些看上去交易有利可图的交易带来的风险越高。 如果你射击一次就击中了靶心，要么你是一个神射手，要么说你纯粹是运气好。 相反，如果你射中靶心100次，你就有很大概率是一名神射手。
+
 To be considered trustworthy, a system needs at least 100 trades, so that its standard error
 will be the square root of 100 + 1 = + - 10.04%.
 
-All the trading system metrics will vary in between the boundaries of +10% and - 10%.
+一个系统要被认为是值得信赖的，至少需要100笔交易，这样其标准错误将是 100 + 1 的平方根，+10.04% 或者 -10.04% 。
+
+All the trading system metrics will vary in between the boundaries of +10% and -10%.
 That is, if the net profit is $100 the possible real net profit will vary more or less as a rule
 of thumb from a high at $110 to a low at $90.
 
-Optimisation
+所有的交易系统指标都会在 +10% 和 -10% 的范围内变化。也就是说，如果净利润是100美元，那么实际净利润可能分布在从90美元到110美元的区间内。
+
+### 2.3 交易系统的预测能力
+#### 优化
 
 Optimisation has earned a bad reputation among many traders. It can even be an offense
 for a systematic trader. Optimising a system means to find those inputs in the system’s
@@ -216,6 +247,8 @@ will be the input of the short-term moving average and how many days will be the
 of the long-term moving average. Optimisation means “to make fit” a system; that is, to
 adapt a system to the market we intend to trade [4].
 
+优化已经在许多交易者中赢得了不好的声誉。 甚至可以是对系统交易者的一种冒犯。 优化系统意味着在系统中找到这些输入使利润最大化或实现交易者所决定的任何约束的变量优化的主要标准（例如，而不是最大化利润系统可能会降低缩减）。 让我们举一个例子：你有一个移动平均线交叉系统; 即系统在短期移动平均线穿越时买入长期均线。 优化回复的问题是多少天将是短期均线的输入，多少天将作为输入的长期均线。 优化意味着“适合”一个系统; 也就是说使系统适应我们打算交易的市场[4]。
+
 But optimisation is a two-edged sword: it is one thing to adapt a system to a market in
 terms of volatility, initial risk, return, etc. But it is another thing to look for those inputs
 that by chance made the most money in the past but have no forecasting power. Let’s
@@ -224,6 +257,8 @@ highest price with two inputs that will have the precise entry and exit price by
 maximum profit is reaped. This is a wrong kind of optimisation since we looked for a
 value that changes every day and only with hindsight is the best value for that particular
 day able to be defined. This system has no forecasting power.
+
+但是，优化是一把双刃剑：一个系统适应市场是一回事波动性，初始风险，回报等等。但是，寻找这些投入是另一回事偶然是过去赚钱最多，却没有预测能力。 让我们假设我们有一个系统，每天都会以最低的价格购买和出售最高的价格与两个输入，将具有确切的进入和退出价格由此获得最大的利润。 这是一种错误的优化，因为我们寻找一个价值每天都在变化，而事后才是最具价值的一天能够被定义。 这个系统没有预测能力。
 
 It is absolutely impossible to avoid optimisation in trading systems’ development. Just
 think of what every trader is currently doing and you will understand that optimisation is
@@ -237,6 +272,8 @@ worked the best in the past: isn’t this also a kind of optimisation? If you ar
 so much inclined towards optimisation please review your standpoint and consider how
 many times you have used optimisation involuntarily.
 
+在交易系统的发展中避免优化是绝对不可能的。 只是想想每个交易者目前正在做什么，你会明白，优化是我们需要面对的东西。 有交易者拒绝投入优化过程因为根据他们的观点，一个系统应该以相同的投入永远工作。 但那么他们决定在一批其他系统之间交换一个系统过去它比其他系统赚了更多的钱。 这不是一种优化吗？ 再次他们改变原来的系统代码，添加约束和条件以进行调整系统对市场价格行为进行选择，然后选择系统的变化过去做得最好：这不就是一种优化吗？ 如果你现在不是这么多倾向于优化，请审查您的立场，并考虑如何很多时候你不经意地使用了优化。
+
 Optimisation is something useful in system trading and we need to distinguish between
 the normal optimisation process and its aberration, namely curve fitting or over-
 optimisation. For example: we trade a daily system on bond futures that will be
@@ -245,6 +282,8 @@ every day but it suits the economic cycle of expansion-recession so that we are 
 about something that lasts years. It will be clear in this case that we need to have an
 optimisation window that is 6, 12 or 18 months long – something of a reasonable length
 in order to fine-tune the system with the market and the monetary policy.
+
+优化在系统交易中是有用的，我们需要区分正常的优化过程及其像差，即曲线拟合或过度曲线拟合，优化。 例如：我们交易债券期货的日常系统受到货币政策的影响。 货币政策不会改变每天都适合经济衰退的经济周期，让我们谈谈关于持续多年的事情 在这种情况下，我们需要明确一点优化时间为6,12或18个月 - 这是一个合理的长度用市场和货币政策来调整制度。
 
 Provided the system produces a significant number of trades, we will test the system on
 the preceding two years at the beginning and then we will fine-tune the system, re-
@@ -257,6 +296,8 @@ will help us in deciding if the system is suitable for that particular market; t
 equity line is growing (the equity line may not be growing in a smooth way as we would
 wish, but it should at least be decisively on the upside).
 
+如果系统产生了大量的交易，我们将测试系统在开始的前两年，我们将微调系统，每6,12或18个月优化一次。 这种方法是针对真正的交易和不是对系统的理论评估。 当然系统必须进行最长的测试价格系列，我们在我们掌握和相应优化，以检查在第一一瞥系统是否可行。 但这个过程并不能帮助我们找到答案适当的参数来放置下一个交易。 这只是一个评估过程将帮助我们决定该系统是否适合该特定市场; 那就是如果股权正在增长(股权可能不会像我们那样顺利增长希望，但至少应该果断地向上)。
+
 In other words during testing over the longest price series available we check if the system
 is adapted to catch the moves of a particular market, while during optimisation we see if
 there is room for improvement with a change of inputs. Then through periodic re-
@@ -264,13 +305,16 @@ optimisation within a 6 to 12 month window we fine-tune the system, in terms of 
 to the characteristics of that particular market and keep the system abreast of the market
 changes.
 
+换句话说，在测试最长的价格系列可用我们检查系统适应于捕捉特定市场的动向，而在优化过程中我们可以看到随着投入的变化，还有改进的空间。 然后，我们在6到12个月的时间内优化系统，根据输入，针对特定市场的特点，使系统与市场保持同步变化。
+
 For an intraday system all the testing, optimising and re-optimising periods will be shorter
 than for daily or weekly systems.
 
-###2.3 交易系统的预测能力
-####最优解
-####走向分析
-####健壮性
+对于日内系统来说，所有的测试，优化和重新优化周期将会缩短比每天或每周系统。
+
+
+#### 走向分析
+#### 健壮性
 
 
 ###2.4 交易系统的评估
