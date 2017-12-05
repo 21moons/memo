@@ -251,8 +251,137 @@ of thumb from a high at $110 to a low at $90.
 对于日内系统来说，所有的测试，优化和重新优化周期都会比日间或周间系统要短。
 
 
-#### 走向分析
+#### 走势分析
+
+In conclusion we can state that optimisation is something variable in terms of data
+window since systems need to be kept in synchronisation with the market. Before
+computer power became so cheap and easy to employ for the majority of market players,
+an “out-of-sample period” was always recommended after optimisation by all the trading
+systems’ developers. The “out-of-sample period” is a data window (usually 10 to 20% of
+the whole optimisation data window) we keep outside the optimisation process and which
+we apply to the optimised trading system in order to verify its forecasting power over
+unseen data. If the system performs in the same manner over the unseen data of the “out-
+of-sample data” it means that the system is a robust one and it can be traded with
+confidence.
+So far we have only discussed ideas that you can read in any of the books in circulation
+about trading systems. But this is an obsolete view of optimisation, maybe dating back
+to those times where computer power was neither cheap nor widely available. Today
+optimisation has evolved into a more efficient and proper method of testing and making
+a system fit over a long price series. This method goes under the name of “walk forward
+analysis” or “walk forward testing”.
+Walk forward testing is a kind of multiple and successive out-of-sample test over the
+same data series. Let us give an example: a system is optimised over the first two years
+of the data history and then applied over the subsequent 6 months of unseen data. Then
+the optimisation window moves ahead by a 6-month period and a new optimisation takes
+place in order to find the new inputs that will be applied over the forthcoming 6 months
+of data. And so on. This kind of optimisation is a “rolling” walk forward analysis since
+the starting period of the optimisation window is always moving ahead by a 6-month
+period each time we re-optimise the inputs. If the starting period is always the same and
+the optimisation period gets longer and longer as the time goes by we have an “anchored”
+walk forward analysis. For intraday systems the “rolling” walk forward analysis is more
+appropriate since intraday trading systems are more suited to the changing market
+conditions.
+
+The equity line resulting from a walk forward run is where we are closest to reality in
+trading systems development since it is what real trading will produce in our pockets.
+And with no surprise this walk forward analysis equity line will be deeply different from
+the equity line we can produce with testing and optimising a trading system on the whole
+price series. So often traders fool themselves deciding whether a trading system is to be
+discarded or not based on a whole price series equity line that in reality reveals nothing
+about the real trading situation after periodic re-optimisation.
+
+A widely accepted way to gauge the forecasting power of a system and its consistency is
+to calculate the ratio between the annualised net profit relating to the walk forward tests
+and the annualised net profit reaped during the optimisation periods. This is the walk
+forward efficiency ratio. If the ratio is above the 100% threshold then the system is
+efficient and the probability that it will keep its forecasting power during real trading is
+high. If a trader decides to trade a system with a walk forward efficiency ratio of just
+50% (and many traders accept this level as the lowest possible) they should expect a
+system that performs at least at half the level of the performances indicated into the
+optimisation test. Statistical evidence also pinpoints that a poorly optimised system could
+make good performances on some lucky one or two walk forward tests. To avoid this
+trap the highest possible number of tests should be performed or at least 10 walk forward
+analysis tests with a test window (that is the data window where we apply the optimised
+trading systems) of at least 10 to 20% of the whole optimisation price series.
+
+Every comment on the old type of static “out-of-sample” testing on the last part of the
+price series or on how to optimise a trading system is nowadays obsolete since most
+professional trading system development software has a walk forward analysis feature
+(like for example most of the RINA Systems products and in particular Portfolio Maestro).
+This does not mean that traders should not become accustomed to the ordinary testing
+and optimisation process. We recommend before using WFA you should do the ordinary
+homework about optimisation in order to acquire a full view of the system and its
+performances. To run a full walk forward analysis takes much time, so it is quicker to
+check the robustness of the system with a shift test and then another shift optimisation.
+In any case, for the sake of simplicity we will summarise some good tips about
+optimisation.
+
+If we have many inputs to be optimised the best methodology is to test one or two inputs
+per turn while all other inputs are kept static. In this way the risk of over-optimisation is
+kept at the lowest level since it is impossible to find the batch of inputs that will maximise
+the constraint we gave to the equation simply because the inputs will not be optimised
+together in the same run.
+
+
 #### 健壮性
+
+But can we deduce from the post-optimisation window if the system is robust or whether
+it is the product of over-optimisation? We do not need to trust the area of the best
+performing inputs as a sure way to victory. If enough darts are thrown at the board, a
+high-scoring grouping will occur or, put in another manner, if a monkey is put in front of
+a piano and enough time is allotted, it will eventually compose a sonata. This joke
+suggests that, at very least, the average of the results should be profitable if we want to
+trust the most performing inputs. If just 1 to 5% of the results are profitable this could
+have happened by accident: if the system’s variables are given wide enough input ranges
+eventually the system will make a fortune over the past data. A robust system will show
+post-optimisation positive performances not only in 5% of all the tests but on the average
+of the tests. In other words, if the average results are positive then we can assume that
+the trading system is a robust one. If you are more statistically inclined you can also
+subtract the standard deviation (or a multiple of it) from the average net profit and check
+if the average net profit remains positive in this case.
+
+So the number of inputs, conditions and variables must be kept under control and reduced
+to its minimum term. But how many inputs, conditions and variables are too many? This
+is a controversial area where the unique hallmark is the number of degrees of freedom
+that must always respect the numerical condition we depicted in the previous paragraph.
+Before taking an input into consideration it is obviously important to check with a rapid
+and cursory optimisation if the input varies or if it does not have any change under
+optimisation. If not, keep it constant in order to increase the degrees of freedom.
+
+Another point to be considered is what scan range to choose for each input. An example
+will give a clearer picture of this problem: if you want to test a moving average crossover
+system with a short-term moving average and a long-term moving average on daily data,
+you cannot test the short moving average from 1 to 20 (this is what is considered the
+short term with daily data) and the long moving average from 20 to 200 (the latter is the
+interval that is usually considered long term with daily data). Indeed a step from 1 to 2 is
+a 100% change and a step from 19 to 20 is a 5% change. But a step change from 199 to
+200 is just a 0.5 % change. You need to put the step scan range in an almost parallel
+relationship so that the scan from 1 to 20 will be performed with a step of 2 and the scan
+from 20 to 200 will be performed with a step of 20.
+
+After optimisation is done a critical decision should be taken: which inputs’ batch should
+we choose? First of all what we need to do is create a function chart that puts the variable’s
+inputs scan range in relation to the net profits (or whichever else criteria was chosen for
+optimisation).
+
+
+
+What we are looking for is a line that ideally would be as close as possible to a horizontal
+line, so that the net profit is not dependent on the input values. Reality is much different
+from theory so that we should be content with a line that grows lightly, then tops for a
+while and then decreases. The topping level is what we are looking for, that is an area
+where, even when changing the inputs, the net profits stay almost constant. This is the
+area where the robust input values are. This is diametrically opposite to a profit spike,
+that is a point in the line where net profit is high but it decreases deeply in the surrounding
+values. In other words we need to find an area where even after changing the input values
+net profit stays stable.
+
+
+In summary we can state that there should be a logical path into the inputs’ results so that
+something coherent in terms of inputs’ batch should arise. When there is not a linear
+relationship with inputs and net profits, or drawdown, or whichever constraint you are
+putting as a primary rule of the optimisation, the whole set of results must be regarded as
+suspicious.
 
 
 ###2.4 交易系统的评估
