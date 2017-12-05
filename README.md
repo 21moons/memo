@@ -7,6 +7,7 @@
 ---
 ## 云
 - [Docker Doc](https://docs.docker.com/)
+- [Cloud Design Pattern](https://www.gitbook.com/book/iambowen/cloud-design-pattern/details)
 
 ---
 
@@ -32,6 +33,7 @@
 - [卷积神经网络介绍](https://yjango.gitbooks.io/superorganism/content/juan-ji-shen-jing-wang-luo-2014-2014-jie-shao.html)
 - [DeepLearningBook](https://github.com/HFTrader/DeepLearningBook)
 - [monkeylearn](https://monkeylearn.com/)
+- [The Neural Network Zoo](http://www.asimovinstitute.org/neural-network-zoo/)
 
 ---
 
@@ -72,6 +74,7 @@
 - [阮一峰](http://www.ruanyifeng.com/blog/)
 - [结构之法](http://blog.csdn.net/v_july_v) 专注算法、机器学习
 - [王垠](http://www.yinwang.org/)
+- [Trygve M. H. Reenskaug](http://heim.ifi.uio.no/~trygver/)
 
 ---
 ## 前端
