@@ -236,81 +236,19 @@ of thumb from a high at $110 to a low at $90.
 ### 2.3 交易系统的预测能力
 #### 优化
 
-Optimisation has earned a bad reputation among many traders. It can even be an offense
-for a systematic trader. Optimising a system means to find those inputs in the system’s
-variables that maximise profits or that fulfill whichever constraints a trader decides to be
-the leading criteria for optimisation (for instance instead of maximising profits a system
-could tend to minimise drawdown). Let us give an example: you have a moving average
-crossover system; that is, the system buys when the short-term moving average crosses
-the long-term moving average. The question optimisation replies to is how many days
-will be the input of the short-term moving average and how many days will be the input
-of the long-term moving average. Optimisation means “to make fit” a system; that is, to
-adapt a system to the market we intend to trade [4].
+优化已经在很多交易者中声誉并不好。 甚至可以是对系统交易者的一种冒犯(系统交易者总是认为自己的系统已经足够好)。 优化系统意味着在系统中找到那些能使利润最大化的系统变量，或者能让交易者趋向主要目标的约束条件(例如，系统更倾向于减少利润回吐，而不是最大化利润)。 让我们举一个例子：你有一个移动平均线交叉系统; 即系统在短期移动平均线穿过长期均线时买入。 针对这个系统的优化问题是短期均线是多短，长期均线又是多长。 优化意味着“适合”一个系统; 也就是说让系统适应我们打算交易的市场[4]。
 
-优化已经在许多交易者中赢得了不好的声誉。 甚至可以是对系统交易者的一种冒犯。 优化系统意味着在系统中找到这些输入使利润最大化或实现交易者所决定的任何约束的变量优化的主要标准（例如，而不是最大化利润系统可能会降低缩减）。 让我们举一个例子：你有一个移动平均线交叉系统; 即系统在短期移动平均线穿越时买入长期均线。 优化回复的问题是多少天将是短期均线的输入，多少天将作为输入的长期均线。 优化意味着“适合”一个系统; 也就是说使系统适应我们打算交易的市场[4]。
+但是优化是一把双刃剑：从波动性，初始风险，回报等角度，让系统来适应市场是一回事。但是，寻找那些可能让你在过去赚得最多，却对未来没有预测能力的输入则是另外一回事。 让我们假设有一个系统，每天都会以最低的价格购买并在最高的价格出售，系统具有精确的入场和出场价格，使其能够达成利润最大的目标。 这是一种错误的优化，因为我们寻找一个每天都在变化，而只能在每天收市后才能确认的最好价格。 这个系统没有任何预测能力(泛化，规则必须有普遍意义)。
 
-But optimisation is a two-edged sword: it is one thing to adapt a system to a market in
-terms of volatility, initial risk, return, etc. But it is another thing to look for those inputs
-that by chance made the most money in the past but have no forecasting power. Let’s
-assume that we have a system that every day will buy at the lowest price and sell at the
-highest price with two inputs that will have the precise entry and exit price by which the
-maximum profit is reaped. This is a wrong kind of optimisation since we looked for a
-value that changes every day and only with hindsight is the best value for that particular
-day able to be defined. This system has no forecasting power.
+在交易系统的开发过程中避免优化是绝对不可能的。 只要想想每个交易者目前正在做什么，你就会明白，优化是我们不得不面对的东西。 有交易者拒绝投入优化过程，因为根据他们的观点，一个系统可以在相同输入的情况下永远工作。 然后他们决定在一批系统选中某个交易系统，就因为这个系统在过去比其他系统赚了更多的钱。 这难道不是一种优化吗？又一次他们改变了原系统的代码，在原系统上添加约束和条件，依据市场价格行为对系统进行调整，然后选择在历史数据中表现最好的系统调整：这不也是一种优化吗？ 如果你现在不是特别倾向于优化，请回顾下你的立场，并考虑下你有多少次不经意地使用了优化。
 
-但是，优化是一把双刃剑：一个系统适应市场是一回事波动性，初始风险，回报等等。但是，寻找这些投入是另一回事偶然是过去赚钱最多，却没有预测能力。 让我们假设我们有一个系统，每天都会以最低的价格购买和出售最高的价格与两个输入，将具有确切的进入和退出价格由此获得最大的利润。 这是一种错误的优化，因为我们寻找一个价值每天都在变化，而事后才是最具价值的一天能够被定义。 这个系统没有预测能力。
+优化在系统交易中是有价值的，我们需要区分正常的优化过程及过度优化，称为曲线拟合或过度优化。 例如：我们交易债券期货的日间系统会受到货币政策的影响。 货币政策不会每天都变，它必须与经济扩张-衰退周期匹配，所以我们谈论的实际上是持续多年的事情。在这种情况下，很明显我们需要将优化窗口设置为6,12或18个月 - 这是依据市场和货币政策来调整系统的合理时间长度。
 
-It is absolutely impossible to avoid optimisation in trading systems’ development. Just
-think of what every trader is currently doing and you will understand that optimisation is
-something we need to face. There are traders that refuse the inputs optimisation process
-since, according to their view, a system should work forever with the same inputs. But
-then they decide to trade a system among a batch of other systems simply because in the
-past it made more money than other systems. Isn’t this a kind of optimisation? Again
-they change the original system code adding constraints and conditions in order to adjust
-the system to market price behaviour and then they chose the variation of the system that
-worked the best in the past: isn’t this also a kind of optimisation? If you are currently not
-so much inclined towards optimisation please review your standpoint and consider how
-many times you have used optimisation involuntarily.
+如果系统产生了大量的交易，我们将在系统启用后的前两年测试系统，然后我们微调系统，上线后则在每6,12或18个月重新优化一次。 这种方法针对的是真正的交易，而不是对系统的理论评估。 当然，为了尽快确认系统是否可行，系统必须用我们现有的最长价格序列进行测试和优化。 但这个过程并不能帮助我们找出适当的参数来进行下一笔交易。 这只是一个评估过程，帮助我们确定系统是否适合该特定市场; 那就是如果净值曲线正在增长(净值可能不会像我们希望的那样平滑增长，但至少应该果断向上)。
 
-在交易系统的发展中避免优化是绝对不可能的。 只是想想每个交易者目前正在做什么，你会明白，优化是我们需要面对的东西。 有交易者拒绝投入优化过程因为根据他们的观点，一个系统应该以相同的投入永远工作。 但那么他们决定在一批其他系统之间交换一个系统过去它比其他系统赚了更多的钱。 这不是一种优化吗？ 再次他们改变原来的系统代码，添加约束和条件以进行调整系统对市场价格行为进行选择，然后选择系统的变化过去做得最好：这不就是一种优化吗？ 如果你现在不是这么多倾向于优化，请审查您的立场，并考虑如何很多时候你不经意地使用了优化。
+换句话说，通过应用已有的最长价格序列进行测试，可以帮助我们检查系统是否能够捕捉指定市场的动向，而在优化过程中我们通过改变输入，观察系统是否仍有改进的空间。 然后，我们在6到12个月的周期上持续优化，对系统进行微调，从输入的角度，考虑特定市场的特点，使系统与市场保持同步变化。
 
-Optimisation is something useful in system trading and we need to distinguish between
-the normal optimisation process and its aberration, namely curve fitting or over-
-optimisation. For example: we trade a daily system on bond futures that will be
-consequently affected by monetary policy. Monetary policy is not something that changes
-every day but it suits the economic cycle of expansion-recession so that we are talking
-about something that lasts years. It will be clear in this case that we need to have an
-optimisation window that is 6, 12 or 18 months long – something of a reasonable length
-in order to fine-tune the system with the market and the monetary policy.
-
-优化在系统交易中是有用的，我们需要区分正常的优化过程及其像差，即曲线拟合或过度曲线拟合，优化。 例如：我们交易债券期货的日常系统受到货币政策的影响。 货币政策不会改变每天都适合经济衰退的经济周期，让我们谈谈关于持续多年的事情 在这种情况下，我们需要明确一点优化时间为6,12或18个月 - 这是一个合理的长度用市场和货币政策来调整制度。
-
-Provided the system produces a significant number of trades, we will test the system on
-the preceding two years at the beginning and then we will fine-tune the system, re-
-optimising it every 6, 12 or 18 months. This approach is directed toward real trading and
-not a theoretical appraisal of the system. Surely the system must be tested on the longest
-price series we have at our disposal and optimised accordingly in order to check at a first
-glance if the system is viable. But this process is not something that will help us in finding
-the appropriate parameters to place the next trades. It is simply an evaluation process that
-will help us in deciding if the system is suitable for that particular market; that is, if the
-equity line is growing (the equity line may not be growing in a smooth way as we would
-wish, but it should at least be decisively on the upside).
-
-如果系统产生了大量的交易，我们将测试系统在开始的前两年，我们将微调系统，每6,12或18个月优化一次。 这种方法是针对真正的交易和不是对系统的理论评估。 当然系统必须进行最长的测试价格系列，我们在我们掌握和相应优化，以检查在第一一瞥系统是否可行。 但这个过程并不能帮助我们找到答案适当的参数来放置下一个交易。 这只是一个评估过程将帮助我们决定该系统是否适合该特定市场; 那就是如果股权正在增长(股权可能不会像我们那样顺利增长希望，但至少应该果断地向上)。
-
-In other words during testing over the longest price series available we check if the system
-is adapted to catch the moves of a particular market, while during optimisation we see if
-there is room for improvement with a change of inputs. Then through periodic re-
-optimisation within a 6 to 12 month window we fine-tune the system, in terms of inputs,
-to the characteristics of that particular market and keep the system abreast of the market
-changes.
-
-换句话说，在测试最长的价格系列可用我们检查系统适应于捕捉特定市场的动向，而在优化过程中我们可以看到随着投入的变化，还有改进的空间。 然后，我们在6到12个月的时间内优化系统，根据输入，针对特定市场的特点，使系统与市场保持同步变化。
-
-For an intraday system all the testing, optimising and re-optimising periods will be shorter
-than for daily or weekly systems.
-
-对于日内系统来说，所有的测试，优化和重新优化周期将会缩短比每天或每周系统。
+对于日内系统来说，所有的测试，优化和重新优化周期都会比日间或周间系统要短。
 
 
 #### 走向分析
