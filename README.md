@@ -104,6 +104,11 @@
 
 ---
 
+## 书目
+* Promise Theory Principles and Applications
+
+---
+
 ## 其他
 - [响应式编程](http://reactivex.io/)
 
