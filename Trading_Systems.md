@@ -250,25 +250,12 @@ of thumb from a high at $110 to a low at $90.
 
 对于日内系统来说，所有的测试，优化和重新优化周期都会比日间或周间系统要短。
 
-
 #### 走势分析
 
-In conclusion we can state that optimisation is something variable in terms of data
-window since systems need to be kept in synchronisation with the market. Before
-computer power became so cheap and easy to employ for the majority of market players,
-an “out-of-sample period” was always recommended after optimisation by all the trading
-systems’ developers. The “out-of-sample period” is a data window (usually 10 to 20% of
-the whole optimisation data window) we keep outside the optimisation process and which
-we apply to the optimised trading system in order to verify its forecasting power over
-unseen data. If the system performs in the same manner over the unseen data of the “out-
-of-sample data” it means that the system is a robust one and it can be traded with
-confidence.
-So far we have only discussed ideas that you can read in any of the books in circulation
-about trading systems. But this is an obsolete view of optimisation, maybe dating back
-to those times where computer power was neither cheap nor widely available. Today
-optimisation has evolved into a more efficient and proper method of testing and making
-a system fit over a long price series. This method goes under the name of “walk forward
-analysis” or “walk forward testing”.
+总之，为了同步系统与市场，我们可以认为优化就是数据窗口的变化。 在电脑计算在大多数市场参与者中普及之前，优化后“样本外时间”对于所有系统开发人员都是值得推荐的。 “样本外时间”是一个与优化过程无关的数据窗口(通常是整个优化数据窗口的 10% 到20%)，通常被应用到优化后的交易系统上，以便在未知的数据上验证系统的预测能力。 如果系统在未知的“样本外数据”上与在训练数据上表现一致，这意味着该系统是强大的，能够进行可信的交易。
+ 
+到目前为止，我们讨论的关于交易系统的想法，在任何流通的书籍中都可以找到。 但是这些关于优化的观点都过时了，它们来自那些计算机没有被广泛使用的年代。 今天的优化已经发展成为一种更有效和更适当的测试方法，可以让一个系统与长期价格序列匹配。这个方法以“前向分析”或“前向测试”的名义不断发展。
+
 Walk forward testing is a kind of multiple and successive out-of-sample test over the
 same data series. Let us give an example: a system is optimised over the first two years
 of the data history and then applied over the subsequent 6 months of unseen data. Then
