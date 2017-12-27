@@ -45,8 +45,28 @@ apply 传入的是单个数组, call 传入的是参数列表
  
 ## 闭包的实现是在外层函数执行结束后,**外部变量保存了对内部函数的引用** 或 **返回了内部函数**
 
+## javascript 中我们可以为任何对象添加属性和方法, 包括数据
 
-page 82
+## call 和 apply 方法作为所有函数的方法存在
+
+## 可以直接调用原生类型的函数, 例如Array.prototype.slice
+
+## 函数也有 length 属性, 表示函数定义时声明了多少个参数, arguments.length 表示调用时传入了多少个参数
+
+## 重载函数的方法
+```javascript
+function addMethod(object, name, fn){
+  var old = object[name];
+  object[name] = function(){
+       if (fn.length = arguments.length)
+           return fn.apply(this, arguments);
+       else if (typeof old == "function")
+           return old.apply(this, arguments);
+  };
+}
+```
+
+page 107
  
  
 
