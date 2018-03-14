@@ -63,6 +63,10 @@
 - [OSGI企业应用开发](http://blog.csdn.net/masusan/article/details/69951536)
 - [OSGi的缘起缘灭](http://lanlingzi.cn/post/technical/2015/0422_remove_osgi/)
 - [Java调优经验谈](http://www.rowkey.me/blog/2016/11/02/java-profile/)
+- [成为JavaGC专家(1)-深入浅出Java垃圾回收机制](http://www.importnew.com/1993.html)
+- [成为JavaGC专家(2)-如何监控Java垃圾回收机制](http://www.importnew.com/2057.html)
+- [成为JavaGC专家(3)-如何优化Java垃圾回收机制](http://www.importnew.com/3146.html)
+- [成为JavaGC专家(4)-Apache的MaxClients参数详解及其在Tomcat执行FullGC时的影响](http://www.importnew.com/3151.html)
 
 ---
 ## Protocol buffers
@@ -102,6 +106,8 @@
 ## Linux
 - [Linux进程描述符task_struct结构体详解](http://blog.csdn.net/gatieme/article/details/51383272)
 - [进程间通信-创建管道实现机制](http://blog.csdn.net/tiankong_/article/details/76468140)
+- [Linux 中的零拷贝技术，第 1 部分](https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy1/)
+- [Linux 中的零拷贝技术，第 2 部分](https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy2/)
 
 ---
 
