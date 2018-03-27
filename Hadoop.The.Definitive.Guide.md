@@ -64,11 +64,12 @@ Hadoop 支持运行多种语言写的 MapReduce 程序, 包括 Java, Ruby, 和 P
 ### A Weather Dataset
 ### Analyzing the Data with Hadoop
 #### Map and Reduce
-MapReduce 任务分为两个阶段: map 阶段和 reduce 阶段. 每个阶段输入和输出的格式都是键值对; 类型可以由程序员自行指定. 程序员还实现了两个函数: map 函数和reduce 函数.
-
+MapReduce 任务分为两个阶段: map 阶段和 reduce 阶段. 每个阶段输入和输出的格式都是键值对; 键和值的类型可以由程序员自行指定. 程序员还实现了两个函数: map 函数和reduce 函数.
+<br>
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/MapReduce_logical_data_flow.png)
-<font size=2>Figure 2-1. MapReduce logical data flow</font>
-
+<p align="center"><font size=2>Figure 2-1. MapReduce logical data flow</font><\p>
+<br>
+<br>
 #### Java MapReduce
 ``` java
 import java.io.IOException;
