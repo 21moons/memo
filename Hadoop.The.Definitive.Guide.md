@@ -67,14 +67,12 @@ Hadoop 支持运行多种语言写的 MapReduce 程序, 包括 Java, Ruby, 和 P
 MapReduce 任务分为两个阶段: map 阶段和 reduce 阶段. 每个阶段输入和输出的格式都是键值对; 键和值的类型可以由程序员自行指定. 程序员还实现了两个函数: map 函数和reduce 函数.
 <br>
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/MapReduce_logical_data_flow.png)
-<p align="center"><font size=2>Figure 2-1. MapReduce logical data flow</font><\p>
+<p align="center"><font size=2>Figure 2-1. MapReduce logical data flow</font></p>
 <br>
 <br>
 #### Java MapReduce
 
-* map function
-* reduce function
-* some code to run the job
+**map function**
 
 ``` java
 import java.io.IOException;
@@ -109,9 +107,74 @@ public class MaxTemperatureMapper
     }
 }
 ```
+<p align="center"><font size=2>Figure 2-3. Mapper for the maximum temperature example</font></p>
 
 Mapper 类包括四个参数:  input key, input value, output key, output value types
 
 为了针对网络序列化场景进行优化, Hadoop 提供了一组自己的基本类型, 用于替换原生 Java 类型. 这些类型可以在 org.apache.hadoop.io 包中找到. 这里我们使用的 LongWritable, 它对应于 Java 中的 Long 类型, Text 对应 Java 中的 字符串, 和 IntWritable 对应 Java 中的 Integer.
+
+**reduce function**
+
+``` java
+import java.io.IOException;
+
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
+
+public class MaxTemperatureReducer
+        extends Reducer<Text, IntWritable, Text, IntWritable> {
+
+    @Override
+    public void reduce(Text key, Iterable<IntWritable> values, Context context)
+        throws IOException, InterruptedException {
+        int maxValue = Integer.MIN_VALUE;
+        for (IntWritable value : values) {
+            maxValue = Math.max(maxValue, value.get());
+        }
+        
+        context.write(key, new IntWritable(maxValue));
+    }
+}
+```
+<p align="center"><font size=2>Figure 2-4. Reducer for the maximum temperature example</font></p>
+
+
+**some code to run the job**
+
+``` java
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class MaxTemperature {
+
+    public static void main(String[] args) throws Exception {
+        if (args.length != 2) {
+            System.err.println("Usage: MaxTemperature <input path> <output path>");
+            System.exit(-1);
+        }
+
+        Job job = new Job();
+        job.setJarByClass(MaxTemperature.class);
+        job.setJobName("Max temperature");
+
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        job.setMapperClass(MaxTemperatureMapper.class);
+        job.setReducerClass(MaxTemperatureReducer.class);
+
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+```
+<p align="center"><font size=2>Figure 2-5. Application to find the maximum temperature in the weather dataset</font></p>
 
 
