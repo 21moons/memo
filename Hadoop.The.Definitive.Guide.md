@@ -70,6 +70,7 @@ MapReduce 任务分为两个阶段: map 阶段和 reduce 阶段. 每个阶段输
 <p align="center"><font size=2>Figure 2-1. MapReduce logical data flow</font></p>
 <br>
 <br>
+
 #### Java MapReduce
 
 **map function**
@@ -107,7 +108,7 @@ public class MaxTemperatureMapper
     }
 }
 ```
-<p align="center"><font size=2>Figure 2-3. Mapper for the maximum temperature example</font></p>
+<p align="center"><font size=2>Example 2-3. Mapper for the maximum temperature example</font></p>
 
 Mapper 类包括四个参数:  input key, input value, output key, output value types
 
@@ -137,7 +138,7 @@ public class MaxTemperatureReducer
     }
 }
 ```
-<p align="center"><font size=2>Figure 2-4. Reducer for the maximum temperature example</font></p>
+<p align="center"><font size=2>Example 2-4. Reducer for the maximum temperature example</font></p>
 
 
 **some code to run the job**
@@ -175,7 +176,7 @@ public class MaxTemperature {
     }
 }
 ```
-<p align="center"><font size=2>Figure 2-5. Application to find the maximum temperature in the weather dataset</font></p>
+<p align="center"><font size=2>Example 2-5. Application to find the maximum temperature in the weather dataset</font></p>
 
 在 Hadoop 集群上运行任务时, 我们将把代码打包成 jar 包, 然后通过方法 setJarByClass() 指定需要加载的类名
 
@@ -183,7 +184,147 @@ public class MaxTemperature {
 
 接下来, 我们通过 setMapperClass() 和 setReducerClass() 方法指定 mapper 类和 reduce 类的类型.
 
-setOutputKeyClass() 和setOutputValueClass() 方法设置 reduce 函数输出结果的类型, 并且必须与 reduce 类生成的内容相匹配. map 函数的输出类型默认和 reduce 是相同的, 所以通常情况下不需要单独设置. 但是, 如果输出类型不同的话, 必须使用 setMapOutputKeyClass() 和 setMapOutputValueClass() 方法来设置 map 输出类型.
+setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出结果的类型, 并且必须与 reduce 类生成的内容相匹配. map 函数的输出类型默认和 reduce 是相同的, 所以通常情况下不需要单独设置. 但是, 如果输出类型不同的话, 必须使用 setMapOutputKeyClass() 和 setMapOutputValueClass() 方法来设置 map 输出类型.
+<br>
+
+#### Data Flow
+
+&emsp;&emsp;首先做一些术语解释. MapReduce job 是客户希望执行的某项工作: 它由输入数据, MapReduce 程序和配置信息组成. Hadoop 通过将 job 分成多个任务来执行, 这些任务分为两种类型: map 任务和 reduce 任务. 这些任务使用 YARN 进行调度, 在集群中的节点上运行. 如果某个任务失败, 它将被自动调度到其他节点上再次运行。
+
+&emsp;&emsp;Hadoop 将输入分成固定大小的片段, 然后提交给 MapReduce 任务. 我们将这些片段称之为 input splits 或是 splits. Hadoop 为每个片段创建一个 map 任务, 该任务基于片段中的每条记录运行用户定义的 map 函数.
+
+&emsp;&emsp;对数据进行分片意味着相对于处理整个输入数据集, 处理每个分片所需时间会比较少. 假设我们并行的处理这些分片, 那么在分片越小的情况下, 更容易达成服务器之间的负载均衡, 因为在任务运行过程中, 机器越快, 处理的分片将越多. 即使这些机器没有差异, 考虑到进程可能失败或存在其他正在运行的作业, 负载均衡也是可取的, 而且分割的粒度越细, 负载平衡的质量越好.
+
+&emsp;&emsp;另一方面, 如果分片太小, 则管理分片和创建 map 任务的开销开始主宰整个 job 的执行时间. 对于大多数 job 来说, 分片大小设置为 HDFS 块的大小将是比较合适的, 默认情况下为 128 MB, 当然, HDFS 块的大小可以基于集群(所有新创建的文件)进行更改，或者在文件创建时进行指定.
+
+Hadoop 尽量在输入数据所在的 HDFS 节点上运行 map 任务, 这样可以不占用宝贵的集群带宽. 该特性被称为数据本地优化(data locality optimization). 然而有些时候, 所有存储任务所需分片及其副本的 HDFS 块所在的节点都在满负载运行 map 任务, 此时作业调度程序将尝试在同一个机架的其他节点上运行任务. 如果同一机架上没有空闲的节点, 尽管这种情况非常少见甚至是不可能的, 此时会使用机架外节点，这将导致机架间的网络传输. 图 2-2 描述了这三种情况.
+
+It should now be clear why the optimal split size is the same as the block size: it is the
+largest size of input that can be guaranteed to be stored on a single node. If the split
+spanned two blocks, it would be unlikely that any HDFS node stored both blocks, so
+some of the split would have to be transferred across the network to the node running
+the map task, which is clearly less efficient than running the whole map task using local
+data.
+
+现在应该清楚为什么最佳分割大小与块大小相同：它是
+最大的输入大小可以保证存储在单个节点上。 如果分裂
+跨越两个块，所以任何HDFS节点都不太可能存储这两个块
+一些拆分将不得不通过网络传输到正在运行的节点
+地图任务显然比使用本地运行整个地图任务效率低
+数据。
+
+Map tasks write their output to the local disk, not to HDFS. Why is this? Map output is
+intermediate output: it’s processed by reduce tasks to produce the final output, and once
+the job is complete, the map output can be thrown away. So, storing it in HDFS with
+replication would be overkill. If the node running the map task fails before the map
+output has been consumed by the reduce task, then Hadoop will automatically rerun
+the map task on another node to re-create the map output.
+
+Map任务将其输出写入本地磁盘，而不是HDFS。 为什么是这样？ 地图输出是
+中间输出：由减少任务处理以产生最终输出，并且一次
+作业完成后，地图输出可以被丢弃。 因此，将它与HDFS一起存储
+复制会过度。 如果运行地图任务的节点在地图之前失败
+输出已被reduce任务使用，那么Hadoop将自动重新运行
+另一个节点上的地图任务重新创建地图输出。
+
+
+
+<p align="center"><font size=2>Figure 2-2. Data-local (a), rack-local (b), and off-rack (c) map tasks</font></p>
+
+
+Reduce tasks don’t have the advantage of data locality; the input to a single reduce task
+is normally the output from all mappers. In the present example, we have a single reduce
+task that is fed by all of the map tasks. Therefore, the sorted map outputs have to be
+transferred across the network to the node where the reduce task is running, where they
+are merged and then passed to the user-defined reduce function. The output of the
+reduce is normally stored in HDFS for reliability. As explained in Chapter 3, for each
+HDFS block of the reduce output, the first replica is stored on the local node, with other
+replicas being stored on off-rack nodes for reliability. Thus, writing the reduce output
+does consume network bandwidth, but only as much as a normal HDFS write pipeline
+consumes.
+
+减少任务不具有数据局部性的优势; 输入到单个reduce任务
+通常是所有映射器的输出。 在目前的例子中，我们有一个单一的减少
+由所有地图任务提供的任务。 因此，排序后的地图输出必须是
+通过网络传输到reduce任务正在运行的节点，它们在哪里
+被合并，然后传递给用户定义的reduce函数。 的输出
+减少通常存储在HDFS中以保证可靠性。 正如第3章所解释的那样
+HDFS块的减少输出，第一个副本存储在本地节点上，与其他节点一起存储
+复制品被存储在机架外节点上以保证可靠性。 因此，编写减少输出
+确实消耗了网络带宽，但只是和普通的HDFS写入管道一样多
+消耗。
+
+The whole data flow with a single reduce task is illustrated in Figure 2-3. The dotted
+boxes indicate nodes, the dotted arrows show data transfers on a node, and the solid
+arrows show data transfers between nodes.
+
+图2-3说明了单个reduce任务的整个数据流。 点缀
+框表示节点，虚线箭头表示节点上的数据传输，以及实体
+箭头显示节点之间的数据传输。
+
+
+<p align="center"><font size=2>Figure 2-3. MapReduce data flow with a single reduce task</font></p>
+
+The number of reduce tasks is not governed by the size of the input, but instead is
+specified independently. In “The Default MapReduce Job” on page 214, you will see how
+to choose the number of reduce tasks for a given job.
+When there are multiple reducers, the map tasks partition their output, each creating
+one partition for each reduce task. There can be many keys (and their associated values)
+in each partition, but the records for any given key are all in a single partition. The
+partitioning can be controlled by a user-defined partitioning function, but normally the
+default partitioner—which buckets keys using a hash function—works very well.
+The data flow for the general case of multiple reduce tasks is illustrated in Figure 2-4.
+This diagram makes it clear why the data flow between map and reduce tasks is collo‐
+quially known as “the shuffle,” as each reduce task is fed by many map tasks. The shuffle
+is more complicated than this diagram suggests, and tuning it can have a big impact on
+job execution time, as you will see in “Shuffle and Sort” on page 197.
+
+减少任务的数量不受输入大小的控制，而是由输入大小决定
+独立指定。在第214页的“默认MapReduce作业”中，您将看到如何
+为特定作业选择减少任务的数量。
+当有多个缩减器时，映射任务将对其输出进行分区，每个创建
+每个减少任务一个分区。可以有许多键（和它们的相关值）
+在每个分区中，但任何给定密钥的记录都在单个分区中。该
+分区可以由用户定义的分区功能来控制，但通常情况下，
+默认分区程序 - 使用散列函数对密钥进行存储 - 效果很好。
+图2-4说明了多个减少任务的一般情况的数据流。
+该图清楚地说明了为什么map和reduce任务之间的数据流是collo-
+一般称为“洗牌”，因为每个减少任务都由许多地图任务提供。洗牌
+比这个图表更复杂，调整它可以产生很大的影响
+作业执行时间，您将在第197页上的“随机排序”中看到。
+
+<p align="center"><font size=2>Figure 2-4. MapReduce data flow with multiple reduce tasks</font></p>
+
+Finally, it’s also possible to have zero reduce tasks. This can be appropriate when you
+don’t need the shuffle because the processing can be carried out entirely in parallel (a
+few examples are discussed in “NLineInputFormat” on page 234). In this case, the only
+off-node data transfer is when the map tasks write to HDFS (see Figure 2-5).
+
+最后，还可以有零减少任务。 这可以适合你的时候
+不需要洗牌，因为处理可以完全并行进行（a
+在第234页的“NLineInputFormat”中讨论了一些例子）。 在这种情况下，唯一的
+离线节点数据传输是在地图任务写入HDFS时（参见图2-5）。
+
+#### Combiner Functions
+
+Many MapReduce jobs are limited by the bandwidth available on the cluster, so it pays
+to minimize the data transferred between map and reduce tasks. Hadoop allows the user
+to specify a combiner function to be run on the map output, and the combiner function’s
+output forms the input to the reduce function. Because the combiner function is an
+optimization, Hadoop does not provide a guarantee of how many times it will call it for
+a particular map output record, if at all. In other words, calling the combiner function
+zero, one, or many times should produce the same output from the reducer.
+
+
+许多MapReduce作业受到群集上可用带宽的限制，因此付费
+以最小化地图和减少任务之间传输的数据。 Hadoop允许用户
+指定要在地图输出上运行的组合器功能，以及组合器功能
+输出形成了reduce函数的输入。 因为组合函数是一个
+优化时，Hadoop不会保证它将调用它多少次
+一个特定的地图输出记录，如果有的话。 换句话说，调用组合器功能
+零，一次或多次应该从减速器产生相同的输出。
+
+<p align="center"><font size=2>Figure 2-5. MapReduce data flow with no reduce tasks</font></p>
 
 
 
