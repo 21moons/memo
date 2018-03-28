@@ -177,4 +177,17 @@ public class MaxTemperature {
 ```
 <p align="center"><font size=2>Figure 2-5. Application to find the maximum temperature in the weather dataset</font></p>
 
+在 Hadoop 集群上运行任务时, 我们将把代码打包成 jar 包, 然后通过方法 setJarByClass() 指定需要加载的类名
+
+构造 Job 对象后, 我们指定 input 和 output 路径.
+
+接下来, 我们通过 setMapperClass() 和 setReducerClass() 方法指定 mapper 类和 reduce 类的类型.
+
+setOutputKeyClass() 和setOutputValueClass() 方法设置 reduce 函数输出结果的类型, 并且必须与 reduce 类生成的内容相匹配. map 函数的输出类型默认和 reduce 是相同的, 所以通常情况下不需要单独设置. 但是, 如果输出类型不同的话, 必须使用 setMapOutputKeyClass() 和 setMapOutputValueClass() 方法来设置 map 输出类型.
+
+
+
+
+
+
 
