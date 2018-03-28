@@ -279,4 +279,36 @@ Hadoop Streaming 使用 Unix 标准流作为 Hadoop 和你的程序之间的接�
 
 ## CHAPTER 3 The Hadoop Distributed Filesystem
 
+Hadoop Distributed Filesystem(HDFS)
+
+对于分布式文件系统, 挑战之一就是在节点故障时而不丢失数据.
+Hadoop 实际上有一个通用文件系统抽象.
+
+### The Design of HDFS
+* Very large files
+* Streaming data access
+最有效的数据处理模式是一次写入, 多次读取, HDFS 基于这个理念来构建. 数据集通常从数据源生成或复制, 随后基于数据集进行各种分析.
+每次分析都会涉及很大一部分(如果不是全部)数据集, 那么读取整个数据集花费的时间比读取数据集中第一条记录的延迟更重要(言下之意是吞吐量比单个文件的寻道时间更重要).
+* Commodity hardware
+* Low-latency data access
+需要低延迟访问数据的应用程序, 例如数十毫秒范围, 不适合用 HDFS 存储. 请记住, HDFS 已针对吞吐量进行了优化, 这是以高延迟为代价的. HBase(参见第 20 章) 是低延迟访问的更好选择。
+* Lots of small files
+由于 namenode 在内存中保存文件系统元数据, 因此文件系统中的文件数量由 namenode 的内存量决定。
+* Multiple writers, arbitrary file modifications
+HDFS 中的文件写入操作是互斥的. 文件写入操作总是在文件的结尾添加数据. 不支持同时写入或修改文件中的任意偏移量.(未来可能会被支持, 但会相对低效)
+
+### HDFS Concepts
+* Blocks
+* Namenodes and Datanodes
+* Block Caching
+* HDFS Federation
+* HDFS High Availability
+
+
+
+
+
+
+
+
 
