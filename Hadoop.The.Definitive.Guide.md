@@ -303,6 +303,8 @@ HDFS 中的文件写入操作是互斥的. 文件写入操作总是在文件的�
 * Block Caching
 * HDFS Federation
 * HDFS High Availability
+namenode 会触发单点故障.
+single point of failure (SPOF)
 
 
 
