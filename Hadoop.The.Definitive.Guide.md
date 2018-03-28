@@ -236,7 +236,47 @@ setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出�
 
 
 
+#### Specifying a combiner function
 
 
+
+``` java
+public class MaxTemperatureWithCombiner {
+
+    public static void main(String[] args) throws Exception {
+        if (args.length != 2) {
+            System.err.println("Usage: MaxTemperatureWithCombiner <input path> " + "<output path>");
+            System.exit(-1);
+        }
+
+        Job job = new Job();
+        job.setJarByClass(MaxTemperatureWithCombiner.class);
+        job.setJobName("Max temperature");
+
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        job.setMapperClass(MaxTemperatureMapper.class);
+        job.setCombinerClass(MaxTemperatureReducer.class);
+        job.setReducerClass(MaxTemperatureReducer.class);
+
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+```
+<p align="center"><font size=2>Example 2-6. Application to find the maximum temperature, using a combiner func‐
+tion for efficiency</font></p>
+
+
+
+### Hadoop Streaming
+Hadoop Streaming 使用 Unix 标准流作为 Hadoop 和你的程序之间的接口，所以你可以使用任何支持读取标准输入和写入标准输出语言的来编写你的 MapReduce 程序。
+对于 C ++程序员, 可以使用 Hadoop Pipes.
+
+
+## CHAPTER 3 The Hadoop Distributed Filesystem
 
 
