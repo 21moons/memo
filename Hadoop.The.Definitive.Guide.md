@@ -522,6 +522,11 @@ public class FileSystemDoubleCat {
 
 <p align="center"><font size=2>Figure 3-2. A client reading data from HDFS</font></p>
 
+这种设计的一个重要方面是客户直接从 datanodes 检索数据, 并且由 namenode 引导到最优的 datanode. 这个设计允许 HDFS 支持大量的并发客户端, 因为数据流量分散到集群中的所有数据节点上. 同时， namenode 只提供数据块位置(它们存储在内存中, 使得查询操作非常高效), 如果不这样做, 随着客户数量的增长, 大量的数据读取很快就会让系统遇到瓶颈.
+
+* **Network Topology and Hadoop**
+两个节点间距离的大小用带宽来衡量.
+
 #### Anatomy of a File Write
 
 <p align="center"><font size=2>Figure 3-4. A client writing data to HDFS</font></p>
