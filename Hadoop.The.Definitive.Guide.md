@@ -267,8 +267,7 @@ public class MaxTemperatureWithCombiner {
     }
 }
 ```
-<p align="center"><font size=2>Example 2-6. Application to find the maximum temperature, using a combiner func‐
-tion for efficiency</font></p>
+<p align="center"><font size=2>Example 2-6. Application to find the maximum temperature, using a combiner function for efficiency</font></p>
 
 
 
@@ -432,7 +431,7 @@ Hadoop 通过将其文件系统接口公开为 Java API, 来支持 Java 应用�
 <p align="center"><font size=2>Figure 3-1. Accessing HDFS over HTTP directly and via a bank of HDFS proxies</font></p>
 
 
-在第一种情况下, namenode 和 datanodes 中的嵌入式 web 服务器充当 WebHDFS 端点.(WebHDFS 默认是使能的, 因为 dfs.webhdfs.enabled 默认值为 true). 文件元数据操作由 namenode 处理, 而文件读取 (还有写入) 操作首先发送到 namenode, 它将 HTTP 重定向报文发送给客户端, 指示应该从/到哪个 datanode 获取/写入数据。
+在第一种情况下, namenode 和 datanodes 中的嵌入式 web 服务器充当 WebHDFS 端点.(WebHDFS 默认是使能的, 因为 dfs.webhdfs.enabled 默认值为 true). 文件元数据操作由 namenode 处理, 而文件读取 (还有写入) 操作首先发送到 namenode, 它将 HTTP 重定向报文发送给客户端, 指示应该从/到哪个 datanode 获取/写入数据.
 
 通过 HTTP 访问 HDFS 的第二种方式依赖于一个或多个独立的代理服务器.(这些代理是无状态的, 所以它们可以在标准负载均衡器后面运行.)所有到集群的流量都通过代理, 所以客户端永远不会直接访问 namenode 或 datanode, 这需要配套更严格的防火墙和带宽限制策略. 通常在位于不同的数据中心 Hadoop 集群之间使用代理进行传输, 或者从外部网络访问部署在云上的 Hadoop 集群.
 
@@ -440,13 +439,79 @@ HttpFS 代理公开了与 WebHDFS 相同的 HTTP(和 HTTPS)接口, 因此客户�
 
 * **C**
 * **NFS**
+可以使用 Hadoop 的 NFSv3 网关在本地客户端的文件系统上挂载 HDFS. 支持在一个文件尾部添加数据, 但不支持随机修改文件, 因为 HDFS 只能写入文件的末尾.
 * **FUSE(Filesystem in Userspace)**
 
 ### The Java Interface
 
 #### Reading Data from a Hadoop URL
+
+``` java
+public class URLCat {
+
+    static {
+        URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory());
+    }
+
+    public static void main(String[] args) throws Exception {
+        InputStream in = null;
+        try {
+            in = new URL(args[0]).openStream();
+            IOUtils.copyBytes(in, System.out, 4096, false);
+        } finally {
+            IOUtils.closeStream(in);
+        }
+    }
+}
+```
+<p align="center"><font size=2>Example 3-1. Displaying files from a Hadoop filesystem on standard output using a URLStreamHandler</font></p>
+
 #### Reading Data Using the FileSystem API
+
+``` java
+public class FileSystemCat {
+
+    public static void main(String[] args) throws Exception {
+        String uri = args[0];
+        Configuration conf = new Configuration();
+        FileSystem fs = FileSystem.get(URI.create(uri), conf);
+        InputStream in = null;
+
+        try {
+            in = fs.open(new Path(uri));
+            IOUtils.copyBytes(in, System.out, 4096, false);
+        } finally {
+            IOUtils.closeStream(in);
+        }
+    }
+}
+```
+<p align="center"><font size=2>Example 3-2. Displaying files from a Hadoop filesystem on standard output by using the FileSystem directly</font></p>
+
 #### Writing Data
+
+``` java
+public class FileSystemDoubleCat {
+
+    public static void main(String[] args) throws Exception {
+        String uri = args[0];
+        Configuration conf = new Configuration();
+        FileSystem fs = FileSystem.get(URI.create(uri), conf);
+        InputStream in = null;
+
+        try {
+            in = fs.open(new Path(uri));
+            IOUtils.copyBytes(in, System.out, 4096, false);
+            in.seek(0); // go back to the start of the file
+            IOUtils.copyBytes(in, System.out, 4096, false);
+        } finally {
+            IOUtils.closeStream(in);
+        }
+    }
+}
+```
+<p align="center"><font size=2>Example 3-3. Displaying files from a Hadoop filesystem on standard output twice, by using seek()</font></p>
+
 #### Directories
 #### Querying the Filesystem
 #### Deleting Data
@@ -454,8 +519,19 @@ HttpFS 代理公开了与 WebHDFS 相同的 HTTP(和 HTTPS)接口, 因此客户�
 
 ### Data Flow
 #### Anatomy of a File Read
+
+<p align="center"><font size=2>Figure 3-2. A client reading data from HDFS</font></p>
+
 #### Anatomy of a File Write
+
+<p align="center"><font size=2>Figure 3-4. A client writing data to HDFS</font></p>
+
 #### Coherency Model
 
 ### Parallel Copying with distcp
 #### Keeping an HDFS Cluster Balanced
+
+
+
+
+## CHAPTER 4 YARN
