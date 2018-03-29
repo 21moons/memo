@@ -340,11 +340,6 @@ namenode 在内存中保存文件系统中每个文件和块的引用, 这意味
 
 2.x 发行版中引入的 HDFS Federation 允许通过添加  来扩展集群, 每个 namenode 管理文件系统名称空间的一部分. 例如, 一个 namenode 可能会管理所有 /user 目录下的文件, 第二个节点管理 /share 目录下的文件.
 
-and furthermore the failure of one
-namenode does not affect the availability of the namespaces managed by other namen‐
-odes. Block pool storage is not partitioned, however, so datanodes register with each
-namenode in the cluster and store blocks from multiple block pools.
-
 HDFS federation 中的每个 namenode 管理一个名字空间卷, 它由名字空间元数据和包含空间中所有文件块的 block pool 组成. 名字空间卷彼此独立, 这意味着
 namenodes 之间不会相互通信, 而且单个 namenode 的失效不会影响其他 namenode 管理的名字空间的可用性. block pool 并不分区存储, 因此 datanodes 会向每个 namenode 注册, 并存储来自多个 block pool 的块.
 
@@ -423,3 +418,44 @@ hadoop fs -ls file:///               -- 查看本地文件系统类型
 | Swift | swift | fs.swift.snative.SwiftNativeFile System | A filesystem backed by OpenStack Swift. |
 
 <p align="center"><font size=2>Table 3-1. Hadoop filesystems</font></p>
+
+#### Interfaces
+
+
+* **HTTP**
+
+Hadoop 通过将其文件系统接口公开为 Java API, 来支持 Java 应用程序访问 HDFS. 而对于非 java 语言, 则需要通过 WebHDFS 协议与 HTTP REST API 交互. 要注意的是，HTTP 接口比本地 Java 客户端慢, 因此如果使用 HTTP 接口, 应该尽可能的避免转移非常大的数据.
+
+有两种方法可以通过 HTTP 访问 HDFS: 直接访问 HDFS, HDFS 守护进程向客户端提供 HTTP 服务; 通过访问 HDFS 的代理客户端代表使用通常的 DistributedFileSystem API. 这两种方式是如图 3-1 所示. 两者都使用 WebHDFS 协议。
+
+
+<p align="center"><font size=2>Figure 3-1. Accessing HDFS over HTTP directly and via a bank of HDFS proxies</font></p>
+
+
+在第一种情况下, namenode 和 datanodes 中的嵌入式 web 服务器充当 WebHDFS 端点.(WebHDFS 默认是使能的, 因为 dfs.webhdfs.enabled 默认值为 true). 文件元数据操作由 namenode 处理, 而文件读取 (还有写入) 操作首先发送到 namenode, 它将 HTTP 重定向报文发送给客户端, 指示应该从/到哪个 datanode 获取/写入数据。
+
+通过 HTTP 访问 HDFS 的第二种方式依赖于一个或多个独立的代理服务器.(这些代理是无状态的, 所以它们可以在标准负载均衡器后面运行.)所有到集群的流量都通过代理, 所以客户端永远不会直接访问 namenode 或 datanode, 这需要配套更严格的防火墙和带宽限制策略. 通常在位于不同的数据中心 Hadoop 集群之间使用代理进行传输, 或者从外部网络访问部署在云上的 Hadoop 集群.
+
+HttpFS 代理公开了与 WebHDFS 相同的 HTTP(和 HTTPS)接口, 因此客户端可以使用 webhdfs(或 swebhdfs)URI 访问这两者. HttpFS 代理独立于 namenode 和 datanode 守护进程, 使用 httpfs.sh 脚本启动, 默认情况下监听 14000 端口号.
+
+* **C**
+* **NFS**
+* **FUSE(Filesystem in Userspace)**
+
+### The Java Interface
+
+#### Reading Data from a Hadoop URL
+#### Reading Data Using the FileSystem API
+#### Writing Data
+#### Directories
+#### Querying the Filesystem
+#### Deleting Data
+
+
+### Data Flow
+#### Anatomy of a File Read
+#### Anatomy of a File Write
+#### Coherency Model
+
+### Parallel Copying with distcp
+#### Keeping an HDFS Cluster Balanced
