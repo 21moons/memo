@@ -1,25 +1,46 @@
 # PART I Hadoop Fundamentals
+
 ## CHAPTER 1 Meet Hadoop
+
 ### Data Storage and Analysis
+
 存储容量与 IO 速度之间的矛盾, 数据越来越多, 但是硬盘的 IO 速度提升有限.
 可能解决方法是从多个设备上并行读取, 那么有两个问题需要解决:
-1. 如何解决单个设备失效导致的数据丢失(replication)
-2. 如何合并多个设备上读取到的文件片段
+
+1. 如何解决单个设备失效导致的数据丢失(replication).
+
+2. 如何合并多个设备上读取到的文件片段.
+
 ### Beyond Batch
+
 Hadoop 是一个生态系统:
+
 1. MapReduce 本质上是基于批处理系统, 但是因为响应时间较长, 并不适用于强调实时性的交互性分析.
+
 2. HBase 用来存放 key-value 格式的数据, 使用 HDFS(Hadoop Distributed Filesystem) 作为底层文件系统.HBase 既支持单行的 读写, 也支持大块数据的批处理读写.
+
 3. YARN(Yet Another Resource Negotiator),  集群资源管理系统, 用来调度所有的分布式程序(包括 MapReduce), 使其可以基于 Hadoop 集群中的数据来运行.
+
 ### 新增处理模式
+
 * Interactive SQL(交互式 SQL) 
+
 Hadoop上的SQL查询可以实现低延迟响应
+
 * Iterative processing(迭代处理)
+
 机器学习算法, Spark 代替 MapReduce
+
 * Stream processing(流处理)
+
 像 Storm, Spark Streaming 或 Samza 等流媒体系统可以运行实时分布式计算, 并将结果发送到 Hadoop 存储或外部系统
+
 * Search
+
 Solr 搜索平台可以在 Hadoop 集群上运行, 索引 HDFS 中的文档, 并基于 HDFS 中的索引中提供搜索服务.
+
 ### RDBMS(Relational Database Management System) compared to MapReduce
+
 |  | Traditional RDBMS | MapReduce |
 | ------| ------ | ------ |
 | Data size | Gigabytes | Petabytes |
@@ -31,12 +52,14 @@ Solr 搜索平台可以在 Hadoop 集群上运行, 索引 HDFS 中的文档, 并
 | Scaling | Nonlinear | Linear |
 <br>
 关于传统关系数据库(RDBMS) 与 Hadoop 的区别, 这里提到了关键的四点:
+
 1. 为什么需要 Hadoop, 为什么不能在传统数据库中加入更多硬盘来实现大数据分析? 因为硬盘的 IO 响应速度受寻道时间限制, 传统关系数据库读取大量数据的速度远远小于 MapReduce. MapReduce 流式读写的读取速度仅仅受传输速率的限制. 
-2. MapReduce is a good fit for problems that need to analyze the whole dataset
-in a batch fashion, particularly for ad hoc analysis. An RDBMS is good for point queries or updates, where the dataset has been indexed to deliver low-latency retrieval and update times of a relatively small amount of data. 
+
+2. MapReduce is a good fit for problems that need to analyze the whole dataset.in a batch fashion, particularly for ad hoc analysis. An RDBMS is good for point queries or updates, where the dataset has been indexed to deliver low-latency retrieval and update times of a relatively small amount of data.
+
 3. MapReduce suits applications where the data is written once and read many times, whereas a relational database is good for datasets that are continually updated.
-4. Hadoop 和 RDBMS 之间的另一个区别在于其操作的数据集. 
-在 RDBMS 中, 结构化数据被组织成定义好的格式, 例如 XML 文档或数据库表. 另一方面, 半结构化数据则比较松散, 虽然可能有格式, 但经常被忽略, 可能仅作为数据结构的指导: 例如 spreadsheet, 其结构是 cells 组成的网格, 虽然 cells 本身可以保存任何形式的数据.
+
+4. Hadoop 和 RDBMS 之间的另一个区别在于其操作的数据集. 在 RDBMS 中, 结构化数据被组织成定义好的格式, 例如 XML 文档或数据库表. 另一方面, 半结构化数据则比较松散, 虽然可能有格式, 但经常被忽略, 可能仅作为数据结构的指导: 例如 spreadsheet, 其结构是 cells 组成的网格, 虽然 cells 本身可以保存任何形式的数据.
 非结构化数据没有任何特定的内部结构: 例如普通文本或图像数据. Hadoop 在非结构化或半结构化数据上工作良好, 因为它被设计成在处理阶段才解释数据(所谓的模式读取 schema-on-read). 这种机制提供了灵活性并避开了 RDBMS 耗时的数据加载阶段, 因为在  <font color=#fd0209 size=4 >Hadoop 中数据加载只是一个文件复制操作</font>.
 
 关系数据通常被标准化(normalized)以保持其完整性并消除冗余. 但是规范化通常会给 Hadoop 处理带来问题, 因为它会将读取记录变为一个一个非本地操作, 而本地操作是 Hadoop 能够执行(高速)流式读写的一个重要假设.
@@ -44,12 +67,16 @@ in a batch fashion, particularly for ad hoc analysis. An RDBMS is good for point
 Web 服务器日志是一个未规范化的记录集合(例如, 即使客户端是同一个客户端, 每次都记录完整的客户端主机名), 这就是各种日志文件特别适合用 Hadoop 进行分析的原因之一. 请注意, Hadoop 可以执行 join 操作; 只是并没有关系数据库中用的那么频繁. 
 
 MapReduce 和 Hadoop 中的其他处理模型, 处理时间随数据量大小线性变化. 数据是分区的, 功能原语(如 map 和 reduce)可以在所有的分区上并行工作. 这意味着如果你输入的数据量翻倍, 分析需要的时间也将会是原来的两倍. 但是, 如果你同时还将集群的大小加倍, 那么分析工作将会像原来一样快. 而 RDBMS 中的 SQL 查询通常不是这样.
+
 ### Grid Computing (网格计算)
+
 高性能计算(HPC high-performance computing)和网格计算社区已经使用 API 作为消息传递接口(MPI Message Passing Interface), 进行了多年的大规模数据处理. 大体上, HPC 的方法是将工作分配到机器集群中, 集群中的机器通过存储区域网络(SAN storage area network)访问共享文件系统. HPC 主要适用于计算密集型作业, 但是当节点需要访问大量数据时, 问题出现了, 此时网络带宽变成了瓶颈, 导致计算节点闲置.
 Hadoop 试图将数据与计算节点放在一起, 因为数据都在本地, 所以访问速度很快. 这个功能称为数据本地化(data locality), 是 Hadoop 数据处理的核心, 也是其性能良好的原因. 意识到网络带宽是数据中心环境中最宝贵的资源, Hadoop 通过网络拓扑建模来竭尽全力的保护它. 注意这个安排并不妨碍 Hadoop 中的 CPU 密集型的分析任务. 
 MPI 不仅要求程序员显式的控制底层的数据流, 也要求程序员熟悉顶层的分析算法. 但是在 Hadoop 中, 程序要只需要考虑数据模型, 底层的数据流是不可见的.
 协调大规模分布式计算中的任务是一个挑战. 最难的地方是优雅地处理部分任务失败 (此时你不知道一个远程任务是否失败), 同时其他的计算过程还在继续运行(暗示不可能全部重来). MapReduce 这样的分布式处理框架让程序员不必考虑失败, 因为框架会检测到失败任务并在健康的机器上重新调度. MapReduce 之所以能够做到这一点, 是因为它是一个无共享(shared-nothing)架构,  这意味着任务之间没有相互依赖. (这里有轻微的简化, 因为 mappers 的输出是reducer 的输入, reducer 对 mapper 有依赖, 但是这仍然在 MapReduce 系统的控制下; 重新运行一个失败的 reducer 要比重新运行一个失败的 map 更小心, 因为 reducer 必须能获取到必要的 map 输出, 如果不能, 则通过再次调度相关的 map  来重新生成) 所以从程序员的角度来看, 任务运行的先后顺序并不重要. 相比之下, MPI 程序必须明确地管理自己的检查点并恢复(遇到部分任务失败时), 程序员拥有更多的控制权, 却使程序更难写.
+
 ### Volunteer Computing
+
 志愿者计算项目将他们正在尝试的问题分解成工作单位(work units), 然后发送到世界各地的电脑进行分析. 例如, 一个 SETI@home 工作单位包含 0.35 MB 的射电望远镜数据, 并在一台典型的家用电脑上花几个小时或几天的时间来分析. 分析完成后, 结果被发送回服务器, 然后客户端获取另一个工作单元. 为了防止作弊, 每个工作单位都被送到三台不同的机器, 至少其中的两个结果一致才能被接受. 
 SETI@home 项目要解决的问题是 CPU 密集型的, 适合在分布于世界各地的数十万台电脑上运行, 因为传输工作单位的时间是相当短的. 志愿者捐献的是 CPU 周期, 而不是带宽.
 MapReduce 旨在在一个由可信的硬件组成的高带宽数据中心上运行持续几分钟或几小时的作业. 相比之下, SETI@home 在不受控互联网的不可信机器上运行不间断的计算, 而且没有本地化数据.
@@ -57,14 +84,20 @@ MapReduce 旨在在一个由可信的硬件组成的高带宽数据中心上运�
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/hadoop_modules.png)
 <br>
 <br>
+
 ## CHAPTER 2 MapReduce
+
 MapReduce 是关于数据处理的 <font color=#fd0209 size=5 >编程模型</font>.
 Hadoop 支持运行多种语言写的 MapReduce 程序, 包括 Java, Ruby, 和 Python. 更重要的是, Most MapReduce 程序天生就是并行的.
 
 ### A Weather Dataset
+
 ### Analyzing the Data with Hadoop
+
 #### Map and Reduce
+
 MapReduce 任务分为两个阶段: map 阶段和 reduce 阶段. 每个阶段输入和输出的格式都是键值对; 键和值的类型可以由程序员自行指定. 程序员还实现了两个函数: map 函数和reduce 函数.
+
 <br>
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/MapReduce_logical_data_flow.png)
 <p align="center"><font size=2>Figure 2-1. MapReduce logical data flow</font></p>
@@ -73,7 +106,7 @@ MapReduce 任务分为两个阶段: map 阶段和 reduce 阶段. 每个阶段输
 
 #### Java MapReduce
 
-**map function**
+* **map function**
 
 ``` java
 import java.io.IOException;
@@ -108,13 +141,14 @@ public class MaxTemperatureMapper
     }
 }
 ```
+
 <p align="center"><font size=2>Example 2-3. Mapper for the maximum temperature example</font></p>
 
 Mapper 类包括四个参数:  input key, input value, output key, output value types
 
 为了针对网络序列化场景进行优化, Hadoop 提供了一组自己的基本类型, 用于替换原生 Java 类型. 这些类型可以在 org.apache.hadoop.io 包中找到. 这里我们使用的 LongWritable, 它对应于 Java 中的 Long 类型, Text 对应 Java 中的 字符串, 和 IntWritable 对应 Java 中的 Integer.
 
-**reduce function**
+* **reduce function**
 
 ``` java
 import java.io.IOException;
@@ -133,15 +167,15 @@ public class MaxTemperatureReducer
         for (IntWritable value : values) {
             maxValue = Math.max(maxValue, value.get());
         }
-        
+
         context.write(key, new IntWritable(maxValue));
     }
 }
 ```
+
 <p align="center"><font size=2>Example 2-4. Reducer for the maximum temperature example</font></p>
 
-
-**some code to run the job**
+* **some code to run the job**
 
 ``` java
 import org.apache.hadoop.fs.Path;
@@ -176,6 +210,7 @@ public class MaxTemperature {
     }
 }
 ```
+
 <p align="center"><font size=2>Example 2-5. Application to find the maximum temperature in the weather dataset</font></p>
 
 在 Hadoop 集群上运行任务时, 我们将把代码打包成 jar 包, 然后通过方法 setJarByClass() 指定需要加载的类名
@@ -203,15 +238,12 @@ setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出�
 
 &emsp;&emsp;Map 任务将其输出写入本地磁盘, 而不是 HDFS. 为什么会这样?因为 Map 的输出是中间输出: 它们随后将交给 reduce 任务处理并生成最终输出, 并且一旦 job 完成后, map 任务的输出可以丢弃. 因此, 将它存储在 HDFS 上是一种浪费. 如果节点运行 map 任务失败, 没有生成中间结果, 然后又被 reduce 任务占用, 那么 Hadoop 将自动在另一个节点上重新运行 map 任务.
 
-
-
 <p align="center"><font size=2>Figure 2-2. Data-local (a), rack-local (b), and off-rack (c) map tasks</font></p>
 <br>
 
 &emsp;&emsp;对于 Reduce 任务来说, 并不存在本地处理数据优势; 单个 reduce 任务的输入通常是所有 mappers 的输出. 在当前的例子中, 我们使用一个 reduce 任务处理所有 map 任务的输出. 因此, 排序后的 map 输出必须通过网络传输到 reduce 任务运行的节点上, 它们在那里被合并, 然后传递给用户定义的 reduce 函数. reduce 任务的输出通常存储在 HDFS 中以保证可靠性. 正如第3章所解释的那样 HDFS, 对于每一个存储 reduce 输出的 HDFS 块, 通过把第一个副本存储在本地节点上, 其他副本存储在机架外节点上, 来保证可靠性. 因此, 在 HDFS 上写入 reduce 任务的输出确实消耗了网络带宽, 但属于正常的 HDFS 写入消耗(并没有引入性能损失).
 
 &emsp;&emsp;图 2-3 描述了单个 reduce 任务的整个数据流. 虚线框表示节点, 虚线箭头表示节点上的数据传输, 实线箭头显示节点之间的数据传输.
-
 
 <p align="center"><font size=2>Figure 2-3. MapReduce data flow with a single reduce task</font></p>
 <br>
@@ -220,7 +252,7 @@ setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出�
 
 &emsp;&emsp;当有多个 reducers 时, map 任务将对其输出进行分区, 每个 map 任务都会为每个 reduce 任务创建一个分区. 分区中可以有许多键(和它们的相关值), 但任何给定 key 的记录都全部在某个分区中(key 一定对应一个分区, 一个分区对应多个 key). 分区可以由用户定义的分区函数来控制, 但通常情况下, 使用默认分区程序(使用 hash 函数对 keys 进行存储)就已经很好了. 
 
-&emsp;&emsp;图 2-4 说明了多个 reduce 任务通常情况下的数据流. 该图清楚地说明了为什么 map 和 reduce 任务之间的数据流被称为"洗牌(the shuffle)", 因为每个 reduce 任务都由许多 map 任务提供. 实际的洗牌比图表中描述的更加复杂, 调整它对 job 执行时间有巨大影响, 你将在 197 页中的"Shuffle and Sort 随机排序"中看到. 
+&emsp;&emsp;图 2-4 说明了多个 reduce 任务通常情况下的数据流. 该图清楚地说明了为什么 map 和 reduce 任务之间的数据流被称为"洗牌(the shuffle)", 因为每个 reduce 任务都由许多 map 任务提供. 实际的洗牌比图表中描述的更加复杂, 调整它对 job 执行时间有巨大影响, 你将在 197 页中的"Shuffle and Sort 随机排序"中看到.
 
 <p align="center"><font size=2>Figure 2-4. MapReduce data flow with multiple reduce tasks</font></p>
 
@@ -234,11 +266,7 @@ setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出�
 <p align="center"><font size=2>Figure 2-5. MapReduce data flow with no reduce tasks</font></p>
 <br>
 
-
-
 #### Specifying a combiner function
-
-
 
 ``` java
 public class MaxTemperatureWithCombiner {
@@ -267,14 +295,13 @@ public class MaxTemperatureWithCombiner {
     }
 }
 ```
+
 <p align="center"><font size=2>Example 2-6. Application to find the maximum temperature, using a combiner function for efficiency</font></p>
 
-
-
 ### Hadoop Streaming
+
 Hadoop Streaming 使用 Unix 标准流作为 Hadoop 和你的程序之间的接口, 所以你可以使用任何支持读取标准输入和写入标准输出语言的来编写你的 MapReduce 程序. 
 对于 C ++程序员, 可以使用 Hadoop Pipes.
-
 
 ## CHAPTER 3 The Hadoop Distributed Filesystem
 
@@ -284,19 +311,30 @@ Hadoop Distributed Filesystem(HDFS)
 Hadoop 实际上有一个通用文件系统抽象.
 
 ### The Design of HDFS
+
 * Very large files
+
 * Streaming data access
+
 最有效的数据处理模式是一次写入, 多次读取, HDFS 基于这个理念来构建. 数据集通常从数据源生成或复制, 随后基于数据集进行各种分析.
 每次分析都会涉及很大一部分(如果不是全部)数据集, 那么读取整个数据集花费的时间比读取数据集中第一条记录的延迟更重要(言下之意是吞吐量比单个文件的寻道时间更重要).
+
 * Commodity hardware
+
 * Low-latency data access
-需要低延迟访问数据的应用程序, 例如数十毫秒范围, 不适合用 HDFS 存储. 请记住, HDFS 已针对吞吐量进行了优化, 这是以高延迟为代价的. HBase(参见第 20 章) 是低延迟访问的更好选择. 
+
+需要低延迟访问数据的应用程序, 例如数十毫秒范围, 不适合用 HDFS 存储. 请记住, HDFS 已针对吞吐量进行了优化, 这是以高延迟为代价的. HBase(参见第 20 章) 是低延迟访问的更好选择.
+
 * Lots of small files
-由于 namenode 在内存中保存文件系统元数据, 因此文件系统中的文件数量由 namenode 的内存量决定. 
+
+由于 namenode 在内存中保存文件系统元数据, 因此文件系统中的文件数量由 namenode 的内存量决定.
+
 * Multiple writers, arbitrary file modifications
+
 HDFS 中的文件写入操作是互斥的. 文件写入操作总是在文件的结尾添加数据. 不支持同时写入或修改文件中的任意偏移量.(未来可能会被支持, 但会相对低效)
 
 ### HDFS Concepts
+
 * **Blocks**
 
 Block 是磁盘能够读取或写入的最小单位.
@@ -316,12 +354,15 @@ MapReduce 中的 map 任务一次只操作一个块.
 存储子系统处理块, 简化存储管理(因为块都是固定大小, 很容易计算出在给定的磁盘上可以存储多少)并消除元数据问题(因为块中只有数据, 文件元数据, 如权限信息不需要与块一起存储, 由另一个独立的系统单独处理).
 
 此外, 分布式文件系统使用复制以提供容错和可用性, 块很适合这样的场景. 为了在块数据丢失, 磁盘和机器故障等场景下保证数据可用, 每个块都会复制到少量物理独立的机器上(通常是三个). 如果一个块不可用, 可以在客户不感知的情况下读取副本. 由于以为物理原因导致块永久性损失, 那么文件系统会读取副本并复制到其他机器上, 使复制因子回到正常水平. (更多信息请参阅 97 页的"数据完整性") 同样, 一些应用程序可能会针对经常读取的文件设置较高的复制因子, 从而使集群更好的支持读取操作.
-```
+
+```bash
 % hdfs fsck / -files -blocks
 ```
+
 列出所有文件与块的对应关系
 <br>
 <br>
+
 * **Namenodes and Datanodes**
 
 HDFS 集群有两种类型的节点: namenode(the master) 和一些 datanode(workers). namenode 管理文件系统命名空间. 它维护文件系统树和所有文件的元数据. 这些信息永久的存储在本地磁盘上, 它分为两个文件: 命名空间图像(namespace image)和编辑日志(edit log).  namenode 知道文件的每个块都在哪个的 datanode 上; 但是它不会持久化这些数据, 因为系统启动时会重建这些信息.
@@ -329,10 +370,12 @@ HDFS 集群有两种类型的节点: namenode(the master) 和一些 datanode(wor
 为了防止 namenode 单点故障, 一种解决方法是把文件元数据同步到其他远程文件系统
 另一种方法是对 namenode 做热备.
 <br>
+
 * **Block Caching**
 
 通常情况下, datanode 会从磁盘读取数据块, 但对于频繁访问的文件, 则会将数据块缓存在内存中, 这块内存被称为堆外块缓存(off-heap block cache).
 <br>
+
 * **HDFS Federation**
 
 namenode 在内存中保存文件系统中每个文件和块的引用, 这意味着在存储很多文件的超大群集上, 内存成为限制存储集群扩展的原因(请参阅 294 页的 "Namenode 需要多少内存").
@@ -344,14 +387,16 @@ namenodes 之间不会相互通信, 而且单个 namenode 的失效不会影响�
 
 要访问 HDFS federation 集群, 客户使用客户侧加载表将文件路径映射到 namenodes, 配置时使用 ViewFileSystem 和 viewfs:// 格式的 URI.
 <br>
+
 * **HDFS High Availability**
 
 通过把 namenode 上的元数据复制到多个文件系统, 同时在次要 namenode 上创建检查点可以防止数据丢失, 但它不能提供文件系统的高可用性. 所有的文件系统元数据都在 namenode 上, 如果 namenode 失效, 所有客户端(包括 MapReduce 作业)都将无法读取, 写入或列出文件, 仍然会触发单点故障 single point of failure (SPOF). 因为 namenode 是唯一存储元数据和文件-块的映射的地方. 在这种情况下, 整个 Hadoop 系统将会停止服务, 直到新的名称节点可用.
 
 在这种情况下, 要在 namenode 失效的情况下恢复, 管理员将启动一个新的 namenode, 将文件系统元数据复制过来, 并配置 datanode 和客户端使用这个新的 namenode. 新的 namenode 在完成下列步骤前无法响应请求:
-1. 将 namespace image 加载到内存  
+
+1. 将 namespace image 加载到内存.
 2. 重放 edit log
-3. 从 datanode 接收足够的块报告, 离开安全模式. 
+3. 从 datanode 接收足够的块报告, 离开安全模式.
 
 在大型集群上, namenode 冷启动需要 30 分钟或更多时间.
 
@@ -373,8 +418,7 @@ Hadoop 2 通过添加对 HDFS 高可用性 (HA) 的支持弥补了这种情况. 
 
 如果主 namenode 失败, 备用可以很快接管 (几十秒内), 因为备节点的内存中已经有最新状态: 包括最新的 edit log 条目和最新的文件-块映射.  实际观察到的故障恢复时间将会慢一些 (大约一分钟左右), 因为系统需要谨慎的确认 主 namenode 节点是否失败. 
 
-如果主节点失败时备节点也同时出现故障, 尽管这种情况不太可能, 管理员仍然可以对备节点实施冷启动.  这并不比没有 HA 的情况更糟, 并且从操作的角度来看, 这是一个改进, 因为这个过程是一个标准的 Hadoop 内置操作流程. 
-
+如果主节点失败时备节点也同时出现故障, 尽管这种情况不太可能, 管理员仍然可以对备节点实施冷启动.  这并不比没有 HA 的情况更糟, 并且从操作的角度来看, 这是一个改进, 因为这个过程是一个标准的 Hadoop 内置操作流程.
 
 #### Failover and fencing
 
@@ -392,13 +436,14 @@ QJM 在同一时刻只允许一个 namenode 写入 edit log; 但是, 在双主�
 
 ### The Command-Line Interface
 
-```
+```bash
 hadoop fs -help                      -- 帮助
 hadoop fs -copyFromLocal input/docs/quangle.txt hdfs://localhost/user/tom/quangle.txt   -- 复制
 hadoop fs -mkdir books               -- 创建目录, 目录保存在 namenode
 hadoop fs -ls .                      -- 列出文件
 hadoop fs -ls file:///               -- 查看本地文件系统类型
 ```
+
 <br>
 
 ### Hadoop Filesystems
@@ -427,7 +472,6 @@ Hadoop 通过将其文件系统接口公开为 Java API, 来支持 Java 应用�
 
 有两种方法可以通过 HTTP 访问 HDFS: 直接访问 HDFS, HDFS 守护进程向客户端提供 HTTP 服务; 通过访问 HDFS 的代理客户端代表使用通常的 DistributedFileSystem API. 这两种方式是如图 3-1 所示. 两者都使用 WebHDFS 协议。
 
-
 <p align="center"><font size=2>Figure 3-1. Accessing HDFS over HTTP directly and via a bank of HDFS proxies</font></p>
 
 
@@ -438,8 +482,11 @@ Hadoop 通过将其文件系统接口公开为 Java API, 来支持 Java 应用�
 HttpFS 代理公开了与 WebHDFS 相同的 HTTP(和 HTTPS)接口, 因此客户端可以使用 webhdfs(或 swebhdfs)URI 访问这两者. HttpFS 代理独立于 namenode 和 datanode 守护进程, 使用 httpfs.sh 脚本启动, 默认情况下监听 14000 端口号.
 
 * **C**
+
 * **NFS**
+
 可以使用 Hadoop 的 NFSv3 网关在本地客户端的文件系统上挂载 HDFS. 支持在一个文件尾部添加数据, 但不支持随机修改文件, 因为 HDFS 只能写入文件的末尾.
+
 * **FUSE(Filesystem in Userspace)**
 
 ### The Java Interface
@@ -464,6 +511,7 @@ public class URLCat {
     }
 }
 ```
+
 <p align="center"><font size=2>Example 3-1. Displaying files from a Hadoop filesystem on standard output using a URLStreamHandler</font></p>
 
 #### Reading Data Using the FileSystem API
@@ -486,6 +534,7 @@ public class FileSystemCat {
     }
 }
 ```
+
 <p align="center"><font size=2>Example 3-2. Displaying files from a Hadoop filesystem on standard output by using the FileSystem directly</font></p>
 
 #### Writing Data
@@ -510,14 +559,17 @@ public class FileSystemDoubleCat {
     }
 }
 ```
+
 <p align="center"><font size=2>Example 3-3. Displaying files from a Hadoop filesystem on standard output twice, by using seek()</font></p>
 
 #### Directories
+
 #### Querying the Filesystem
+
 #### Deleting Data
 
-
 ### Data Flow
+
 #### Anatomy of a File Read
 
 <p align="center"><font size=2>Figure 3-2. A client reading data from HDFS</font></p>
@@ -525,6 +577,7 @@ public class FileSystemDoubleCat {
 这种设计的一个重要方面是客户直接从 datanodes 检索数据, 并且由 namenode 引导到最优的 datanode. 这个设计允许 HDFS 支持大量的并发客户端, 因为数据流量分散到集群中的所有数据节点上. 同时， namenode 只提供数据块位置(它们存储在内存中, 使得查询操作非常高效), 如果不这样做, 随着客户数量的增长, 大量的数据读取很快就会让系统遇到瓶颈.
 
 * **Network Topology and Hadoop**
+
 两个节点间距离的大小用带宽来衡量.
 
 #### Anatomy of a File Write
@@ -534,9 +587,9 @@ public class FileSystemDoubleCat {
 #### Coherency Model
 
 ### Parallel Copying with distcp
+
 #### Keeping an HDFS Cluster Balanced
 
-
-
+<br>
 
 ## CHAPTER 4 YARN
