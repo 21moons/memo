@@ -592,4 +592,359 @@ public class FileSystemDoubleCat {
 
 <br>
 
-## CHAPTER 4 YARN
+## CHAPTER 4 YARN(Yet Another Resource Negotiator)
+
+YARN 是 Hadoop 的集群资源管理系统.
+
+YARN 提供了一组 API 用于集群资源管理, 但这些 API 通常不会由用户直接调用. 相反, 用户调用更高级别的分布式计算框架提供的 API, 分布式计算框架是基于 YARN 构建, 并隐藏了底层的资源管理细节. 情况如图所示
+图 4-1 显示了一些分布式计算框架 (MapReduce, Spark,等等), 它们使用 YARN 作为集群计算层, 使用 HDFS 和 HBase 作为集群存储层
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/)
+<p align="center"><font size=2>Figure 4-1. YARN applications</font></p>
+
+图 4-1 所示的框架上还可以有一个应用层, Pig, Hive 和 Crunch 都是基于 MapReduce, Spark 或 Tez(或者全部三个)的处理框架, 并且它们不直接与YARN交互。
+
+### Anatomy of a YARN Application Run
+
+YARN 通过两种长时间运行的守护进程提供核心服务: 资源管理器(每个群集一个)管理集群中资源的使用, 节点管理器在集群中的所有节点上运行, 用来启动和监视容器. 容器使用一组指定的资源(内存, CPU 等)执行应用程序下发的进程. 取决于 YARN 的配置方式(参见 300 页), 容器可以是一个 Unix 进程或 Linux cgroup. 图 4-2 说明了 YARN 如何上运行一个应用.
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/)
+
+<p align="center"><font size=2>Figure 4-2. How YARN runs an application</font></p>
+
+要在 YARN 上运行应用程序, 客户端会联系资源管理器并要求它运行应用程序主进程(图 4-2 中的步骤 1). 资源管理器然后找到一个可以在容器中启动应用程序主进程的节点(步骤 2a 和 2b). 应用程序主程序在启动后会执行什么操作取决于应用. 它可以只是运行简单的运算, 然后将结果返回给客户端. 它也可以从资源管理器请求更多的容器(步骤 3), 并使用它们来运行分布式计算(步骤 4a 和 4b). 后者是 MapReduce YARN 应用程序的作法, 我们将在后面 185 页 "MapReduce 作业运行剖析" 进一步讨论.
+
+从图 4-2 中注意到, YARN 本身并没有提供任何机制来处理应用(客户端, 主进程, 进程)之间的相互通信. 大部分 YARN 应用使用某种形式的远程通信(例如 Hadoop 的 RPC 层) 将状态更新和结果返回给客户端, 但这些与 YARN 无关.
+
+#### Resource Requests
+
+YARN 具有灵活的资源请求模式. 请求一组容器可以细化为每个容器所需的计算机资源量(内存和CPU), 当然也可以注明容器的本地约束。
+
+本地化对于确保分布式数据处理算法有效的使用集群带宽至关重要, 因此 YARN 允许应用对正在请求的容器指定本地约束. 无论在指定节点或机架, 甚至集群上的任何位置(机架外)申请容器, 都可以设置本地约束.
+
+Sometimes the locality constraint cannot be met, in which case either no allocation is
+made or, optionally, the constraint can be loosened. For example, if a specific node was
+requested but it is not possible to start a container on it (because other containers are
+running on it), then YARN will try to start a container on a node in the same rack, or,
+if that’s not possible, on any node in the cluster.
+
+In the common case of launching a container to process an HDFS block (to run a map
+task in MapReduce, say), the application will request a container on one of the nodes
+hosting the block’s three replicas, or on a node in one of the racks hosting the replicas,
+or, failing that, on any node in the cluster.
+
+A YARN application can make resource requests at any time while it is running. For
+example, an application can make all of its requests up front, or it can take a more
+dynamic approach whereby it requests more resources dynamically to meet the chang‐
+ing needs of the application.
+
+Spark takes the first approach, starting a fixed number of executors on the cluster (see
+“Spark on YARN” on page 571). MapReduce, on the other hand, has two phases: the map
+task containers are requested up front, but the reduce task containers are not started
+until later. Also, if any tasks fail, additional containers will be requested so the failed
+tasks can be rerun.
+
+#### Application Lifespan
+
+The lifespan of a YARN application can vary dramatically: from a short-lived application
+of a few seconds to a long-running application that runs for days or even months. Rather
+than look at how long the application runs for, it’s useful to categorize applications in
+terms of how they map to the jobs that users run. The simplest case is one application
+per user job, which is the approach that MapReduce takes.
+
+The second model is to run one application per workflow or user session of (possibly
+unrelated) jobs. This approach can be more efficient than the first, since containers can
+be reused between jobs, and there is also the potential to cache intermediate data be‐
+tween jobs. Spark is an example that uses this model.
+
+The third model is a long-running application that is shared by different users. Such an
+application often acts in some kind of coordination role. For example, Apache Slider
+has a long-running application master for launching other applications on the cluster.
+This approach is also used by Impala (see “SQL-on-Hadoop Alternatives” on page 484) to
+provide a proxy application that the Impala daemons communicate with to request
+cluster resources. The “always on” application master means that users have very low-
+latency responses to their queries since the overhead of starting a new application master
+is avoided. 
+
+#### Building YARN Applications
+
+Writing a YARN application from scratch is fairly involved, but in many cases is not
+necessary, as it is often possible to use an existing application that fits the bill. For ex‐
+ample, if you are interested in running a directed acyclic graph (DAG) of jobs, then
+Spark or Tez is appropriate; or for stream processing, Spark, Samza, or Storm works. 
+
+There are a couple of projects that simplify the process of building a YARN application.
+Apache Slider, mentioned earlier, makes it possible to run existing distributed applica‐
+tions on YARN. Users can run their own instances of an application (such as HBase) on
+a cluster, independently of other users, which means that different users can run dif‐
+ferent versions of the same application. Slider provides controls to change the number
+of nodes an application is running on, and to suspend then resume a running
+application.
+
+Apache Twill is similar to Slider, but in addition provides a simple programming model
+for developing distributed applications on YARN. Twill allows you to define cluster
+processes as an extension of a Java  Runnable , then runs them in YARN containers on
+the cluster. Twill also provides support for, among other things, real-time logging (log
+events from runnables are streamed back to the client) and command messages (sent
+from the client to runnables).
+
+In cases where none of these options are sufficient—such as an application that has
+complex scheduling requirements—then the distributed shell application that is a part
+of the YARN project itself serves as an example of how to write a YARN application. It
+demonstrates how to use YARN’s client APIs to handle communication between the
+client or application master and the YARN daemons.
+
+### YARN Compared to MapReduce 1
+
+The distributed implementation of MapReduce in the original version of Hadoop (ver‐
+sion 1 and earlier) is sometimes referred to as “MapReduce 1” to distinguish it from
+MapReduce 2, the implementation that uses YARN (in Hadoop 2 and later).
+
+In MapReduce 1, there are two types of daemon that control the job execution process:
+a jobtracker and one or more tasktrackers. The jobtracker coordinates all the jobs run
+on the system by scheduling tasks to run on tasktrackers. Tasktrackers run tasks and
+send progress reports to the jobtracker, which keeps a record of the overall progress of
+each job. If a task fails, the jobtracker can reschedule it on a different tasktracker.
+
+In MapReduce 1, the jobtracker takes care of both job scheduling (matching tasks with
+tasktrackers) and task progress monitoring (keeping track of tasks, restarting failed or
+slow tasks, and doing task bookkeeping, such as maintaining counter totals). By con‐
+trast, in YARN these responsibilities are handled by separate entities: the resource man‐
+ager and an application master (one for each MapReduce job). The jobtracker is also
+responsible for storing job history for completed jobs, although it is possible to run a
+job history server as a separate daemon to take the load off the jobtracker. In YARN,
+the equivalent role is the timeline server, which stores application history. 5
+
+The YARN equivalent of a tasktracker is a node manager. The mapping is summarized
+in Table 4-1.
+
+| MapReduce 1 | YARN |
+| ------| ------ |
+| Jobtracker | Resource manager, application master, timeline server |
+| Tasktracker | Node manager |
+| Slot | Container |
+
+<p align="center"><font size=2>Table 4-1. A comparison of MapReduce 1 and YARN components</font></p>
+
+YARN was designed to address many of the limitations in MapReduce 1. The benefits
+to using YARN include the following:
+
+* **Scalability**
+
+YARN can run on larger clusters than MapReduce 1. MapReduce 1 hits scalability
+bottlenecks in the region of 4,000 nodes and 40,000 tasks, 6 stemming from the fact
+that the jobtracker has to manage both jobs and tasks. YARN overcomes these
+limitations by virtue of its split resource manager/application master architecture:
+it is designed to scale up to 10,000 nodes and 100,000 tasks.
+
+In contrast to the jobtracker, each instance of an application—here, a MapReduce
+job—has a dedicated application master, which runs for the duration of the appli‐
+cation. This model is actually closer to the original Google MapReduce paper, which
+describes how a master process is started to coordinate map and reduce tasks run‐
+ning on a set of workers.
+
+* **Availability**
+
+High availability (HA) is usually achieved by replicating the state needed for another
+daemon to take over the work needed to provide the service, in the event of the
+service daemon failing. However, the large amount of rapidly changing complex
+state in the jobtracker’s memory (each task status is updated every few seconds, for
+example) makes it very difficult to retrofit HA into the jobtracker service.
+
+With the jobtracker’s responsibilities split between the resource manager and ap‐
+plication master in YARN, making the service highly available became a divide-
+and-conquer problem: provide HA for the resource manager, then for YARN applications (on a per-application basis). And indeed, Hadoop 2 supports HA both for the resource manager and for the application master for MapReduce jobs. Failure recovery in YARN is discussed in more detail in “Failures” on page 193.
+
+* **Utilization**
+
+In MapReduce 1, each tasktracker is configured with a static allocation of fixed-size
+“slots,” which are divided into map slots and reduce slots at configuration time. A
+map slot can only be used to run a map task, and a reduce slot can only be used for
+a reduce task.
+
+In YARN, a node manager manages a pool of resources, rather than a fixed number
+of designated slots. MapReduce running on YARN will not hit the situation where
+a reduce task has to wait because only map slots are available on the cluster, which
+can happen in MapReduce 1. If the resources to run the task are available, then the
+application will be eligible for them.
+
+Furthermore, resources in YARN are fine grained, so an application can make a
+request for what it needs, rather than for an indivisible slot, which may be too big
+(which is wasteful of resources) or too small (which may cause a failure) for the
+particular task.
+
+* **Multitenancy**
+
+In some ways, the biggest benefit of YARN is that it opens up Hadoop to other types
+of distributed application beyond MapReduce. MapReduce is just one YARN ap‐
+plication among many.
+
+It is even possible for users to run different versions of MapReduce on the same
+YARN cluster, which makes the process of upgrading MapReduce more manage‐
+able. (Note, however, that some parts of MapReduce, such as the job history server
+and the shuffle handler, as well as YARN itself, still need to be upgraded across the
+cluster.)
+
+Since Hadoop 2 is widely used and is the latest stable version, in the rest of this book
+the term “MapReduce” refers to MapReduce 2 unless otherwise stated. Chapter 7 looks
+in detail at how MapReduce running on YARN works.
+
+### Scheduling in YARN
+
+In an ideal world, the requests that a YARN application makes would be granted im‐
+mediately. In the real world, however, resources are limited, and on a busy cluster, an
+application will often need to wait to have some of its requests fulfilled. It is the job of
+the YARN scheduler to allocate resources to applications according to some defined
+policy. Scheduling in general is a difficult problem and there is no one “best” policy,
+which is why YARN provides a choice of schedulers and configurable policies. We look
+at these next.
+
+#### Scheduler Options
+
+Three schedulers are available in YARN: the FIFO, Capacity, and Fair Schedulers. The
+FIFO Scheduler places applications in a queue and runs them in the order of submission
+(first in, first out). Requests for the first application in the queue are allocated first; once
+its requests have been satisfied, the next application in the queue is served, and so on.
+
+The FIFO Scheduler has the merit of being simple to understand and not needing any
+configuration, but it’s not suitable for shared clusters. Large applications will use all the
+resources in a cluster, so each application has to wait its turn. On a shared cluster it is
+better to use the Capacity Scheduler or the Fair Scheduler. Both of these allow long-
+running jobs to complete in a timely manner, while still allowing users who are running
+concurrent smaller ad hoc queries to get results back in a reasonable time.
+
+The difference between schedulers is illustrated in Figure 4-3, which shows that under
+the FIFO Scheduler (i) the small job is blocked until the large job completes.
+
+With the Capacity Scheduler (ii in Figure 4-3), a separate dedicated queue allows the
+small job to start as soon as it is submitted, although this is at the cost of overall cluster
+utilization since the queue capacity is reserved for jobs in that queue. This means that
+the large job finishes later than when using the FIFO Scheduler.
+
+With the Fair Scheduler (iii in Figure 4-3), there is no need to reserve a set amount of
+capacity, since it will dynamically balance resources between all running jobs. Just after
+the first (large) job starts, it is the only job running, so it gets all the resources in the
+cluster. When the second (small) job starts, it is allocated half of the cluster resources
+so that each job is using its fair share of resources.
+
+Note that there is a lag between the time the second job starts and when it receives its
+fair share, since it has to wait for resources to free up as containers used by the first job
+complete. After the small job completes and no longer requires resources, the large job
+goes back to using the full cluster capacity again. The overall effect is both high cluster
+utilization and timely small job completion.
+
+Figure 4-3 contrasts the basic operation of the three schedulers. In the next two sections,
+we examine some of the more advanced configuration options for the Capacity and Fair
+Schedulers.
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/)
+<p align="center"><font size=2>Figure 4-3. Cluster utilization over time when running a large job and a small job under the FIFO Scheduler (i), Capacity Scheduler (ii), and Fair Scheduler (iii)</font></p>
+
+#### Capacity Scheduler Configuration
+
+The Capacity Scheduler allows sharing of a Hadoop cluster along organizational lines,
+whereby each organization is allocated a certain capacity of the overall cluster. Each
+organization is set up with a dedicated queue that is configured to use a given fraction
+of the cluster capacity. Queues may be further divided in hierarchical fashion, allowing
+each organization to share its cluster allowance between different groups of users within
+the organization. Within a queue, applications are scheduled using FIFO scheduling.
+
+As we saw in Figure 4-3, a single job does not use more resources than its queue’s
+capacity. However, if there is more than one job in the queue and there are idle resources
+available, then the Capacity Scheduler may allocate the spare resources to jobs in the
+queue, even if that causes the queue’s capacity to be exceeded. 7 This behavior is known
+as queue elasticity.
+
+In normal operation, the Capacity Scheduler does not preempt containers by forcibly
+killing them, 8 so if a queue is under capacity due to lack of demand, and then demand
+increases, the queue will only return to capacity as resources are released from other
+queues as containers complete. It is possible to mitigate this by configuring queues with
+a maximum capacity so that they don’t eat into other queues’ capacities too much. This
+is at the cost of queue elasticity, of course, so a reasonable trade-off should be found by
+trial and error.
+
+Imagine a queue hierarchy that looks like this:
+
+root
+├── prod
+└── dev
+     ├── eng
+     └── science
+
+The listing in Example 4-1 shows a sample Capacity Scheduler configuration file, called
+capacity-scheduler.xml, for this hierarchy. It defines two queues under the  root queue,
+prod and  dev , which have 40% and 60% of the capacity, respectively. Notice that a par‐
+ticular queue is configured by setting configuration properties of the form
+yarn.scheduler.capacity.<queue-path>.<sub-property> , where  <queue-path> is
+the hierarchical (dotted) path of the queue, such as  root.prod.
+
+```xml
+<?xml version="1.0"?>
+<configuration>
+  <property>
+    <name>yarn.scheduler.capacity.root.queues</name>
+    <value>prod,dev</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.capacity.root.dev.queues</name>
+    <value>eng,science</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.capacity.root.prod.capacity</name>
+    <value>40</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.capacity.root.dev.capacity</name>
+    <value>60</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.capacity.root.dev.maximum-capacity</name>
+    <value>75</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.capacity.root.dev.eng.capacity</name>
+    <value>50</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.capacity.root.dev.science.capacity</name>
+    <value>50</value>
+  </property>
+</configuration>
+```
+
+<p align="center"><font size=2>Example 4-1. A basic configuration file for the Capacity Scheduler</font></p>
+
+As you can see, the  dev queue is further divided into  eng and  science queues of equal
+capacity. So that the  dev queue does not use up all the cluster resources when the  prod
+queue is idle, it has its maximum capacity set to 75%. In other words, the  prod queue
+always has 25% of the cluster available for immediate use. Since no maximum capacities
+have been set for other queues, it’s possible for jobs in the  eng or  science queues to use
+all of the  dev queue’s capacity (up to 75% of the cluster), or indeed for the  prod queue
+to use the entire cluster.
+
+Beyond configuring queue hierarchies and capacities, there are settings to control the
+maximum number of resources a single user or application can be allocated, how many
+applications can be running at any one time, and ACLs on queues. See the reference
+page for details.
+
+* Queue placement
+
+The way that you specify which queue an application is placed in is specific to the
+application. For example, in MapReduce, you set the property  mapreduce.job.queue
+name to the name of the queue you want to use. If the queue does not exist, then you’ll
+get an error at submission time. If no queue is specified, applications will be placed in
+a queue called  default 
+
+For the Capacity Scheduler, the queue name should be the last part
+of the hierarchical name since the full hierarchical name is not rec‐
+ognized. So, for the preceding example configuration,  prod and  eng
+are OK, but  root.dev.eng and  dev.eng do not work.
+
+
+#### Fair Scheduler Configuration
+
+#### Delay Scheduling
+
+#### Dominant Resource Fairness
+
+## CHAPTER 5 Hadoop I/O
