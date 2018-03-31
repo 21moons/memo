@@ -705,34 +705,19 @@ YARN 支持更大的集群. MapReduce 1 在 4,000 个节点和 40,000 个任务�
 
 ### Scheduling in YARN
 
-In an ideal world, the requests that a YARN application makes would be granted im‐
-mediately. In the real world, however, resources are limited, and on a busy cluster, an
-application will often need to wait to have some of its requests fulfilled. It is the job of
-the YARN scheduler to allocate resources to applications according to some defined
-policy. Scheduling in general is a difficult problem and there is no one “best” policy,
-which is why YARN provides a choice of schedulers and configurable policies. We look
-at these next.
-
-在理想的世界中，YARN应 用程序所提出的请求将立即得到响应. 然而，在现实世界中，资源是有限的，并且在繁忙的群集中，
-应用程序通常需要等待其部分请求完成。 这是工作
-YARN调度程序根据某些定义为应用程序分配资源
-政策。 一般来说，调度是一个难题，并且没有一个“最佳”策略，
-这就是YARN提供调度和可配置策略的原因。 我们看
-在接下来的这些。
+在理想的世界中，YARN 应用程序所提出的请求将立即得到响应. 然而, 在现实世界中资源是有限的, 并且在繁忙的集群中, 应用程序在请求完成前通常需要等待. YARN 调度器的工作就是依据某些定义好的策略为应用程序分配资源. 通常来说调度是一个难题, 并且没有一个通用的 "最佳" 策略, 这就是 YARN 提供可选择的调度器和可配置策略的原因.
 
 #### Scheduler Options
 
-Three schedulers are available in YARN: the FIFO, Capacity, and Fair Schedulers. The
-FIFO Scheduler places applications in a queue and runs them in the order of submission
-(first in, first out). Requests for the first application in the queue are allocated first; once
-its requests have been satisfied, the next application in the queue is served, and so on.
+YARN 提供三种调度器: FIFO, 容量优先和公平调度器. FIFO 调度器将应用程序放入队列中, 并按照提交顺序运行它们(先入先出). 首先为队列中第一个应用程序分配资源; 一旦它的请求已经满足, 接着为队列中的下一个应用程序提供服务, 依此类推.
 
-The FIFO Scheduler has the merit of being simple to understand and not needing any
-configuration, but it’s not suitable for shared clusters. Large applications will use all the
-resources in a cluster, so each application has to wait its turn. On a shared cluster it is
-better to use the Capacity Scheduler or the Fair Scheduler. Both of these allow long-
+Both of these allow long-
 running jobs to complete in a timely manner, while still allowing users who are running
 concurrent smaller ad hoc queries to get results back in a reasonable time.
+
+FIFO 调度器具有易于理解和不需要配置的优点, 但它不适用于集群共享场景. 大型应用程序会耗光集群中的所有资源, 因此队列后面的应用都必须等待. 在共享群集上
+最好使用 Capacity Scheduler 或 Fair Scheduler. 这两种调度器都允许长期使用
+及时完成运行作业，同时仍允许正在运行的用户并发更小的即席查询以在合理的时间内恢复结果.
 
 The difference between schedulers is illustrated in Figure 4-3, which shows that under
 the FIFO Scheduler (i) the small job is blocked until the large job completes.
@@ -1104,8 +1089,7 @@ special consideration when dealing with multiterabyte datasets. Others are Hadoo
 tools or APIs that form the building blocks for developing distributed systems, such as
 serialization frameworks and on-disk data structures.
 
-Hadoop带有一组用于数据I / O的基元。 其中一些是技术
-比Hadoop更普遍，比如数据完整性和压缩，但值得
+Hadoop带有一组用于数据I / O的基元. 其中一些是技术比Hadoop更普遍，比如数据完整性和压缩，但值得
 处理多TB数据集时需特别考虑。 其他人是Hadoop
 工具或API，它们构成了用于开发分布式系统的构建块，例如
 序列化框架和磁盘数据结构。
