@@ -650,27 +650,20 @@ Apache Twill 与 Slider 类似, 但是增加了一个简单的编程模型, 用�
 
 ### YARN Compared to MapReduce 1
 
-The distributed implementation of MapReduce in the original version of Hadoop (ver‐
-sion 1 and earlier) is sometimes referred to as “MapReduce 1” to distinguish it from
-MapReduce 2, the implementation that uses YARN (in Hadoop 2 and later).
+MapReduce 在 Hadoop 原始版本中的分布式实现(version 1 及更早版本)被称为 "MapReduce 1", MapReduce 2 则不同, 它基于 YARN 实现(Hadoop 2及后续版本中).
 
-In MapReduce 1, there are two types of daemon that control the job execution process:
-a jobtracker and one or more tasktrackers. The jobtracker coordinates all the jobs run
-on the system by scheduling tasks to run on tasktrackers. Tasktrackers run tasks and
-send progress reports to the jobtracker, which keeps a record of the overall progress of
-each job. If a task fails, the jobtracker can reschedule it on a different tasktracker.
+在 MapReduce 1 中, 有两种类型的守护进程控制 job 执行过程: 一个 jobtracker 和至少一个 tasktrackers.  通过把任务调度到 tasktracker 上执行, jobtracker 协调系统中所有 job 的正常运行. Tasktrackers 运行任务并将进度报告发送给 jobtracker 以记录整体进度. 如果任务失败, jobtracker 可以在不同的 tasktracker 上重新调度.
 
-In MapReduce 1, the jobtracker takes care of both job scheduling (matching tasks with
-tasktrackers) and task progress monitoring (keeping track of tasks, restarting failed or
-slow tasks, and doing task bookkeeping, such as maintaining counter totals). By con‐
-trast, in YARN these responsibilities are handled by separate entities: the resource man‐
-ager and an application master (one for each MapReduce job). The jobtracker is also
+The jobtracker is also
 responsible for storing job history for completed jobs, although it is possible to run a
-job history server as a separate daemon to take the load off the jobtracker. In YARN,
-the equivalent role is the timeline server, which stores application history. 5
+job history server as a separate daemon to take the load off the jobtracker.
+
+在 MapReduce 1 中，jobtracker 负责 job 调度(将 tasktrackers 与任务匹配) 和任务进度监控(持续跟踪任务执行, 重启失败或缓慢的任务, 并做任务簿记, 如维护计数器的总数). 而在YARN中, 这些职责由不同的实体处理: 资源管理员和应用程序 master(每个 MapReduce job 一个). jobtracker 也负责存储已完成作业的历史记录, 尽管可以以守护进程的方式运行一个作业历史记录服务器来减少 jobtracker 的负担. 在 YARN 中, timeline 服务器承担了相同的角色.
 
 The YARN equivalent of a tasktracker is a node manager. The mapping is summarized
 in Table 4-1.
+
+YARN 中的 node manager 与 tasktracker 对应. 表 4-1 列出了映射关系.
 
 | MapReduce 1 | YARN |
 | ------| ------ |
@@ -680,68 +673,35 @@ in Table 4-1.
 
 <p align="center"><font size=2>Table 4-1. A comparison of MapReduce 1 and YARN components</font></p>
 
-YARN was designed to address many of the limitations in MapReduce 1. The benefits
-to using YARN include the following:
+YARN 旨在解决 MapReduce 1 中的许多短板. 使用 YARN 的好处包括以下内容:
 
 * **Scalability**
 
-YARN can run on larger clusters than MapReduce 1. MapReduce 1 hits scalability
-bottlenecks in the region of 4,000 nodes and 40,000 tasks, 6 stemming from the fact
-that the jobtracker has to manage both jobs and tasks. YARN overcomes these
-limitations by virtue of its split resource manager/application master architecture:
-it is designed to scale up to 10,000 nodes and 100,000 tasks.
+YARN 支持更大的集群. MapReduce 1 在 4,000 个节点和 40,000 个任务会遇到伸缩性瓶颈, 因为 jobtracker 必须同时管理 job 和任务. YARN 凭借其分离的资源管理器/应用程序 master 架构克服了这些限制: 它旨在扩展到 10,000 个节点和 100,000 个任务.
 
-In contrast to the jobtracker, each instance of an application—here, a MapReduce
-job—has a dedicated application master, which runs for the duration of the appli‐
-cation. This model is actually closer to the original Google MapReduce paper, which
-describes how a master process is started to coordinate map and reduce tasks run‐
-ning on a set of workers.
+与 jobtracker 不同的是, 应用程序的每个实例都有一个专用的应用程序 master. 这个模型实际上更接近原来的 Google MapReduce 论文, 这篇论文描述了 master 进程如何协调 map 和 reduce 任务在一组 workers 上运行.
 
 * **Availability**
 
-High availability (HA) is usually achieved by replicating the state needed for another
-daemon to take over the work needed to provide the service, in the event of the
-service daemon failing. However, the large amount of rapidly changing complex
-state in the jobtracker’s memory (each task status is updated every few seconds, for
-example) makes it very difficult to retrofit HA into the jobtracker service.
+当服务守护进程失败时, 另一个守护进程将复制所需的状态并继续提供服务, 这就是高可用性(HA) 的实现方式. 但是, jobtracker 的内存中保存了大量迅速变化的复杂状态 (每个任务状态几秒钟就会更新一次), 使得 jobtracker 支持 HA 非常困难.
 
-With the jobtracker’s responsibilities split between the resource manager and ap‐
-plication master in YARN, making the service highly available became a divide-
-and-conquer problem: provide HA for the resource manager, then for YARN applications (on a per-application basis). And indeed, Hadoop 2 supports HA both for the resource manager and for the application master for MapReduce jobs. Failure recovery in YARN is discussed in more detail in “Failures” on page 193.
+随着 jobarcker 的职责在 YARN 中分解为资源管理器和应用程序 master, 使得服务高用可以用分而治之的方法来解决: 为资源管理器提供 HA, 然后为每个基于 YARN 的应用程序提供(基于每个独立应用的层次). 实际上, Hadoop 2 支持资源管理器 HA 和 应用程序 master HA. YARN 中的故障恢复在第193页的 "“Failures”" 中有更详细的讨论.
 
 * **Utilization**
 
-In MapReduce 1, each tasktracker is configured with a static allocation of fixed-size
-“slots,” which are divided into map slots and reduce slots at configuration time. A
-map slot can only be used to run a map task, and a reduce slot can only be used for
-a reduce task.
+在 MapReduce 1 中, 每个 tasktracker 都配置了固定大小, 静态分配 "插槽", 它们在配置时分为 map 插槽和 reduce 插槽. 一个 map 插槽只能用于运行 map 任务,而 reduce 插槽只能用于 reduce 任务.
 
-In YARN, a node manager manages a pool of resources, rather than a fixed number
-of designated slots. MapReduce running on YARN will not hit the situation where
-a reduce task has to wait because only map slots are available on the cluster, which
-can happen in MapReduce 1. If the resources to run the task are available, then the
-application will be eligible for them.
+在 YARN 中, 节点管理器管理一个资源池, 而不是一个固定大小的指定插槽. 因为集群上仅有 map 插槽, 所以 reduce 任务不得不等待, 这种情况在基于 YARN 的 MapReduce 上是不会出现的. 只要有集群上有足够的资源运行任务, 那么任务就不用等待.
 
-Furthermore, resources in YARN are fine grained, so an application can make a
-request for what it needs, rather than for an indivisible slot, which may be too big
-(which is wasteful of resources) or too small (which may cause a failure) for the
-particular task.
+此外, YARN 中的资源管理是非常细粒度的, 因此应用程序可以按需获取资源, 而不是被不可拆分的插槽限制, 对于一个任务来说, 插槽既有可能太大(浪费资源), 也有可能太小(这可能导致分配失败).
 
 * **Multitenancy**
 
-In some ways, the biggest benefit of YARN is that it opens up Hadoop to other types
-of distributed application beyond MapReduce. MapReduce is just one YARN ap‐
-plication among many.
+从某种意义上来讲，YARN 最大的好处是使得 Hadoop 对其他除了 MapReduce 以外的分布式应用开放. MapReduce 只是 YARN 支持的众多分布式应用之一.
 
-It is even possible for users to run different versions of MapReduce on the same
-YARN cluster, which makes the process of upgrading MapReduce more manage‐
-able. (Note, however, that some parts of MapReduce, such as the job history server
-and the shuffle handler, as well as YARN itself, still need to be upgraded across the
-cluster.)
+用户甚至可以在同一个 YARN 集群上运行不同版本的 MapReduce, 这使得升级 MapReduce 的过程更加可控.(但是请注意, MapReduce 的某些部分, 例如 job 历史记录服务器, 洗牌(shuffle)处理程序以及 YARN 本身, 仍然需要升级.)
 
-Since Hadoop 2 is widely used and is the latest stable version, in the rest of this book
-the term “MapReduce” refers to MapReduce 2 unless otherwise stated. Chapter 7 looks
-in detail at how MapReduce running on YARN works.
+由于 Hadoop 2 已经被广泛使用, 并且是最新的稳定版本, 除非另有说明, 本书其余部分的术语 "MapReduce" 指的都是 MapReduce 2. 第 7 章将详细介绍 MapReduce 如何基于 YARN 运行.
 
 ### Scheduling in YARN
 
@@ -752,6 +712,13 @@ the YARN scheduler to allocate resources to applications according to some defin
 policy. Scheduling in general is a difficult problem and there is no one “best” policy,
 which is why YARN provides a choice of schedulers and configurable policies. We look
 at these next.
+
+在理想的世界中，YARN应 用程序所提出的请求将立即得到响应. 然而，在现实世界中，资源是有限的，并且在繁忙的群集中，
+应用程序通常需要等待其部分请求完成。 这是工作
+YARN调度程序根据某些定义为应用程序分配资源
+政策。 一般来说，调度是一个难题，并且没有一个“最佳”策略，
+这就是YARN提供调度和可配置策略的原因。 我们看
+在接下来的这些。
 
 #### Scheduler Options
 
@@ -1250,6 +1217,7 @@ FileSystem is just a wrapper around  FileSystem . The general idiom is as follow
   FileSystem rawFs = ...
   FileSystem checksummedFs = new ChecksumFileSystem(rawFs);
 ```
+
 The underlying filesystem is called the raw filesystem, and may be retrieved using the
 getRawFileSystem() method on  ChecksumFileSystem .  ChecksumFileSystem has a few
 more useful methods for working with checksums, such as  getChecksumFile() for
@@ -1262,3 +1230,4 @@ same device called bad_files. Administrators should periodically check for these
 files and take action on them.
 
 ### Compression
+
