@@ -622,77 +622,31 @@ YARN 具有灵活的资源请求模式. 请求一组容器可以细化为每个�
 
 本地化对于确保分布式数据处理算法有效的使用集群带宽至关重要, 因此 YARN 允许应用对正在请求的容器指定本地约束. 无论在指定节点或机架, 甚至集群上的任何位置(机架外)申请容器, 都可以设置本地约束.
 
-Sometimes the locality constraint cannot be met, in which case either no allocation is
-made or, optionally, the constraint can be loosened. For example, if a specific node was
-requested but it is not possible to start a container on it (because other containers are
-running on it), then YARN will try to start a container on a node in the same rack, or,
-if that’s not possible, on any node in the cluster.
+有时候 YARN 分配容器时不能满足本地约束, 这种情况下可以分配失败, 也选择忽略约束强制分配. 例如, 如果某个特定的节点被请求但是无法启动一个容器(因为已经启动了其他容器), 那么 YARN 会优先尝试在同一个机架的其他节点上启动容器, 如果再次失败, 则选择在集群中其他机架的任何节点上进行第三次尝试.
 
-In the common case of launching a container to process an HDFS block (to run a map
-task in MapReduce, say), the application will request a container on one of the nodes
-hosting the block’s three replicas, or on a node in one of the racks hosting the replicas,
-or, failing that, on any node in the cluster.
+通常情况下, 在加载容器并处理 HDFS 块(运行 MapReduce 中的 map 任务)时, 应用程序将在块的三个副本其中之一所在的节点上请求容器, 或者在三副本之一所在的机架上请求容器, 如果都失败, 那么就在集群中的其他节点上加载容器.
 
-A YARN application can make resource requests at any time while it is running. For
-example, an application can make all of its requests up front, or it can take a more
-dynamic approach whereby it requests more resources dynamically to meet the chang‐
-ing needs of the application.
+基于 YARN 的应用程序可以在运行的任意时刻发出资源请求. 例如, 应用程序可以预先完成所有请求, 也可以采取更灵活的方法, 动态地请求更多的资源来满足变化的需求.
 
-Spark takes the first approach, starting a fixed number of executors on the cluster (see
-“Spark on YARN” on page 571). MapReduce, on the other hand, has two phases: the map
-task containers are requested up front, but the reduce task containers are not started
-until later. Also, if any tasks fail, additional containers will be requested so the failed
-tasks can be rerun.
+Spark 采用第一种方法, 在集群上预先启动固定数量的 executors (请参阅 571 页 "Spark on YARN" ). MapReduce 使用第二种方法, 并且分为两个阶段: 预先请求 map 任务容器, reduce 任务容器后面再申请. 另外, 如果任何任务失败, 则会请求新的容器, 以便失败任务可以重新运行.
 
 #### Application Lifespan
 
-The lifespan of a YARN application can vary dramatically: from a short-lived application
-of a few seconds to a long-running application that runs for days or even months. Rather
-than look at how long the application runs for, it’s useful to categorize applications in
-terms of how they map to the jobs that users run. The simplest case is one application
-per user job, which is the approach that MapReduce takes.
+YARN 应用程序的生命周期有很大差异: 从短至几秒钟到长到几天甚至是几个月. 相较于关注应用程序的运行时间, 另一种更合适的分类方法是它们映射用户作业的方式. 最简单的情况, 就是一个应用程序对应一个用户 job, 这就是 MapReduce 采用的方法.
 
-The second model is to run one application per workflow or user session of (possibly
-unrelated) jobs. This approach can be more efficient than the first, since containers can
-be reused between jobs, and there is also the potential to cache intermediate data be‐
-tween jobs. Spark is an example that uses this model.
+第二种模式是一个应用程序对应一个工作流或一个用户会话. 因为容器可以在作业之间复用, 这种方法比第一种方法效率更高, 并且这种方法还可以缓存 job 之间的中间数据. Spark是使用该模型的一个例子.
 
-The third model is a long-running application that is shared by different users. Such an
-application often acts in some kind of coordination role. For example, Apache Slider
-has a long-running application master for launching other applications on the cluster.
-This approach is also used by Impala (see “SQL-on-Hadoop Alternatives” on page 484) to
-provide a proxy application that the Impala daemons communicate with to request
-cluster resources. The “always on” application master means that users have very low-
-latency responses to their queries since the overhead of starting a new application master
-is avoided. 
+第三种模式是多用户共享长期运行的应用程序. 这样的应用程序通常以某种协调角色行事. 例如, Apache Slider 有一个长期运行的应用程序 master 以启动集群上的其他应用程序. Impala 也使用此方法(请参阅 484 页 "SQL-on-Hadoop Alternatives")提供 Impala 守护进程与集群资源请求之间的代理. "永远在线" 的应用程序 master 意味着用户拥有非常低的查询响应延迟, 因为没有启动新的应用程序 master 的开销.
 
 #### Building YARN Applications
 
-Writing a YARN application from scratch is fairly involved, but in many cases is not
-necessary, as it is often possible to use an existing application that fits the bill. For ex‐
-ample, if you are interested in running a directed acyclic graph (DAG) of jobs, then
-Spark or Tez is appropriate; or for stream processing, Spark, Samza, or Storm works. 
+虽然从头开始编写基于 YARN 的应用程序是相当重要的, 但在很多情况下并不需要, 因为现有的应用程序已经可以满足大部分要求. 例如, 如果你有兴趣运行一个有向无环图(DAG)的 jobs, 那么 Spark 或 Tez 是合适的; 如果用于流处理, Spark, Samza 或 Storm 可以胜任.
 
-There are a couple of projects that simplify the process of building a YARN application.
-Apache Slider, mentioned earlier, makes it possible to run existing distributed applica‐
-tions on YARN. Users can run their own instances of an application (such as HBase) on
-a cluster, independently of other users, which means that different users can run dif‐
-ferent versions of the same application. Slider provides controls to change the number
-of nodes an application is running on, and to suspend then resume a running
-application.
+有几个项目简化了构建 YARN 应用程序的过程. 前面提到的 Apache Slider 可以在 YARN 上运行现有的分布式应用程序. 用户可以在集群上独立的运行自己的应用程序实例(如 HBase), 这意味着不同的用户可以运行同一个应用程序的不同版本. Apache Slider 支持更改应用程序运行所需的节点, 暂停应用运行然后随后恢复.
 
-Apache Twill is similar to Slider, but in addition provides a simple programming model
-for developing distributed applications on YARN. Twill allows you to define cluster
-processes as an extension of a Java  Runnable , then runs them in YARN containers on
-the cluster. Twill also provides support for, among other things, real-time logging (log
-events from runnables are streamed back to the client) and command messages (sent
-from the client to runnables).
+Apache Twill 与 Slider 类似, 但是增加了一个简单的编程模型, 用于在 YARN 上开发分布式应用程序. Twill 允许您通过继承 Java Runnable 类来定义集群处理流程, 然后在 YARN 容器上运行. 除此之外, Twill 还支持实时日志(日志事件会回传给客户端)和命令消息(从客户端发送到 runnables).
 
-In cases where none of these options are sufficient—such as an application that has
-complex scheduling requirements—then the distributed shell application that is a part
-of the YARN project itself serves as an example of how to write a YARN application. It
-demonstrates how to use YARN’s client APIs to handle communication between the
-client or application master and the YARN daemons.
+如果这些实现都不满足我们的需求(例如应用程序有复杂的调度需求), 那么请参考 YARN 的分布式壳应用, YARN 项目本身就是一个关于如何编写 YARN 应用程序的例子. 它演示了如何使用 YARN 的客户端 API 来处理客户端或应用程序 master 与 YARN 守护进程之间的通信.
 
 ### YARN Compared to MapReduce 1
 
@@ -940,11 +894,371 @@ of the hierarchical name since the full hierarchical name is not rec‐
 ognized. So, for the preceding example configuration,  prod and  eng
 are OK, but  root.dev.eng and  dev.eng do not work.
 
-
 #### Fair Scheduler Configuration
+
+The Fair Scheduler attempts to allocate resources so that all running applications get
+the same share of resources. Figure 4-3 showed how fair sharing works for applications
+in the same queue; however, fair sharing actually works between queues, too, as we’ll
+see next.
+
+**The terms queue and pool are used interchangeably in the context of the Fair Scheduler.**
+
+To understand how resources are shared between queues, imagine two users A and B,
+each with their own queue (Figure 4-4). A starts a job, and it is allocated all the resources
+available since there is no demand from B. Then B starts a job while A’s job is still
+running, and after a while each job is using half of the resources, in the way we saw
+earlier. Now if B starts a second job while the other jobs are still running, it will share
+its resources with B’s other job, so each of B’s jobs will have one-fourth of the resources,
+while A’s will continue to have half. The result is that resources are shared fairly between
+users.
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/)
+<p align="center"><font size=2>Figure 4-4. Fair sharing between user queues</font></p>
+
+* Enabling the Fair Scheduler
+The scheduler in use is determined by the setting of  yarn.resourcemanager.schedu
+ler.class . The Capacity Scheduler is used by default (although the Fair Scheduler is
+the default in some Hadoop distributions, such as CDH), but this can be changed by
+setting  yarn.resourcemanager.scheduler.class in yarn-site.xml to the fully qualified
+classname of the scheduler,  org.apache.hadoop.yarn.server.resourcemanag
+er.scheduler.fair.FairScheduler 
+
+* Queue configuration
+
+The Fair Scheduler is configured using an allocation file named fair-scheduler.xml that
+is loaded from the classpath. (The name can be changed by setting the property
+yarn.scheduler.fair.allocation.file .) In the absence of an allocation file, the Fair
+Scheduler operates as described earlier: each application is placed in a queue named
+after the user and queues are created dynamically when users submit their first appli‐
+cations.
+
+Per-queue configuration is specified in the allocation file. This allows configuration of
+hierarchical queues like those supported by the Capacity Scheduler. For example, we
+can define  prod and  dev queues like we did for the Capacity Scheduler using the allo‐
+cation file in Example 4-2.
+
+```xml
+<?xml version="1.0"?>
+<allocations>
+  <defaultQueueSchedulingPolicy>fair</defaultQueueSchedulingPolicy>
+
+  <queue name="prod">
+    <weight>40</weight>
+    <schedulingPolicy>fifo</schedulingPolicy>
+  </queue>
+
+  <queue name="dev">
+    <weight>60</weight>
+    <queue name="eng" />
+    <queue name="science" />
+  </queue>
+
+  <queuePlacementPolicy>
+    <rule name="specified" create="false" />
+    <rule name="primaryGroup" create="false" />
+    <rule name="default" queue="dev.eng" />
+  </queuePlacementPolicy>
+</allocations>
+```
+
+<p align="center"><font size=2>Example 4-2. An allocation file for the Fair Scheduler</font></p>
+
+The queue hierarchy is defined using nested  queue elements. All queues are children of
+the  root queue, even if not actually nested in a  root queue element. Here we subdivide
+the  dev queue into a queue called  eng and another called  science 
+
+Queues can have weights, which are used in the fair share calculation. In this example,
+the cluster allocation is considered fair when it is divided into a 40:60 proportion be‐
+tween  prod and  dev . The  eng and  science queues do not have weights specified, so they
+are divided evenly. Weights are not quite the same as percentages, even though the
+example uses numbers that add up to 100 for the sake of simplicity. We could have
+specified weights of 2 and 3 for the  prod and  dev queues to achieve the same queue
+weighting.
+
+**When setting weights, remember to consider the default queue and dynamically created queues (such as queues named after users). These are not specified in the allocation file, but still have weight 1.**
+
+Queues can have different scheduling policies. The default policy for queues can be set
+in the top-level  defaultQueueSchedulingPolicy element; if it is omitted, fair sched‐
+uling is used. Despite its name, the Fair Scheduler also supports a FIFO ( fifo ) policy
+on queues, as well as Dominant Resource Fairness ( drf ), described later in the chapter.
+
+The policy for a particular queue can be overridden using the  schedulingPolicy ele‐
+ment for that queue. In this case, the  prod queue uses FIFO scheduling since we want
+each production job to run serially and complete in the shortest possible amount of
+time. Note that fair sharing is still used to divide resources between the  prod and  dev
+queues, as well as between (and within) the  eng and  science queues.
+
+Although not shown in this allocation file, queues can be configured with minimum
+and maximum resources, and a maximum number of running applications. (See the
+reference page for details.) The minimum resources setting is not a hard limit, but rather
+is used by the scheduler to prioritize resource allocations. If two queues are below their
+fair share, then the one that is furthest below its minimum is allocated resources first.
+The minimum resource setting is also used for preemption, discussed momentarily.
+
+* Queue placement
+
+The Fair Scheduler uses a rules-based system to determine which queue an application
+is placed in. In Example 4-2, the  queuePlacementPolicy element contains a list of rules,
+each of which is tried in turn until a match occurs. The first rule,  specified , places an
+application in the queue it specified; if none is specified, or if the specified queue doesn’t
+exist, then the rule doesn’t match and the next rule is tried. The  primaryGroup rule tries
+to place an application in a queue with the name of the user’s primary Unix group; if
+there is no such queue, rather than creating it, the next rule is tried. The  default rule
+is a catch-all and always places the application in the  dev.eng queue.
+
+The  queuePlacementPolicy can be omitted entirely, in which case the default behavior
+is as if it had been specified with the following:
+
+```xml
+  <queuePlacementPolicy>
+    <rule name="specified" />
+    <rule name="user" />
+  </queuePlacementPolicy>
+```
+
+In other words, unless the queue is explicitly specified, the user’s name is used for the
+queue, creating it if necessary.
+
+Another simple queue placement policy is one where all applications are placed in the
+same (default) queue. This allows resources to be shared fairly between applications,
+rather than users. The definition is equivalent to this:
+
+```xml
+  <queuePlacementPolicy>
+    <rule name="default" />
+  </queuePlacementPolicy>
+```
+
+It’s also possible to set this policy without using an allocation file, by setting
+yarn.scheduler.fair.user-as-default-queue to  false so that applications will be
+placed in the default queue rather than a per-user queue. In addition,
+yarn.scheduler.fair.allow-undeclared-pools should be set to  false so that users
+can’t create queues on the fly.
+
+* Preemption
+
+When a job is submitted to an empty queue on a busy cluster, the job cannot start until
+resources free up from jobs that are already running on the cluster. To make the time
+taken for a job to start more predictable, the Fair Scheduler supports preemption.
+
+Preemption allows the scheduler to kill containers for queues that are running with
+more than their fair share of resources so that the resources can be allocated to a queue
+that is under its fair share. Note that preemption reduces overall cluster efficiency, since
+the terminated containers need to be reexecuted.
+
+Preemption is enabled globally by setting  yarn.scheduler.fair.preemption to  true .
+There are two relevant preemption timeout settings: one for minimum share and one
+for fair share, both specified in seconds. By default, the timeouts are not set, so you need
+to set at least one to allow containers to be preempted.
+
+If a queue waits for as long as its minimum share preemption timeout without receiving
+its minimum guaranteed share, then the scheduler may preempt other containers. The
+default timeout is set for all queues via the  defaultMinSharePreemptionTimeout top-
+level element in the allocation file, and on a per-queue basis by setting the  minShare
+PreemptionTimeout element for a queue.
+
+Likewise, if a queue remains below half of its fair share for as long as the fair share
+preemption timeout, then the scheduler may preempt other containers. The default
+timeout is set for all queues via the  defaultFairSharePreemptionTimeout top-level
+element in the allocation file, and on a per-queue basis by setting  fairSharePreemp
+tionTimeout on a queue. The threshold may also be changed from its default of 0.5 by
+setting  defaultFairSharePreemptionThreshold and  fairSharePreemptionThres
+hold (per-queue).
 
 #### Delay Scheduling
 
+All the YARN schedulers try to honor locality requests. On a busy cluster, if an appli‐
+cation requests a particular node, there is a good chance that other containers are run‐
+ning on it at the time of the request. The obvious course of action is to immediately
+loosen the locality requirement and allocate a container on the same rack. However, it
+has been observed in practice that waiting a short time (no more than a few seconds)
+can dramatically increase the chances of being allocated a container on the requested
+node, and therefore increase the efficiency of the cluster. This feature is called delay
+scheduling, and it is supported by both the Capacity Scheduler and the Fair Scheduler.
+
+Every node manager in a YARN cluster periodically sends a heartbeat request to the
+resource manager—by default, one per second. Heartbeats carry information about the
+node manager’s running containers and the resources available for new containers, so
+each heartbeat is a potential scheduling opportunity for an application to run a container.
+
+When using delay scheduling, the scheduler doesn’t simply use the first scheduling
+opportunity it receives, but waits for up to a given maximum number of scheduling
+opportunities to occur before loosening the locality constraint and taking the next
+scheduling opportunity.
+
+For the Capacity Scheduler, delay scheduling is configured by setting
+yarn.scheduler.capacity.node-locality-delay to a positive integer representing
+the number of scheduling opportunities that it is prepared to miss before loosening the
+node constraint to match any node in the same rack.
+
+The Fair Scheduler also uses the number of scheduling opportunities to determine the
+delay, although it is expressed as a proportion of the cluster size. For example, setting
+yarn.scheduler.fair.locality.threshold.node to 0.5 means that the scheduler
+should wait until half of the nodes in the cluster have presented scheduling opportunities
+before accepting another node in the same rack. There is a corresponding property,
+yarn.scheduler.fair.locality.threshold.rack , for setting the threshold before
+another rack is accepted instead of the one requested.
+
 #### Dominant Resource Fairness
 
+When there is only a single resource type being scheduled, such as memory, then the
+concept of capacity or fairness is easy to determine. If two users are running applications,
+you can measure the amount of memory that each is using to compare the two appli‐
+cations. However, when there are multiple resource types in play, things get more com‐
+plicated. If one user’s application requires lots of CPU but little memory and the other’s
+requires little CPU and lots of memory, how are these two applications compared?
+
+The way that the schedulers in YARN address this problem is to look at each user’s
+dominant resource and use it as a measure of the cluster usage. This approach is called
+Dominant Resource Fairness, or DRF for short. 9 The idea is best illustrated with a simple
+example.
+
+Imagine a cluster with a total of 100 CPUs and 10 TB of memory. Application A requests
+containers of (2 CPUs, 300 GB), and application B requests containers of (6 CPUs, 100
+GB). A’s request is (2%, 3%) of the cluster, so memory is dominant since its proportion
+(3%) is larger than CPU’s (2%). B’s request is (6%, 1%), so CPU is dominant. Since B’s
+container requests are twice as big in the dominant resource (6% versus 3%), it will be
+allocated half as many containers under fair sharing.
+
+By default DRF is not used, so during resource calculations, only memory is considered
+and CPU is ignored. The Capacity Scheduler can be configured to use DRF by setting
+yarn.scheduler.capacity.resource-calculator to  org.apache.hadoop.yarn
+.util.resource.DominantResourceCalculator in capacity-scheduler.xml.
+
+For the Fair Scheduler, DRF can be enabled by setting the top-level element  default
+QueueSchedulingPolicy in the allocation file to  drf 
+<br>
+
 ## CHAPTER 5 Hadoop I/O
+
+Hadoop comes with a set of primitives for data I/O. Some of these are techniques that
+are more general than Hadoop, such as data integrity and compression, but deserve
+special consideration when dealing with multiterabyte datasets. Others are Hadoop
+tools or APIs that form the building blocks for developing distributed systems, such as
+serialization frameworks and on-disk data structures.
+
+Hadoop带有一组用于数据I / O的基元。 其中一些是技术
+比Hadoop更普遍，比如数据完整性和压缩，但值得
+处理多TB数据集时需特别考虑。 其他人是Hadoop
+工具或API，它们构成了用于开发分布式系统的构建块，例如
+序列化框架和磁盘数据结构。
+
+### Data Integrity
+
+Users of Hadoop rightly expect that no data will be lost or corrupted during storage or
+processing. However, because every I/O operation on the disk or network carries with
+it a small chance of introducing errors into the data that it is reading or writing, when
+the volumes of data flowing through the system are as large as the ones Hadoop is capable
+of handling, the chance of data corruption occurring is high.
+
+The usual way of detecting corrupted data is by computing a checksum for the data when
+it first enters the system, and again whenever it is transmitted across a channel that is
+unreliable and hence capable of corrupting the data. The data is deemed to be corrupt
+if the newly generated checksum doesn’t exactly match the original. This technique
+doesn’t offer any way to fix the data—it is merely error detection. (And this is a reason
+for not using low-end hardware; in particular, be sure to use ECC memory.) Note that
+it is possible that it’s the checksum that is corrupt, not the data, but this is very unlikely,
+because the checksum is much smaller than the data.
+
+A commonly used error-detecting code is CRC-32 (32-bit cyclic redundancy check),
+which computes a 32-bit integer checksum for input of any size. CRC-32 is used for
+checksumming in Hadoop’s  ChecksumFileSystem , while HDFS uses a more efficient
+variant called CRC-32C.
+
+#### Data Integrity in HDFS
+
+HDFS transparently checksums all data written to it and by default verifies checksums
+when reading data. A separate checksum is created for every  dfs.bytes-per-
+checksum bytes of data. The default is 512 bytes, and because a CRC-32C checksum is
+4 bytes long, the storage overhead is less than 1%.
+
+Datanodes are responsible for verifying the data they receive before storing the data and
+its checksum. This applies to data that they receive from clients and from other
+datanodes during replication. A client writing data sends it to a pipeline of datanodes
+(as explained in Chapter 3), and the last datanode in the pipeline verifies the checksum.
+If the datanode detects an error, the client receives a subclass of  IOException , which it
+should handle in an application-specific manner (for example, by retrying the opera‐
+tion).
+
+When clients read data from datanodes, they verify checksums as well, comparing them
+with the ones stored at the datanodes. Each datanode keeps a persistent log of checksum
+verifications, so it knows the last time each of its blocks was verified. When a client
+successfully verifies a block, it tells the datanode, which updates its log. Keeping statistics
+such as these is valuable in detecting bad disks.
+
+In addition to block verification on client reads, each datanode runs a  DataBlockScan
+ner in a background thread that periodically verifies all the blocks stored on the data‐
+node. This is to guard against corruption due to “bit rot” in the physical storage media.
+See “Datanode block scanner” on page 328 for details on how to access the scanner
+reports.
+
+Because HDFS stores replicas of blocks, it can “heal” corrupted blocks by copying one
+of the good replicas to produce a new, uncorrupt replica. The way this works is that if
+a client detects an error when reading a block, it reports the bad block and the datanode
+it was trying to read from to the namenode before throwing a  ChecksumException . The
+namenode marks the block replica as corrupt so it doesn’t direct any more clients to it
+or try to copy this replica to another datanode. It then schedules a copy of the block to
+be replicated on another datanode, so its replication factor is back at the expected level.
+Once this has happened, the corrupt replica is deleted.
+
+It is possible to disable verification of checksums by passing  false to the  setVerify
+Checksum() method on  FileSystem before using the  open() method to read a file. The
+same effect is possible from the shell by using the  -ignoreCrc option with the  -get or
+the equivalent  -copyToLocal command. This feature is useful if you have a corrupt file
+that you want to inspect so you can decide what to do with it. For example, you might
+want to see whether it can be salvaged before you delete it.
+
+You can find a file’s checksum with  hadoop fs -checksum . This is useful to check
+whether two files in HDFS have the same contents—something that distcp does, for
+example (see “Parallel Copying with distcp” on page 76).
+
+#### LocalFileSystem
+
+The Hadoop  LocalFileSystem performs client-side checksumming. This means that
+when you write a file called filename, the filesystem client transparently creates a hidden
+file, .filename.crc, in the same directory containing the checksums for each chunk of the
+file. The chunk size is controlled by the  file.bytes-per-checksum property, which
+defaults to 512 bytes. The chunk size is stored as metadata in the .crc file, so the file can
+be read back correctly even if the setting for the chunk size has changed. Checksums
+are verified when the file is read, and if an error is detected,  LocalFileSystem throws
+a  ChecksumException 
+
+Checksums are fairly cheap to compute (in Java, they are implemented in native code),
+typically adding a few percent overhead to the time to read or write a file. For most
+applications, this is an acceptable price to pay for data integrity. It is, however, possible
+to disable checksums, which is typically done when the underlying filesystem supports
+checksums natively. This is accomplished by using  RawLocalFileSystem in place of
+LocalFileSystem . To do this globally in an application, it suffices to remap the imple‐
+mentation for  file URIs by setting the property  fs.file.impl to the value
+org.apache.hadoop.fs.RawLocalFileSystem . Alternatively, you can directly create a
+RawLocalFileSystem instance, which may be useful if you want to disable checksum
+verification for only some reads, for example:
+
+```java
+  Configuration conf = ...
+  FileSystem fs = new RawLocalFileSystem();
+  fs.initialize(null, conf);
+```
+
+#### ChecksumFileSystem
+
+LocalFileSystem uses  ChecksumFileSystem to do its work, and this class makes it easy
+to add checksumming to other (nonchecksummed) filesystems, as  Checksum
+FileSystem is just a wrapper around  FileSystem . The general idiom is as follows:
+
+```java
+  FileSystem rawFs = ...
+  FileSystem checksummedFs = new ChecksumFileSystem(rawFs);
+```
+The underlying filesystem is called the raw filesystem, and may be retrieved using the
+getRawFileSystem() method on  ChecksumFileSystem .  ChecksumFileSystem has a few
+more useful methods for working with checksums, such as  getChecksumFile() for
+getting the path of a checksum file for any file. Check the documentation for the others.
+
+If an error is detected by  ChecksumFileSystem when reading a file, it will call its
+reportChecksumFailure() method. The default implementation does nothing, but
+LocalFileSystem moves the offending file and its checksum to a side directory on the
+same device called bad_files. Administrators should periodically check for these bad
+files and take action on them.
+
+### Compression
