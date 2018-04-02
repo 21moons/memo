@@ -15,7 +15,7 @@
 
 Hadoop 是一个生态系统:
 
-1. MapReduce 本质上是基于批处理系统, 但是因为响应时间较长, 并不适用于强调实时性的交互性分析.
+1. MapReduce 本质上是一个类批处理系统, 但是因为响应时间较长, 并不适用于强调实时性的交互性分析.
 
 2. HBase 用来存放 key-value 格式的数据, 使用 HDFS(Hadoop Distributed Filesystem) 作为底层文件系统.HBase 既支持单行的 读写, 也支持大块数据的批处理读写.
 
@@ -237,8 +237,11 @@ setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出�
 &emsp;&emsp;现在应该清楚为什么最佳分片的大小就是 HDFS 文件系统块的大小: 它是能够确认存储在单个节点上的最大大小. 如果分片跨越两个或更多的块, 任何 HDFS 节点都不太可能同时存储这两个块(HDFS 文件系统的特性), 一些分片将不得不通过网络传输到正在运行 map 任务的节点上, 这显然比数据全部在本地运行效率要低.
 
 &emsp;&emsp;Map 任务将其输出写入本地磁盘, 而不是 HDFS. 为什么会这样?因为 Map 的输出是中间输出: 它们随后将交给 reduce 任务处理并生成最终输出, 并且一旦 job 完成后, map 任务的输出可以丢弃. 因此, 将它存储在 HDFS 上是一种浪费. 如果节点运行 map 任务失败, 没有生成中间结果, 然后又被 reduce 任务占用, 那么 Hadoop 将自动在另一个节点上重新运行 map 任务.
+<br>
 
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Data-local_rack-local_and off-rack_map_tasks.png)
 <p align="center"><font size=2>Figure 2-2. Data-local (a), rack-local (b), and off-rack (c) map tasks</font></p>
+
 <br>
 
 &emsp;&emsp;对于 Reduce 任务来说, 并不存在本地处理数据优势; 单个 reduce 任务的输入通常是所有 mappers 的输出. 在当前的例子中, 我们使用一个 reduce 任务处理所有 map 任务的输出. 因此, 排序后的 map 输出必须通过网络传输到 reduce 任务运行的节点上, 它们在那里被合并, 然后传递给用户定义的 reduce 函数. reduce 任务的输出通常存储在 HDFS 中以保证可靠性. 正如第3章所解释的那样 HDFS, 对于每一个存储 reduce 输出的 HDFS 块, 通过把第一个副本存储在本地节点上, 其他副本存储在机架外节点上, 来保证可靠性. 因此, 在 HDFS 上写入 reduce 任务的输出确实消耗了网络带宽, 但属于正常的 HDFS 写入消耗(并没有引入性能损失).
@@ -884,45 +887,13 @@ queuePlacementPolicy 可以完全省略, 在这种情况下默认行为如下:
 
 如果一个队列在最小共享时间超时后, 仍未收到满足其最小份额的资源, 则调度器可以抢占其他容器. 通过配置文件中的顶层元素 defaultMinSharePreemptionTimeout 为所有队列设置默认超时, 通过配置队列元素下的 minSharePreemptionTimeout 为每个队列设置超时.
 
-Likewise, if a queue remains below half of its fair share for as long as the fair share
-preemption timeout, then the scheduler may preempt other containers. The default
-timeout is set for all queues via the  defaultFairSharePreemptionTimeout top-level
-element in the allocation file, and on a per-queue basis by setting  fairSharePreemp
-tionTimeout on a queue. The threshold may also be changed from its default of 0.5 by
-setting  defaultFairSharePreemptionThreshold and  fairSharePreemptionThres
-hold (per-queue).
-
-同样, 如果一个队列的公平份额低于公平份额的一半, 抢占超时, 那么调度器可以抢占其他容器. 默认值
-通过 defaultFairSharePreemptionTimeout 顶层为所有队列设置超时元素放在分配文件中, 并通过设置 fairSharePreemptionTimeout 以每个队列为基础
-一个队列中的. 阈值也可以从其默认值 0.5 改变为
-设置 defaultFairSharePreemptionThreshold 和 fairSharePreemptionThres 保持(每队列).
+同样, 当公平共享超时时, 如果一个队列实际占有的资源低于应得资源的一半, 那么调度器可以抢占其他容器. 默认超时值通过 defaultFairSharePreemptionTimeout 来设置, 这个配置是全局生效的, 如果要对指定队列设置超时值, 请修改队列配置项 fairSharePreemptionTimeout. 阈值也可以通过设置 defaultFairSharePreemptionThreshold 和 fairSharePreemptionThreshold (基于单个队列)来修改, 默认值是 0.5.
 
 #### Delay Scheduling
 
-All the YARN schedulers try to honor locality requests. On a busy cluster, if an appli‐
-cation requests a particular node, there is a good chance that other containers are run‐
-ning on it at the time of the request. The obvious course of action is to immediately
-loosen the locality requirement and allocate a container on the same rack. However, it
-has been observed in practice that waiting a short time (no more than a few seconds)
-can dramatically increase the chances of being allocated a container on the requested
-node, and therefore increase the efficiency of the cluster. This feature is called delay
-scheduling, and it is supported by both the Capacity Scheduler and the Fair Scheduler.
+所有 YARN 调度器都试图将任务本地化(任务调度到离数据最近的节点). 在繁忙的集群上, 如果应用程序请求一个特定的节点, 很有可能其他容器正在节点上运行. 显而易见的行动是立即在同一机架上分配容器. 但是, 实践中观察到等待一小段时间(不超过几秒)可以大大增加按原要求分配到容器的机会, 并因此提高集群的效率. 这个特性被称为延迟调度, 容量调度器和公平调度器都支持它.
 
-所有 YARN 调度程序都试图遵守本地请求. 在繁忙的集群上, 如果应用程序请求一个特定的节点, 很有可能其他容器被运行 - 
-在请求的时候在它上面. 显而易见的行动是立即
-放松本地要求并在同一机架上分配容器. 但是, 它
-在实践中观察到等待一小段时间(不超过几秒)
-可以大大增加按要求分配容器的机会
-节点, 并因此提高集群的效率. 这个功能被称为延迟
-调度, 并且容量调度程序和公平调度程序都支持它.
-
-Every node manager in a YARN cluster periodically sends a heartbeat request to the
-resource manager—by default, one per second. Heartbeats carry information about the
-node manager’s running containers and the resources available for new containers, so
-each heartbeat is a potential scheduling opportunity for an application to run a container.
-
-YARN 集群中的每个 node manager 周期性地向资源管理器发送心跳请求 - 默认情况下, 每秒一个. 心跳带有关于心脏的信息
-节点管理器的运行容器和可用于新容器的资源等每个心跳都是应用程序运行容器的潜在调度机会.
+YARN 集群中的每个 node manager 周期性地向资源管理器发送心跳请求 - 默认情况下每秒一个. 心跳报文包含关于 node manager 当前运行容器和空闲资源的信息, 每次心跳都是应用程序启动容器的潜在调度机会.
 
 When using delay scheduling, the scheduler doesn’t simply use the first scheduling
 opportunity it receives, but waits for up to a given maximum number of scheduling
@@ -939,7 +910,7 @@ yarn.scheduler.capacity.node-locality-delay to a positive integer representing
 the number of scheduling opportunities that it is prepared to miss before loosening the
 node constraint to match any node in the same rack.
 
-对于容量调度程序, 延迟调度通过设置进行配置 yarn.scheduler.capacity.node-locality-delay 为一个正整数表示
+对于容量优先调度器, 延迟调度通过设置进行配置 yarn.scheduler.capacity.node-locality-delay 为一个正整数表示
 它在放松之前准备放弃的调度机会的数量
 节点约束来匹配同一机架中的任何节点.
 
@@ -951,7 +922,7 @@ before accepting another node in the same rack. There is a corresponding propert
 yarn.scheduler.fair.locality.threshold.rack , for setting the threshold before
 another rack is accepted instead of the one requested.
 
-Fair Scheduler也使用调度机会的数量来确定
+公平调度器也使用调度机会的数量来确定
 延迟, 虽然它表示为群集大小的一部分. 例如, 设置 yarn.scheduler.fair.locality.threshold.node 为0.5意味着调度器
 应该等到集群中的一半节点出现调度机会
 然后再接受同一机架中的另一个节点. 有一个相应的属性, yarn.scheduler.fair.locality.threshold.rack, 用于设置阈值接受另一个货架而不是所请求的货架.
