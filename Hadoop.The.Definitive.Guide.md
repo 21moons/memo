@@ -612,7 +612,7 @@ YARN 是 Hadoop 的集群资源管理系统.
 YARN 提供了一组 API 用于集群资源管理, 但这些 API 通常不会由用户直接调用. 相反, 用户调用更高级别的分布式计算框架提供的 API, 分布式计算框架是基于 YARN 构建, 并隐藏了底层的资源管理细节. 情况如图所示
 图 4-1 显示了一些分布式计算框架 (MapReduce, Spark,等等), 它们使用 YARN 作为集群计算层, 使用 HDFS 和 HBase 作为集群存储层
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/YARN_applications.png)
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Applications_for_yarn.png)
 <p align="center"><font size=2>Figure 4-1. YARN applications</font></p>
 
 图 4-1 所示的框架上还可以有一个应用层, Pig, Hive 和 Crunch 都是基于 MapReduce, Spark 或 Tez(或者全部三个)的处理框架, 并且它们不直接与YARN交互。
