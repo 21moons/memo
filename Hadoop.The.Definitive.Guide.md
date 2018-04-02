@@ -621,7 +621,7 @@ YARN 提供了一组 API 用于集群资源管理, 但这些 API 通常不会由
 
 YARN 通过两种长时间运行的守护进程提供核心服务: 资源管理器(每个群集一个)管理集群中资源的使用, 节点管理器在集群中的所有节点上运行, 用来启动和监视容器. 容器使用一组指定的资源(内存, CPU 等)执行应用程序下发的进程. 取决于 YARN 的配置方式(参见 300 页), 容器可以是一个 Unix 进程或 Linux cgroup. 图 4-2 说明了 YARN 如何上运行一个应用.
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/How_YARN_runs_an_application.png)
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/How_Y_runs_an_application.png)
 
 <p align="center"><font size=2>Figure 4-2. How YARN runs an application</font></p>
 
