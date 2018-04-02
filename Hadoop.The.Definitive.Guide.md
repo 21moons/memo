@@ -728,41 +728,21 @@ FIFO 调度器具有易于理解和不需要配置的优点, 但它不适用于�
 
 #### Capacity Scheduler Configuration
 
-The Capacity Scheduler allows sharing of a Hadoop cluster along organizational lines,
-whereby each organization is allocated a certain capacity of the overall cluster. Each
-organization is set up with a dedicated queue that is configured to use a given fraction
-of the cluster capacity. Queues may be further divided in hierarchical fashion, allowing
-each organization to share its cluster allowance between different groups of users within
-the organization. Within a queue, applications are scheduled using FIFO scheduling.
+容量优先调度器允许在组织层面共享 Hadoop 集群, 为每个组织在集群分配一定的容量. 每个组织拥有一个专用的队列, 限定使用一定百分比的系统容量. 队列可以继续进行层次分割, 允许组织为不同的用户组配置容量. 在单个队列中, 应用程序使用 FIFO 的方式调度.
 
-As we saw in Figure 4-3, a single job does not use more resources than its queue’s
-capacity. However, if there is more than one job in the queue and there are idle resources
-available, then the Capacity Scheduler may allocate the spare resources to jobs in the
-queue, even if that causes the queue’s capacity to be exceeded. 7 This behavior is known
-as queue elasticity.
+正如我们在图 4-3 中看到的, 单个作业用到的资源不会超出队列容量的限制. 但是, 如果队列中有多个作业而系统中又有空闲资源, 那么 Capacity Scheduler 可能会将空闲资源分配给队列中的其他作业, 即使这会导致作业所在队列实际使用的容量越限. 这种操作被称为队列弹性(queue elasticity).
 
-In normal operation, the Capacity Scheduler does not preempt containers by forcibly
-killing them, 8 so if a queue is under capacity due to lack of demand, and then demand
-increases, the queue will only return to capacity as resources are released from other
-queues as containers complete. It is possible to mitigate this by configuring queues with
-a maximum capacity so that they don’t eat into other queues’ capacities too much. This
-is at the cost of queue elasticity, of course, so a reasonable trade-off should be found by
-trial and error.
+在正常操作中, 容量优先调度器不会通过杀掉容器来强行抢占, 因此, 如果队列由于缺乏作业而导致分配的资源空闲, 然后作业数量又增长了, 则只有当容器资源从其他地方释放, 队列中的作业才能开始运行. 通过给队列配置一个最大容量可以缓解这种情况, 以便他们不会吃掉太多其他队列的资源. 当然, 这是以排队弹性为代价的, 所以应该通过反复试错找到一个合理的取舍.
 
-Imagine a queue hierarchy that looks like this:
+想象一个如下图所示的队列层次结构:
 
 root
-├── prod
-└── dev
-     ├── eng
-     └── science
+ ├── prod
+ └── dev
+      ├── eng
+      └── science
 
-The listing in Example 4-1 shows a sample Capacity Scheduler configuration file, called
-capacity-scheduler.xml, for this hierarchy. It defines two queues under the  root queue,
-prod and  dev , which have 40% and 60% of the capacity, respectively. Notice that a par‐
-ticular queue is configured by setting configuration properties of the form
-yarn.scheduler.capacity.<queue-path>.<sub-property> , where  <queue-path> is
-the hierarchical (dotted) path of the queue, such as  root.prod.
+示例 4-1 中的清单显示了一个名为 capacity-scheduler.xml 的容量优先调度器配置文件, 与上面列出的层次结构匹配. 它在 root 队列下定义了两个队列, prod 和 dev, 分别分配 40% 和 60% 的容量. 注意, 指定队列通过设置配置文件的 yarn.scheduler.capacity.<queue-path>.<sub-property> 属性进行配置, 其中 <queue-path> 是队列的分层(虚线)路径, 如 root.prod.
 
 ```xml
 <?xml version="1.0"?>
@@ -800,60 +780,30 @@ the hierarchical (dotted) path of the queue, such as  root.prod.
 
 <p align="center"><font size=2>Example 4-1. A basic configuration file for the Capacity Scheduler</font></p>
 
-As you can see, the  dev queue is further divided into  eng and  science queues of equal
-capacity. So that the  dev queue does not use up all the cluster resources when the  prod
-queue is idle, it has its maximum capacity set to 75%. In other words, the  prod queue
-always has 25% of the cluster available for immediate use. Since no maximum capacities
-have been set for other queues, it’s possible for jobs in the  eng or  science queues to use
-all of the  dev queue’s capacity (up to 75% of the cluster), or indeed for the  prod queue
-to use the entire cluster.
+正如你所看到的, dev 队列容量被进一步平分给 eng 和 science 队列(各占 50%). 这样, dev 队列的最大容量设置为 75%, 所以当 prod 队列空闲时, dev 队列不会用完所有集群资源. 换句话说, prod 队列总是有 25% 的集群可供随时使用. 由于其他队列没有设置最大容量, 这可能会导致 eng 队列和 science 队列用掉 dev 队列的所有资源(集群资源的 75%), 或者导致 prod 队列用掉整个集群的资源.
 
-Beyond configuring queue hierarchies and capacities, there are settings to control the
-maximum number of resources a single user or application can be allocated, how many
-applications can be running at any one time, and ACLs on queues. See the reference
-page for details.
+除了配置队列层次结构和容量外, 还有一些设置可以控制单个用户或应用程序能够分到的最大资源, 有多少个应用程序可以同时运行, 为队列配置 ACL. 详情见参考页面.
 
 * Queue placement
 
-The way that you specify which queue an application is placed in is specific to the
-application. For example, in MapReduce, you set the property  mapreduce.job.queue
-name to the name of the queue you want to use. If the queue does not exist, then you’ll
-get an error at submission time. If no queue is specified, applications will be placed in
-a queue called  default 
+我们可以为应用程序指明放入哪个队列. 例如, 在 MapReduce 中, 您可以通过设置属性 mapreduce.job.queue 来指定要使用的队列的名称. 如果队列不存在, 那么在提交时会返回错误. 如果没有指定队列, 应用程序将被放入一个名为 default 的队列.
 
-For the Capacity Scheduler, the queue name should be the last part
-of the hierarchical name since the full hierarchical name is not rec‐
-ognized. So, for the preceding example configuration,  prod and  eng
-are OK, but  root.dev.eng and  dev.eng do not work.
+对于容量优先调度器, 因为完整的层级名称不能被识别, 队列名应该是完整名称的最后一部分. 因此, 对于前面的示例配置, prod 和 eng 没问题, 但 root.dev.eng 和 dev.eng 不起作用(无法).
 
 #### Fair Scheduler Configuration
 
-The Fair Scheduler attempts to allocate resources so that all running applications get
-the same share of resources. Figure 4-3 showed how fair sharing works for applications
-in the same queue; however, fair sharing actually works between queues, too, as we’ll
-see next.
+公平调度器试图让所有正在运行的应用程序都能获得相同的资源份额. 图 4-3 显示了在同一队列中的应用如何实现公平分享; 然而, 像我们即将看到的一样, 公平分享实际上也适用于队列之间.
 
-**The terms queue and pool are used interchangeably in the context of the Fair Scheduler.**
+**对于公平调度器来说, queue 和 pool 是一回事**
 
-To understand how resources are shared between queues, imagine two users A and B,
-each with their own queue (Figure 4-4). A starts a job, and it is allocated all the resources
-available since there is no demand from B. Then B starts a job while A’s job is still
-running, and after a while each job is using half of the resources, in the way we saw
-earlier. Now if B starts a second job while the other jobs are still running, it will share
-its resources with B’s other job, so each of B’s jobs will have one-fourth of the resources,
-while A’s will continue to have half. The result is that resources are shared fairly between
-users.
+为了理解资源如何在队列之间共享, 假设有两个用户 A 和 B, 每个都有自己的队列(图 4-4). A 启动了一项作业, 并获取了所有的集群资源, 因为当前 B 没有作业. 然后 B 开始工作, 而 A 的作业仍然是运行, 过了一段时间, 每个作业都使用一半资源. 现在, 如果 B 在其他作业仍在运行时启动第二项作业, 它将与 B 的其他作业共享其资源, 所以 B 的每个工作将有占有系统资源的四分之一, 而 A 将继续占有一半. 结果就是在用户之间公平分享资源.
 
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/)
 <p align="center"><font size=2>Figure 4-4. Fair sharing between user queues</font></p>
 
 * Enabling the Fair Scheduler
-The scheduler in use is determined by the setting of  yarn.resourcemanager.schedu
-ler.class . The Capacity Scheduler is used by default (although the Fair Scheduler is
-the default in some Hadoop distributions, such as CDH), but this can be changed by
-setting  yarn.resourcemanager.scheduler.class in yarn-site.xml to the fully qualified
-classname of the scheduler,  org.apache.hadoop.yarn.server.resourcemanag
-er.scheduler.fair.FairScheduler 
+
+调度器通过 yarn.resourcemanager.scheduler.class 来设置. 默认使用容量优先调度器 (虽然某些 Hadoop 发行版默认使用公平调度器,例如 CDH), 但是这可以通过将 yarn-site.xml 中的 yarn.resourcemanager.scheduler.class 设置为调度程序的完整类名来改变, 如 org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler.
 
 * Queue configuration
 
@@ -864,10 +814,22 @@ Scheduler operates as described earlier: each application is placed in a queue n
 after the user and queues are created dynamically when users submit their first appli‐
 cations.
 
+Fair Scheduler使用名为fair-scheduler.xml的分配文件进行配置
+从类路径加载。 （名称可以通过设置属性进行更改
+yarn.scheduler.fair.allocation.file）。在没有分配文件的情况下，Fair
+调度程序如前所述进行操作：每个应用程序都放置在名为的队列中
+在用户提交他们的第一个应用程序之后动态创建用户和队列后，
+阳离子。
+
 Per-queue configuration is specified in the allocation file. This allows configuration of
 hierarchical queues like those supported by the Capacity Scheduler. For example, we
 can define  prod and  dev queues like we did for the Capacity Scheduler using the allo‐
 cation file in Example 4-2.
+
+每队列配置在分配文件中指定。 这允许配置
+像Capacity Scheduler支持的分层队列。 例如，我们
+可以像我们为容量调度程序所做的那样定义prod和dev队列，使用allo-
+例4-2中的阳离子文件。
 
 ```xml
 <?xml version="1.0"?>
@@ -899,6 +861,10 @@ The queue hierarchy is defined using nested  queue elements. All queues are chil
 the  root queue, even if not actually nested in a  root queue element. Here we subdivide
 the  dev queue into a queue called  eng and another called  science 
 
+队列层次使用嵌套的队列元素进行定义。 所有队列都是小孩
+根队列，即使没有实际嵌套在根队列元素中。 在这里我们细分
+开发队列进入一个叫做eng的队列，另一个叫科学
+
 Queues can have weights, which are used in the fair share calculation. In this example,
 the cluster allocation is considered fair when it is divided into a 40:60 proportion be‐
 tween  prod and  dev . The  eng and  science queues do not have weights specified, so they
@@ -907,6 +873,14 @@ example uses numbers that add up to 100 for the sake of simplicity. We could hav
 specified weights of 2 and 3 for the  prod and  dev queues to achieve the same queue
 weighting.
 
+队列可以有权重，用于公平份额计算。 在这个例子中，
+当它被划分成40:60的比例时，集群分配被认为是公平的，
+tween prod和dev。 队长和科学队列没有指定权重，所以他们
+均匀划分。 即使是重量百分比，重量也不尽相同
+为了简单起见，示例使用总计为100的数字。 我们可以有
+为prod和dev队列指定权重2和3以实现相同的队列
+权重。
+
 **When setting weights, remember to consider the default queue and dynamically created queues (such as queues named after users). These are not specified in the allocation file, but still have weight 1.**
 
 Queues can have different scheduling policies. The default policy for queues can be set
@@ -914,11 +888,22 @@ in the top-level  defaultQueueSchedulingPolicy element; if it is omitted, fair s
 uling is used. Despite its name, the Fair Scheduler also supports a FIFO ( fifo ) policy
 on queues, as well as Dominant Resource Fairness ( drf ), described later in the chapter.
 
+队列可以有不同的调度策略。 队列的默认策略可以设置
+在顶层defaultQueueSchedulingPolicy元素中; 如果省略，公平调整 - 
+使用uling。 尽管它的名字，Fair Scheduler也支持FIFO（fifo）策略
+在队列中，以及本章后面所述的主导资源公平（drf）。
+
 The policy for a particular queue can be overridden using the  schedulingPolicy ele‐
 ment for that queue. In this case, the  prod queue uses FIFO scheduling since we want
 each production job to run serially and complete in the shortest possible amount of
 time. Note that fair sharing is still used to divide resources between the  prod and  dev
 queues, as well as between (and within) the  eng and  science queues.
+
+特定队列的策略可以使用schedulingPolicy ele-
+这个队列。 在这种情况下，prod队列使用FIFO调度，因为我们需要
+每个生产工作都要以最短的数量连续运行和完成
+时间。 请注意，公平分享仍然用于在产品和开发之间分配资源
+队列之间，以及之间（和内部）的工程和科学队列。
 
 Although not shown in this allocation file, queues can be configured with minimum
 and maximum resources, and a maximum number of running applications. (See the
@@ -926,6 +911,13 @@ reference page for details.) The minimum resources setting is not a hard limit, 
 is used by the scheduler to prioritize resource allocations. If two queues are below their
 fair share, then the one that is furthest below its minimum is allocated resources first.
 The minimum resource setting is also used for preemption, discussed momentarily.
+
+尽管在此分配文件中未显示，但可以使用最小值配置队列
+和最大的资源以及最大数量的正在运行的应用程序。 （见
+参考页面了解详细信息。）最低资源设置不是硬限制，而是
+被调度器用来优先考虑资源分配。 如果两个队列在他们的下面
+公平分享，那么最低于其最低分配的分配首先被分配资源。
+最低资源设置也用于抢先，暂时讨论。
 
 * Queue placement
 
@@ -938,8 +930,20 @@ to place an application in a queue with the name of the user’s primary Unix gr
 there is no such queue, rather than creating it, the next rule is tried. The  default rule
 is a catch-all and always places the application in the  dev.eng queue.
 
+Fair Scheduler使用基于规则的系统来确定应用程序的哪个队列
+在例4-2中，queuePlacementPolicy元素包含一系列规则，
+依次尝试其中的每一个，直到匹配发生。 规定的第一条规则是，放置一个
+应用程序在它指定的队列中; 如果没有指定，或者指定的队列没有指定
+存在，则规则不匹配，并尝试下一个规则。 primaryGroup规则尝试
+将应用程序放在一个队列中，该队列的名称是用户主Unix组的名称; 如果
+没有这样的队列，而不是创建它，下一个规则被尝试。 默认规则
+是一个全面的方法，并且总是将应用程序放在dev.eng队列中。
+
 The  queuePlacementPolicy can be omitted entirely, in which case the default behavior
 is as if it had been specified with the following:
+
+queuePlacementPolicy可以完全省略，在这种情况下默认行为
+就好像它已经被指定如下：
 
 ```xml
   <queuePlacementPolicy>
@@ -951,9 +955,16 @@ is as if it had been specified with the following:
 In other words, unless the queue is explicitly specified, the user’s name is used for the
 queue, creating it if necessary.
 
+换句话说，除非明确指定队列，否则用户的名字用于
+队列，如有必要创建它。
+
 Another simple queue placement policy is one where all applications are placed in the
 same (default) queue. This allows resources to be shared fairly between applications,
 rather than users. The definition is equivalent to this:
+
+另一个简单的队列放置策略是所有应用程序放置在其中的一个策略
+相同（默认）队列。 这允许资源在应用程序之间公平分享，
+而不是用户。 定义等同于：
 
 ```xml
   <queuePlacementPolicy>
@@ -967,27 +978,53 @@ placed in the default queue rather than a per-user queue. In addition,
 yarn.scheduler.fair.allow-undeclared-pools should be set to  false so that users
 can’t create queues on the fly.
 
+也可以通过设置来设置此策略而不使用分配文件
+yarn.scheduler.fair.user-as-default-queue为false，以使应用程序可以
+放置在默认队列中而不是按用户队列。 此外，
+yarn.scheduler.fair.allow-undeclared-pools应设置为false，以便用户
+不能立即创建队列。
+
 * Preemption
 
 When a job is submitted to an empty queue on a busy cluster, the job cannot start until
 resources free up from jobs that are already running on the cluster. To make the time
 taken for a job to start more predictable, the Fair Scheduler supports preemption.
 
+当作业提交到繁忙集群上的空队列时，作业无法启动，直到
+资源已经从群集上已经运行的作业中释放出来。 为了打发时间
+公平调度程序支持抢占。
+
 Preemption allows the scheduler to kill containers for queues that are running with
 more than their fair share of resources so that the resources can be allocated to a queue
 that is under its fair share. Note that preemption reduces overall cluster efficiency, since
 the terminated containers need to be reexecuted.
+
+抢占允许调度程序杀死正在运行的队列的容器
+超过其公平的资源份额，以便将资源分配到队列中
+这是它的公平份额。 请注意，抢占会降低整体集群效率，因为
+被终止的容器需要重新执行。
 
 Preemption is enabled globally by setting  yarn.scheduler.fair.preemption to  true .
 There are two relevant preemption timeout settings: one for minimum share and one
 for fair share, both specified in seconds. By default, the timeouts are not set, so you need
 to set at least one to allow containers to be preempted.
 
+通过将yarn.scheduler.fair.preemption设置为true来全局启用抢占。
+有两个相关的抢占超时设置：一个用于最小份额和一个
+公平份额，均以秒为单位。 默认情况下，超时没有设置，所以你需要
+设置至少一个以允许容器被抢占。
+
 If a queue waits for as long as its minimum share preemption timeout without receiving
 its minimum guaranteed share, then the scheduler may preempt other containers. The
 default timeout is set for all queues via the  defaultMinSharePreemptionTimeout top-
 level element in the allocation file, and on a per-queue basis by setting the  minShare
 PreemptionTimeout element for a queue.
+
+如果一个队列等待，只要其最小共享抢占超时未收到
+其最小保证份额，则调度程序可以抢占其他容器。该
+通过defaultMinSharePreemptionTimeout顶级设置为所有队列设置默认超时，
+分配文件中的高级元素，并通过设置minShare以每个队列为基础
+PreemptionTimeout元素的队列。
 
 Likewise, if a queue remains below half of its fair share for as long as the fair share
 preemption timeout, then the scheduler may preempt other containers. The default
@@ -996,6 +1033,14 @@ element in the allocation file, and on a per-queue basis by setting  fairSharePr
 tionTimeout on a queue. The threshold may also be changed from its default of 0.5 by
 setting  defaultFairSharePreemptionThreshold and  fairSharePreemptionThres
 hold (per-queue).
+
+同样，如果一个队列的公平份额低于公平份额的一半，
+抢先超时，那么调度器可以抢占其他容器。 默认值
+通过defaultFairSharePreemptionTimeout顶层为所有队列设置超时
+元素放在分配文件中，并通过设置fairSharePreemp以每个队列为基础
+一个队列中的timeoutTimeout。 阈值也可以从其默认值0.5改变为
+设置defaultFairSharePreemptionThreshold和fairSharePreemptionThres
+保持（每队列）。
 
 #### Delay Scheduling
 
@@ -1008,20 +1053,44 @@ can dramatically increase the chances of being allocated a container on the requ
 node, and therefore increase the efficiency of the cluster. This feature is called delay
 scheduling, and it is supported by both the Capacity Scheduler and the Fair Scheduler.
 
+所有YARN调度程序都试图遵守本地请求。 在繁忙的集群上，如果应用程序 - 
+阳离子请求一个特定的节点，很有可能其他容器被运行 - 
+在请求的时候在它上面。 显而易见的行动是立即
+放松本地要求并在同一机架上分配容器。 但是，它
+在实践中观察到等待一小段时间（不超过几秒）
+可以大大增加按要求分配容器的机会
+节点，并因此提高集群的效率。 这个功能被称为延迟
+调度，并且容量调度程序和公平调度程序都支持它。
+
 Every node manager in a YARN cluster periodically sends a heartbeat request to the
 resource manager—by default, one per second. Heartbeats carry information about the
 node manager’s running containers and the resources available for new containers, so
 each heartbeat is a potential scheduling opportunity for an application to run a container.
+
+YARN群集中的每个节点管理器周期性地向该节点发送心跳请求
+资源管理器 - 默认情况下，每秒一个。 心跳带有关于心脏的信息
+节点管理器的运行容器和可用于新容器的资源等
+每个心跳都是应用程序运行容器的潜在调度机会。
 
 When using delay scheduling, the scheduler doesn’t simply use the first scheduling
 opportunity it receives, but waits for up to a given maximum number of scheduling
 opportunities to occur before loosening the locality constraint and taking the next
 scheduling opportunity.
 
+在使用延迟调度时，调度程序不会简单地使用第一个调度
+它收到的机会，但等待达到给定的最大数量的调度
+在放松局部约束并采取下一步之前可能发生的机会
+调度机会。
+
 For the Capacity Scheduler, delay scheduling is configured by setting
 yarn.scheduler.capacity.node-locality-delay to a positive integer representing
 the number of scheduling opportunities that it is prepared to miss before loosening the
 node constraint to match any node in the same rack.
+
+对于容量调度程序，延迟调度通过设置进行配置
+yarn.scheduler.capacity.node-locality-delay为一个正整数表示
+它在放松之前准备放弃的调度机会的数量
+节点约束来匹配同一机架中的任何节点。
 
 The Fair Scheduler also uses the number of scheduling opportunities to determine the
 delay, although it is expressed as a proportion of the cluster size. For example, setting
@@ -1030,6 +1099,14 @@ should wait until half of the nodes in the cluster have presented scheduling opp
 before accepting another node in the same rack. There is a corresponding property,
 yarn.scheduler.fair.locality.threshold.rack , for setting the threshold before
 another rack is accepted instead of the one requested.
+
+Fair Scheduler也使用调度机会的数量来确定
+延迟，虽然它表示为群集大小的一部分。 例如，设置
+yarn.scheduler.fair.locality.threshold.node为0.5意味着调度器
+应该等到集群中的一半节点出现调度机会
+然后再接受同一机架中的另一个节点。 有一个相应的属性，
+yarn.scheduler.fair.locality.threshold.rack，用于设置阈值
+接受另一个货架而不是所请求的货架。
 
 #### Dominant Resource Fairness
 
@@ -1040,10 +1117,22 @@ cations. However, when there are multiple resource types in play, things get mor
 plicated. If one user’s application requires lots of CPU but little memory and the other’s
 requires little CPU and lots of memory, how are these two applications compared?
 
+当只有一种资源类型正在调度时，例如内存，那么
+能力或公平的概念很容易确定。 如果两个用户在运行应用程序，
+您可以测量每个用于比较两个应用程序的内存量，
+阳离子。 但是，当有多种资源类型参与时，情况会变得更加复杂，
+折襞。 如果一个用户的应用程序需要大量CPU但内存很少，另一个则需要
+需要很少的CPU和大量的内存，这两个应用程序如何比较？
+
 The way that the schedulers in YARN address this problem is to look at each user’s
 dominant resource and use it as a measure of the cluster usage. This approach is called
 Dominant Resource Fairness, or DRF for short. 9 The idea is best illustrated with a simple
 example.
+
+YARN中的调度程序解决这个问题的方式是查看每个用户的
+主导资源并将其用作衡量集群使用情况。 这种方法被称为
+主导资源公平，简称DRF。 9这个想法最好用一个简单的例子来说明
+例。
 
 Imagine a cluster with a total of 100 CPUs and 10 TB of memory. Application A requests
 containers of (2 CPUs, 300 GB), and application B requests containers of (6 CPUs, 100
@@ -1052,13 +1141,28 @@ GB). A’s request is (2%, 3%) of the cluster, so memory is dominant since its p
 container requests are twice as big in the dominant resource (6% versus 3%), it will be
 allocated half as many containers under fair sharing.
 
+想象一下总共有100个CPU和10 TB内存的集群。 应用程序A请求
+（2个CPU，300 GB）的容器和应用程序B请求容器（6个CPU，100个容器）
+GB）。 A的请求是集群的（2％，3％），所以内存占据了主导地位，因为它的比例
+（3％）大于CPU（2％）。 B的请求是（6％，1％），所以CPU占主导地位。 因为B的
+容器的请求量占统治地位的资源要大一倍（6％比3％），它将是
+在公平分享下分配了一半的容器。
+
 By default DRF is not used, so during resource calculations, only memory is considered
 and CPU is ignored. The Capacity Scheduler can be configured to use DRF by setting
 yarn.scheduler.capacity.resource-calculator to  org.apache.hadoop.yarn
 .util.resource.DominantResourceCalculator in capacity-scheduler.xml.
 
+默认情况下不使用DRF，所以在资源计算时只考虑内存
+并且CPU被忽略。 Capacity Scheduler可以配置为通过设置使用DRF
+yarn.scheduler.capacity.resource-calculator转换为org.apache.hadoop.yarn
+.util.resource.DominantResourceCalculator在capacity-scheduler.xml中。
+
 For the Fair Scheduler, DRF can be enabled by setting the top-level element  default
-QueueSchedulingPolicy in the allocation file to  drf 
+QueueSchedulingPolicy in the allocation file to  drf
+
+对于Fair Scheduler，可以通过设置顶层元素的默认值来启用DRF
+将分配文件中的QueueSchedulingPolicy分配给drf
 <br>
 
 ## CHAPTER 5 Hadoop I/O
@@ -1082,6 +1186,12 @@ it a small chance of introducing errors into the data that it is reading or writ
 the volumes of data flowing through the system are as large as the ones Hadoop is capable
 of handling, the chance of data corruption occurring is high.
 
+Hadoop的用户正确地期望在存储或数据存储期间不会有数据丢失或损坏
+处理。 但是，因为磁盘或网络上的每个I / O操作都在进行
+那么将错误引入正在读取或写入的数据的可能性很小
+流经系统的数据量与Hadoop的能力一样大
+的处理，发生数据损坏的可能性很高。
+
 The usual way of detecting corrupted data is by computing a checksum for the data when
 it first enters the system, and again whenever it is transmitted across a channel that is
 unreliable and hence capable of corrupting the data. The data is deemed to be corrupt
@@ -1091,10 +1201,24 @@ for not using low-end hardware; in particular, be sure to use ECC memory.) Note 
 it is possible that it’s the checksum that is corrupt, not the data, but this is very unlikely,
 because the checksum is much smaller than the data.
 
+检测损坏数据的常用方法是在计算数据时校验和
+它首先进入系统，然后再一次通过一个通道传输
+不可靠，因此能够破坏数据。 数据被认为是腐败的
+如果新生成的校验和不完全匹配原始。 这种技术
+没有提供任何修复数据的方法 - 它仅仅是错误检测。 （这是一个原因
+不使用低端硬件; 特别是一定要使用ECC内存。）注意
+它可能是腐败的校验和，而不是数据，但这是不太可能的，
+因为校验和比数据小得多。
+
 A commonly used error-detecting code is CRC-32 (32-bit cyclic redundancy check),
 which computes a 32-bit integer checksum for input of any size. CRC-32 is used for
 checksumming in Hadoop’s  ChecksumFileSystem , while HDFS uses a more efficient
 variant called CRC-32C.
+
+常用的错误检测代码是CRC-32（32位循环冗余校验），
+它计算任意大小输入的32位整数校验和。 CRC-32用于
+校验和在Hadoop的ChecksumFileSystem中进行，而HDFS使用更高效
+称为CRC-32C的变种。
 
 #### Data Integrity in HDFS
 
@@ -1102,6 +1226,11 @@ HDFS transparently checksums all data written to it and by default verifies chec
 when reading data. A separate checksum is created for every  dfs.bytes-per-
 checksum bytes of data. The default is 512 bytes, and because a CRC-32C checksum is
 4 bytes long, the storage overhead is less than 1%.
+
+HDFS透明地校验所有写入的数据，默认情况下验证校验和
+在阅读数据时。 每个dfs.bytes-per-
+校验和字节的数据。 默认值是512字节，因为CRC-32C校验和是
+4个字节长，存储开销小于 1%.
 
 Datanodes are responsible for verifying the data they receive before storing the data and
 its checksum. This applies to data that they receive from clients and from other
@@ -1111,17 +1240,37 @@ If the datanode detects an error, the client receives a subclass of  IOException
 should handle in an application-specific manner (for example, by retrying the opera‐
 tion).
 
+Datanodes负责验证他们在存储数据和数据之前收到的数据
+它的校验和。 这适用于从客户端和其他客户端收到的数据
+datanodes在复制期间。 客户端写数据将其发送到datanodes管道
+（如第3章所述），并且管道中的最后一个datanode验证校验和。
+如果datanode检测到错误，客户端会收到它的IOException的子类
+应该以特定于应用程序的方式处理（例如，通过重试opera-
+荐）。
+
 When clients read data from datanodes, they verify checksums as well, comparing them
 with the ones stored at the datanodes. Each datanode keeps a persistent log of checksum
 verifications, so it knows the last time each of its blocks was verified. When a client
 successfully verifies a block, it tells the datanode, which updates its log. Keeping statistics
 such as these is valuable in detecting bad disks.
 
+当客户端从datanodes读取数据时，他们也会验证校验和，并将它们进行比较
+与那些存储在datanode中的。 每个datanode保持一个持久的校验和日志
+验证，所以它知道每个块的最后一次验证。 当一个客户
+成功验证块，它会通知datanode，它会更新其日志。 保持统计
+例如这些对于检测错误的磁盘非常有用。
+
 In addition to block verification on client reads, each datanode runs a  DataBlockScan
 ner in a background thread that periodically verifies all the blocks stored on the data‐
 node. This is to guard against corruption due to “bit rot” in the physical storage media.
 See “Datanode block scanner” on page 328 for details on how to access the scanner
 reports.
+
+除了对客户端读取进行块验证之外，每个datanode还运行DataBlockScan
+在后台线程中定期验证数据存储区中存储的所有数据块，
+节点。 这是为了防止由于物理存储介质中的“位元腐烂”而造成的腐败。
+有关如何访问扫描仪的详细信息，请参阅第328页上的“Datanode块扫描器”
+报告。
 
 Because HDFS stores replicas of blocks, it can “heal” corrupted blocks by copying one
 of the good replicas to produce a new, uncorrupt replica. The way this works is that if
@@ -1132,6 +1281,15 @@ or try to copy this replica to another datanode. It then schedules a copy of the
 be replicated on another datanode, so its replication factor is back at the expected level.
 Once this has happened, the corrupt replica is deleted.
 
+由于HDFS存储块的副本，因此可以通过复制一个块来“修复”损坏的块
+的副本制作一个新的，无损的复制品。 这个工作的方式是，如果
+客户端在读取块时会检测到错误，并报告坏块和数据节点
+它在抛出ChecksumException之前试图读取namenode。该
+namenode将块副本标记为已损坏，因此它不会将更多客户端指向它
+或尝试将此副本复制到另一个datanode。 然后它会将该块的副本安排到
+被复制到另一个datanode上，所以它的复制因子又回到了预期的水平。
+一旦发生这种情况，损坏的副本将被删除。
+
 It is possible to disable verification of checksums by passing  false to the  setVerify
 Checksum() method on  FileSystem before using the  open() method to read a file. The
 same effect is possible from the shell by using the  -ignoreCrc option with the  -get or
@@ -1139,9 +1297,20 @@ the equivalent  -copyToLocal command. This feature is useful if you have a corru
 that you want to inspect so you can decide what to do with it. For example, you might
 want to see whether it can be salvaged before you delete it.
 
+可以通过将false传递给setVerify来禁用校验和验证
+在使用open（）方法读取文件之前，使用FileSystem上的Checksum（）方法。该
+通过在-get or上使用-ignoreCrc选项，可以从shell获得相同的效果
+等效的-copyToLocal命令。 如果您有损坏的文件，此功能很有用
+你想检查，所以你可以决定如何处理它。 例如，你可能会
+想要查看它是否可以在删除之前进行抢救。
+
 You can find a file’s checksum with  hadoop fs -checksum . This is useful to check
 whether two files in HDFS have the same contents—something that distcp does, for
 example (see “Parallel Copying with distcp” on page 76).
+
+你可以用hadoop fs -checksum找到一个文件的校验和。 这对检查很有用
+HDFS中的两个文件是否具有相同的内容 - distcp所做的内容
+示例（请参阅第72页上的“使用distcp进行并行复制”）。
 
 #### LocalFileSystem
 
@@ -1152,7 +1321,16 @@ file. The chunk size is controlled by the  file.bytes-per-checksum property, whi
 defaults to 512 bytes. The chunk size is stored as metadata in the .crc file, so the file can
 be read back correctly even if the setting for the chunk size has changed. Checksums
 are verified when the file is read, and if an error is detected,  LocalFileSystem throws
-a  ChecksumException 
+a  ChecksumException
+
+Hadoop LocalFileSystem执行客户端校验和。 这意味着
+当你编写一个名为filename的文件时，文件系统客户端透明地创建一个隐藏文件
+文件，.filename.crc，在同一目录中包含每个块的校验和
+文件。 块的大小由file.bytes-per-checksum属性来控制
+默认为512字节。 块大小作为元数据存储在.crc文件中，因此文件可以
+即使块大小设置已更改，也可以正确读回。校验
+在文件被读取时被验证，并且如果检测到错误，则LocalFileSystem抛出
+一个ChecksumException
 
 Checksums are fairly cheap to compute (in Java, they are implemented in native code),
 typically adding a few percent overhead to the time to read or write a file. For most
@@ -1164,6 +1342,17 @@ mentation for  file URIs by setting the property  fs.file.impl to the value
 org.apache.hadoop.fs.RawLocalFileSystem . Alternatively, you can directly create a
 RawLocalFileSystem instance, which may be useful if you want to disable checksum
 verification for only some reads, for example:
+
+校验和计算起来相当便宜（在Java中，它们是用本地代码实现的），
+通常在读取或写入文件时增加几个百分比的开销。 对于大多数
+应用程序，这是支付数据完整性的可接受的价格。 然而，这是可能的
+禁用校验和，这通常在底层文件系统支持时完成
+校验和本身。 这是通过使用RawLocalFileSystem来代替的
+LocalFileSystem。 要在应用程序中全局执行此操作，只需重新映射执行程序即可，
+通过将属性fs.file.impl设置为该值来验证文件URI
+org.apache.hadoop.fs.RawLocalFileSystem。 或者，您可以直接创建一个
+RawLocalFileSystem实例，如果您想禁用校验和，这可能很有用
+仅对一些读取进行验证，例如：
 
 ```java
   Configuration conf = ...
@@ -1177,6 +1366,10 @@ LocalFileSystem uses  ChecksumFileSystem to do its work, and this class makes it
 to add checksumming to other (nonchecksummed) filesystems, as  Checksum
 FileSystem is just a wrapper around  FileSystem . The general idiom is as follows:
 
+LocalFileSystem使用ChecksumFileSystem来完成它的工作，而这个类使得它变得容易
+将校验和添加到其他（非被检查的）文件系统，如Checksum
+FileSystem只是FileSystem的一个包装。 一般习语如下：
+
 ```java
   FileSystem rawFs = ...
   FileSystem checksummedFs = new ChecksumFileSystem(rawFs);
@@ -1187,11 +1380,22 @@ getRawFileSystem() method on  ChecksumFileSystem .  ChecksumFileSystem has a few
 more useful methods for working with checksums, such as  getChecksumFile() for
 getting the path of a checksum file for any file. Check the documentation for the others.
 
+底层文件系统被称为原始文件系统，可以使用
+ChecksumFileSystem上的getRawFileSystem（）方法。 ChecksumFileSystem有几个
+更多有用的方法来处理校验和，例如getChecksumFile（）for
+获取任何文件的校验和文件的路径。 检查其他文档。
+
 If an error is detected by  ChecksumFileSystem when reading a file, it will call its
 reportChecksumFailure() method. The default implementation does nothing, but
 LocalFileSystem moves the offending file and its checksum to a side directory on the
 same device called bad_files. Administrators should periodically check for these bad
 files and take action on them.
+
+如果ChecksumFileSystem在读取文件时检测到错误，则会调用它
+reportChecksumFailure（）方法。 默认实现什么都不做，但是
+LocalFileSystem将有问题的文件及其校验和移动到一个侧面目录
+相同的设备称为bad_files。 管理员应定期检查这些不良内容
+文件并对其采取行动。
 
 ### Compression
 
