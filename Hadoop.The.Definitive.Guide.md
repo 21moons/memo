@@ -807,29 +807,9 @@ root
 
 * Queue configuration
 
-The Fair Scheduler is configured using an allocation file named fair-scheduler.xml that
-is loaded from the classpath. (The name can be changed by setting the property
-yarn.scheduler.fair.allocation.file .) In the absence of an allocation file, the Fair
-Scheduler operates as described earlier: each application is placed in a queue named
-after the user and queues are created dynamically when users submit their first appli‐
-cations.
+公平调度器使用类路径下名为 fair-scheduler.xml 的文件来配置.(配置文件的名称可以通过设置属性 yarn.scheduler.fair.allocation.file 进行更改). 在没有配置文件的情况下, 公平调度器如前所述工作: 所有应用程序都放置在一个的队列, 这个队列是在用户提交第一个应用后动态创建的.
 
-Fair Scheduler使用名为fair-scheduler.xml的分配文件进行配置
-从类路径加载。 （名称可以通过设置属性进行更改
-yarn.scheduler.fair.allocation.file）。在没有分配文件的情况下，Fair
-调度程序如前所述进行操作：每个应用程序都放置在名为的队列中
-在用户提交他们的第一个应用程序之后动态创建用户和队列后，
-阳离子。
-
-Per-queue configuration is specified in the allocation file. This allows configuration of
-hierarchical queues like those supported by the Capacity Scheduler. For example, we
-can define  prod and  dev queues like we did for the Capacity Scheduler using the allo‐
-cation file in Example 4-2.
-
-每队列配置在分配文件中指定。 这允许配置
-像Capacity Scheduler支持的分层队列。 例如，我们
-可以像我们为容量调度程序所做的那样定义prod和dev队列，使用allo-
-例4-2中的阳离子文件。
+配置文件支持按队列进行配置. 这允许配置容量优先调度器支持的分层队列. 例如, 我们可以使用例 4-2 中的配置文件, 像我们为容量调度器所做的那样, 单独定义定义 prod 和 dev 队列.
 
 ```xml
 <?xml version="1.0"?>
@@ -857,93 +837,23 @@ cation file in Example 4-2.
 
 <p align="center"><font size=2>Example 4-2. An allocation file for the Fair Scheduler</font></p>
 
-The queue hierarchy is defined using nested  queue elements. All queues are children of
-the  root queue, even if not actually nested in a  root queue element. Here we subdivide
-the  dev queue into a queue called  eng and another called  science 
+配置文件中使用嵌套的队列元素定义队列层次. 所有队列都是 root 队列的后代, 即使 root 队列并没有在配置文件中列出来. 在这里我们将 dev 队列细分为 eng 队列和 science 队列.
 
-队列层次使用嵌套的队列元素进行定义。 所有队列都是小孩
-根队列，即使没有实际嵌套在根队列元素中。 在这里我们细分
-开发队列进入一个叫做eng的队列，另一个叫科学
+队列可以有权重, 用于公平分配的份额计算. 在上面的例子中, 当 prod 和 dev 之间的比例划分为40:60时, 集群分配被认为是公平的. eng 和 science 队列没有指定权重, 所以他们平分资源. 但是权重与百分比不同, 为了便于理解, 示例中使用和为 100 的数字. 但我们也可以为 prod 和 dev 队列分别指定 2 和 3 的权重以实现相同的分配.
 
-Queues can have weights, which are used in the fair share calculation. In this example,
-the cluster allocation is considered fair when it is divided into a 40:60 proportion be‐
-tween  prod and  dev . The  eng and  science queues do not have weights specified, so they
-are divided evenly. Weights are not quite the same as percentages, even though the
-example uses numbers that add up to 100 for the sake of simplicity. We could have
-specified weights of 2 and 3 for the  prod and  dev queues to achieve the same queue
-weighting.
+**在设置权重时, 别忘了考虑默认队列和动态创建的队列(例如以用户命名的队列). 这些没有在分配文件中指定, 但它们的权重仍然为 1.**
 
-队列可以有权重，用于公平份额计算。 在这个例子中，
-当它被划分成40:60的比例时，集群分配被认为是公平的，
-tween prod和dev。 队长和科学队列没有指定权重，所以他们
-均匀划分。 即使是重量百分比，重量也不尽相同
-为了简单起见，示例使用总计为100的数字。 我们可以有
-为prod和dev队列指定权重2和3以实现相同的队列
-权重。
+队列之间的调度策略是可以选择的. 全局的默认策略可以在顶层元素 defaultQueueSchedulingPolicy 中设置; 如果省略, 将会使用公平调度器. 尽管它的名字是公平, Fair Scheduler 也支持在队列内部实行 FIFO 策略, 以及本章后面所述的主导资源公平(Dominant Resource Fairness).
 
-**When setting weights, remember to consider the default queue and dynamically created queues (such as queues named after users). These are not specified in the allocation file, but still have weight 1.**
+可以在队列元素中设置 schedulingPolicy 元素来覆盖全局配置, 为指定队列设置策略. 在这个例子中, 因为我们需要生产性作业串行运行并在最短的时间完成, prod 队列选择使用 FIFO 调度. 请注意, prod 队列和 dev 队列之间依然公平分配资源, eng 和 science 队列之间也是一样.
 
-Queues can have different scheduling policies. The default policy for queues can be set
-in the top-level  defaultQueueSchedulingPolicy element; if it is omitted, fair sched‐
-uling is used. Despite its name, the Fair Scheduler also supports a FIFO ( fifo ) policy
-on queues, as well as Dominant Resource Fairness ( drf ), described later in the chapter.
-
-队列可以有不同的调度策略。 队列的默认策略可以设置
-在顶层defaultQueueSchedulingPolicy元素中; 如果省略，公平调整 - 
-使用uling。 尽管它的名字，Fair Scheduler也支持FIFO（fifo）策略
-在队列中，以及本章后面所述的主导资源公平（drf）。
-
-The policy for a particular queue can be overridden using the  schedulingPolicy ele‐
-ment for that queue. In this case, the  prod queue uses FIFO scheduling since we want
-each production job to run serially and complete in the shortest possible amount of
-time. Note that fair sharing is still used to divide resources between the  prod and  dev
-queues, as well as between (and within) the  eng and  science queues.
-
-特定队列的策略可以使用schedulingPolicy ele-
-这个队列。 在这种情况下，prod队列使用FIFO调度，因为我们需要
-每个生产工作都要以最短的数量连续运行和完成
-时间。 请注意，公平分享仍然用于在产品和开发之间分配资源
-队列之间，以及之间（和内部）的工程和科学队列。
-
-Although not shown in this allocation file, queues can be configured with minimum
-and maximum resources, and a maximum number of running applications. (See the
-reference page for details.) The minimum resources setting is not a hard limit, but rather
-is used by the scheduler to prioritize resource allocations. If two queues are below their
-fair share, then the one that is furthest below its minimum is allocated resources first.
-The minimum resource setting is also used for preemption, discussed momentarily.
-
-尽管在此分配文件中未显示，但可以使用最小值配置队列
-和最大的资源以及最大数量的正在运行的应用程序。 （见
-参考页面了解详细信息。）最低资源设置不是硬限制，而是
-被调度器用来优先考虑资源分配。 如果两个队列在他们的下面
-公平分享，那么最低于其最低分配的分配首先被分配资源。
-最低资源设置也用于抢先，暂时讨论。
+尽管在此配置文件中未显示, 队列支持最少资源配置, 最大资源配置, 以及配置同时运行应用的最大数量. 最低资源设置不是硬性限制, 而是供调度器决定资源分配的优先权. 假设同时有两个队列当前资源低于分配资源, 那么低于其最低资源设置更多的队列优先获得资源. 最少资源设置也用于抢占.
 
 * Queue placement
 
-The Fair Scheduler uses a rules-based system to determine which queue an application
-is placed in. In Example 4-2, the  queuePlacementPolicy element contains a list of rules,
-each of which is tried in turn until a match occurs. The first rule,  specified , places an
-application in the queue it specified; if none is specified, or if the specified queue doesn’t
-exist, then the rule doesn’t match and the next rule is tried. The  primaryGroup rule tries
-to place an application in a queue with the name of the user’s primary Unix group; if
-there is no such queue, rather than creating it, the next rule is tried. The  default rule
-is a catch-all and always places the application in the  dev.eng queue.
+公平调度器使用基于规则的系统来确定应用程序应该放到哪个队列. 在例 4-2 中, queuePlacementPolicy 元素包含一系列规则, 调度器依次尝试其中的每一个, 直到匹配成功. 第一条规则是将应用程序放到它指定的队列中; 如果没有指定队列, 或者指定的队列不存在, 则规则匹配失败, 继续尝试下一个规则. primaryGroup 规则尝试将应用程序放在以用户所在 unix 组命名的队列中; 如果没有这样的队列, 将尝试匹配下一个规则. 默认规则是一个万能的规则(肯定能匹配上), 总是将应用程序放在 dev.eng 队列.
 
-Fair Scheduler使用基于规则的系统来确定应用程序的哪个队列
-在例4-2中，queuePlacementPolicy元素包含一系列规则，
-依次尝试其中的每一个，直到匹配发生。 规定的第一条规则是，放置一个
-应用程序在它指定的队列中; 如果没有指定，或者指定的队列没有指定
-存在，则规则不匹配，并尝试下一个规则。 primaryGroup规则尝试
-将应用程序放在一个队列中，该队列的名称是用户主Unix组的名称; 如果
-没有这样的队列，而不是创建它，下一个规则被尝试。 默认规则
-是一个全面的方法，并且总是将应用程序放在dev.eng队列中。
-
-The  queuePlacementPolicy can be omitted entirely, in which case the default behavior
-is as if it had been specified with the following:
-
-queuePlacementPolicy可以完全省略，在这种情况下默认行为
-就好像它已经被指定如下：
+queuePlacementPolicy 可以完全省略, 在这种情况下默认行为如下:
 
 ```xml
   <queuePlacementPolicy>
@@ -952,19 +862,9 @@ queuePlacementPolicy可以完全省略，在这种情况下默认行为
   </queuePlacementPolicy>
 ```
 
-In other words, unless the queue is explicitly specified, the user’s name is used for the
-queue, creating it if necessary.
+换句话说, 除非明确指定队列, 否则放在以用户名命名的队列, 如有该队列不存在则创建它.
 
-换句话说，除非明确指定队列，否则用户的名字用于
-队列，如有必要创建它。
-
-Another simple queue placement policy is one where all applications are placed in the
-same (default) queue. This allows resources to be shared fairly between applications,
-rather than users. The definition is equivalent to this:
-
-另一个简单的队列放置策略是所有应用程序放置在其中的一个策略
-相同（默认）队列。 这允许资源在应用程序之间公平分享，
-而不是用户。 定义等同于：
+另一个简单的队列放置策略是所有应用程序都放在相同(默认)队列. 这允许资源在应用程序之间公平分享, 而不是用户之间. 定义等同于:
 
 ```xml
   <queuePlacementPolicy>
@@ -972,47 +872,20 @@ rather than users. The definition is equivalent to this:
   </queuePlacementPolicy>
 ```
 
-It’s also possible to set this policy without using an allocation file, by setting
-yarn.scheduler.fair.user-as-default-queue to  false so that applications will be
-placed in the default queue rather than a per-user queue. In addition,
-yarn.scheduler.fair.allow-undeclared-pools should be set to  false so that users
-can’t create queues on the fly.
-
-也可以通过设置来设置此策略而不使用分配文件
-yarn.scheduler.fair.user-as-default-queue为false，以使应用程序可以
-放置在默认队列中而不是按用户队列。 此外，
-yarn.scheduler.fair.allow-undeclared-pools应设置为false，以便用户
-不能立即创建队列。
+也可以不使用配置文件, 通过设置 yarn.scheduler.fair.user-as-default-queue 为 false, 应用程序将放置在默认队列中而不是按用户命名的队列. 此外, yarn.scheduler.fair.allow-undeclared-pools 应设置为 false, 以便用户不能即时创建队列.
 
 * Preemption
 
-When a job is submitted to an empty queue on a busy cluster, the job cannot start until
-resources free up from jobs that are already running on the cluster. To make the time
-taken for a job to start more predictable, the Fair Scheduler supports preemption.
+当作业提交到繁忙集群上的空队列时, 在资源从集群上已经运行的作业中释放出来之前, 作业无法启动. 为了使工作开始的时间更加可确定, 公平调度器支持抢占.
 
-当作业提交到繁忙集群上的空队列时，作业无法启动，直到
-资源已经从群集上已经运行的作业中释放出来。 为了打发时间
-公平调度程序支持抢占。
+抢占允许调度程序杀死占用超限资源队列所属的容器, 以便将资源分配给当前资源低于其分配资源的队列. 请注意, 抢占会降低整体集群的整体效率, 因为被终止的容器需要重新运行.
 
-Preemption allows the scheduler to kill containers for queues that are running with
-more than their fair share of resources so that the resources can be allocated to a queue
-that is under its fair share. Note that preemption reduces overall cluster efficiency, since
-the terminated containers need to be reexecuted.
 
-抢占允许调度程序杀死正在运行的队列的容器
-超过其公平的资源份额，以便将资源分配到队列中
-这是它的公平份额。 请注意，抢占会降低整体集群效率，因为
-被终止的容器需要重新执行。
-
-Preemption is enabled globally by setting  yarn.scheduler.fair.preemption to  true .
 There are two relevant preemption timeout settings: one for minimum share and one
 for fair share, both specified in seconds. By default, the timeouts are not set, so you need
 to set at least one to allow containers to be preempted.
 
-通过将yarn.scheduler.fair.preemption设置为true来全局启用抢占。
-有两个相关的抢占超时设置：一个用于最小份额和一个
-公平份额，均以秒为单位。 默认情况下，超时没有设置，所以你需要
-设置至少一个以允许容器被抢占。
+通过将 yarn.scheduler.fair.preemption 设置为 true 来全局启用抢占. 有两个相关的抢占超时设置: 一个用于最小份额, 一个用于公平份额, 都以秒为单位. 默认情况下超时不设置, 所以为了开启容器抢占, 你需要至少设置其中的一个.
 
 If a queue waits for as long as its minimum share preemption timeout without receiving
 its minimum guaranteed share, then the scheduler may preempt other containers. The
@@ -1020,11 +893,11 @@ default timeout is set for all queues via the  defaultMinSharePreemptionTimeout 
 level element in the allocation file, and on a per-queue basis by setting the  minShare
 PreemptionTimeout element for a queue.
 
-如果一个队列等待，只要其最小共享抢占超时未收到
-其最小保证份额，则调度程序可以抢占其他容器。该
-通过defaultMinSharePreemptionTimeout顶级设置为所有队列设置默认超时，
-分配文件中的高级元素，并通过设置minShare以每个队列为基础
-PreemptionTimeout元素的队列。
+如果一个队列等待, 只要其最小共享抢占超时未收到
+其最小保证份额, 则调度程序可以抢占其他容器. 该
+通过 defaultMinSharePreemptionTimeout 顶级设置为所有队列设置默认超时, 
+分配文件中的高级元素, 并通过设置minShare以每个队列为基础
+PreemptionTimeout元素的队列.
 
 Likewise, if a queue remains below half of its fair share for as long as the fair share
 preemption timeout, then the scheduler may preempt other containers. The default
@@ -1034,13 +907,10 @@ tionTimeout on a queue. The threshold may also be changed from its default of 0.
 setting  defaultFairSharePreemptionThreshold and  fairSharePreemptionThres
 hold (per-queue).
 
-同样，如果一个队列的公平份额低于公平份额的一半，
-抢先超时，那么调度器可以抢占其他容器。 默认值
-通过defaultFairSharePreemptionTimeout顶层为所有队列设置超时
-元素放在分配文件中，并通过设置fairSharePreemp以每个队列为基础
-一个队列中的timeoutTimeout。 阈值也可以从其默认值0.5改变为
-设置defaultFairSharePreemptionThreshold和fairSharePreemptionThres
-保持（每队列）。
+同样, 如果一个队列的公平份额低于公平份额的一半, 抢占超时, 那么调度器可以抢占其他容器. 默认值
+通过 defaultFairSharePreemptionTimeout 顶层为所有队列设置超时元素放在分配文件中, 并通过设置 fairSharePreemptionTimeout 以每个队列为基础
+一个队列中的. 阈值也可以从其默认值0.5改变为
+设置 defaultFairSharePreemptionThreshold 和 fairSharePreemptionThres 保持(每队列).
 
 #### Delay Scheduling
 
@@ -1053,44 +923,40 @@ can dramatically increase the chances of being allocated a container on the requ
 node, and therefore increase the efficiency of the cluster. This feature is called delay
 scheduling, and it is supported by both the Capacity Scheduler and the Fair Scheduler.
 
-所有YARN调度程序都试图遵守本地请求。 在繁忙的集群上，如果应用程序 - 
-阳离子请求一个特定的节点，很有可能其他容器被运行 - 
-在请求的时候在它上面。 显而易见的行动是立即
-放松本地要求并在同一机架上分配容器。 但是，它
-在实践中观察到等待一小段时间（不超过几秒）
+所有 YARN 调度程序都试图遵守本地请求. 在繁忙的集群上, 如果应用程序请求一个特定的节点, 很有可能其他容器被运行 - 
+在请求的时候在它上面. 显而易见的行动是立即
+放松本地要求并在同一机架上分配容器. 但是, 它
+在实践中观察到等待一小段时间(不超过几秒)
 可以大大增加按要求分配容器的机会
-节点，并因此提高集群的效率。 这个功能被称为延迟
-调度，并且容量调度程序和公平调度程序都支持它。
+节点, 并因此提高集群的效率. 这个功能被称为延迟
+调度, 并且容量调度程序和公平调度程序都支持它.
 
 Every node manager in a YARN cluster periodically sends a heartbeat request to the
 resource manager—by default, one per second. Heartbeats carry information about the
 node manager’s running containers and the resources available for new containers, so
 each heartbeat is a potential scheduling opportunity for an application to run a container.
 
-YARN群集中的每个节点管理器周期性地向该节点发送心跳请求
-资源管理器 - 默认情况下，每秒一个。 心跳带有关于心脏的信息
-节点管理器的运行容器和可用于新容器的资源等
-每个心跳都是应用程序运行容器的潜在调度机会。
+YARN 集群中的每个 node manager 周期性地向资源管理器发送心跳请求 - 默认情况下, 每秒一个. 心跳带有关于心脏的信息
+节点管理器的运行容器和可用于新容器的资源等每个心跳都是应用程序运行容器的潜在调度机会.
 
 When using delay scheduling, the scheduler doesn’t simply use the first scheduling
 opportunity it receives, but waits for up to a given maximum number of scheduling
 opportunities to occur before loosening the locality constraint and taking the next
 scheduling opportunity.
 
-在使用延迟调度时，调度程序不会简单地使用第一个调度
-它收到的机会，但等待达到给定的最大数量的调度
+使用延迟调度时, 调度程序不会简单地使用第一个调度
+它收到的机会, 但等待达到给定的最大数量的调度
 在放松局部约束并采取下一步之前可能发生的机会
-调度机会。
+调度机会.
 
 For the Capacity Scheduler, delay scheduling is configured by setting
 yarn.scheduler.capacity.node-locality-delay to a positive integer representing
 the number of scheduling opportunities that it is prepared to miss before loosening the
 node constraint to match any node in the same rack.
 
-对于容量调度程序，延迟调度通过设置进行配置
-yarn.scheduler.capacity.node-locality-delay为一个正整数表示
+对于容量调度程序, 延迟调度通过设置进行配置 yarn.scheduler.capacity.node-locality-delay 为一个正整数表示
 它在放松之前准备放弃的调度机会的数量
-节点约束来匹配同一机架中的任何节点。
+节点约束来匹配同一机架中的任何节点.
 
 The Fair Scheduler also uses the number of scheduling opportunities to determine the
 delay, although it is expressed as a proportion of the cluster size. For example, setting
@@ -1101,12 +967,9 @@ yarn.scheduler.fair.locality.threshold.rack , for setting the threshold before
 another rack is accepted instead of the one requested.
 
 Fair Scheduler也使用调度机会的数量来确定
-延迟，虽然它表示为群集大小的一部分。 例如，设置
-yarn.scheduler.fair.locality.threshold.node为0.5意味着调度器
+延迟, 虽然它表示为群集大小的一部分. 例如, 设置 yarn.scheduler.fair.locality.threshold.node 为0.5意味着调度器
 应该等到集群中的一半节点出现调度机会
-然后再接受同一机架中的另一个节点。 有一个相应的属性，
-yarn.scheduler.fair.locality.threshold.rack，用于设置阈值
-接受另一个货架而不是所请求的货架。
+然后再接受同一机架中的另一个节点. 有一个相应的属性, yarn.scheduler.fair.locality.threshold.rack, 用于设置阈值接受另一个货架而不是所请求的货架.
 
 #### Dominant Resource Fairness
 
@@ -1117,12 +980,9 @@ cations. However, when there are multiple resource types in play, things get mor
 plicated. If one user’s application requires lots of CPU but little memory and the other’s
 requires little CPU and lots of memory, how are these two applications compared?
 
-当只有一种资源类型正在调度时，例如内存，那么
-能力或公平的概念很容易确定。 如果两个用户在运行应用程序，
-您可以测量每个用于比较两个应用程序的内存量，
-阳离子。 但是，当有多种资源类型参与时，情况会变得更加复杂，
-折襞。 如果一个用户的应用程序需要大量CPU但内存很少，另一个则需要
-需要很少的CPU和大量的内存，这两个应用程序如何比较？
+当只有一种资源类型正在调度时, 例如内存, 那么能力或公平的概念很容易确定. 如果两个用户在运行应用程序, 您可以测量每个用于比较两个应用程序的内存量. 但是, 当有多种资源类型参与时, 情况会变得更加复杂, 
+折襞。 如果一个用户的应用程序需要大量CPU但内存很少, 另一个则需要
+需要很少的 CPU 和大量的内存, 这两个应用程序如何比较?
 
 The way that the schedulers in YARN address this problem is to look at each user’s
 dominant resource and use it as a measure of the cluster usage. This approach is called
@@ -1130,8 +990,8 @@ Dominant Resource Fairness, or DRF for short. 9 The idea is best illustrated wit
 example.
 
 YARN中的调度程序解决这个问题的方式是查看每个用户的
-主导资源并将其用作衡量集群使用情况。 这种方法被称为
-主导资源公平，简称DRF。 9这个想法最好用一个简单的例子来说明
+主导资源并将其用作衡量集群使用情况. 这种方法被称为
+主导资源公平, 简称 DRF.9这个想法最好用一个简单的例子来说明
 例。
 
 Imagine a cluster with a total of 100 CPUs and 10 TB of memory. Application A requests
@@ -1141,28 +1001,24 @@ GB). A’s request is (2%, 3%) of the cluster, so memory is dominant since its p
 container requests are twice as big in the dominant resource (6% versus 3%), it will be
 allocated half as many containers under fair sharing.
 
-想象一下总共有100个CPU和10 TB内存的集群。 应用程序A请求
-（2个CPU，300 GB）的容器和应用程序B请求容器（6个CPU，100个容器）
-GB）。 A的请求是集群的（2％，3％），所以内存占据了主导地位，因为它的比例
-（3％）大于CPU（2％）。 B的请求是（6％，1％），所以CPU占主导地位。 因为B的
-容器的请求量占统治地位的资源要大一倍（6％比3％），它将是
-在公平分享下分配了一半的容器。
+想象一下总共有 100 个 CPU 和 10 TB 内存的集群. 应用程序 A 请求
+(2 个 CPU, 300 GB) 的容器和应用程序B请求容器 (6 个 CPU, 100 个容器)
+GB). A 的请求是集群的(2%, 3%), 所以内存占据了主导地位, 因为它的比例
+(3%) 大于 CPU (2%). B 的请求是(6%, 1%), 所以 CPU 占主导地位. 因为 B 的容器的请求量占统治地位的资源要大一倍(6% 比3%), 它将是
+在公平分享下分配了一半的容器.
 
 By default DRF is not used, so during resource calculations, only memory is considered
 and CPU is ignored. The Capacity Scheduler can be configured to use DRF by setting
 yarn.scheduler.capacity.resource-calculator to  org.apache.hadoop.yarn
 .util.resource.DominantResourceCalculator in capacity-scheduler.xml.
 
-默认情况下不使用DRF，所以在资源计算时只考虑内存
-并且CPU被忽略。 Capacity Scheduler可以配置为通过设置使用DRF
-yarn.scheduler.capacity.resource-calculator转换为org.apache.hadoop.yarn
-.util.resource.DominantResourceCalculator在capacity-scheduler.xml中。
+默认情况下不使用 DRF, 所以在资源计算时只考虑内存并且 CPU 被忽略. Capacity Scheduler 可以配置为通过设置使用 DRF
+yarn.scheduler.capacity.resource-calculator 转换为 org.apache.hadoop.yarn.util.resource.DominantResourceCalculator 在capacity-scheduler.xml 中.
 
 For the Fair Scheduler, DRF can be enabled by setting the top-level element  default
 QueueSchedulingPolicy in the allocation file to  drf
 
-对于Fair Scheduler，可以通过设置顶层元素的默认值来启用DRF
-将分配文件中的QueueSchedulingPolicy分配给drf
+对于 Fair Scheduler, 可以通过设置顶层元素的默认值来启用 DRF 将分配文件中的 QueueSchedulingPolicy 分配给 drf.
 <br>
 
 ## CHAPTER 5 Hadoop I/O
@@ -1173,10 +1029,10 @@ special consideration when dealing with multiterabyte datasets. Others are Hadoo
 tools or APIs that form the building blocks for developing distributed systems, such as
 serialization frameworks and on-disk data structures.
 
-Hadoop带有一组用于数据I / O的基元. 其中一些是技术比Hadoop更普遍，比如数据完整性和压缩，但值得
-处理多TB数据集时需特别考虑。 其他人是Hadoop
-工具或API，它们构成了用于开发分布式系统的构建块，例如
-序列化框架和磁盘数据结构。
+Hadoop 带有一组用于数据 I/O 的基元. 其中一些是技术比 Hadoop 更普遍, 比如数据完整性和压缩, 但值得
+处理多TB数据集时需特别考虑. 其他人是 Hadoop
+工具或API, 它们构成了用于开发分布式系统的构建块, 例如
+序列化框架和磁盘数据结构.
 
 ### Data Integrity
 
