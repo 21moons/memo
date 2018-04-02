@@ -709,39 +709,19 @@ YARN 支持更大的集群. MapReduce 1 在 4,000 个节点和 40,000 个任务�
 
 #### Scheduler Options
 
-YARN 提供三种调度器: FIFO, 容量优先和公平调度器. FIFO 调度器将应用程序放入队列中, 并按照提交顺序运行它们(先入先出). 首先为队列中第一个应用程序分配资源; 一旦它的请求已经满足, 接着为队列中的下一个应用程序提供服务, 依此类推.
+YARN 提供三种调度器: FIFO, 和公平调度器. FIFO 调度器将应用程序放入队列中, 并按照提交顺序运行它们(先入先出). 首先为队列中第一个应用程序分配资源; 一旦它的请求已经满足, 接着为队列中的下一个应用程序提供服务, 依此类推.
 
-Both of these allow long-
-running jobs to complete in a timely manner, while still allowing users who are running
-concurrent smaller ad hoc queries to get results back in a reasonable time.
+FIFO 调度器具有易于理解和不需要配置的优点, 但它不适用于集群共享场景. 大型应用程序会耗光集群中的所有资源, 因此队列后面的应用都必须等待. 在共享群集上最好使用 Capacity Scheduler 或 Fair Scheduler. 这两种调度器都在保证长时间运行的作业及时完成的同时, 也允许其他用户的查询能够在合理的时间内得到响应.
 
-FIFO 调度器具有易于理解和不需要配置的优点, 但它不适用于集群共享场景. 大型应用程序会耗光集群中的所有资源, 因此队列后面的应用都必须等待. 在共享群集上
-最好使用 Capacity Scheduler 或 Fair Scheduler. 这两种调度器都允许长期使用
-及时完成运行作业，同时仍允许正在运行的用户并发更小的即席查询以在合理的时间内恢复结果.
+调度程序之间的区别如图 4-3 所示, 其中显示了在 FIFO (i)的调度下小作业在大作业完成前被阻塞.
 
-The difference between schedulers is illustrated in Figure 4-3, which shows that under
-the FIFO Scheduler (i) the small job is blocked until the large job completes.
+容量优先调度器(图 4-3 中的 ii) 使用一个独立的专用队列存放小型作业, 这样小型作业一旦提交就可以开始运行, 虽然这是以牺牲集群的利用率为代价的, 因为必须为该队列中的作业保留一部分的容量. 这意味着大型作业的运行时间会比使用 FIFO 调度器时要长.
 
-With the Capacity Scheduler (ii in Figure 4-3), a separate dedicated queue allows the
-small job to start as soon as it is submitted, although this is at the cost of overall cluster
-utilization since the queue capacity is reserved for jobs in that queue. This means that
-the large job finishes later than when using the FIFO Scheduler.
+公平调度器(图 4-3 中的 iii) 不需要保留一定数量的容量, 因为它将在所有正在运行的作业之间动态平衡资源. 一个(大型)作业开始, 这是此时系统上唯一的工作, 所以它获得了所有的集群资源. 当第二个(小型)作业启动时, 它将得到集群资源的一半, 以便每个作业公平的使用集群资源.
 
-With the Fair Scheduler (iii in Figure 4-3), there is no need to reserve a set amount of
-capacity, since it will dynamically balance resources between all running jobs. Just after
-the first (large) job starts, it is the only job running, so it gets all the resources in the
-cluster. When the second (small) job starts, it is allocated half of the cluster resources
-so that each job is using its fair share of resources.
+请注意, 从第二个作业开始到获取资源之间存在滞后, 因为它必须等待前一个作业完成容器的释放. 在小型作业完成后, 大型作业可以重新获取全部容器. 总体效果是较高的集群利用率和小型工作及时完成(避免了被大型作业阻塞).
 
-Note that there is a lag between the time the second job starts and when it receives its
-fair share, since it has to wait for resources to free up as containers used by the first job
-complete. After the small job completes and no longer requires resources, the large job
-goes back to using the full cluster capacity again. The overall effect is both high cluster
-utilization and timely small job completion.
-
-Figure 4-3 contrasts the basic operation of the three schedulers. In the next two sections,
-we examine some of the more advanced configuration options for the Capacity and Fair
-Schedulers.
+图 4-3 对比了三个调度程序的基本操作. 在接下来的两节中,我们将研究 Capacity 调度器和 Fair 调度器的一些高级配置项.
 
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/)
 <p align="center"><font size=2>Figure 4-3. Cluster utilization over time when running a large job and a small job under the FIFO Scheduler (i), Capacity Scheduler (ii), and Fair Scheduler (iii)</font></p>
