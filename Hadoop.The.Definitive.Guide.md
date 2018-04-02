@@ -239,7 +239,7 @@ setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出�
 &emsp;&emsp;Map 任务将其输出写入本地磁盘, 而不是 HDFS. 为什么会这样?因为 Map 的输出是中间输出: 它们随后将交给 reduce 任务处理并生成最终输出, 并且一旦 job 完成后, map 任务的输出可以丢弃. 因此, 将它存储在 HDFS 上是一种浪费. 如果节点运行 map 任务失败, 没有生成中间结果, 然后又被 reduce 任务占用, 那么 Hadoop 将自动在另一个节点上重新运行 map 任务.
 <br>
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Data-local_rack-local_and off-rack_map_tasks.png)
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Data-local_rack-local_and_off-rack_map_tasks.png)
 <p align="center"><font size=2>Figure 2-2. Data-local (a), rack-local (b), and off-rack (c) map tasks</font></p>
 
 <br>
@@ -247,8 +247,11 @@ setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出�
 &emsp;&emsp;对于 Reduce 任务来说, 并不存在本地处理数据优势; 单个 reduce 任务的输入通常是所有 mappers 的输出. 在当前的例子中, 我们使用一个 reduce 任务处理所有 map 任务的输出. 因此, 排序后的 map 输出必须通过网络传输到 reduce 任务运行的节点上, 它们在那里被合并, 然后传递给用户定义的 reduce 函数. reduce 任务的输出通常存储在 HDFS 中以保证可靠性. 正如第3章所解释的那样 HDFS, 对于每一个存储 reduce 输出的 HDFS 块, 通过把第一个副本存储在本地节点上, 其他副本存储在机架外节点上, 来保证可靠性. 因此, 在 HDFS 上写入 reduce 任务的输出确实消耗了网络带宽, 但属于正常的 HDFS 写入消耗(并没有引入性能损失).
 
 &emsp;&emsp;图 2-3 描述了单个 reduce 任务的整个数据流. 虚线框表示节点, 虚线箭头表示节点上的数据传输, 实线箭头显示节点之间的数据传输.
+<br>
 
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/MapReduce_data_flow_with_a_single_reduce_task.png
 <p align="center"><font size=2>Figure 2-3. MapReduce data flow with a single reduce task</font></p>
+
 <br>
 
 &emsp;&emsp;reduce 任务的数量不受输入大小的控制, 而是单独指定的. 在 214 页的 "The Default MapReduce Job" 中, 你将看到如何为特定作业选择 reduce 任务的数量. 
