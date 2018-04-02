@@ -880,24 +880,9 @@ queuePlacementPolicy 可以完全省略, 在这种情况下默认行为如下:
 
 抢占允许调度程序杀死占用超限资源队列所属的容器, 以便将资源分配给当前资源低于其分配资源的队列. 请注意, 抢占会降低整体集群的整体效率, 因为被终止的容器需要重新运行.
 
+通过将 yarn.scheduler.fair.preemption 设置为 true 来启用全局抢占. 有两个抢占相关的超时设置: 一个用于最小共享, 一个用于公平共享, 都以秒为单位. 默认情况下不设置超时, 所以为了开启容器抢占, 你至少要设置其中的一个.
 
-There are two relevant preemption timeout settings: one for minimum share and one
-for fair share, both specified in seconds. By default, the timeouts are not set, so you need
-to set at least one to allow containers to be preempted.
-
-通过将 yarn.scheduler.fair.preemption 设置为 true 来全局启用抢占. 有两个相关的抢占超时设置: 一个用于最小份额, 一个用于公平份额, 都以秒为单位. 默认情况下超时不设置, 所以为了开启容器抢占, 你需要至少设置其中的一个.
-
-If a queue waits for as long as its minimum share preemption timeout without receiving
-its minimum guaranteed share, then the scheduler may preempt other containers. The
-default timeout is set for all queues via the  defaultMinSharePreemptionTimeout top-
-level element in the allocation file, and on a per-queue basis by setting the  minShare
-PreemptionTimeout element for a queue.
-
-如果一个队列等待, 只要其最小共享抢占超时未收到
-其最小保证份额, 则调度程序可以抢占其他容器. 该
-通过 defaultMinSharePreemptionTimeout 顶级设置为所有队列设置默认超时, 
-分配文件中的高级元素, 并通过设置minShare以每个队列为基础
-PreemptionTimeout元素的队列.
+如果一个队列在最小共享时间超时后, 仍未收到满足其最小份额的资源, 则调度器可以抢占其他容器. 通过配置文件中的顶层元素 defaultMinSharePreemptionTimeout 为所有队列设置默认超时, 通过配置队列元素下的 minSharePreemptionTimeout 为每个队列设置超时.
 
 Likewise, if a queue remains below half of its fair share for as long as the fair share
 preemption timeout, then the scheduler may preempt other containers. The default
@@ -909,7 +894,7 @@ hold (per-queue).
 
 同样, 如果一个队列的公平份额低于公平份额的一半, 抢占超时, 那么调度器可以抢占其他容器. 默认值
 通过 defaultFairSharePreemptionTimeout 顶层为所有队列设置超时元素放在分配文件中, 并通过设置 fairSharePreemptionTimeout 以每个队列为基础
-一个队列中的. 阈值也可以从其默认值0.5改变为
+一个队列中的. 阈值也可以从其默认值 0.5 改变为
 设置 defaultFairSharePreemptionThreshold 和 fairSharePreemptionThres 保持(每队列).
 
 #### Delay Scheduling
