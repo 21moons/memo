@@ -249,7 +249,7 @@ setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出�
 &emsp;&emsp;图 2-3 描述了单个 reduce 任务的整个数据流. 虚线框表示节点, 虚线箭头表示节点上的数据传输, 实线箭头显示节点之间的数据传输.
 <br>
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/MapReduce_data_flow_with_a_single_reduce_task.png
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/MapReduce_data_flow_with_a_single_reduce_task.png)
 <p align="center"><font size=2>Figure 2-3. MapReduce data flow with a single reduce task</font></p>
 
 <br>
@@ -259,8 +259,12 @@ setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出�
 &emsp;&emsp;当有多个 reducers 时, map 任务将对其输出进行分区, 每个 map 任务都会为每个 reduce 任务创建一个分区. 分区中可以有许多键(和它们的相关值), 但任何给定 key 的记录都全部在某个分区中(key 一定对应一个分区, 一个分区对应多个 key). 分区可以由用户定义的分区函数来控制, 但通常情况下, 使用默认分区程序(使用 hash 函数对 keys 进行存储)就已经很好了. 
 
 &emsp;&emsp;图 2-4 说明了多个 reduce 任务通常情况下的数据流. 该图清楚地说明了为什么 map 和 reduce 任务之间的数据流被称为"洗牌(the shuffle)", 因为每个 reduce 任务都由许多 map 任务提供. 实际的洗牌比图表中描述的更加复杂, 调整它对 job 执行时间有巨大影响, 你将在 197 页中的"Shuffle and Sort 随机排序"中看到.
+<br>
 
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/MapReduce_data_flow_with_multiple_reduce_tasks.png)
 <p align="center"><font size=2>Figure 2-4. MapReduce data flow with multiple reduce tasks</font></p>
+
+<br>
 
 &emsp;&emsp;最后提一下, 我们也可以不需要 reduce 任务. 此时因为处理流程可以完全并行进行而不需要洗牌(234 页的 "NLineInputFormat" 中讨论了一些例子). 在这种情况下, 唯一的节点间数据传输是 map 任务将输出写入 HDFS 文件系统(参见图 2-5).
 <br>
@@ -268,8 +272,11 @@ setOutputKeyClass() 和 setOutputValueClass() 方法设置 reduce 函数输出�
 ### Combiner Functions
 
 许多 MapReduce job 受到集群上可用带宽的限制, 因此在最小化 map 任务和 reduce 任务间的数据传输上耗费了不少精力. Hadoop 允许用户指定一个 combiner 函数, 运行在 map 任务的输出上, combiner 函数的输出作为 reduce 函数的输入. 因为 combiner 函数只是一个优化, Hadoop 不会保证它会调用combiner 函数多少次. 换句话说, 无论调用 combiner 函数零次, 单次还是多次, reducer 的输出结果都应该是一致的.
+<br>
 
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/MapReduce_data_flow_with_no_reduce_tasks.png)
 <p align="center"><font size=2>Figure 2-5. MapReduce data flow with no reduce tasks</font></p>
+
 <br>
 
 #### Specifying a combiner function
