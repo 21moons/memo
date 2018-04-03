@@ -97,11 +97,11 @@ Hadoop 支持运行多种语言写的 MapReduce 程序, 包括 Java, Ruby, 和 P
 #### Map and Reduce
 
 MapReduce 任务分为两个阶段: map 阶段和 reduce 阶段. 每个阶段输入和输出的格式都是键值对; 键和值的类型可以由程序员自行指定. 程序员还实现了两个函数: map 函数和reduce 函数.
-
 <br>
+
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/MapReduce_logical_data_flow.png)
 <p align="center"><font size=2>Figure 2-1. MapReduce logical data flow</font></p>
-<br>
+
 <br>
 
 #### Java MapReduce
@@ -621,7 +621,7 @@ YARN 提供了一组 API 用于集群资源管理, 但这些 API 通常不会由
 
 YARN 通过两种长时间运行的守护进程提供核心服务: 资源管理器(每个群集一个)管理集群中资源的使用, 节点管理器在集群中的所有节点上运行, 用来启动和监视容器. 容器使用一组指定的资源(内存, CPU 等)执行应用程序下发的进程. 取决于 YARN 的配置方式(参见 300 页), 容器可以是一个 Unix 进程或 Linux cgroup. 图 4-2 说明了 YARN 如何上运行一个应用.
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/4-2.png)
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/How_YARN_runs_an_application.png)
 
 <p align="center"><font size=2>Figure 4-2. How YARN runs an application</font></p>
 
@@ -736,7 +736,9 @@ FIFO 调度器具有易于理解和不需要配置的优点, 但它不适用于�
 
 图 4-3 对比了三个调度程序的基本操作. 在接下来的两节中,我们将研究 Capacity 调度器和 Fair 调度器的一些高级配置项.
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/)
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/FIFO_Scheduler.png)
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Capacity_Scheduler.png)
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Fair_Scheduler.png)
 <p align="center"><font size=2>Figure 4-3. Cluster utilization over time when running a large job and a small job under the FIFO Scheduler (i), Capacity Scheduler (ii), and Fair Scheduler (iii)</font></p>
 
 #### Capacity Scheduler Configuration
@@ -811,7 +813,7 @@ root
 
 为了理解资源如何在队列之间共享, 假设有两个用户 A 和 B, 每个都有自己的队列(图 4-4). A 启动了一项作业, 并获取了所有的集群资源, 因为当前 B 没有作业. 然后 B 开始工作, 而 A 的作业仍然是运行, 过了一段时间, 每个作业都使用一半资源. 现在, 如果 B 在其他作业仍在运行时启动第二项作业, 它将与 B 的其他作业共享其资源, 所以 B 的每个工作将有占有系统资源的四分之一, 而 A 将继续占有一半. 结果就是在用户之间公平分享资源.
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/)
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Fair_sharing_between_user_queues.png)
 <p align="center"><font size=2>Figure 4-4. Fair sharing between user queues</font></p>
 
 * Enabling the Fair Scheduler
