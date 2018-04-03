@@ -903,90 +903,27 @@ queuePlacementPolicy 可以完全省略, 在这种情况下默认行为如下:
 
 #### Delay Scheduling
 
-所有 YARN 调度器都试图将任务本地化(任务调度到离数据最近的节点). 在繁忙的集群上, 如果应用程序请求一个特定的节点, 很有可能其他容器正在节点上运行. 显而易见的行动是立即在同一机架上分配容器. 但是, 实践中观察到等待一小段时间(不超过几秒)可以大大增加按原要求分配到容器的机会, 并因此提高集群的效率. 这个特性被称为延迟调度, 容量调度器和公平调度器都支持它.
+所有 YARN 调度器都试图将任务本地化(任务调度到离数据最近的节点). 在繁忙的集群上, 如果调度程序打算在一个特定的节点运行任务时, 很有可能其他容器正在节点上运行. 显而易见的行动是立即在同一机架上分配容器. 但是, 我们在实践中观察到, 等待一小段时间(仅仅几秒钟)可以大大增加按原要求分配到容器的机会, 并因此提高集群的效率. 这个特性被称为延迟调度, 容量调度器和公平调度器都支持它.
 
-YARN 集群中的每个 node manager 周期性地向资源管理器发送心跳请求 - 默认情况下每秒一个. 心跳报文包含关于 node manager 当前运行容器和空闲资源的信息, 每次心跳都是应用程序启动容器的潜在调度机会.
+YARN 集群中的每个 node manager 周期性地向资源管理器发送心跳请求 - 默认情况下每秒一个. 心跳报文包含 node manager 所在节点的当前运行容器和空闲资源信息, 每次心跳都是应用程序启动容器的潜在调度机会.
 
-When using delay scheduling, the scheduler doesn’t simply use the first scheduling
-opportunity it receives, but waits for up to a given maximum number of scheduling
-opportunities to occur before loosening the locality constraint and taking the next
-scheduling opportunity.
+使用延迟调度时, 调度程序不会简单地在一有机会就启动调度, 而是等待调度机会达到给定的最大数量后再开始调度, 放松本地约束, 分配资源, 然后等待下一次调度的机会.
 
-使用延迟调度时, 调度程序不会简单地使用第一个调度
-它收到的机会, 但等待达到给定的最大数量的调度
-在放松局部约束并采取下一步之前可能发生的机会
-调度机会.
+对于容量优先调度器, 延迟调度需要将 yarn.scheduler.capacity.node-locality-delay 设置为一个正整数, 表示它在放松本地约束, 在同一机架上选择其他节点之前打算放弃多少次调度机会.
 
-For the Capacity Scheduler, delay scheduling is configured by setting
-yarn.scheduler.capacity.node-locality-delay to a positive integer representing
-the number of scheduling opportunities that it is prepared to miss before loosening the
-node constraint to match any node in the same rack.
-
-对于容量优先调度器, 延迟调度通过设置进行配置 yarn.scheduler.capacity.node-locality-delay 为一个正整数表示
-它在放松之前准备放弃的调度机会的数量
-节点约束来匹配同一机架中的任何节点.
-
-The Fair Scheduler also uses the number of scheduling opportunities to determine the
-delay, although it is expressed as a proportion of the cluster size. For example, setting
-yarn.scheduler.fair.locality.threshold.node to 0.5 means that the scheduler
-should wait until half of the nodes in the cluster have presented scheduling opportunities
-before accepting another node in the same rack. There is a corresponding property,
-yarn.scheduler.fair.locality.threshold.rack , for setting the threshold before
-another rack is accepted instead of the one requested.
-
-公平调度器也使用调度机会的数量来确定
-延迟, 虽然它表示为群集大小的一部分. 例如, 设置 yarn.scheduler.fair.locality.threshold.node 为0.5意味着调度器
-应该等到集群中的一半节点出现调度机会
-然后再接受同一机架中的另一个节点. 有一个相应的属性, yarn.scheduler.fair.locality.threshold.rack, 用于设置阈值接受另一个货架而不是所请求的货架.
+公平调度器也使用调度机会的数量来决定延迟, 虽然这里的数量表示为集群的占比. 例如, yarn.scheduler.fair.locality.threshold.node 设置为 0.5 , 意味着只有等到集群中的一半节点出现调度机会后, 调度器才会选择同一机架中的其他节点. 有一个相应的属性, yarn.scheduler.fair.locality.threshold.rack, 用于设置选择另一个机架而不是数据所在机架所需要的阈值.
 
 #### Dominant Resource Fairness
 
-When there is only a single resource type being scheduled, such as memory, then the
-concept of capacity or fairness is easy to determine. If two users are running applications,
-you can measure the amount of memory that each is using to compare the two appli‐
-cations. However, when there are multiple resource types in play, things get more com‐
-plicated. If one user’s application requires lots of CPU but little memory and the other’s
-requires little CPU and lots of memory, how are these two applications compared?
+假设只调度一种类型的资源, 比如说内存, 那么容量或公平的概念很容易界定. 如果两个用户在运行应用, 您可以测量两个应用程序使用的内存并进行比较. 但是, 当调度多种类型的资源时, 情况会变得复杂. 假设某个用户的应用需要大量 CPU 和很少内存, 另一个则需要很少的 CPU 和大量的内存, 此时这两个应用如何比较?
 
-当只有一种资源类型正在调度时, 例如内存, 那么能力或公平的概念很容易确定. 如果两个用户在运行应用程序, 您可以测量每个用于比较两个应用程序的内存量. 但是, 当有多种资源类型参与时, 情况会变得更加复杂, 
-折襞。 如果一个用户的应用程序需要大量CPU但内存很少, 另一个则需要
-需要很少的 CPU 和大量的内存, 这两个应用程序如何比较?
+YARN 中的调度器解决这个问题的方式是查看每个用户的主导资源并将其用来衡量集群使用情况. 这种方法被称为优势资源公平, 简称 DRF. 这个想法最好用一个简单的例子来说明.
 
-The way that the schedulers in YARN address this problem is to look at each user’s
-dominant resource and use it as a measure of the cluster usage. This approach is called
-Dominant Resource Fairness, or DRF for short. 9 The idea is best illustrated with a simple
-example.
+想象一下集群中共有 100 个 CPU 和 10 TB 内存. 应用程序 A 请求 (2 个 CPU, 300 GB 内存) 的容器, 应用程序 B 请求容器 (6 个 CPU, 100 GB 内存). A 的请求占比是集群的(2%, 3%), 所以内存占据了优势地位, 因为它内存占比(3%) 大于 CPU占比 (2%). B 的请求是(6%, 1%), 所以 CPU 占优势地位. 因为 B 优势资源请求比 A 要大一倍(6% 比 3%), 它将基于公平分享下比 A 多分配一倍的容器.
 
-YARN中的调度程序解决这个问题的方式是查看每个用户的
-主导资源并将其用作衡量集群使用情况. 这种方法被称为
-主导资源公平, 简称 DRF.9这个想法最好用一个简单的例子来说明
-例。
+默认情况下不使用 DRF, 所以在资源计算时只考虑内存并且忽略 CPU . Capacity Scheduler 可以通过将 capacity-scheduler.xml 中的 yarn.scheduler.capacity.resource-calculator 配置为 org.apache.hadoop.yarn.util.resource.DominantResourceCalculator, 来启用 DRF.
 
-Imagine a cluster with a total of 100 CPUs and 10 TB of memory. Application A requests
-containers of (2 CPUs, 300 GB), and application B requests containers of (6 CPUs, 100
-GB). A’s request is (2%, 3%) of the cluster, so memory is dominant since its proportion
-(3%) is larger than CPU’s (2%). B’s request is (6%, 1%), so CPU is dominant. Since B’s
-container requests are twice as big in the dominant resource (6% versus 3%), it will be
-allocated half as many containers under fair sharing.
-
-想象一下总共有 100 个 CPU 和 10 TB 内存的集群. 应用程序 A 请求
-(2 个 CPU, 300 GB) 的容器和应用程序B请求容器 (6 个 CPU, 100 个容器)
-GB). A 的请求是集群的(2%, 3%), 所以内存占据了主导地位, 因为它的比例
-(3%) 大于 CPU (2%). B 的请求是(6%, 1%), 所以 CPU 占主导地位. 因为 B 的容器的请求量占统治地位的资源要大一倍(6% 比3%), 它将是
-在公平分享下分配了一半的容器.
-
-By default DRF is not used, so during resource calculations, only memory is considered
-and CPU is ignored. The Capacity Scheduler can be configured to use DRF by setting
-yarn.scheduler.capacity.resource-calculator to  org.apache.hadoop.yarn
-.util.resource.DominantResourceCalculator in capacity-scheduler.xml.
-
-默认情况下不使用 DRF, 所以在资源计算时只考虑内存并且 CPU 被忽略. Capacity Scheduler 可以配置为通过设置使用 DRF
-yarn.scheduler.capacity.resource-calculator 转换为 org.apache.hadoop.yarn.util.resource.DominantResourceCalculator 在capacity-scheduler.xml 中.
-
-For the Fair Scheduler, DRF can be enabled by setting the top-level element  default
-QueueSchedulingPolicy in the allocation file to  drf
-
-对于 Fair Scheduler, 可以通过设置顶层元素的默认值来启用 DRF 将分配文件中的 QueueSchedulingPolicy 分配给 drf.
+对于 Fair Scheduler, 可以通过设置顶层元素 QueueSchedulingPolicy 设置为 drf 来启用 DRF.
 <br>
 
 ## CHAPTER 5 Hadoop I/O
@@ -997,10 +934,9 @@ special consideration when dealing with multiterabyte datasets. Others are Hadoo
 tools or APIs that form the building blocks for developing distributed systems, such as
 serialization frameworks and on-disk data structures.
 
-Hadoop 带有一组用于数据 I/O 的基元. 其中一些是技术比 Hadoop 更普遍, 比如数据完整性和压缩, 但值得
+Hadoop 带有一组用于数据 I/O 的原型. 其中一些从技术上来说比 Hadoop 更普遍, 比如数据完整性和压缩, 但值得
 处理多TB数据集时需特别考虑. 其他人是 Hadoop
-工具或API, 它们构成了用于开发分布式系统的构建块, 例如
-序列化框架和磁盘数据结构.
+工具或API, 它们构成了用于开发分布式系统的构建块, 例如序列化框架和磁盘数据结构.
 
 ### Data Integrity
 
