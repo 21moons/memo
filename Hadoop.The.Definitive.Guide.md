@@ -928,149 +928,31 @@ YARN 中的调度器解决这个问题的方式是查看每个用户的主导资
 
 ## CHAPTER 5 Hadoop I/O
 
-Hadoop comes with a set of primitives for data I/O. Some of these are techniques that
-are more general than Hadoop, such as data integrity and compression, but deserve
-special consideration when dealing with multiterabyte datasets. Others are Hadoop
-tools or APIs that form the building blocks for developing distributed systems, such as
-serialization frameworks and on-disk data structures.
-
-Hadoop 带有一组用于数据 I/O 的原型. 其中一些从技术上来说比 Hadoop 更普遍, 比如数据完整性和压缩, 但值得
-处理多TB数据集时需特别考虑. 其他人是 Hadoop
-工具或API, 它们构成了用于开发分布式系统的构建块, 例如序列化框架和磁盘数据结构.
+Hadoop 带有一组用于数据 I/O 的原型. 其中一些是比 Hadoop 更通用的技术, 例如数据完整性和压缩, 但在处理多 TB 数据集时需要特别考虑. 其他的是 Hadoop 工具或 API, 它们构成了用于开发分布式系统的构建块, 例如序列化框架和磁盘上的数据结构.
 
 ### Data Integrity
 
-Users of Hadoop rightly expect that no data will be lost or corrupted during storage or
-processing. However, because every I/O operation on the disk or network carries with
-it a small chance of introducing errors into the data that it is reading or writing, when
-the volumes of data flowing through the system are as large as the ones Hadoop is capable
-of handling, the chance of data corruption occurring is high.
+Hadoop 的用户期望在数据存储和处理期间不会遇到数据丢失或损坏. 但是, 因为磁盘或网络上的每个 I/O 操作都有很小的可能会引入错误, 当流经系统的数据量与 Hadoop 的处理能力一样大时, 发生数据损坏的可能性会变得很高.
 
-Hadoop的用户正确地期望在存储或数据存储期间不会有数据丢失或损坏
-处理。 但是，因为磁盘或网络上的每个I / O操作都在进行
-那么将错误引入正在读取或写入的数据的可能性很小
-流经系统的数据量与Hadoop的能力一样大
-的处理，发生数据损坏的可能性很高。
+检测损坏数据的常用方法是在数据进入系统时计算校验和, 然后通过不可靠通道传输后再次计算, 如果新生成的校验和原始值不完全匹配, 数据被认为已经损坏. 这种技术没有提供任何修复数据的方法 - 它仅仅是错误检测. (这也是一个不使用低端硬件原因; 特别是一定要使用 ECC 内存.)注意不仅仅是数据, 校验和也可能损坏, 但这是不太可能的, 因为校验和比数据小得多.
 
-The usual way of detecting corrupted data is by computing a checksum for the data when
-it first enters the system, and again whenever it is transmitted across a channel that is
-unreliable and hence capable of corrupting the data. The data is deemed to be corrupt
-if the newly generated checksum doesn’t exactly match the original. This technique
-doesn’t offer any way to fix the data—it is merely error detection. (And this is a reason
-for not using low-end hardware; in particular, be sure to use ECC memory.) Note that
-it is possible that it’s the checksum that is corrupt, not the data, but this is very unlikely,
-because the checksum is much smaller than the data.
-
-检测损坏数据的常用方法是在计算数据时校验和
-它首先进入系统，然后再一次通过一个通道传输
-不可靠，因此能够破坏数据。 数据被认为是腐败的
-如果新生成的校验和不完全匹配原始。 这种技术
-没有提供任何修复数据的方法 - 它仅仅是错误检测。 （这是一个原因
-不使用低端硬件; 特别是一定要使用ECC内存。）注意
-它可能是腐败的校验和，而不是数据，但这是不太可能的，
-因为校验和比数据小得多。
-
-A commonly used error-detecting code is CRC-32 (32-bit cyclic redundancy check),
-which computes a 32-bit integer checksum for input of any size. CRC-32 is used for
-checksumming in Hadoop’s  ChecksumFileSystem , while HDFS uses a more efficient
-variant called CRC-32C.
-
-常用的错误检测代码是CRC-32（32位循环冗余校验），
-它计算任意大小输入的32位整数校验和。 CRC-32用于
-校验和在Hadoop的ChecksumFileSystem中进行，而HDFS使用更高效
-称为CRC-32C的变种。
+常用的错误检测码是 CRC-32(32位循环冗余校验), 它为任意大小的输入计算出一个32位整数校验和. Hadoop 的 ChecksumFileSystem 中使用 CRC-32 做校验, 而 HDFS 使用更高效被称为 CRC-32C 的变种.
 
 #### Data Integrity in HDFS
 
-HDFS transparently checksums all data written to it and by default verifies checksums
-when reading data. A separate checksum is created for every  dfs.bytes-per-
-checksum bytes of data. The default is 512 bytes, and because a CRC-32C checksum is
-4 bytes long, the storage overhead is less than 1%.
+HDFS 透明地校验所有写入的数据, 默认情况下在读取数据时也进行校验. 每个 dfs.bytes-per-checksum 大小的数据都会创建一个独立的校验和. dfs.bytes-per-checksum 的默认值是512字节, 因为 CRC-32C 校验和长度是4个字节, 存储开销小于 1%.
 
-HDFS透明地校验所有写入的数据，默认情况下验证校验和
-在阅读数据时。 每个dfs.bytes-per-
-校验和字节的数据。 默认值是512字节，因为CRC-32C校验和是
-4个字节长，存储开销小于 1%.
+Datanodes 负责在存储数据之前验证接收数据的一致性. 包括从客户端收到的数据和从其他 datanodes 复制过来的数据. 客户端通过将数据其发送到 datanodes 管道来进行写入(如第3章所述), 管道中的最后一个 datanode 负责验证校验和. 如果 datanode 检测到错误, 客户端会收到 IOException 的子类构成的异常, 然后决定该如何处理(例如重试).
 
-Datanodes are responsible for verifying the data they receive before storing the data and
-its checksum. This applies to data that they receive from clients and from other
-datanodes during replication. A client writing data sends it to a pipeline of datanodes
-(as explained in Chapter 3), and the last datanode in the pipeline verifies the checksum.
-If the datanode detects an error, the client receives a subclass of  IOException , which it
-should handle in an application-specific manner (for example, by retrying the opera‐
-tion).
+当客户端从 datanodes 读取数据时, 他们也会验证校验和, 并将它们与那些存储在 datanode 中的校验和进行比较. 每次验证校验和, datanode 都会记录一条日志, 所以它知道每个块的最后一次验证发生在何时. 当一个客户成功验证某个块, 它会通知 datanode 更新其日志. 保持记录对于检测磁盘错误非常有用.
 
-Datanodes负责验证他们在存储数据和数据之前收到的数据
-它的校验和。 这适用于从客户端和其他客户端收到的数据
-datanodes在复制期间。 客户端写数据将其发送到datanodes管道
-（如第3章所述），并且管道中的最后一个datanode验证校验和。
-如果datanode检测到错误，客户端会收到它的IOException的子类
-应该以特定于应用程序的方式处理（例如，通过重试opera-
-荐）。
+除了在客户端读取时进行块验证之外, 每个 datanode 还会在后台线程中运行 DataBlockScanner, 定期验证 datanode 中存储的所有数据块. 这是为了防止因为物理存储介质中的 "位元腐烂" 而造成的数据损坏. 有关如何访问扫描日报的详细信息, 请参阅 328 页的 "Datanode 块扫描器".
 
-When clients read data from datanodes, they verify checksums as well, comparing them
-with the ones stored at the datanodes. Each datanode keeps a persistent log of checksum
-verifications, so it knows the last time each of its blocks was verified. When a client
-successfully verifies a block, it tells the datanode, which updates its log. Keeping statistics
-such as these is valuable in detecting bad disks.
+由于 HDFS 存储块的副本, 因此可以通过复制一个没有损坏的副本来 "修复" 损坏的块. 具体的工作方式是, 如果客户端在读取块时检测到错误, 会在抛出 ChecksumException 异常前将坏块所在 datanode 报告给 namenode. namenode 将块标记为已损坏, 此后它不会将更多客户端请求指向它, 也不会尝试将损坏的块复制到另一个 datanode. 然后它会在其他 datanode 上新建一个该块的副本, 这样使得损坏块的复制因子恢复到期望值. 一旦发生这种情况, 损坏的块将被删除.
 
-当客户端从datanodes读取数据时，他们也会验证校验和，并将它们进行比较
-与那些存储在datanode中的。 每个datanode保持一个持久的校验和日志
-验证，所以它知道每个块的最后一次验证。 当一个客户
-成功验证块，它会通知datanode，它会更新其日志。 保持统计
-例如这些对于检测错误的磁盘非常有用。
+在调用 open() 方法读取文件之前, 可以通过将 false 参数传递给 setVerifyChecksum() 来禁用校验. 你也可以在 shell 上执行命令来获得相同的效果, 命令写作 -get 或 -copyToLocal, 记得带上参数 -ignoreCrc. 如果你发现文件损坏, 决定如何自行处理它时, 此功能很有用. 比如, 你可能会想查看损坏的文件在删除前是否能进行修复.
 
-In addition to block verification on client reads, each datanode runs a  DataBlockScan
-ner in a background thread that periodically verifies all the blocks stored on the data‐
-node. This is to guard against corruption due to “bit rot” in the physical storage media.
-See “Datanode block scanner” on page 328 for details on how to access the scanner
-reports.
-
-除了对客户端读取进行块验证之外，每个datanode还运行DataBlockScan
-在后台线程中定期验证数据存储区中存储的所有数据块，
-节点。 这是为了防止由于物理存储介质中的“位元腐烂”而造成的腐败。
-有关如何访问扫描仪的详细信息，请参阅第328页上的“Datanode块扫描器”
-报告。
-
-Because HDFS stores replicas of blocks, it can “heal” corrupted blocks by copying one
-of the good replicas to produce a new, uncorrupt replica. The way this works is that if
-a client detects an error when reading a block, it reports the bad block and the datanode
-it was trying to read from to the namenode before throwing a  ChecksumException . The
-namenode marks the block replica as corrupt so it doesn’t direct any more clients to it
-or try to copy this replica to another datanode. It then schedules a copy of the block to
-be replicated on another datanode, so its replication factor is back at the expected level.
-Once this has happened, the corrupt replica is deleted.
-
-由于HDFS存储块的副本，因此可以通过复制一个块来“修复”损坏的块
-的副本制作一个新的，无损的复制品。 这个工作的方式是，如果
-客户端在读取块时会检测到错误，并报告坏块和数据节点
-它在抛出ChecksumException之前试图读取namenode。该
-namenode将块副本标记为已损坏，因此它不会将更多客户端指向它
-或尝试将此副本复制到另一个datanode。 然后它会将该块的副本安排到
-被复制到另一个datanode上，所以它的复制因子又回到了预期的水平。
-一旦发生这种情况，损坏的副本将被删除。
-
-It is possible to disable verification of checksums by passing  false to the  setVerify
-Checksum() method on  FileSystem before using the  open() method to read a file. The
-same effect is possible from the shell by using the  -ignoreCrc option with the  -get or
-the equivalent  -copyToLocal command. This feature is useful if you have a corrupt file
-that you want to inspect so you can decide what to do with it. For example, you might
-want to see whether it can be salvaged before you delete it.
-
-可以通过将false传递给setVerify来禁用校验和验证
-在使用open（）方法读取文件之前，使用FileSystem上的Checksum（）方法。该
-通过在-get or上使用-ignoreCrc选项，可以从shell获得相同的效果
-等效的-copyToLocal命令。 如果您有损坏的文件，此功能很有用
-你想检查，所以你可以决定如何处理它。 例如，你可能会
-想要查看它是否可以在删除之前进行抢救。
-
-You can find a file’s checksum with  hadoop fs -checksum . This is useful to check
-whether two files in HDFS have the same contents—something that distcp does, for
-example (see “Parallel Copying with distcp” on page 76).
-
-你可以用hadoop fs -checksum找到一个文件的校验和。 这对检查很有用
-HDFS中的两个文件是否具有相同的内容 - distcp所做的内容
-示例（请参阅第72页上的“使用distcp进行并行复制”）。
+你可以用 hadoop fs -checksum 查看文件的校验和. 这个命令可以有效检查 HDFS 中的两个文件是否具有相同的内容 - 这正是 distcp 所做的工作(请参阅 76 页上的 "使用 distcp 进行并行复制").
 
 #### LocalFileSystem
 
@@ -1083,28 +965,25 @@ be read back correctly even if the setting for the chunk size has changed. Check
 are verified when the file is read, and if an error is detected,  LocalFileSystem throws
 a  ChecksumException
 
-Hadoop LocalFileSystem执行客户端校验和。 这意味着
-当你编写一个名为filename的文件时，文件系统客户端透明地创建一个隐藏文件
-文件，.filename.crc，在同一目录中包含每个块的校验和
-文件。 块的大小由file.bytes-per-checksum属性来控制
-默认为512字节。 块大小作为元数据存储在.crc文件中，因此文件可以
-即使块大小设置已更改，也可以正确读回。校验
-在文件被读取时被验证，并且如果检测到错误，则LocalFileSystem抛出
-一个ChecksumException
+Hadoop LocalFileSystem 执行客户端校验. 这意味着
+当你编写一个名为 filename 的文件时, 文件系统客户端透明地创建一个隐藏文件
+文件, .filename.crc, 在同一目录中包含每个块的校验和文件. 块的大小由 file.bytes-per-checksum 属性来控制
+默认为512字节. 块大小作为元数据存储在.crc文件中, 因此文件可以
+即使块大小设置已更改, 也可以正确读回. 校验
+在文件被读取时被验证, 并且如果检测到错误, 则 LocalFileSystem 抛出一个 ChecksumException 异常.
 
 Checksums are fairly cheap to compute (in Java, they are implemented in native code),
 typically adding a few percent overhead to the time to read or write a file. For most
 applications, this is an acceptable price to pay for data integrity. It is, however, possible
 to disable checksums, which is typically done when the underlying filesystem supports
 checksums natively. This is accomplished by using  RawLocalFileSystem in place of
-LocalFileSystem . To do this globally in an application, it suffices to remap the imple‐
+LocalFileSystem. To do this globally in an application, it suffices to remap the imple‐
 mentation for  file URIs by setting the property  fs.file.impl to the value
 org.apache.hadoop.fs.RawLocalFileSystem . Alternatively, you can directly create a
 RawLocalFileSystem instance, which may be useful if you want to disable checksum
 verification for only some reads, for example:
 
-校验和计算起来相当便宜（在Java中，它们是用本地代码实现的），
-通常在读取或写入文件时增加几个百分比的开销。 对于大多数
+校验和计算起来相当便宜(在 Java 中, 它们是用本地代码实现的), 通常在读取或写入文件时增加几个百分比的开销. 对于大多数
 应用程序，这是支付数据完整性的可接受的价格。 然而，这是可能的
 禁用校验和，这通常在底层文件系统支持时完成
 校验和本身。 这是通过使用RawLocalFileSystem来代替的
@@ -1159,3 +1038,114 @@ LocalFileSystem将有问题的文件及其校验和移动到一个侧面目录
 
 ### Compression
 
+File compression brings two major benefits: it reduces the space needed to store files,
+and it speeds up data transfer across the network or to or from disk. When dealing with
+large volumes of data, both of these savings can be significant, so it pays to carefully
+consider how to use compression in Hadoop.
+
+文件压缩带来两大好处：它减少了存储文件所需的空间，
+它可以加速网络或磁盘或数据的数据传输。 在处理时
+大量的数据，这些节省都可能是显着的，所以它要小心谨慎
+考虑如何在Hadoop中使用压缩。
+
+There are many different compression formats, tools, and algorithms, each with dif‐
+ferent characteristics. Table 5-1 lists some of the more common ones that can be used
+with Hadoop.
+
+有许多不同的压缩格式，工具和算法，每种都有dif-
+不同的特点。 表5-1列出了一些可以使用的更常见的一些
+与Hadoop。
+
+<p align="left"><font size=2>Table 5-1. A summary of compression formats</font></p>
+
+| Compression format | Tool | Algorithm | Filename extension | Splittable? |
+| ------| ------ | ------ | ------ | ------ |
+| DEFLATE  | N/A | DEFLATE | .deflate | No |
+| gzip  | gzip | DEFLATE | .gz | No |
+| bzip2  | bzip2 | bzip2 | .bz2 | Yes |
+| LZO  | lzop | LZO | .lzo | No |
+| LZ4  | N/A | N/A | .lz4 | No |
+| Snappy  | N/A | Snappy | .snappy | No |
+
+All compression algorithms exhibit a space/time trade-off: faster compression and de‐
+compression speeds usually come at the expense of smaller space savings. The tools
+listed in Table 5-1 typically give some control over this trade-off at compression time
+by offering nine different options:  –1 means optimize for speed, and  -9 means optimize
+for space. For example, the following command creates a compressed file file.gz using
+the fastest compression method:
+
+所有的压缩算法都表现出空间/时间的折衷：更快的压缩和解压缩，
+压缩速度通常以较小的空间节省为代价。 工具
+列在表5-1中通常会在压缩时对这种权衡提供一些控制
+通过提供九种不同的选项：-1表示优化速度，-9表示优化
+为空间。 例如，以下命令使用创建一个压缩文件file.gz
+最快的压缩方法：
+
+```bash
+  % gzip -1 file
+```
+
+The different tools have very different compression characteristics. gzip is a general-
+purpose compressor and sits in the middle of the space/time trade-off. bzip2 compresses
+more effectively than gzip, but is slower. bzip2’s decompression speed is faster than its
+compression speed, but it is still slower than the other formats. LZO, LZ4, and Snappy,
+on the other hand, all optimize for speed and are around an order of magnitude faster than gzip, but compress less effectively. Snappy and LZ4 are also significantly faster than
+LZO for decompression.
+
+不同的工具具有非常不同的压缩特性。 gzip是一个通用的，
+并且在空间/时间交换中处于中等位置。 bzip2压缩
+比gzip更有效，但速度更慢。 bzip2的解压速度比它快
+压缩速度，但仍然比其他格式慢。 LZO，LZ4和Snappy，
+另一方面，所有的优化速度都比gzip快一个数量级，但压缩效率较低。 Snappy和LZ4也显着快于
+LZO减压。
+
+The “Splittable” column in Table 5-1 indicates whether the compression format supports
+splitting (that is, whether you can seek to any point in the stream and start reading from
+some point further on). Splittable compression formats are especially suitable for Map‐
+Reduce; see “Compression and Input Splits” on page 105 for further discussion.
+
+表5-1中的“可拆分”列表示压缩格式是否支持
+分裂（也就是说，你是否可以寻求流中的任何一点并开始阅读
+一些点进一步）。 可拆分的压缩格式特别适用于Map-
+减少; 有关进一步的讨论，请参阅第105页上的“压缩和输入拆分”。
+
+#### Codecs
+
+A codec is the implementation of a compression-decompression algorithm. In Hadoop,
+a codec is represented by an implementation of the  CompressionCodec interface. So, for
+example,  GzipCodec encapsulates the compression and decompression algorithm for
+gzip. Table 5-2 lists the codecs that are available for Hadoop.
+
+编解码器是压缩 - 解压缩算法的实现。 在Hadoop中，
+编解码器由CompressionCodec接口的实现来表示。 因此对于
+例如，GzipCodec封装了压缩和解压缩算法
+gzip的。 表5-2列出了可用于Hadoop的编解码器。
+
+<p align="left"><font size=2>Table 5-2. Hadoop compression codecs</font></p>
+
+| Compression format | Hadoop CompressionCodec |
+| ------| ------ |
+| DEFLATE  | org.apache.hadoop.io.compress.DefaultCodec |
+| gzip  | org.apache.hadoop.io.compress.GzipCodec |
+| bzip2  | org.apache.hadoop.io.compress.BZip2Codec |
+| LZO  | com.hadoop.compression.lzo.LzopCodec |
+| LZ4  | org.apache.hadoop.io.compress.Lz4Codec |
+| Snappy  | org.apache.hadoop.io.compress.SnappyCodec |
+
+The LZO libraries are GPL licensed and may not be included in Apache distributions,
+so for this reason the Hadoop codecs must be downloaded separately from Google (or
+GitHub, which includes bug fixes and more tools). The  LzopCodec , which is compatible
+with the lzop tool, is essentially the LZO format with extra headers, and is the one you
+normally want. There is also an  LzoCodec for the pure LZO format, which uses
+the .lzo_deflate filename extension (by analogy with DEFLATE, which is gzip without
+the headers).
+
+LZO库是GPL许可的，可能不包含在Apache发行版中，
+所以出于这个原因，Hadoop编解码器必须与Google分别下载（或
+GitHub，其中包括错误修复和更多工具）。 LzopCodec，兼容
+与lzop工具，本质上是LZO格式与额外的标题，并且是你
+通常需要。 还有一个用于纯LZO格式的LzoCodec
+.lzo_deflate文件扩展名（类似于DEFLATE，不带gzip）
+标题）。
+
+* Compressing and decompressing streams with CompressionCodec
