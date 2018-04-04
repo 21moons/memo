@@ -176,32 +176,31 @@ and you hit the mark every time the probabilities that you are a good marksman a
 
 对于日内系统来说, 所有的测试, 优化和重新优化周期都会比日间或周间系统要短.
 
-#### 走势分析
+#### 走势分析(Walk forward analysis)
 
-总之, 为了同步系统与市场, 我们可以认为优化就是数据窗口的变化. 在电脑计算在大多数市场参与者中普及之前, 优化后"样本外时间”对于所有系统开发人员都是值得推荐的. "样本外时间”是一个与优化过程无关的数据窗口(通常是整个优化数据窗口的 10% 到20%), 通常被应用到优化后的交易系统上, 以便在未知的数据上验证系统的预测能力. 如果系统在未知的"样本外数据”上与在训练数据上表现一致, 这意味着该系统是强大的, 能够进行可信的交易.
+总之, 为了同步系统与市场, 我们可以说, 就数据窗口而言, 优化是可变的. 在电脑计算在大多数市场参与者中普及之前, 优化后"样本外周期(out-of-sample period)"对于所有交易系统开发人员都是值得推荐的. "样本外周期" 是一个与优化过程无关的数据窗口(通常是整个优化数据窗口的 10% 到 20%), 它会被应用到优化后的交易系统上, 以便在未知的数据上验证系统的预测能力. 如果系统在 "样本外数据" 上的表现与在训练集上表现一致, 这意味着该系统是稳健的, 能够进行可信的交易.
  
-**到目前为止, 我们讨论的关于交易系统的想法, 在任何流通的书籍中都可以找到. 但是这些关于优化的观点都过时了, 它们来自那些计算机没有被广泛使用的年代. 今天的优化已经发展成为一种更有效和更适当的测试方法, 可以让一个系统与长期价格序列匹配. 这个方法以 "前向分析" 或 "前向测试" 的名义不断发展.**
+**到目前为止, 我们讨论的关于交易系统的想法, 在任何流通的书籍中都可以找到. 但是这些关于优化的观点都过时了, 它们来自那些计算机没有被广泛使用的年代. 今天的优化已经发展成为一种更有效和更适当的测试方法, 可以让一个系统与长期价格序列匹配. 这个方法以 "前向分析(walk forward analysis)" 或 "前向测试(walk forward testing)" 的名义不断发展.**
 
-Walk forward testing is a kind of multiple and successive out-of-sample test over the
-same data series.Let us give an example: a system is optimised over the first two years
-of the data history and then applied over the subsequent 6 months of unseen data.Then
-the optimisation window moves ahead by a 6-month period and a new optimisation takes
-place in order to find the new inputs that will be applied over the forthcoming 6 months
-of data.And so on.This kind of optimisation is a "rolling” walk forward analysis since
-the starting period of the optimisation window is always moving ahead by a 6-month
-period each time we re-optimise the inputs.If the starting period is always the same and
-the optimisation period gets longer and longer as the time goes by we have an "anchored”
-walk forward analysis.For intraday systems the "rolling” walk forward analysis is more
-appropriate since intraday trading systems are more suited to the changing market
-conditions.
+前向测试是一种多轮的, 连续的样本外数据测试, 它不停的用样本外数据测试同一个数据序列. 让我们举个例子: 先用数据集中前两年的数据对系统进行优化, 然后用随后6个月的数据进行验证. 此时再将优化窗口前移6个月, 对系统进行新的优化, 再用未来6个月的数据进行验证, 就这样继续下去. 这种优化是一种 "滚动" 的前向分析, 因为每次我们重新优化时, 优化窗口总是前移6个月. 如果开始时间不变, 而是随着时间的推移增加优化窗口, 这种方式称为 "锚定" 前向分析. "滚动" 前向分析更适合于盘中交易系统, 因为盘中交易系统面对的是不断变化的市场条件.
+<p align="left"><font color=#fd0209 size=4 ><b>注: 因为趋势在不断变化, 所以将时间序列进行细分, 保持对趋势的跟踪, 提升灵敏度</b></font></p>
 
 The equity line resulting from a walk forward run is where we are closest to reality in
 trading systems development since it is what real trading will produce in our pockets.
+
 And with no surprise this walk forward analysis equity line will be deeply different from
 the equity line we can produce with testing and optimising a trading system on the whole
 price series.So often traders fool themselves deciding whether a trading system is to be
 discarded or not based on a whole price series equity line that in reality reveals nothing
 about the real trading situation after periodic re-optimisation.
+
+通过走向前行产生的股权是我们最接近现实的地方
+交易系统的开发过程中, 因为这就是真正的交易将给我们带来的收益.
+并不奇怪，这种前瞻性分析股权投资将与以往截然不同
+我们可以通过对整个交易系统进行测试和优化来生产的股票系列
+价格系列。往往交易员自己欺骗自己决定交易系统是否会
+丢弃或不基于整个价格系列股票线，实际上什么都没有揭示
+了解周期性重新优化后的真实交易情况。
 
 A widely accepted way to gauge the forecasting power of a system and its consistency is
 to calculate the ratio between the annualised net profit relating to the walk forward tests
@@ -217,6 +216,20 @@ trap the highest possible number of tests should be performed or at least 10 wal
 analysis tests with a test window (that is the data window where we apply the optimised
 trading systems) of at least 10 to 20% of the whole optimisation price series.
 
+衡量系统预测能力及其一致性的一种被广泛接受的方法是
+计算与步行前进测试相关的年度净利润之间的比率
+并在优化期间实现年化净利润。这就是走路
+正向效率比。如果该比率高于100％阈值，那么系统是
+有效率以及在实际交易中保持其预测能力的可能性是
+高。如果交易者决定交易系统的步行前进效率比刚刚好
+50％（许多交易者认为这个水平尽可能低），他们应该期望a
+该系统的演出水平至少达到表演的水平的一半
+优化测试。统计学证据还指出，系统可能不够优化
+在一些幸运的一两步行前测试中做出好的表现。为了避免这一点
+应该执行尽可能高的测试次数或至少向前走10步
+用测试窗口分析测试（即我们应用优化的数据窗口）
+交易系统）至少占整个优化价格序列的10％至20％。
+
 Every comment on the old type of static "out-of-sample” testing on the last part of the
 price series or on how to optimise a trading system is nowadays obsolete since most
 professional trading system development software has a walk forward analysis feature
@@ -229,12 +242,29 @@ check the robustness of the system with a shift test and then another shift opti
 In any case, for the sake of simplicity we will summarise some good tips about
 optimisation.
 
+每一次对最后一部分静态“样本外”测试的评论
+价格系列或如何优化交易系统现在已经过时，因为大多数
+专业交易系统开发软件具有漫步分析功能
+（例如大多数RINA系统产品，特别是Portfolio Maestro）。
+这并不意味着交易者不应该习惯于普通的测试
+和优化过程。我们建议在使用WFA之前，你应该做普通的
+关于优化的作业，以获得系统及其系统的完整视图
+性能。要运行完整的步行前进分析需要很长时间，因此速度更快
+通过班次测试来检查系统的稳健性，然后再进行另一次班次优化。
+无论如何，为了简单起见，我们将总结一些好的提示
+优化。
+
 If we have many inputs to be optimised the best methodology is to test one or two inputs
 per turn while all other inputs are kept static.In this way the risk of over-optimisation is
 kept at the lowest level since it is impossible to find the batch of inputs that will maximise
 the constraint we gave to the equation simply because the inputs will not be optimised
 together in the same run.
 
+如果我们有许多输入需要优化，最好的方法是测试一个或两个输入
+而所有其他输入都保持静态。这样就会导致过度优化的风险
+由于无法找到最大化的一批投入，因此保持在最低水平
+我们给方程的约束只是因为输入不会被优化
+在同一个运行中一起。
 
 #### 健壮性
 

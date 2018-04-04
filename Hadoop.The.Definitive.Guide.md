@@ -966,11 +966,10 @@ are verified when the file is read, and if an error is detected,  LocalFileSyste
 a  ChecksumException
 
 Hadoop LocalFileSystem 执行客户端校验. 这意味着
-当你编写一个名为 filename 的文件时, 文件系统客户端透明地创建一个隐藏文件
-文件, .filename.crc, 在同一目录中包含每个块的校验和文件. 块的大小由 file.bytes-per-checksum 属性来控制
-默认为512字节. 块大小作为元数据存储在.crc文件中, 因此文件可以
-即使块大小设置已更改, 也可以正确读回. 校验
-在文件被读取时被验证, 并且如果检测到错误, 则 LocalFileSystem 抛出一个 ChecksumException 异常.
+当你写入一个名为 filename 的文件时, 文件系统客户端透明地创建一个隐藏文件
+文件, .filename.crc, 在文件的同一目录中包含文件中每个块的校验. 块的大小由 file.bytes-per-checksum 属性来控制, 
+默认为 512 字节. 块大小作为元数据存储在 .crc 文件中, 因此即使块大小设置已更改, 文件也可以可以正确读回.
+在文件被读取时进行校验, 如果检测到错误, 则 LocalFileSystem 抛出一个 ChecksumException 异常.
 
 Checksums are fairly cheap to compute (in Java, they are implemented in native code),
 typically adding a few percent overhead to the time to read or write a file. For most
@@ -983,10 +982,9 @@ org.apache.hadoop.fs.RawLocalFileSystem . Alternatively, you can directly create
 RawLocalFileSystem instance, which may be useful if you want to disable checksum
 verification for only some reads, for example:
 
-校验和计算起来相当便宜(在 Java 中, 它们是用本地代码实现的), 通常在读取或写入文件时增加几个百分比的开销. 对于大多数
-应用程序，这是支付数据完整性的可接受的价格。 然而，这是可能的
+校验和计算起来相当容易(在 Java 中, 它们是用 native 代码实现的), 在读取或写入文件时仅增加几个百分比的开销. 对于大多数应用程序, 这是为了数据完整性能接受的代价. 然而, 这是可能的
 禁用校验和，这通常在底层文件系统支持时完成
-校验和本身。 这是通过使用RawLocalFileSystem来代替的
+校验和本身。 这是通过使用 RawLocalFileSystem 来代替的
 LocalFileSystem。 要在应用程序中全局执行此操作，只需重新映射执行程序即可，
 通过将属性fs.file.impl设置为该值来验证文件URI
 org.apache.hadoop.fs.RawLocalFileSystem。 或者，您可以直接创建一个
@@ -1005,9 +1003,8 @@ LocalFileSystem uses  ChecksumFileSystem to do its work, and this class makes it
 to add checksumming to other (nonchecksummed) filesystems, as  Checksum
 FileSystem is just a wrapper around  FileSystem . The general idiom is as follows:
 
-LocalFileSystem使用ChecksumFileSystem来完成它的工作，而这个类使得它变得容易
-将校验和添加到其他（非被检查的）文件系统，如Checksum
-FileSystem只是FileSystem的一个包装。 一般习语如下：
+LocalFileSystem 使用 ChecksumFileSystem 来完成它的工作, 而这个类使得
+将校验和添加到其他(非被检查的)文件系统变得容易, 如 ChecksumFileSystem 只是 FileSystem 的一个包装. 一般习语如下:
 
 ```java
   FileSystem rawFs = ...
@@ -1043,10 +1040,10 @@ and it speeds up data transfer across the network or to or from disk. When deali
 large volumes of data, both of these savings can be significant, so it pays to carefully
 consider how to use compression in Hadoop.
 
-文件压缩带来两大好处：它减少了存储文件所需的空间，
-它可以加速网络或磁盘或数据的数据传输。 在处理时
-大量的数据，这些节省都可能是显着的，所以它要小心谨慎
-考虑如何在Hadoop中使用压缩。
+文件压缩带来两大好处: 它减少了存储文件所需的空间,
+它可以加速网络或磁盘或数据的数据传输. 在处理时
+大量的数据, 这些节省都可能是显着的, 所以它要小心谨慎
+考虑如何在Hadoop中使用压缩.
 
 There are many different compression formats, tools, and algorithms, each with dif‐
 ferent characteristics. Table 5-1 lists some of the more common ones that can be used
