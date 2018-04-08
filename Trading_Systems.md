@@ -3,9 +3,10 @@ A new approach to system development and
 portfolio optimisation
 
 
-#Part I: 交易系统开发&评估实践指导
+# Part I: 交易系统开发&评估实践指导
 
-##Chapter 1: 什么是交易系统? 
+## Chapter 1: 什么是交易系统?
+
 交易系统就是一个自动定义入场点和出场点的, 不包含任何人为介入因素的规则集合.
 因为交易规则并没有定义交易时间和交易地点, 这样使得交易系统是静态可测试的.
 通过历史数据, 我们可以在一定程度上计算交易系统的可信度.
@@ -13,7 +14,8 @@ portfolio optimisation
 
 我们提到的资金管理并不是我们通常认为的风险管理, 而是如何去止损和止盈.
 
-###1.1 简易交易系统示例
+### 1.1 简易交易系统示例
+
 * 入场规则
 买入2份最近20天内价格创最高的合约;
 卖空2份最近20天内价格创新低的合约;
@@ -23,7 +25,8 @@ portfolio optimisation
 
 quantitative traders 量化交易者
 
-###1.2 为什么你需要交易系统
+### 1.2 为什么你需要交易系统
+
 统计结果毫无疑问地表明只有百分之几的交易者能够年复一年地打败市场.大部分是私人和机构交易者迟早会破产.如果你不属于幸运的随意交易者, 那么为了生存, 唯一的选择就是使用交易系统.如果你购买了这本书, 你很可能并不是一个成功的自由交易者.按照我的经验, 成功的自主交易者拥有天生的直觉, 能够依靠本能预测市场动向.与之对应的是, 有许多成功的基金经理, 机构和私募交易者利用预设的交易策略和投资方法获利.如果有人认为交易系统可以很容易地战胜所有的交易中的阻碍, 那么这是对交易系统的一种误解.一方面交易系统可以帮助交易者击败市场, 另一方面它也会引入一些新的问题.
 
 首先, 如果交易者在勇气方面有些问题, 面对机会时没有足够的魄力及时行事.这种情况下交易系统并非一个完美的解决方案.正如 Larry Williams 所说, "trading systems work, system traders do not”.对应一个有系统的交易者而言, 没有什么比忽略交易信号更大的恶行, Bill Eckhardt 写到：
@@ -38,8 +41,7 @@ quantitative traders 量化交易者
 
 使用机械的交易系统意味着你需要放弃自己持有的关于金融的信念, 放弃所有让你"感觉良好”的交易方式：通常每个人买入下跌中的合约会感觉良好, 买入价格创新高的合约则会感觉不舒服, 但有很大概率是后者的方法更好. 测试交易系统, 意味着数字的野蛮力量将会强加于你, 让你感觉倍受约束. 成为一名完全机械的交易者意味着与自己搏斗. 这是赢利的唯一途径, 除非你是一个幸运的劫匪, 日复一日地赚钱, 但却不知道如何赚钱.
 
-
-###1.3 交易系统的相关知识
+### 1.3 交易系统的相关知识
 
 主观技术分析(subjective technical analysis)和客观技术分析(objective technical analysis)之间有很大的区别.
 
@@ -57,15 +59,14 @@ quantitative traders 量化交易者
 5.结论.系统开发人员, 通过使用统计推断工具(例如信任区间和假设测试), 将通过衡量实际观察结果与预测是否一致, 确认假设是否成立.
 这个过程与化学或生物学等应用科学中用到的科学评估方法没有任何区别.
 
+## Chapter 2: 设计, 测试, 优化和评估一个交易系统 
 
-##Chapter 2: 设计, 测试, 优化和评估一个交易系统 
-
-###2.1 设计
+### 2.1 设计
 
 交易系统从一个像创业愿景一样的想法开始. 创新是介于创意和幻想之间的一类东西, 但是想法能否成为现实则取决于你为它奉献了多少时间. 有些系统交易员说一个关于交易系统的好主意是在你最不期待的时候出现的, 但是与优秀交易者聊天很好会有些帮助, 强烈建议你参加研讨会, 大会和专业交易者之间的聚会.即使能够亲眼看到自由交易如何交易也是有用的.不幸的是, 创新并没有确定的道路, 但下面是
 提示可以促使你走出想象的边界.
 
-####开始
+#### 开始
 
 书单：
 1.Traders www.traders-mag.co.uk
@@ -77,17 +78,19 @@ quantitative traders 量化交易者
 TradeStation 论坛
 "System Traders and Development Club” (STAD)
 
-####编程目标
+#### 编程目标
 
 一个系统由一个入场公式, 一个离场公式和一个资金管理公式组成. 离场公式与 "风险管理” 有关, 即初始止损, 追踪止损, 目标退出, 通俗一点来讲就是我们承担多少风险以及在每一笔交易如何承担风险. "资金管理”关心的是我们在每笔交易中投资多少, 就是我们买或卖多少股票或期货合约. 系统交易的初学者不愿意相信的是, 只要积极地使用杠杆和资金管理技术, 回报就会是惊人的, 换句话来说, 如果没有合适的资金和风险管理工具, 即使交易系统优秀的令人屏息, 也不会成为可行的投资工具.
 
-####交易时机
+#### 交易时机
+
 期货价格系列没有任何问题, 股票要考虑回购, 分红, 增发
 
-###2.2 测试
-####市场数据的重要性
+### 2.2 测试
 
-####回测时间长度
+#### 市场数据的重要性
+
+#### 回测时间长度
 
 文献指出, 一个交易系统为了确保健壮性和一致性, 必须在多时段多市场测试(multi-period multi-market test)中达到一定的成功率.
 一些机械交易者(mechanical traders)声称, 支持多市场的交易规则是不存在的, 因为交易系统有自己的个性, 交易系统只能适合部分而非全部市场.如果多市场测试是指在许多不同的市场 (债券, 股票, 商品, 货币, 股票, 等等) 中表现的都一样好, 从这个角度来讲, 能够通过多市场测试的系统确实很少.我们与这些交易者看法一致 - 不过, 经过20年的不断尝试, 今天的我们称得上是屈指可数的真正多市场交易系统之一.
@@ -96,7 +99,7 @@ TradeStation 论坛
 
 我们认为, 回测周期的长度由长期交易中形成的智慧决定.举个例子, 一支银行股的价格是波动的, 在2000年的泡沫期间, 这家银行突然与一家网上银行合并.那么在2001年, 使用之前的交易系统进行测试是不合适的, 因为股票的走势已经因为合并而改变了.所以严肃的交易者会去掉非正常环境下的数据, 比如说 1999-2000 的股市泡沫, 或者是2008年的原油危机.每个系统在波动巨大的时候都是有效的(意思是单向趋势), 但是只有一个稳健的系统才能在正常情况下始终保持稳定工作.不正常的情况时有发生, 我们知道将会面对它们, 然而市场在80％的时间中都是正常的, 当它变得疯狂导致风险太高时, 一个好的系统能够感知到.
 
-####规则复杂度和自由度
+#### 规则复杂度和自由度
 
 多市场测试的首要目标是检查一个系统是否按照预期的方式执行(如果手动测试, 系统发出的信号与程序员想要的信号位于同一位置), 并且当它们应用到市场上是否有利可图.我们不应该期望系统在我们测试的每个市场上都能盈利, 但能够盈利市场越多, 系统就越优秀.
 
@@ -160,6 +163,7 @@ and you hit the mark every time the probabilities that you are a good marksman a
 所有的交易系统指标都会在 +10% 和 -10% 的范围内变化.也就是说, 如果净利润是100美元, 那么实际净利润可能分布在从 90 美元到 110 美元的区间内.
 
 ### 2.3 交易系统的预测能力
+
 #### 优化
 
 优化在很多交易者中名声并不好. 甚至可以是对系统交易者的一种冒犯(系统交易者总是认为自己的系统已经足够好). 优化系统意味着在系统中找到那些能使利润最大化的系统变量, 或者能让交易者趋向主要目标的约束条件(例如, 系统更倾向于减少利润回吐, 而不是最大化利润). 让我们举一个例子：你有一个移动平均线交叉系统; 即系统在短期移动平均线穿过长期均线时买入. 针对这个系统的优化问题是短期均线是多短, 长期均线又是多长. 优化意味着"适合”一个系统; 也就是说让系统适应我们打算交易的市场[4].
@@ -248,13 +252,13 @@ Before taking an input into consideration it is obviously important to check wit
 and cursory optimisation if the input varies or if it does not have any change under
 optimisation.If not, keep it constant in order to increase the degrees of freedom.
 
-因此，投入，条件和变量的数量必须控制和减少
-到它的最小期限。但有多少输入，条件和变量太多？ 这个
-是一个有争议的领域，其中独特的标志是自由度的数量
-必须始终尊重我们在前面段落中描述的数字条件。
-在考虑意见之前，快速检查显然很重要
+因此, 投入, 条件和变量的数量必须控制和减少
+到它的最小期限. 但有多少输入, 条件和变量太多? 这个
+是一个有争议的领域, 其中独特的标志是自由度的数量
+必须始终尊重我们在前面段落中描述的数字条件.
+在考虑意见之前, 快速检查显然很重要
 粗略优化如果输入变化或者它没有任何改变
-优化。如果不是，保持它不变以增加自由度。
+优化. 如果不是, 保持它不变以增加自由度.
 
 Another point to be considered is what scan range to choose for each input.An example
 will give a clearer picture of this problem: if you want to test a moving average crossover
@@ -267,26 +271,24 @@ a 100% change and a step from 19 to 20 is a 5% change.But a step change from 199
 relationship so that the scan from 1 to 20 will be performed with a step of 2 and the scan
 from 20 to 200 will be performed with a step of 20.
 
-要考虑的另一点是每个输入的扫描范围。例如
-将给这个问题更清晰的描述：如果你想测试移动平均交叉
-系统在日常数据上具有短期移动平均线和长期移动平均线，
-你不能测试从1到20的短移动平均线（这就是所认为的
-短期与日常数据）和长期均线从20至200（后者是
-间隔通常被认为是长时间的日常数据）。从1到2的步骤是
-一个100％的变化，从19到20的步骤是5％的变化，但从199步骤变为
-200只是0.5％的变化。您需要将步进扫描范围几乎平行放置
-关系，从1到20的扫描将以2步和扫描进行
-从20到200将以20的步长执行。
+要考虑的另一点是每个输入的扫描范围. 例如
+将给这个问题更清晰的描述: 如果你想测试移动平均交叉
+系统在日常数据上具有短期移动平均线和长期移动平均线, 
+你不能测试从 1 到 20 的短移动平均线(这就是所认为的
+短期与日常数据)和长期均线从 20 至 200(后者是
+间隔通常被认为是长时间的日常数据). 从 1 到 2 的步骤是
+一个 100% 的变化, 从19到20的步骤是 5% 的变化, 但从 199 步骤变为 200 只是 0.5% 的变化. 您需要将步进扫描范围几乎平行放置
+关系, 从1到20的扫描将以2步和扫描进行
+从20到200将以20的步长执行.
 
 After optimisation is done a critical decision should be taken: which inputs’ batch should
 we choose? First of all what we need to do is create a function chart that puts the variable’s
 inputs scan range in relation to the net profits (or whichever else criteria was chosen for
 optimisation).
 
-优化完成后，应该做出关键的决定：批次应该输入哪些输入
-我们选择？ 首先我们需要做的是创建一个放置变量的函数图表
-输入与净利润相关的扫描范围（或其他选择的标准）
-优化）。
+优化完成后, 应该做出关键的决定: 批次应该输入哪些输入
+我们选择? 首先我们需要做的是创建一个放置变量的函数图表
+输入与净利润相关的扫描范围(或其他选择的标准)优化).
 
 What we are looking for is a line that ideally would be as close as possible to a horizontal
 line, so that the net profit is not dependent on the input values.Reality is much different
@@ -299,14 +301,14 @@ values.In other words we need to find an area where even after changing the inpu
 net profit stays stable.
 
 我们正在寻找的是理想情况下尽可能接近水平的线
-因此，净利润不依赖于投入价值。现实情况差别很大
-从理论上讲，我们应该满足于一条轻微增长的路线，然后才能达到一条
-然后降低。顶级水平是我们正在寻找的，这是一个领域
-即使在改变投入时，净利润也几乎保持不变。这是
-输入值强大的区域。这与利润上涨截然相反，
-这是净利润高的行中的一个点，但在周围深度下降
-换句话说，我们需要在改变输入值之后找到一个区域
-净利润保持稳定。
+因此, 净利润不依赖于投入价值. 现实情况差别很大
+从理论上讲, 我们应该满足于一条轻微增长的路线, 然后才能达到一条
+然后降低. 顶级水平是我们正在寻找的, 这是一个领域
+即使在改变投入时, 净利润也几乎保持不变. 这是
+输入值强大的区域. 这与利润上涨截然相反, 
+这是净利润高的行中的一个点, 但在周围深度下降
+换句话说, 我们需要在改变输入值之后找到一个区域
+净利润保持稳定.
 
 In summary we can state that there should be a logical path into the inputs’ results so that
 something coherent in terms of inputs’ batch should arise.When there is not a linear
@@ -314,20 +316,148 @@ relationship with inputs and net profits, or drawdown, or whichever constraint y
 putting as a primary rule of the optimisation, the whole set of results must be regarded as
 suspicious.
 
-总之，我们可以说，应该有一个逻辑的路径来输入结果
-在输入批次方面应该出现一致性。当不存在线性时
-与投入和净利润之间的关系，或者缩减，或者无论你是什么限制
-作为优化的主要规则，整套结果必须被视为
-可疑。
+总之, 我们可以说, 应该有一个逻辑的路径来输入结果
+在输入批次方面应该出现一致性. 当不存在线性时
+与投入和净利润之间的关系, 或者缩减, 或者无论你是什么限制
+作为优化的主要规则, 整套结果必须被视为可疑.
 
-###2.4 交易系统的评估
-What to look for in an indicator 27
-Average trade 28
-Percentage of profitable trades 28
-Trading Systems
-iv
-Profit factor 30
-Drawdown 30
-Time averages 31
-RINA Index 32
+### 2.4 交易系统的评估
+
+Evaluating a trading system can look easier than it is in reality. In the end what a prudent
+trader must do is something which is counterintuitive: at first glance we indeed would
+say that the higher the net profit the better the system. Unfortunately nothing is further
+from reality than this impression. We will put forward some general methodological
+criteria not based on net profit and absolute numbers in order to weed out this deceptive
+approach. Then we will introduce the indicator RINA index, which was elaborated by
+TradeStation. RINA index is more and more common among system traders and we
+believe that it comes closer to a good analysis than any other tool.
+
+评估一个交易系统看起来比现实要容易. 到底什么是审慎
+交易者必须做的是违反直觉的东西: 乍一看我们确实会这样做
+说净利越高系统越好. 不幸的是没有进一步的
+来自现实比这个印象. 我们将提出一些一般的方法论
+标准不是基于净利润和绝对数量来消除这种欺骗性
+做法. 接下来我们将介绍 RINA 指标, 该指标已经被详细阐述
+TradeStation. RINA 指数在系统交易者和我们之间越来越普遍
+相信它比任何其他工具都更接近良好的分析.
+
+#### What to look for in an indicator
+
+#### Average trade
+
+#### Percentage of profitable trades
+
+#### Profit factor
+
+#### Drawdown
+
+#### Time averages
+
+#### RINA Index
+
 ###2.5 结论
+
+# Part II: 交易系统开发&演进真实案例
+
+## Chapter 3: How to develop a trading system step-by-step – using the example of the British pound/US dollar pair
+
+* **Introduction**
+
+The currency markets are attractive to all types of traders including individual day traders,
+trading companies, financial and non-financial companies, banks and governments. They
+trade 24 hours a day from Monday morning in New Zealand until Friday night in
+America. Markets with strong movements like the British pound offer you all the
+possibilities to develop any type of trading system from any different idea on any time
+scale.
+
+In this chapter we will not present the very best trading system, which promises the
+highest profits. Instead our goal is to show you a trading system which is based on a
+sound idea and improved for a high robustness. As an aid to understanding our concept
+of trading system development you will find in the following pages a step-by-step
+explanation of how a new trading system is developed and tested for stability.
+
+As an example we choose a trend-following system with a breakout component. We take
+this system and show how you can improve it up to become a profitable trading system
+in the following steps.
+
+3.1 The entry logic and code. How to improve a normal moving average crossover
+system with a breakout filter.
+
+3.2 Evaluation of the trading system without parameter optimisation and exits – the
+importance of commissions and slippage.
+
+3.3 Variation of the input parameters: Optimisation and stability graphs.
+
+3.4 Inserting an intraday time filter: the importance of time for short-term trading.
+
+3.5 Determination of appropriate exits for your system by checking the development of
+all the system’s trades. How John Sweeney’s Maximum Adverse and Maximum
+
+Favourable Excursion can support you.
+
+Let’s start with the description of the logic of the system.
+
+### 3.1 The birth of a trading system
+
+#### The free LUXOR system code
+
+#### The entry logic
+
+### 3.2 First evaluation of the trading system
+
+#### Calculation without slippage and commissions
+
+#### Calculation after adding slippage and commissions
+
+### 3.3 Variation of the input parameters: optimisation and stability diagrams
+
+#### What does stability of a system’s input parameter mean? A short theoretical excursion
+
+#### Dependency of main system figures on the two moving averages
+
+#### Result with optimised input values
+
+### 3.4 Inserting an intraday time filter
+
+#### Finding the best entry time
+
+#### Result with added time filter
+
+### 3.5 Determination of appropriate exits – risk management
+
+#### The concept of Maximum Adverse Excursion (MAE)
+
+#### Inserting a risk stop loss
+
+#### Adding a trailing stop
+
+#### Looking for profit targets: Maximum Favourable Excursion(MFE)
+
+#### Summary: Result of the entry logic with the three added exits
+
+#### How exits are affected by money management
+
+### 3.6 Summary: Step-by-step development of a trading system
+
+## Chapter 4: Two methods for evaluating the system’s predictive power
+
+## Chapter 5: The factors around your system
+
+## Chapter 6: Periodic re-optimisation and walk forward analysis
+
+## Chapter 7: Position sizing example, using the LUXOR system
+
+# Part II: Systematic Portfolio Trading
+
+## Chapter 8: Dynamic portfolio construction
+
+### 8.1 Introduction to portfolio construction
+
+### 8.2 Correlation among equity lines
+
+### 8.3 A dynamic approach: equity line crossover
+
+### 8.4 Dynamic portfolio composition: the walk forward analysis activator
+
+### 8.5 Largest losing trade/largest losing streak/largest drawdown
+
