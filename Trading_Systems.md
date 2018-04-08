@@ -185,6 +185,19 @@ and you hit the mark every time the probabilities that you are a good marksman a
 前向测试是一种多轮的, 连续的样本外数据测试, 它不停的用样本外数据测试同一个数据序列. 让我们举个例子: 先用数据集中前两年的数据对系统进行优化, 然后用随后6个月的数据进行验证. 此时再将优化窗口前移6个月, 对系统进行新的优化, 再用未来6个月的数据进行验证, 就这样继续下去. 这种优化是一种 "滚动" 的前向分析, 因为每次我们重新优化时, 优化窗口总是前移6个月. 如果开始时间不变, 随着时间的推移增加优化窗口长度, 这种方式称为 "锚定" 前向分析. "滚动" 前向分析更适合于盘中交易系统, 因为盘中交易系统面对的是不断变化的市场条件.
 <p align="left"><font color=#fd0209 size=4 ><b>注: 因为短期趋势不断变化, 不可捉摸, 所以减小分析的时间跨度, 保持对趋势的跟踪, 提升灵敏度.</b></font></p>
 
+```
+Rolling walk forward: out-of-sample (OOS) = 20%:
+Run #1 |--------- In-sample 80% -------------- | OOS 20% |
+Run #2                 |---------- In-sample 80% ------------ | OOS 20% |
+Run #3                       |---------- In-sample 80% ---------------------| OOS 20% |
+Anchored walk forward: out-of-sample (OOS) = 20%:
+
+Run #1 |--------------In-sample 80% --------------- | OOS 20% |
+Run #2 |----------------------------- In-sample 80% ---------------| OOS 20% |
+Run #3 |-------------------------------------------- In-sample 80% --------------- | OOS 20% |
+```
+<p align="center"><font size=2>Figure 2.1: A graphical description of a “rolling” and “anchored” walk forward analysis</font></p>
+
 前向测试中产生的净值线是交易系统开发过程中最接近真实的地方, 因为这就是真正的交易将带给我们的. 显而易见的是, 同基于整个价值序列测试或优化交易系统生成的净值线相比, 这种前向分析生成的净值线将完全不同. <font color=#fd0209 size=4 ><b>注: 一个关注长期趋势, 一个追踪短期波动</b></font> 所以交易员在决定是否放弃一个交易系统时往往会欺骗自己, 依赖交易系统在整个价格序列上生成的净值线, 实际上这样的净值线压根就没有反映经过定期重优化后的真实交易情况<font color=#fd0209 size=4 ><b>注: 定期重优化拟合的是最近的波动, 对于全周期未必是适用的</b></font>.
 
 一种被广泛接受的衡量系统预测能力及其一致性的方法, 是计算前向测试年化净利润与优化期间年化净利润的比率. 这就是前向有效率(walk forward efficiency ratio). 如果该比率高于 100%, 那么系统是高效的, 在实际交易中保持预测能力的可能性也比较高. 如果交易者决定使用前向有效率为 50% 的系统进行交易(许多交易者认为这个水平已经是最低了), 他们应该期望该系统的实际表现至少是优化测试结果的一半. 统计学证据还指出, 一些优化的不够好的系统, 也可能在前向测试的一两步中幸运的有良好表现. 为了规避这个陷阱, 应该执行尽可能多的执行前向测试, 或者至少让测试窗口(即我们在优化后的交易系统上应用的数据窗口)前进 10 步, 并且测试窗口涉及的数据至少占整个优化价格序列的 10% 至 20%.
@@ -210,6 +223,8 @@ the trading system is a robust one.If you are more statistically inclined you ca
 subtract the standard deviation (or a multiple of it) from the average net profit and check
 if the average net profit remains positive in this case.
 
+如果系统是健壮的, 我们可以从后优化窗口中推断出来, 是否
+它是过度优化的产物?
 但是, 如果系统是健壮的或者是否可以从后优化窗口推导出来
 它是过度优化的产物? 我们不需要相信最好的地区
 执行投入是一个肯定的胜利方式. 如果足够的飞镖投掷在板上, a
@@ -233,6 +248,14 @@ Before taking an input into consideration it is obviously important to check wit
 and cursory optimisation if the input varies or if it does not have any change under
 optimisation.If not, keep it constant in order to increase the degrees of freedom.
 
+因此，投入，条件和变量的数量必须控制和减少
+到它的最小期限。但有多少输入，条件和变量太多？ 这个
+是一个有争议的领域，其中独特的标志是自由度的数量
+必须始终尊重我们在前面段落中描述的数字条件。
+在考虑意见之前，快速检查显然很重要
+粗略优化如果输入变化或者它没有任何改变
+优化。如果不是，保持它不变以增加自由度。
+
 Another point to be considered is what scan range to choose for each input.An example
 will give a clearer picture of this problem: if you want to test a moving average crossover
 system with a short-term moving average and a long-term moving average on daily data,
@@ -244,12 +267,26 @@ a 100% change and a step from 19 to 20 is a 5% change.But a step change from 199
 relationship so that the scan from 1 to 20 will be performed with a step of 2 and the scan
 from 20 to 200 will be performed with a step of 20.
 
+要考虑的另一点是每个输入的扫描范围。例如
+将给这个问题更清晰的描述：如果你想测试移动平均交叉
+系统在日常数据上具有短期移动平均线和长期移动平均线，
+你不能测试从1到20的短移动平均线（这就是所认为的
+短期与日常数据）和长期均线从20至200（后者是
+间隔通常被认为是长时间的日常数据）。从1到2的步骤是
+一个100％的变化，从19到20的步骤是5％的变化，但从199步骤变为
+200只是0.5％的变化。您需要将步进扫描范围几乎平行放置
+关系，从1到20的扫描将以2步和扫描进行
+从20到200将以20的步长执行。
+
 After optimisation is done a critical decision should be taken: which inputs’ batch should
 we choose? First of all what we need to do is create a function chart that puts the variable’s
 inputs scan range in relation to the net profits (or whichever else criteria was chosen for
 optimisation).
 
-
+优化完成后，应该做出关键的决定：批次应该输入哪些输入
+我们选择？ 首先我们需要做的是创建一个放置变量的函数图表
+输入与净利润相关的扫描范围（或其他选择的标准）
+优化）。
 
 What we are looking for is a line that ideally would be as close as possible to a horizontal
 line, so that the net profit is not dependent on the input values.Reality is much different
@@ -261,6 +298,15 @@ that is a point in the line where net profit is high but it decreases deeply in 
 values.In other words we need to find an area where even after changing the input values
 net profit stays stable.
 
+我们正在寻找的是理想情况下尽可能接近水平的线
+因此，净利润不依赖于投入价值。现实情况差别很大
+从理论上讲，我们应该满足于一条轻微增长的路线，然后才能达到一条
+然后降低。顶级水平是我们正在寻找的，这是一个领域
+即使在改变投入时，净利润也几乎保持不变。这是
+输入值强大的区域。这与利润上涨截然相反，
+这是净利润高的行中的一个点，但在周围深度下降
+换句话说，我们需要在改变输入值之后找到一个区域
+净利润保持稳定。
 
 In summary we can state that there should be a logical path into the inputs’ results so that
 something coherent in terms of inputs’ batch should arise.When there is not a linear
@@ -268,6 +314,11 @@ relationship with inputs and net profits, or drawdown, or whichever constraint y
 putting as a primary rule of the optimisation, the whole set of results must be regarded as
 suspicious.
 
+总之，我们可以说，应该有一个逻辑的路径来输入结果
+在输入批次方面应该出现一致性。当不存在线性时
+与投入和净利润之间的关系，或者缩减，或者无论你是什么限制
+作为优化的主要规则，整套结果必须被视为
+可疑。
 
 ###2.4 交易系统的评估
 What to look for in an indicator 27
