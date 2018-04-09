@@ -29,7 +29,7 @@ quantitative traders 量化交易者
 
 统计结果毫无疑问地表明只有百分之几的交易者能够年复一年地打败市场.大部分是私人和机构交易者迟早会破产.如果你不属于幸运的随意交易者, 那么为了生存, 唯一的选择就是使用交易系统.如果你购买了这本书, 你很可能并不是一个成功的自由交易者.按照我的经验, 成功的自主交易者拥有天生的直觉, 能够依靠本能预测市场动向.与之对应的是, 有许多成功的基金经理, 机构和私募交易者利用预设的交易策略和投资方法获利.如果有人认为交易系统可以很容易地战胜所有的交易中的阻碍, 那么这是对交易系统的一种误解.一方面交易系统可以帮助交易者击败市场, 另一方面它也会引入一些新的问题.
 
-首先, 如果交易者在勇气方面有些问题, 面对机会时没有足够的魄力及时行事.这种情况下交易系统并非一个完美的解决方案.正如 Larry Williams 所说, "trading systems work, system traders do not”.对应一个有系统的交易者而言, 没有什么比忽略交易信号更大的恶行, Bill Eckhardt 写到：
+首先, 如果交易者在勇气方面有些问题, 面对机会时没有足够的魄力及时行事.这种情况下交易系统并非一个完美的解决方案.正如 Larry Williams 所说, "trading systems work, system traders do not".对应一个有系统的交易者而言, 没有什么比忽略交易信号更大的恶行, Bill Eckhardt 写到：
 
 *如果你做了一笔坏交易, 你还有资金管理, 你还有一大堆东西能够帮助你, 做一笔坏交易真的没有你想的这么严重.但是, 如果你错过了一笔好的交易, 不要找任何理由.如果你遇到了一笔注定盈利的交易, 而你却错过了它, 你注定会在这个游戏中完蛋.*
 
@@ -39,7 +39,7 @@ quantitative traders 量化交易者
 
 更重要的是, 我们可以说做交易并不像在一个理性的企业工作, 你做出计划, 得出结论, 一切可以用逻辑的方式来解释. 恐惧和贪婪用一种大脑无法掌控的方式操纵价格. 当然有一些幸运交易者可以凭直觉地打败市场, 但在这些情况下, 他们并不能清晰的解释他们为什么买或卖. 如果这一切都是真的, 意味着你需要一个不理智和不合逻辑的工具来进入和退出市场, 这东西不能让你完全理解, 而且违反直觉. 通常情况下, 那些你认为是不合逻辑的, 或者只会导致失败的信号会让你成为赢家.
 
-使用机械的交易系统意味着你需要放弃自己持有的关于金融的信念, 放弃所有让你"感觉良好”的交易方式：通常每个人买入下跌中的合约会感觉良好, 买入价格创新高的合约则会感觉不舒服, 但有很大概率是后者的方法更好. 测试交易系统, 意味着数字的野蛮力量将会强加于你, 让你感觉倍受约束. 成为一名完全机械的交易者意味着与自己搏斗. 这是赢利的唯一途径, 除非你是一个幸运的劫匪, 日复一日地赚钱, 但却不知道如何赚钱.
+使用机械的交易系统意味着你需要放弃自己持有的关于金融的信念, 放弃所有让你"感觉良好"的交易方式：通常每个人买入下跌中的合约会感觉良好, 买入价格创新高的合约则会感觉不舒服, 但有很大概率是后者的方法更好. 测试交易系统, 意味着数字的野蛮力量将会强加于你, 让你感觉倍受约束. 成为一名完全机械的交易者意味着与自己搏斗. 这是赢利的唯一途径, 除非你是一个幸运的劫匪, 日复一日地赚钱, 但却不知道如何赚钱.
 
 ### 1.3 交易系统的相关知识
 
@@ -54,7 +54,7 @@ quantitative traders 量化交易者
 因此, 技术分析利用统计推断工具, 从单个样本开始观察, 目的是评估整个人群的统计学属性. 通过这种方式, 技术分析是可以量化的, 就像统计学一样.此外, 技术分析和科学一样, 试图通过变量之间的函数关系来预测未来. 如果一个变量变了, 那么因变量会随之变化.技术分析中的规则对应统计学中的函数, 这里函数是有一定概率的.科学技术分析和统计学之间没有任何障碍, 那些不喜欢主观技术分析的人提出的疑惑突然消失了.定量技术分析借用了应用科学中的典型分析方法：由牛顿发起并由波普尔推广的假设 - 演绎方法.该假设演绎法有五个阶段：
 1.观察.系统开发人员, 通过持续观察金融市场上的日内波动及日间波动, 设计变量之间的关系, 例如当天交易量和收盘价之间的关联, 或者指数和第二天开盘价之间的关联.
 2.假设.假设来自系统开发人员的创新思维 - 一个智力火花, 其中的起源无法得知.系统开发人员必须清晰的知道他的假设不是来源于分析样本的特殊性, 而是从全部数据中推演出来, 对其中的大部分数据都是适用的.
-3.预测.如果这种关系是真的, 那么可以依据假设来构建一个条件命题或一个预测, "如果这个假设确实是真实的, 预测将准确的告诉我们可以在新的集合中观察到什么”.
+3.预测.如果这种关系是真的, 那么可以依据假设来构建一个条件命题或一个预测, "如果这个假设确实是真实的, 预测将准确的告诉我们可以在新的集合中观察到什么".
 4.验证.系统开发人员验证预测在新集合中是否成立.
 5.结论.系统开发人员, 通过使用统计推断工具(例如信任区间和假设测试), 将通过衡量实际观察结果与预测是否一致, 确认假设是否成立.
 这个过程与化学或生物学等应用科学中用到的科学评估方法没有任何区别.
@@ -76,11 +76,11 @@ quantitative traders 量化交易者
 5.Technical Analysis of Stocks & Commodities www.traders.com
 
 TradeStation 论坛
-"System Traders and Development Club” (STAD)
+"System Traders and Development Club" (STAD)
 
 #### 编程目标
 
-一个系统由一个入场公式, 一个离场公式和一个资金管理公式组成. 离场公式与 "风险管理” 有关, 即初始止损, 追踪止损, 目标退出, 通俗一点来讲就是我们承担多少风险以及在每一笔交易如何承担风险. "资金管理”关心的是我们在每笔交易中投资多少, 就是我们买或卖多少股票或期货合约. 系统交易的初学者不愿意相信的是, 只要积极地使用杠杆和资金管理技术, 回报就会是惊人的, 换句话来说, 如果没有合适的资金和风险管理工具, 即使交易系统优秀的令人屏息, 也不会成为可行的投资工具.
+一个系统由一个入场公式, 一个离场公式和一个资金管理公式组成. 离场公式与 "风险管理" 有关, 即初始止损, 追踪止损, 目标退出, 通俗一点来讲就是我们承担多少风险以及在每一笔交易如何承担风险. "资金管理"关心的是我们在每笔交易中投资多少, 就是我们买或卖多少股票或期货合约. 系统交易的初学者不愿意相信的是, 只要积极地使用杠杆和资金管理技术, 回报就会是惊人的, 换句话来说, 如果没有合适的资金和风险管理工具, 即使交易系统优秀的令人屏息, 也不会成为可行的投资工具.
 
 #### 交易时机
 
@@ -97,7 +97,7 @@ TradeStation 论坛
 
 反过来说, 正因为多周期测试是令人厌恶的, 机械交易者才认为过去只能是过去(意思是对未来并没有指导意义)：市场是随着经济结构和社会的变化而不断变化的.为什么会认为市场是一成不变呢？很多使用日内交易系统的系统交易者的绝不会用12个月之前的数据做回测, 甚至有些只用3个月内的数据.
 
-我们认为, 回测周期的长度由长期交易中形成的智慧决定.举个例子, 一支银行股的价格是波动的, 在2000年的泡沫期间, 这家银行突然与一家网上银行合并.那么在2001年, 使用之前的交易系统进行测试是不合适的, 因为股票的走势已经因为合并而改变了.所以严肃的交易者会去掉非正常环境下的数据, 比如说 1999-2000 的股市泡沫, 或者是2008年的原油危机.每个系统在波动巨大的时候都是有效的(意思是单向趋势), 但是只有一个稳健的系统才能在正常情况下始终保持稳定工作.不正常的情况时有发生, 我们知道将会面对它们, 然而市场在80％的时间中都是正常的, 当它变得疯狂导致风险太高时, 一个好的系统能够感知到.
+我们认为, 回测周期的长度由长期交易中形成的智慧决定.举个例子, 一支银行股的价格是波动的, 在2000年的泡沫期间, 这家银行突然与一家网上银行合并.那么在2001年, 使用之前的交易系统进行测试是不合适的, 因为股票的走势已经因为合并而改变了.所以严肃的交易者会去掉非正常环境下的数据, 比如说 1999-2000 的股市泡沫, 或者是2008年的原油危机.每个系统在波动巨大的时候都是有效的(意思是单向趋势), 但是只有一个稳健的系统才能在正常情况下始终保持稳定工作.不正常的情况时有发生, 我们知道将会面对它们, 然而市场在80%的时间中都是正常的, 当它变得疯狂导致风险太高时, 一个好的系统能够感知到.
 
 #### 规则复杂度和自由度
 
@@ -113,7 +113,7 @@ TradeStation 论坛
 
 对于那些没有数学思维的人, 规则的复杂性和自由度是一个难题.即使很多数学家也不能说清楚什么是自由度.在解释自由度时(通常表示为df), 也许最恰当和容易理解的解释就是那个关于已婚男人的笑话: "我只有一个妻子, 我的自由度是零.我应该通过观察其他女性来增加我的"样本量"."
 
-严格来讲, 从统计到数学, 几何, 物理, 和力学, 自由度这个概念有很多定义. 在互联网上有一篇免费的论文尝试简单解释这个概念, 当然这是个困难的任务. 自由度的第一个定义(Larry Toothaker, 1986)可能是 "独立组件的数量减去估计参数的数量(the number of independent components minus the number of estimated parameters)”. 这个定义源于Walker(1940)的定义："观察的次数减去这些观察之间必要关系的数量(The number of observations minus the number of necessary relations among these observations)". 但是如果从实践出发, 最好的解释是 Robert Schulle 博士(俄克拉荷马大学)的一个说法:
+严格来讲, 从统计到数学, 几何, 物理, 和力学, 自由度这个概念有很多定义. 在互联网上有一篇免费的论文尝试简单解释这个概念, 当然这是个困难的任务. 自由度的第一个定义(Larry Toothaker, 1986)可能是 "独立组件的数量减去估计参数的数量(the number of independent components minus the number of estimated parameters)". 这个定义源于Walker(1940)的定义："观察的次数减去这些观察之间必要关系的数量(The number of observations minus the number of necessary relations among these observations)". 但是如果从实践出发, 最好的解释是 Robert Schulle 博士(俄克拉荷马大学)的一个说法:
 
 
 在只有一个数据点的散点图(scatter plot)中, 你不可能对回归线(regression line)做任何估计. 这条线可以走向任何方向...此时你没有自由度(n-1 = 0, 其中 n = 1)用于估计(这可能会让你想起那个关于已婚男人的笑话). 为了绘制回归线, 你必须至少有两个数据点(一个妻子和一个情妇). 在这种情况下, 你有一个自由度用于估计 (n-1 = 1, 其中 n = 2). 换句话说, 自由度告诉你用于估计的有效数据数量. 但是, 如果只有两个数据点, 则可以将它们连成一条直线回归线, 并得到完美的相关性 (确定指数 = 1.00). 因此自由度越低, 评估效果越差.
@@ -166,7 +166,7 @@ and you hit the mark every time the probabilities that you are a good marksman a
 
 #### 优化
 
-优化在很多交易者中名声并不好. 甚至可以是对系统交易者的一种冒犯(系统交易者总是认为自己的系统已经足够好). 优化系统意味着在系统中找到那些能使利润最大化的系统变量, 或者能让交易者趋向主要目标的约束条件(例如, 系统更倾向于减少利润回吐, 而不是最大化利润). 让我们举一个例子：你有一个移动平均线交叉系统; 即系统在短期移动平均线穿过长期均线时买入. 针对这个系统的优化问题是短期均线是多短, 长期均线又是多长. 优化意味着"适合”一个系统; 也就是说让系统适应我们打算交易的市场[4].
+优化在很多交易者中名声并不好. 甚至可以是对系统交易者的一种冒犯(系统交易者总是认为自己的系统已经足够好). 优化系统意味着在系统中找到那些能使利润最大化的系统变量, 或者能让交易者趋向主要目标的约束条件(例如, 系统更倾向于减少利润回吐, 而不是最大化利润). 让我们举一个例子：你有一个移动平均线交叉系统; 即系统在短期移动平均线穿过长期均线时买入. 针对这个系统的优化问题是短期均线是多短, 长期均线又是多长. 优化意味着"适合"一个系统; 也就是说让系统适应我们打算交易的市场[4].
 
 但是优化是一把双刃剑：从波动性, 初始风险, 回报等角度, 让系统来适应市场是一回事.但是, 寻找那些可能让你在过去赚得最多, 却对未来没有预测能力的输入则是另外一回事. 让我们假设有一个系统, 每天都会以最低的价格购买并在最高的价格出售, 系统具有精确的入场和出场价格, 使其能够达成利润最大的目标. 这是一种错误的优化, 因为我们寻找一个每天都在变化, 而只能在每天收市后才能确认的最好价格. 这个系统没有任何预测能力(泛化, 规则必须有普遍意义).
 
@@ -200,49 +200,32 @@ Run #1 |--------------In-sample 80% --------------- | OOS 20% |
 Run #2 |----------------------------- In-sample 80% ---------------| OOS 20% |
 Run #3 |-------------------------------------------- In-sample 80% --------------- | OOS 20% |
 ```
-<p align="center"><font size=2>Figure 2.1: A graphical description of a “rolling” and “anchored” walk forward analysis</font></p>
+<p align="center"><font size=2>Figure 2.1: A graphical description of a  "rolling" and  "anchored" walk forward analysis</font></p>
 
 前向测试中产生的净值线是交易系统开发过程中最接近真实的地方, 因为这就是真正的交易将带给我们的. 显而易见的是, 同基于整个价值序列测试或优化交易系统生成的净值线相比, 这种前向分析生成的净值线将完全不同. <font color=#fd0209 size=4 ><b>注: 一个关注长期趋势, 一个追踪短期波动</b></font> 所以交易员在决定是否放弃一个交易系统时往往会欺骗自己, 依赖交易系统在整个价格序列上生成的净值线, 实际上这样的净值线压根就没有反映经过定期重优化后的真实交易情况<font color=#fd0209 size=4 ><b>注: 定期重优化拟合的是最近的波动, 对于全周期未必是适用的</b></font>.
 
 一种被广泛接受的衡量系统预测能力及其一致性的方法, 是计算前向测试年化净利润与优化期间年化净利润的比率. 这就是前向有效率(walk forward efficiency ratio). 如果该比率高于 100%, 那么系统是高效的, 在实际交易中保持预测能力的可能性也比较高. 如果交易者决定使用前向有效率为 50% 的系统进行交易(许多交易者认为这个水平已经是最低了), 他们应该期望该系统的实际表现至少是优化测试结果的一半. 统计学证据还指出, 一些优化的不够好的系统, 也可能在前向测试的一两步中幸运的有良好表现. 为了规避这个陷阱, 应该执行尽可能多的执行前向测试, 或者至少让测试窗口(即我们在优化后的交易系统上应用的数据窗口)前进 10 步, 并且测试窗口涉及的数据至少占整个优化价格序列的 10% 至 20%.
 
-讨论 "静态的基于数据集中部分数据的 "样本外" 测试" 或 "如何优化交易系统" 都已经过时, 因为大多数专业交易系统开发软件都集成了前向分析功能. 这并不意味着交易者不用熟悉常见的测试和优化过程. 我们建议在使用 WFA 之前, 你应该做关于优化的作业, 从而获得系统及其性能的完整视图. 要运行完整的前向分析耗时巨大, 为了提升速度, 我们可以通过先进行一轮测试, 再进行一轮优化来检查系统的稳健性. 无论如何, 为了简单起见, 我们将总结一些好的优化提示.
+讨论 "静态的基于数据集中部分数据的 '样本外' 测试" 或 "如何优化交易系统" 都已经过时, 因为大多数专业交易系统开发软件都集成了前向分析功能. 这并不意味着交易者不用熟悉常见的测试和优化过程. 我们建议在使用 WFA 之前, 你应该做关于优化的作业, 从而获得系统及其性能的完整视图. 要运行完整的前向分析耗时巨大, 为了提升速度, 我们可以通过先进行一轮测试, 再进行一轮优化来检查系统的稳健性. 无论如何, 为了简单起见, 我们将总结一些好的优化提示.
 
 如果我们有许多输入需要优化, 最好的方法是每轮测试一到两个输入, 与此同时其他输入都保持不变.<font color=#fd0209 size=4 ><b>注: 数学思维</b></font> 这样能将过度优化的风险降到最低, 因为当所有的输入不在同一轮优化时, 不可能简单的找到一组输入能让我们给方程的约束最大化.(since it is impossible to find the batch of inputs that will maximise the constraint we gave to the equation simply because the inputs will not be optimised together in the same run.)
 
 #### 健壮性
 
-But can we deduce from the post-optimisation window if the system is robust or whether
-it is the product of over-optimisation? We do not need to trust the area of the best
-performing inputs as a sure way to victory.If enough darts are thrown at the board, a
-high-scoring grouping will occur or, put in another manner, if a monkey is put in front of
-a piano and enough time is allotted, it will eventually compose a sonata.This joke
+This joke
 suggests that, at very least, the average of the results should be profitable if we want to
 trust the most performing inputs.If just 1 to 5% of the results are profitable this could
 have happened by accident: if the system’s variables are given wide enough input ranges
-eventually the system will make a fortune over the past data.A robust system will show
+eventually the system will make a fortune over the past data.
+A robust system will show
 post-optimisation positive performances not only in 5% of all the tests but on the average
-of the tests.In other words, if the average results are positive then we can assume that
+of the tests.
+In other words, if the average results are positive then we can assume that
 the trading system is a robust one.If you are more statistically inclined you can also
 subtract the standard deviation (or a multiple of it) from the average net profit and check
 if the average net profit remains positive in this case.
 
-如果系统是健壮的, 我们可以从后优化窗口中推断出来, 是否
-它是过度优化的产物?
-但是, 如果系统是健壮的或者是否可以从后优化窗口推导出来
-它是过度优化的产物? 我们不需要相信最好的地区
-执行投入是一个肯定的胜利方式. 如果足够的飞镖投掷在板上, a
-高分组会发生, 或者换句话说, 如果猴子被放在前面
-一架钢琴和足够的时间分配, 它将最终构成一首奏鸣曲. 这个笑话
-这表明至少, 如果我们愿意, 结果的平均值应该是有利可图的
-相信性能最好的输入. 如果只有 1% 到 5% 的结果是有利可图的, 这可以
-都是偶然发生的: 如果系统的变量有足够宽的输入范围
-这个系统最终会为过去的数据发财. 一个强大的系统将显示出来
-优化后的积极表现不仅在所有测试的 5% 中, 而且在平均水平上
-的测试. 换句话说, 如果平均结果是肯定的, 那么我们可以假设
-交易系统是一个强大的. 如果你更统计倾向, 你也可以
-从平均净利润和支票中减去标准偏差(或其倍数)
-如果在这种情况下平均净利润保持正值.
+我们是否能从后优化窗口 (post-optimisation window) 中推断出, 系统是健壮的, 抑或是过度优化的产物? 我们不需要迷信最优执行输入 (the best performing inputs), 将其视为必胜的条件. 如果足够的飞镖投掷在板上, 必然会有高分组, 或者换句话说, 如果把一只猴子放在钢琴前, 只要有足够的时间, 最终它能弹出一首奏鸣曲. 这个笑话表明, 如果我们相信性能最好的输入 (the most performing inputs) 的存在, 至少结果的平均值应该是盈利的. 如果仅有 1% 到 5% 的结果是有利可图的, 这可能是偶然的: 如果系统的变量有足够大的输入区间, 这个系统最终能依靠历史数据发财. 一个稳健的系统不仅在所有测试的 5% 的中表现良好, 而是在所有测试的平均值. 换句话说, 如果平均结果是盈利的, 那么我们可以假设交易系统是稳健的. 如果你更倾向统计, 如果在这种情况下平均净利润保持正值, 你也可以从平均净利润和支票中减去标准偏差(或其倍数).
 
 So the number of inputs, conditions and variables must be kept under control and reduced
 to its minimum term.But how many inputs, conditions and variables are too many? This
@@ -252,11 +235,9 @@ Before taking an input into consideration it is obviously important to check wit
 and cursory optimisation if the input varies or if it does not have any change under
 optimisation.If not, keep it constant in order to increase the degrees of freedom.
 
-因此, 投入, 条件和变量的数量必须控制和减少
-到它的最小期限. 但有多少输入, 条件和变量太多? 这个
-是一个有争议的领域, 其中独特的标志是自由度的数量
+因此, 输入, 条件和变量的数量必须可控并减少至最小期限. 但多少个输入, 条件和变量才算太多? 这是一个有争议的领域, 其中独特的标志是自由度的数量
 必须始终尊重我们在前面段落中描述的数字条件.
-在考虑意见之前, 快速检查显然很重要
+在考虑意见之前, 快速检查显然很重要 0
 粗略优化如果输入变化或者它没有任何改变
 优化. 如果不是, 保持它不变以增加自由度.
 
@@ -271,15 +252,14 @@ a 100% change and a step from 19 to 20 is a 5% change.But a step change from 199
 relationship so that the scan from 1 to 20 will be performed with a step of 2 and the scan
 from 20 to 200 will be performed with a step of 20.
 
-要考虑的另一点是每个输入的扫描范围. 例如
-将给这个问题更清晰的描述: 如果你想测试移动平均交叉
+要考虑的另一点是每个输入的扫描范围. 举个例子来描述这个问题: 如果你想测试移动平均交叉
 系统在日常数据上具有短期移动平均线和长期移动平均线, 
 你不能测试从 1 到 20 的短移动平均线(这就是所认为的
 短期与日常数据)和长期均线从 20 至 200(后者是
 间隔通常被认为是长时间的日常数据). 从 1 到 2 的步骤是
-一个 100% 的变化, 从19到20的步骤是 5% 的变化, 但从 199 步骤变为 200 只是 0.5% 的变化. 您需要将步进扫描范围几乎平行放置
-关系, 从1到20的扫描将以2步和扫描进行
-从20到200将以20的步长执行.
+一个 100% 的变化, 从 19 到 20 的步骤是 5% 的变化, 但从 199 步骤变为 200 只是 0.5% 的变化. 您需要将步进扫描范围几乎平行放置
+关系, 从 1 到 20 的扫描将以 2 步和扫描进行
+从 20 到 200 将以 20 的步长执行.
 
 After optimisation is done a critical decision should be taken: which inputs’ batch should
 we choose? First of all what we need to do is create a function chart that puts the variable’s
@@ -289,6 +269,10 @@ optimisation).
 优化完成后, 应该做出关键的决定: 批次应该输入哪些输入
 我们选择? 首先我们需要做的是创建一个放置变量的函数图表
 输入与净利润相关的扫描范围(或其他选择的标准)优化).
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop)
+<p align="center"><font size=2>Figure 2.2: In the middle of the chart as the variable varies the net profit stays almost at the
+same level.</font></p>
 
 What we are looking for is a line that ideally would be as close as possible to a horizontal
 line, so that the net profit is not dependent on the input values.Reality is much different
@@ -362,9 +346,9 @@ among multiple asset classes or multiple trading systems
 Net profit has neither of these features.
 
 Moreover an indicator should always convey the idea of how much the measure he is
-trying to catch is “consistent”. What is consistency? A synonym of consistency could be
-“stability”: consistency measures how stable an indicator is. Let’s take the example of
-the net profit: net profit in itself says nothing about “when” the profit was reaped. It could
+trying to catch is  "consistent". What is consistency? A synonym of consistency could be
+ "stability": consistency measures how stable an indicator is. Let’s take the example of
+the net profit: net profit in itself says nothing about  "when" the profit was reaped. It could
 be that profit varied a lot from year to year or even that it was made just in a single year
 and all the other years the system lost money. Would you place more trust in a system
 that makes money year after year or simply a system that made money 10 years ago and
@@ -374,18 +358,18 @@ profit was so huge 10 years ago and the following losses were acceptable; but wh
 is apparent that the windfall 10 years ago could likely be an outlier, an abnormal
 occurrence that will never be repeated.
 
-此外，一个指标应该总是传达他是多少措施的想法
-试图抓住是“一致的”。什么是一致性？一致性的同义词可能是
-“稳定性”：一致性衡量指标的稳定性。我们来举个例子吧
-净利润：净利润本身并没有提到“何时”获利。它可以
-因为每年的利润差异很大，甚至仅仅在一年内就可以完成
-并且所有其他年份系统都损失了资金。你会更信任系统吗？
-年复一年赚钱，或者只是一个10年前赚钱的系统
-那么每年都会亏钱？最终这个后来的系统赚钱，因为
-10年前利润非常巨大，以下损失是可以接受的;但谁会
- 未来能够遵循这个系统吗？没有人会交易这样的系统，因为它
-很明显，10年前的这笔意外可能是一个异常，一个异常
-将不会重复的事件。
+此外,一个指标应该总是传达他是多少措施的想法
+试图抓住是 "一致的".什么是一致性？一致性的同义词可能是
+ "稳定性"：一致性衡量指标的稳定性.我们来举个例子吧
+净利润：净利润本身并没有提到 "何时"获利.它可以
+因为每年的利润差异很大,甚至仅仅在一年内就可以完成
+并且所有其他年份系统都损失了资金.你会更信任系统吗？
+年复一年赚钱,或者只是一个10年前赚钱的系统
+那么每年都会亏钱？最终这个后来的系统赚钱,因为
+10年前利润非常巨大,以下损失是可以接受的;但谁会
+ 未来能够遵循这个系统吗？没有人会交易这样的系统,因为它
+很明显,10年前的这笔意外可能是一个异常,一个异常
+将不会重复的事件.
 
 So we can conclude that a consistent trading system has an even distribution not only of
 profits and losses but also of the series of consecutive winning and losing trades. If you
@@ -395,11 +379,11 @@ to month the trading system is not consistent. An intraday system could also be 
 by weekly performances.
 
 所以我们可以得出结论：一致的交易系统不仅具有均匀分布
-盈利和亏损，而且还包括一系列连续的赢输行业。 如果你
-逐年削减统一的交易系统的统计数据，你会发现所有的指标
-将几乎相同。 如果每年或每月出现重大差异
-到月份交易系统并不一致。 一个盘中系统也可以被测量
-每周演出。
+盈利和亏损,而且还包括一系列连续的赢输行业. 如果你
+逐年削减统一的交易系统的统计数据,你会发现所有的指标
+将几乎相同. 如果每年或每月出现重大差异
+到月份交易系统并不一致. 一个盘中系统也可以被测量
+每周演出.
 
 #### Average trade
 
@@ -414,16 +398,16 @@ nominal average trade value with the nominal value of the contract in a given pe
 What we can recommend is to plot the historical average percentage value of the trades
 in order to have a clear picture of the profitability trend of the system over the years.
 
-交易系统良好性的一个重要指标是平均交易量，也就是说
-净利润除以交易次数。 平均交易告诉我们多少钱
-我们每次交易都会失败或失败。 从绝对数量来看，平均交易应该能够
-涵盖滑点和佣金，然后为交易者留下一些利润。 在
-在整个测试中，平均交易应该保持一致
-期。 通常交易者将绝对平均交易与入场价进行比较
-特定交易，以百分比表示。 其他交易者比较
-名义平均交易价值与一定时期内的合约名义价值。
+交易系统良好性的一个重要指标是平均交易量,也就是说
+净利润除以交易次数. 平均交易告诉我们多少钱
+我们每次交易都会失败或失败. 从绝对数量来看,平均交易应该能够
+涵盖滑点和佣金,然后为交易者留下一些利润. 在
+在整个测试中,平均交易应该保持一致
+期. 通常交易者将绝对平均交易与入场价进行比较
+特定交易,以百分比表示. 其他交易者比较
+名义平均交易价值与一定时期内的合约名义价值.
 我们可以推荐的是绘制交易的历史平均百分比值
-以便清楚地了解多年来该系统的盈利趋势。
+以便清楚地了解多年来该系统的盈利趋势.
 
 #### Percentage of profitable trades
 
@@ -443,19 +427,19 @@ normal for the percentage of profitable trades to go over 60% and the average wi
 trade/average losing trade to go under 2.
 
 盈利交易百分比表示赢利交易的数量
-交易总数。它本身并不重要（系统可能具有的趋势
-低利润率的交易数量如35％，仍然是一个可行的系统）
+交易总数.它本身并不重要(系统可能具有的趋势
+低利润率的交易数量如35%, 仍然是一个可用的系统)
 因为它可以用来衡量系统相对于平均值的平衡程度
-赢得的交易/平均失败的交易比率。通常的逻辑是，如果你赢了很多次
-平均获胜交易/平均失败交易比率将会很低，而如果相反，你的
-有利可图的交易比例很低，那么这个比例会很高（反比关系）。一个
-50％的盈利交易数量是健康的。如果它显着增长超过50％
-（例如达到60％或70％）需要注意，因为可能是错误的：要
+赢得的交易/平均失败的交易比率. 通常的逻辑是, 如果你赢了很多次
+平均获胜交易/平均失败交易比率将会很低, 而如果相反, 你的
+有利可图的交易比例很低, 那么这个比例会很高(反比关系). 一个
+50%的盈利交易数量是健康的. 如果它显着增长超过 50%
+(例如达到 60% 或 70%)需要注意,因为可能是错误的：要
 平衡如此高百分比的平均赢得交易/平均亏损交易
-比率应该特别低，通常甚至在1的警报级别下。如果您正在使用
-目标退出（让我们假设你以超过入场限制的价格退出头寸的50％）
-正常的赢利交易的比例超过60％，平均获胜
-交易/平均亏损交易低于2。
+比率应该特别低,通常甚至在1的警报级别下.如果您正在使用
+目标退出(让我们假设你以超过入场限制的价格退出头寸的50%)
+正常的赢利交易的比例超过60%,平均获胜
+交易/平均亏损交易低于2.
 
 The percentage of profitable trades number is also important for calculating the
 mathematical expectancy of a trading system. The percentage of profitable trades
@@ -465,11 +449,11 @@ should be positive and the higher the better. You can use this measure of mathem
 expectancy to rank systems and pick up the best.
 
 有利可图的交易数量的百分比对计算也很重要
-交易系统的数学期望。 有利可图的交易比例
+交易系统的数学期望. 有利可图的交易比例
 乘以平均获胜交易应高于失败的百分比
-交易乘以平均亏损交易。 数学期望，换句话说，
-应该是积极的，越高越好。 你可以使用这种数学方法
-期望排名系统，并拿起最好的。
+交易乘以平均亏损交易. 数学期望,换句话说,
+应该是积极的,越高越好. 你可以使用这种数学方法
+期望排名系统,并拿起最好的.
 
 As far as the percentage of profitable trades is concerned there is a caveat that must be
 regarded with careful attention: a 50% profitable trades ratio does not mean that a loss is
@@ -481,15 +465,15 @@ assumption is quite strong. Indeed you are assuming that there is a recurring or
 trade sequence; that is, probabilities in the past show that after three wins in a row it was
 more likely to have two losses instead of a fourth win.
 
-就盈利交易的百分比而言，必须有一个警告
-认真对待：50％的盈利交易比例并不意味着亏损
-其次是赢，反之亦然。 如果贸易顺序表明这是一个有争议的领域
-有可能声称赢得胜利，反之亦然。 即使这个话题
-令人着迷的是，谨慎的交易应该始终与最坏的和最好的希望作斗争
-因此，从我们的经验来看，对贸易依存度的信任是特别危险的
-假设很强。 事实上，你认为中国经常出现一个订单
-交易顺序; 也就是说，过去的概率表明，在连续三次获胜后
-更有可能出现两次失利，而不是第四次胜利。
+就盈利交易的百分比而言, 必须有一个警告
+认真对待: 50% 的盈利交易比例并不意味着亏损
+其次是赢, 反之亦然. 如果贸易顺序表明这是一个有争议的领域
+有可能声称赢得胜利, 反之亦然. 即使这个话题
+令人着迷的是, 谨慎的交易应该始终与最坏的和最好的希望作斗争
+因此,从我们的经验来看,对贸易依存度的信任是特别危险的
+假设很强. 事实上, 你认为中国经常出现一个订单
+交易顺序; 也就是说, 过去的概率表明, 在连续三次获胜后
+更有可能出现两次失利, 而不是第四次胜利.
 
 There are roulette players which really believe that the chance of getting a red number in
 the next run increases if you just had a black one. And even worse, they believe that the
@@ -503,14 +487,14 @@ your chance is always the same: 18/37 = 48.6% (since there are 18 black and 18 r
 numbers plus one green 0).
 
 有轮盘球员真的相信有机会获得红色数字
-如果你只有一个黑色，下一次运行会增加。 更糟糕的是，他们认为
-如果随后一排黑色，获得红色号码的机会变得越来越大
-数字发生，例如连续7次或10次。 从逻辑思维和统计
-理论，但是，你知道赌场里的每一轮轮盘赌都是完全的
-独立于另一个。 所以它没有意义，不管好坏，只要在运行中
-之前有一个红色的数字，一个黑色的或绿色的。 每次出现一个数字
-与其他人完全独立。 所以在下一轮投注颜色
-你的机会总是一样的：18/37 = 48.6％（因为有18黑和18红
+如果你只有一个黑色, 下一次运行会增加. 更糟糕的是, 他们认为
+如果随后一排黑色, 获得红色号码的机会变得越来越大
+数字发生, 例如连续7次或10次. 从逻辑思维和统计
+理论, 但是, 你知道赌场里的每一轮轮盘赌都是完全的
+独立于另一个. 所以它没有意义, 不管好坏, 只要在运行中
+之前有一个红色的数字, 一个黑色的或绿色的. 每次出现一个数字
+与其他人完全独立. 所以在下一轮投注颜色
+你的机会总是一样的：18/37 = 48.6%(因为有18黑和18红
 数字加一个绿色0).
 
 Although the financial markets, especially for beginners, sometimes look like a casino,
@@ -522,14 +506,14 @@ systems in special situations, trade dependencies can occur [5]. But this is a s
 topic that goes beyond of the scope of this book. In any case we recommend readers
 approach this topic with extreme prudence.
 
-虽然金融市场，特别是初学者，有时看起来像赌场，
-他们非常不同，也更复杂。 在许多情况下，他们的行为意外，与
-许多运动发生在上下，没有人知道为什么。 然而，有
+虽然金融市场,特别是初学者,有时看起来像赌场,
+他们非常不同,也更复杂. 在许多情况下,他们的行为意外,与
+许多运动发生在上下,没有人知道为什么. 然而,有
 一些特殊情况是由人类的心理创造的贪婪和恐惧时
-市场表现与事故不同。 正是这些运动，在特殊交易中
-在特殊情况下的系统，贸易依赖可能发生[5]。 但这是一个复杂的
-这个主题超出了本书的范围。 无论如何，我们都建议读者
-极端谨慎地处理这个话题。
+市场表现与事故不同. 正是这些运动,在特殊交易中
+在特殊情况下的系统,贸易依赖可能发生[5]. 但这是一个复杂的
+这个主题超出了本书的范围. 无论如何,我们都建议读者
+极端谨慎地处理这个话题.
 
 #### Profit factor
 
@@ -544,31 +528,31 @@ Think again about what you did during optmisation and your system’s design and
 development when your profit factor goes over 3.
 
 利润因素是比较不同系统或相同系统的完美指标
-绘制在不同的市场上。 当然，这个指标是一个不受其影响的比率
-其他绝对数字比率的通常缺点。 利润因素是毛利分配
-以毛损计算，并基本揭示毛利的大小与毛损的关系。该
-越高越好。 通常一个健康的交易系统的平均利润因子是2
+绘制在不同的市场上. 当然,这个指标是一个不受其影响的比率
+其他绝对数字比率的通常缺点. 利润因素是毛利分配
+以毛损计算,并基本揭示毛利的大小与毛损的关系.该
+越高越好. 通常一个健康的交易系统的平均利润因子是2
 获胜的交易/平均失败交易比率为2和一定比例的盈利交易数量
-等于50％。 但也有好的系统，利润因子在1.5到3之间。
+等于50%. 但也有好的系统,利润因子在1.5到3之间.
 再想一想在你的系统设计和系统设计中你做了什么
-当你的利润因素超过3时发展。
+当你的利润因素超过3时发展.
 
 #### Drawdown
 
 A broad definition of drawdown could be the largest loss or the largest losing streak of a
 trading system, whichever is the biggest [4]. In a more graphical way we can depict
 drawdown as the dip in the equity line between a highest high point and the successive
-lower point before a new high is made. In other words “total equity drawdown” is the
+lower point before a new high is made. In other words  "total equity drawdown" is the
 open trade profits and losses plus the already closed out equity on your account. But
 drawdown has more subtle meanings according to whether we consider only open
 positions or closed out positions. In fact it is important to distinguish between three
 different types of drawdown:
 
 缩小的广义定义可能是a的最大损失或最大连续亏损
-交易系统，以最大者为准[4]。 我们可以用更加图形化的方式描述
+交易系统,以最大者为准[4]. 我们可以用更加图形化的方式描述
 作为在最高点和连续点之间的净值线下跌
-创下新高之前的低点. 换句话说，“总股本缩减”是
-开放的交易盈利和亏损以及您账户中已经结清的权益。 但
+创下新高之前的低点. 换句话说, "总股本缩减"是
+开放的交易盈利和亏损以及您账户中已经结清的权益. 但
 根据我们是否只考虑公开, 缩编有更微妙的含义
 职位或封闭职位. 事实上, 区分三者很重要
 不同类型的缩编:
@@ -584,14 +568,14 @@ For sake of simplicity we will use the close trade drawdown definition since it 
 significant. But it is important to remember that while trading real money we can endure an
 open trade drawdown much bigger than the theoretically calculated closed trade drawdown.
 
-为了简单起见，我们将使用近距离交易缩减定义，因为它是最多的
-重大。 但重要的是要记住，在交易真钱时我们可以忍受
-开放的交易缩减比理论上计算的封闭式交易缩减大得多。
+为了简单起见,我们将使用近距离交易缩减定义,因为它是最多的
+重大. 但重要的是要记住,在交易真钱时我们可以忍受
+开放的交易缩减比理论上计算的封闭式交易缩减大得多.
 
 It is undeniable that the absolute value of a drawdown has a deep psychological impact
 on the trader because he will be forced to deal with it and this could be painful. But with
 drawdown, as with profit indicators, we need to be careful to use this measure in a
-comparative way. For this purpose the concept of “underwater equity line” is useful; that
+comparative way. For this purpose the concept of  "underwater equity line" is useful; that
 is, the absolute drawdown value divided by the equity line’s previous highest high value.
 This expresses the drawdown relative to the equity line in percentage terms. So even if
 we are testing a system on a 40-year long price series in which the value of the contract
@@ -599,16 +583,16 @@ changed dramatically, we still have a percentage point reference value in order 
 what is the real expected drawdown at current values: just plot the highest underwater
 equity line percentage at the current market value.
 
-不可否认，缩编的绝对价值有着深刻的心理影响
-对交易者而言，因为他将被迫应付，这可能是痛苦的。 但是与
-如同利润指标一样，我们需要小心使用这一措施
-比较方式。 为此目的，“水下权益线”的概念是有用的; 那
-是，绝对亏损值除以股票系列之前的最高价值。
-这表示相对于股权的百分比下降。 所以即使
+不可否认,缩编的绝对价值有着深刻的心理影响
+对交易者而言,因为他将被迫应付,这可能是痛苦的. 但是与
+如同利润指标一样,我们需要小心使用这一措施
+比较方式. 为此目的, "水下权益线"的概念是有用的; 那
+是,绝对亏损值除以股票系列之前的最高价值.
+这表示相对于股权的百分比下降. 所以即使
 我们正在测试一个长达40年的合约价值系列
-我们仍然有一个百分点的参考值，以便发现
+我们仍然有一个百分点的参考值,以便发现
 目前的真实预期缩水量是多少：只绘制最高的水下
-以当前市场价值计算的股权百分比。
+以当前市场价值计算的股权百分比.
 
 Many analysts try to fight against drawdown by optimising the exits and the initial stops
 while it would be more appropriate to further understand the reason why drawdown is
@@ -618,9 +602,9 @@ something wrong in the logic of the system.
 
 许多分析师试图通过优化出口和初始止损来对抗缩编
 而进一步理解缩编的原因则更为恰当
-发生。 如果市场上出现历史上的怪事，那么它就是
-很明显，发生了异常缩水。 如果没有什么特别的事情发生，
-系统的逻辑中有些问题。
+发生. 如果市场上出现历史上的怪事,那么它就是
+很明显,发生了异常缩水. 如果没有什么特别的事情发生,
+系统的逻辑中有些问题.
 
 In order to evaluate which kind of drawdown we have to worry about, and which kind of
 drawdown is normal, it is paramount to calculate the average drawdown and its standard
@@ -631,12 +615,12 @@ need to rethink the logic of the system, provided that nothing special happened 
 past that could justify the freak drawdown.
 
 为了评估我们不得不担心哪种类型的缩编以及哪种缩编
-缩编是正常的，计算平均缩减及其标准是最重要的
-偏差。 如果最大的跌幅在1至2个标准差之间
+缩编是正常的,计算平均缩减及其标准是最重要的
+偏差. 如果最大的跌幅在1至2个标准差之间
 平均数比我们预计未来的降幅非常接近我们目前的水平
-过去。 如果平均跌幅超过平均值两个标准偏差，那么我们就是这样
-需要重新思考系统的逻辑，只要没有什么特别的事情发生
-过去那可以证明这个怪胎缩水。
+过去. 如果平均跌幅超过平均值两个标准偏差,那么我们就是这样
+需要重新思考系统的逻辑,只要没有什么特别的事情发生
+过去那可以证明这个怪胎缩水.
 
 The average tolerance of a drawdown for most professional traders and money managers
 ranges from 20% up to 30%. Let’s say that a drawdown of 10% is a wonderful
@@ -645,7 +629,7 @@ drawdown of 40 to 50% would be unbearable for most market players.
 
 大多数专业交易员和基金经理的平均容许跌幅
 范围从 20% 到 30%. 假设 10% 的缩减是一个很好的例子
-而30％的降幅更加痛苦和令人担忧. 一个
+而30%的降幅更加痛苦和令人担忧. 一个
 对于大多数市场参与者来说, 缩减 40% 到 50% 是无法忍受的.
 
 #### Time averages
@@ -655,20 +639,20 @@ to the TradeStation terminology, displays the average time (years, days, minutes
 in all completed trades, during the specified period for the strategy. Other trading
 platforms have similar indicators. Average time in trades is vital for portfolio construction
 since to exploit negative correlation among equity lines your systems need to be in the 
-market at the same time or at least to have the same “average time in trades”. If you make
+market at the same time or at least to have the same  "average time in trades". If you make
 up a portfolio with a system that trades seldom and stays in the market for long periods
 of time, and another that trades often but with short individual trades, you will never level
 off the cumulative equity line.
 
-其他重要指标包括时间平均值。 根据行业平均交易时间
-到TradeStation术语，显示花费的平均时间（年，日，分）
-在所有完成的交易中，在该策略的特定时期内。 其他交易
-平台有类似的指标。 交易平均时间对投资组合建设至关重要
+其他重要指标包括时间平均值. 根据行业平均交易时间
+到TradeStation术语,显示花费的平均时间(年,日,分)
+在所有完成的交易中,在该策略的特定时期内. 其他交易
+平台有类似的指标. 交易平均时间对投资组合建设至关重要
 因为要利用您的系统所需的股票系列之间的负相关性
-市场同时或至少具有相同的“平均交易时间”。 如果你做
-建立一个投资组合体系，该体系很少进行交易并长期在市场上停留
-的时间，而另一种经常交易但短暂的个人交易，你永远不会水平
-关闭累积的权益线。
+市场同时或至少具有相同的 "平均交易时间". 如果你做
+建立一个投资组合体系,该体系很少进行交易并长期在市场上停留
+的时间,而另一种经常交易但短暂的个人交易,你永远不会水平
+关闭累积的权益线.
 
 A trading system should be balanced between the profit and risk it produces on the long
 side and on the short side. TradeStation split the system report between long and short
@@ -677,28 +661,28 @@ should always keep pace with short in profit generation. A trading system which 
 balanced in between long and short must always be regarded with suspicion.
 
 一个交易系统应该长期平衡它产生的利润和风险
-侧面和短边。 TradeStation 将系统报告分成多份和多份
-交易，除特殊情况外，当你可以找到合理的理由时，多头头寸
-应该始终跟上盈利的步伐。 一个不是的交易系统
-总之，平衡在多空之间总是被怀疑。
+侧面和短边. TradeStation 将系统报告分成多份和多份
+交易,除特殊情况外,当你可以找到合理的理由时,多头头寸
+应该始终跟上盈利的步伐. 一个不是的交易系统
+总之,平衡在多空之间总是被怀疑.
 
 #### RINA Index
 
 A powerful indicator created by RINA Systems and included in the TradeStation trading
 system report is the RINA Index, which represents the reward-risk ratio per one unit of
-time and it compares the “select net profit” (net profit minus the positive and negative
+time and it compares the  "select net profit" (net profit minus the positive and negative
 outlier trades, that is minus the abnormal trades that overcome the three standard deviation
 limit away from the average) divided by the average drawdown and again divided by the
 percentage of time in the market indicator (the latter is always taken from the TradeStation
 system report). This indicator should always be over 30 and the higher the better.
 
-RINA系统创建的强大指标，包含在TradeStation交易中
-系统报告是RINA指数，它代表每单位的奖励 - 风险比率
-时间和它比较“选择净利润”（净利润减去正面和负面
-异常交易，即减去克服三个标准偏差的异常交易
-远离平均水平）除以平均跌幅，再除以平均跌幅
-市场指标中的时间百分比（后者始终取自TradeStation
-系统报告）。 这个指标应该总是在30以上，越高越好。
+RINA系统创建的强大指标,包含在TradeStation交易中
+系统报告是RINA指数,它代表每单位的奖励 - 风险比率
+时间和它比较 "选择净利润"(净利润减去正面和负面
+异常交易,即减去克服三个标准偏差的异常交易
+远离平均水平)除以平均跌幅,再除以平均跌幅
+市场指标中的时间百分比(后者始终取自TradeStation
+系统报告). 这个指标应该总是在30以上,越高越好.
 
 In order to measure consistency in results the TradeStation system report automatically
 calculates the three standard variations positive and negative limit for the average trade
@@ -706,11 +690,11 @@ and for almost all the indicators. This gives an idea of how much the indicators
 naturally oscillate between these boundaries. Usually the coefficient of variation (standard
 deviation divided by average) should never be higher than 250%.
 
-为了衡量结果的一致性，TradeStation系统会自动报告
+为了衡量结果的一致性,TradeStation系统会自动报告
 计算平均交易的三种标准差异正负限制
-几乎所有的指标。 这给出了这些指标可以达到多少的想法
-自然在这些边界之间摇摆。 通常变异系数（标准
-偏差除以平均值）不应高于250％。
+几乎所有的指标. 这给出了这些指标可以达到多少的想法
+自然在这些边界之间摇摆. 通常变异系数(标准
+偏差除以平均值)不应高于250%.
 
 In this paragraph we have tried to figure out some practical guidelines for a system
 developer without delving into much theory or philosophical considerations. Without
@@ -718,7 +702,7 @@ fretting about being considered sloppy system traders we dare to openly recognis
 after 20-years’ experience we can understand at the first glance whether a trading system
 deserves to be considered with attention or not. The first aspect we check is the equity
 line, which needs to be growing smoothly and without many deep drawdowns. Personally
-we also appreciate many “flat times”, that is parts of the equity line that are horizontal:
+we also appreciate many  "flat times", that is parts of the equity line that are horizontal:
 it means that no trading was done in that period since a filter took the system out of the
 market. We believe that there is no need to trade continuously and a good system should
 know when there is some edge to be exploited over the markets and conversely when it 
@@ -728,21 +712,21 @@ the monthly returns were distributed throughout the years. Just from these indic
 proper judgment about the trading system can be drawn without much worry about being
 on the wrong side.
 
-在这一段中，我们试图找出系统的一些实用指南
-没有深入研究许多理论或哲学考量。没有
+在这一段中, 我们试图找出系统的一些实用指南
+没有深入研究许多理论或哲学考量.没有
 对于我们敢于公开承认的被认为是猖獗的系统交易者感到担忧
-经过20年的经验，我们可以乍一看地了解交易系统
-值得注意与否。我们检查的第一个方面是股权
-线需要平稳增长并且没有太多深刻的消耗。亲自
-我们也欣赏许多“平稳时代”，这是水平股权的一部分：
-这意味着在此期间没有进行交易，因为过滤器将该系统带出该系统
-市场。我们认为，没有必要持续交易和建立一个良好的体系
-知道什么时候在市场上有一定的优势，反之亦然
-更偏向于观望。然后，在股权之后，我们立即
-检查平均交易，利润因素，盈利百分比，平均赢/平均损失和如何
-每年的回报是多年来分配的。只是从这些指标a
+经过20年的经验, 我们可以乍一看地了解交易系统
+值得注意与否. 我们检查的第一个方面是股权
+线需要平稳增长并且没有太多深刻的消耗. 亲自
+我们也欣赏许多 "平稳时代",这是水平股权的一部分：
+这意味着在此期间没有进行交易,因为过滤器将该系统带出该系统
+市场.我们认为,没有必要持续交易和建立一个良好的体系
+知道什么时候在市场上有一定的优势,反之亦然
+更偏向于观望.然后,在股权之后,我们立即
+检查平均交易,利润因素,盈利百分比,平均赢/平均损失和如何
+每年的回报是多年来分配的.只是从这些指标a
 对于交易系统的正确判断可以不必担心
-在错误的一面。
+在错误的一面.
 
 ### 2.5 结论
 
@@ -751,28 +735,28 @@ optimisation and performance evaluation. It was a quick overview of the universe
 notions that this topic embraces, but we hope that this brevity will lead to a much more
 powerful understanding.
 
-到目前为止，我们已经涵盖了交易系统最重要的理论方面，
-优化和性能评估。 这是一个关于宇宙的简要概述
-这个主题所包含的概念，但我们希望这个简洁会带来更多
-有力的理解。
+到目前为止,我们已经涵盖了交易系统最重要的理论方面,
+优化和性能评估. 这是一个关于宇宙的简要概述
+这个主题所包含的概念,但我们希望这个简洁会带来更多
+有力的理解.
 
 We can assert in conclusion that trading systems are a scientific approach to trading where
 nothing is left to discretion. It is not a certain business, obviously, but it is a business that
 deals with probability and that allows the trader to trade the markets exploiting a statistical
 edge.
 
-我们可以断言，交易系统是一种科学的交易方式
-没有任何事情可以自由裁量。 显然，这不是一项特定的业务，但它是一项业务
-处理概率，并允许交易者利用统计数据交易市场
-边缘。
+我们可以断言,交易系统是一种科学的交易方式
+没有任何事情可以自由裁量. 显然,这不是一项特定的业务,但它是一项业务
+处理概率,并允许交易者利用统计数据交易市场
+边缘.
 
 You will be able to expand this knowledge, delving into the nuances of trading systems
 evaluation and optimisation, by reading the texts we included in the bibliography at the
 end of the book.
 
-您将能够扩展这些知识，深入研究交易系统的细微差别
-评估和优化，通过阅读我们包含在参考书目中的文本
-这本书的结尾。
+您将能够扩展这些知识,深入研究交易系统的细微差别
+评估和优化,通过阅读我们包含在参考书目中的文本
+这本书的结尾.
 
 Unfortunately it is impossible to have a full grasp of the subject without dealing with the
 practical application of trading systems. Trading systems’ development is not a theoretical
@@ -782,21 +766,19 @@ practical view of the markets that is sometimes much more important than theory.
 Knowing how to follow this process will save much demanding work and it will help to
 solve situations that otherwise will be out of reach for the average trader.
 
-不幸的是，如果不处理这个问题，就不可能全面掌握这个主题
-交易系统的实际应用。 交易系统的发展不是一个理论
-智力挑战，而是一种对市场的实用实验方法。 编写代码，
-测试它们然后优化它们是一个允许交易者获得一个交易的过程
-市场的实际观点有时比理论更重要。
-知道如何遵循这个过程将节省很多艰巨的工作，这将有助于
-解决平均交易者无法实现的情况。
+不幸的是,如果不处理这个问题, 就不可能全面掌握这个主题
+交易系统的实际应用. 交易系统的发展不是一个理论
+智力挑战, 而是一种对市场的实用实验方法. 编写代码, 测试它们然后优化它们是一个允许交易者获得一个交易的过程
+市场的实际观点有时比理论更重要.
+知道如何遵循这个过程将节省很多艰巨的工作, 这将有助于
+解决平均交易者无法实现的情况.
 
 In the following chapters you will have a practical view of what a systematic trader does
 when they develop, evaluate and optimise a trading system. We believe that this is the
 most important part of our work.
 
-在接下来的章节中，您将对系统交易员的实际操作有所了解
-当他们开发，评估和优化交易系统。 我们相信这是
-我们工作中最重要的部分。
+在接下来的章节中, 您将对系统交易员的实际操作有所了解
+当他们开发, 评估和优化交易系统. 我们相信这是我们工作中最重要的部分.
 
 # Part II: 交易系统开发&演进真实案例
 
@@ -811,12 +793,11 @@ America. Markets with strong movements like the British pound offer you all the
 possibilities to develop any type of trading system from any different idea on any time
 scale.
 
-外汇市场对所有类型的交易者都很有吸引力，包括个人日间交易者，
-贸易公司，金融和非金融公司，银行和政府。 他们
-从新西兰的星期一早晨到星期五晚上的一天24小时交易
-美国。 像英镑一样强劲的市场会为您提供所有的支持
-在任何时间从任何不同的想法开发任何类型的交易系统的可能性
-规模。
+外汇市场对所有类型的交易者都很有吸引力, 包括个人日间交易者,
+贸易公司, 金融和非金融公司, 银行和政府. 他们
+从新西兰的星期一早晨到星期五晚上的一天 24 小时交易
+美国. 像英镑一样强劲的市场会为您提供所有的支持
+在任何时间从任何不同的想法开发任何类型的交易系统的可能性规模.
 
 In this chapter we will not present the very best trading system, which promises the
 highest profits. Instead our goal is to show you a trading system which is based on a
@@ -824,65 +805,65 @@ sound idea and improved for a high robustness. As an aid to understanding our co
 of trading system development you will find in the following pages a step-by-step
 explanation of how a new trading system is developed and tested for stability.
 
-在本章中，我们不会介绍最好的交易系统，它承诺
-最高的利润。 相反，我们的目标是向您展示一个基于a的交易系统
-完善的想法和改进的高鲁棒性。 作为理解我们概念的帮助
-交易系统开发的一部分，您将在后面的页面中逐步找到
-解释如何开发新的交易系统并进行稳定性测试。
+在本章中, 我们不会介绍最好的交易系统,它承诺
+最高的利润. 相反, 我们的目标是向您展示一个基于的交易系统
+完善的想法和改进的高鲁棒性. 作为理解我们概念的帮助
+交易系统开发的一部分,您将在后面的页面中逐步找到
+解释如何开发新的交易系统并进行稳定性测试.
 
 As an example we choose a trend-following system with a breakout component. We take
 this system and show how you can improve it up to become a profitable trading system
 in the following steps.
 
-作为一个例子，我们选择一个具有突破组件的趋势跟踪系统。 我们采取
-这个系统，并展示如何改进它成为一个有利可图的交易系统
-在以下步骤中。
+作为一个例子,我们选择一个具有突破组件的趋势跟踪系统. 我们采取
+这个系统,并展示如何改进它成为一个有利可图的交易系统
+在以下步骤中.
 
 3.1 The entry logic and code. How to improve a normal moving average crossover
 system with a breakout filter.
 
-3.1 输入逻辑和代码。 如何改善正常移动平均交叉
-带突破过滤器的系统。
+3.1 输入逻辑和代码. 如何改善正常移动平均交叉
+带突破过滤器的系统.
 
 3.2 Evaluation of the trading system without parameter optimisation and exits – the
 importance of commissions and slippage.
 
 3.2 没有参数优化和退出的交易系统评估 - 
-佣金和滑点的重要性。
+佣金和滑点的重要性.
 
 3.3 Variation of the input parameters: Optimisation and stability graphs.
 
-3.3 输入参数的变化：优化和稳定性图。
+3.3 输入参数的变化：优化和稳定性图.
 
 3.4 Inserting an intraday time filter: the importance of time for short-term trading.
 
-3.4 插入盘中时间过滤器：短期交易时间的重要性。
+3.4 插入盘中时间过滤器：短期交易时间的重要性.
 
 3.5 Determination of appropriate exits for your system by checking the development of
 all the system’s trades. How John Sweeney’s Maximum Adverse and Maximum
 
 3.5 通过检查你的系统的开发确定你的系统的适当出口
-所有系统的交易。 约翰斯威尼的最大不利和最大值
+所有系统的交易. 约翰斯威尼的最大不利和最大值
 
 Favourable Excursion can support you.
 
-有利的游览可以支持你。
+有利的游览可以支持你.
 
 Let’s start with the description of the logic of the system.
 
-我们首先描述系统的逻辑。
+我们首先描述系统的逻辑.
 
 ### 3.1 The birth of a trading system
 
 As mentioned in the introduction there are lots of sources for developing your own pool
 of trading systems. One of them is certainly the Strategy Trading and Development Club
-(in short “STAD”) of Omega Research (TradeStation). As a starting point we take the
+(in short  "STAD") of Omega Research (TradeStation). As a starting point we take the
 following entry logic, as explained in STAD, volume 13:
 
 正如引言中所提到的, 开发自己的游泳池有很多来源
 的交易系统. 其中之一肯定是战略交易和发展俱乐部
 (简称"STAD") 的 Omega Research (TradeStation). 作为一个起点, 我们采取这一做法
-按照STAD中的解释, 第 13 卷:
+按照 STAD 中的解释, 第 13 卷:
 
 The Luxor system identifies set-ups for new trades by the crossing of two moving averages
 – a fast one and a slow one. Of course, there are many types of moving averages; Luxor is
@@ -894,13 +875,13 @@ commonly averaged). Then, the TMA indicator calculates a simple arithmetic avera
 the first average.
 
 卢克索系统通过穿越两条移动平均线来确定新交易的设置
-- 一个快一个，一个慢一个。 当然，有多种移动平均线; 卢克索是
-STAD俱乐部的第一个策略是使用三角形移动平均线。 的目的
-三角移动平均线（TMA）是增加没有价格数据的平滑
-也增加了价格和指标之间的滞后时间。 TMA开始于
-计算简单的算术平均价格（最接近的是价格领域
-通常平均）。 然后，TMA指标计算一个简单的算术平均值
-第一个平均水平。
+- 一个快一个,一个慢一个. 当然,有多种移动平均线; 卢克索是
+STAD俱乐部的第一个策略是使用三角形移动平均线. 的目的
+三角移动平均线(TMA)是增加没有价格数据的平滑
+也增加了价格和指标之间的滞后时间. TMA开始于
+计算简单的算术平均价格(最接近的是价格领域
+通常平均). 然后, TMA 指标计算一个简单的算术平均值
+第一个平均水平.
 
 So the key point in the description is the special type of moving average. When we tested
 the trading system we found, however, that the type of moving average did not matter
@@ -909,12 +890,12 @@ complex triangular moving average! So you can forget how this triangular, comple
 moving average works and stay with the normal ones. This confirms our observation
 when developing trading systems that often the simplest things work best.
 
-所以描述中的关键点是移动平均线的特殊类型。 当我们测试
-我们发现的交易系统，移动平均线的类型并不重要
-最好的结果是用一个简单的移动平均数来产生的，而不是更多
-复杂的三角均线！ 所以你可以忘记这个三角形，复杂的
-移动平均线运行并与正常线路保持一致。 这证实了我们的观察
-在开发往往最简单的工作最好的交易系统时。
+所以描述中的关键点是移动平均线的特殊类型. 当我们测试
+我们发现的交易系统, 移动平均线的类型并不重要
+最好的结果是用一个简单的移动平均数来产生的, 而不是更多
+复杂的三角均线! 所以你可以忘记这个三角形, 复杂的
+移动平均线运行并与正常线路保持一致. 这证实了我们的观察
+在开发往往最简单的工作最好的交易系统时.
 
 The main steps in system development are the following: to get ideas which fit the
 personality of the traded market, to test them and to adapt them to your own needs. We
@@ -922,9 +903,9 @@ do this here for the LUXOR system. We only take the main idea of how to use the 
 averages and make some minor changes.
 
 系统开发的主要步骤如下：获取适合自己的想法
-交易市场的个性，测试它们并使其适应您自己的需求。 我们
-在这里为LUXOR系统做这个。 我们只考虑如何使用移动的主要想法
-平均值和做一些小的改变。
+交易市场的个性, 测试它们并使其适应您自己的需求. 我们
+在这里为LUXOR系统做这个. 我们只考虑如何使用移动的主要想法
+平均值和做一些小的改变.
 
 #### The free LUXOR system code
 

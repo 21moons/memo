@@ -1,7 +1,7 @@
 # memo
 
 ## 算法
-- [**算法**图示](http://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
+- [算法图示](http://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
 - [算法学习笔记](https://brandeath.gitbooks.io/al/content/index.html)
 
 ---
@@ -19,7 +19,7 @@
 
 
 ## 大数据
-- [数据处理平台架构中的SMACK组合：`Spark`、Mesos、Akka、Cassandra以及Kafka](http://blog.dataman-inc.com/untitled-23/  "Title")
+- [数据处理平台架构中的SMACK组合：`Spark`、Mesos、Akka、Cassandra 以及 Kafka](http://blog.dataman-inc.com/untitled-23/  "Title")
 - [Hadoop: The Definitive Guide, 4th Edition](http://javaarm.com/file/apache/Hadoop/books/Hadoop-The.Definitive.Guide_4.edition_a_Tom.White_April-2015.pdf)
 
 ---
@@ -106,8 +106,8 @@
 ## Linux
 - [Linux进程描述符task_struct结构体详解](http://blog.csdn.net/gatieme/article/details/51383272)
 - [进程间通信-创建管道实现机制](http://blog.csdn.net/tiankong_/article/details/76468140)
-- [Linux 中的零拷贝技术，第 1 部分](https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy1/)
-- [Linux 中的零拷贝技术，第 2 部分](https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy2/)
+- [Linux 中的零拷贝技术, 第 1 部分](https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy1/)
+- [Linux 中的零拷贝技术, 第 2 部分](https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy2/)
 
 ---
 
@@ -121,24 +121,57 @@
 
 ---
 ## 设计模式
+
 - [Domain-driven design](http://dddcommunity.org/)
 - [图说设计模式](http://design-patterns.readthedocs.io)
 
 ---
 ## java
-- 在Java中，构造方法无法被继承，无法设置默认值
-- Jboss同时是Web容器和EJB容器。Tomcat只是Web容器
-- HashMap几乎可以等价于Hashtable，除了HashMap是非synchronized的，并可以接受null(HashMap可以接受为null的键值(key)和值(value)，而Hashtable则不行)
-- HashMap是非synchronized，而Hashtable是synchronized，这意味着Hashtable是线程安全的，多个线程可以共享一个Hashtable；而如果没有正确的同步的话，多个线程是不能共享HashMap的。
+
+* 在Java中, 构造方法无法被继承, 无法设置默认值
+* Jboss同时是Web容器和EJB容器. Tomcat只是Web容器
+* HashMap几乎可以等价于Hashtable, 除了HashMap是非synchronized的, 并可以接受null(HashMap可以接受为null的键值(key)和值(value), 而Hashtable则不行)
+* HashMap 是非 synchronized, 而 Hashtable 是 synchronized, 这意味着 Hashtable 是线程安全的, 多个线程可以共享一个 Hashtable; 而如果没有正确的同步的话, 多个线程是不能共享 HashMap 的.
+
+**关于final的重要知识点**
+* final关键字可以用于成员变量, 本地变量, 方法以及类.
+* final成员变量必须在声明的时候初始化或者在构造器中初始化, 否则就会报编译错误.
+* 你不能够对 final 变量再次赋值.
+* 本地变量必须在声明时赋值.
+* 匿名类中所有变量都必须是 final 变量.
+* final 方法不能被重写.
+* final 类不能被继承.
+* final 关键字容易与 finalize() 方法搞混, 后者是在 Object 类中定义的方法, 是在垃圾回收之前被 JVM 调用的方法.
+* 接口中声明的所有变量本身是 final 的.
+* final 和 abstract 这两个关键字是互斥的, final 类就不可能是 abstract 的.
+* final 方法在编译阶段绑定, 称为静态绑定(static binding).
+* 没有在声明时初始化 final 变量的称为空白 final 变量(blank final variable), 它们必须在构造器中初始化, 或者调用 this()(调用本类中另一种形成的构造函数, 通常为构造函数中的第一条语句) 初始化.不这么做的话，编译器会报错"final变量(变量名)需要进行初始化".
+* 将类, 方法, 变量声明为final能够提高性能, 这样JVM就有机会进行估计, 然后优化.
+* 按照Java代码惯例, final变量就是常量, 而且通常常量名要大写:
+
+``` java
+private final int COUNT = 10;
+```
+
+* 对于集合对象声明为final指的是引用不能被更改, 但是你可以向其中增加, 删除或者改变内容. 譬如:
+
+``` java
+private final List Loans = new ArrayList();
+list.add(“home loan”);  //valid
+list.add("personal loan"); //valid
+loans = new Vector();  //not valid
+```
 
 ---
 ## docker
 - docker 要求必须部署在64位机器上
-- 容器内的数据是临时性的，它会随着容器生命周期的结束而消失
-- 默认的 Docker volume （driver = ‘loclal’）不管是哪种形式，本质上都是将容器所在的主机上的一个目录 mount 到容器内的一个目录，因此，它不具备可移植性。
+- 容器内的数据是临时性的, 它会随着容器生命周期的结束而消失
+- 默认的 Docker volume （driver = ‘loclal’）不管是哪种形式, 本质上都是将容器所在的主机上的一个目录 mount 到容器内的一个目录, 因此, 它不具备可移植性. 
 
 ---
+
 ## [Is there a difference between fibers, coroutines and green threads](https://softwareengineering.stackexchange.com/questions/254140/is-there-a-difference-between-fibers-coroutines-and-green-threads-and-if-that-i) 
+
 A Fiber is a lightweight thread that uses cooperative multitasking instead of preemptive multitasking. A running fiber must explicitly "yield" to allow another fiber to run, which makes their implementation much easier than kernel or user threads.
 
 A Coroutine is a component that generalizes a subroutine to allow multiple entry points for suspending and resuming execution at certain locations. Unlike subroutines, coroutines can exit by calling other coroutines, which may later return to the point where they were invoked in the original coroutine.
