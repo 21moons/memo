@@ -996,59 +996,19 @@ LocalFileSystem 使用 ChecksumFileSystem 来完成它的工作(LocalFileSystem 
 | LZ4  | N/A | N/A | .lz4 | No |
 | Snappy  | N/A | Snappy | .snappy | No |
 
-All compression algorithms exhibit a space/time trade-off: faster compression and de‐
-compression speeds usually come at the expense of smaller space savings. The tools
-listed in Table 5-1 typically give some control over this trade-off at compression time
-by offering nine different options:  –1 means optimize for speed, and  -9 means optimize
-for space. For example, the following command creates a compressed file file.gz using
-the fastest compression method:
-
-所有的压缩算法都是出空间效率/时间效率的折衷: 更快的压缩和解压缩,
-压缩速度通常以较小的空间节省为代价.  工具
-列在表5-1中通常会在压缩时对这种权衡提供一些控制
-通过提供九种不同的选项：-1表示优化速度,-9表示优化
-为空间.  例如,以下命令使用创建一个压缩文件file.gz
-最快的压缩方法：
+所有的压缩算法都是出空间效率/时间效率的折衷: 更快的压缩和解压缩速度通常以较大的空间为代价. 表 5-1 中列出的工具通过提供九种不同的选项, 在压缩时提供一些控制方式: -1 表示压缩速度最优, -9 表示空间占用最优. 例如, 以下命令使用最快的压缩方法创建一个压缩文件 file.gz:
 
 ```bash
   % gzip -1 file
 ```
 
-The different tools have very different compression characteristics. gzip is a general-
-purpose compressor and sits in the middle of the space/time trade-off. bzip2 compresses
-more effectively than gzip, but is slower. bzip2’s decompression speed is faster than its
-compression speed, but it is still slower than the other formats. LZO, LZ4, and Snappy,
-on the other hand, all optimize for speed and are around an order of magnitude faster than gzip, but compress less effectively. Snappy and LZ4 are also significantly faster than
-LZO for decompression.
+不同的工具有非常不同的压缩特性. gzip 是一个通用的压缩器, 算法的空间/时间效率相对来说比较均衡. bzip2 压缩比比 gzip 更有效, 但速度更慢. bzip2 的解压速度比压缩速度快, 但仍然比其他格式慢. LZO, LZ4 和 Snappy, 这些算法的压缩速度都比 gzip 快一个数量级, 但文件压缩比较低. Snappy 和 LZ4 的解压速度也显着快于 LZO.
 
-不同的工具具有非常不同的压缩特性.  gzip是一个通用的,
-并且在空间/时间交换中处于中等位置.  bzip2压缩
-比gzip更有效,但速度更慢.  bzip2的解压速度比它快
-压缩速度,但仍然比其他格式慢.  LZO,LZ4和Snappy,
-另一方面,所有的优化速度都比gzip快一个数量级,但压缩效率较低.  Snappy和LZ4也显着快于
-LZO减压. 
-
-The “Splittable” column in Table 5-1 indicates whether the compression format supports
-splitting (that is, whether you can seek to any point in the stream and start reading from
-some point further on). Splittable compression formats are especially suitable for Map‐
-Reduce; see “Compression and Input Splits” on page 105 for further discussion.
-
-表5-1中的“可拆分”列表示压缩格式是否支持
-分裂（也就是说,你是否可以寻求流中的任何一点并开始阅读
-一些点进一步）.  可拆分的压缩格式特别适用于Map-
-减少; 有关进一步的讨论,请参阅第105页上的“压缩和输入拆分”. 
+表 5-1 中的 "可拆分" 列表示压缩格式是否支持拆分 (也就是说,你是否可以在流中查找任意一点并开始读取). 可拆分的压缩格式特别适用于 MapReduce; 进一步的讨论请参阅 105 页的 "压缩和输入拆分". 
 
 #### Codecs
 
-A codec is the implementation of a compression-decompression algorithm. In Hadoop,
-a codec is represented by an implementation of the  CompressionCodec interface. So, for
-example,  GzipCodec encapsulates the compression and decompression algorithm for
-gzip. Table 5-2 lists the codecs that are available for Hadoop.
-
-编解码器是压缩 - 解压缩算法的实现.  在Hadoop中,
-编解码器由CompressionCodec接口的实现来表示.  因此对于
-例如,GzipCodec封装了压缩和解压缩算法
-gzip的.  表5-2列出了可用于Hadoop的编解码器. 
+编解码器是压缩 - 解压缩算法的实现. 在 Hadoop 中, 编解码器由 CompressionCodec 接口的实现来表示. 例如, GzipCodec 封装了 gzip 的压缩和解压缩算法. 表 5-2 列出了可用于 Hadoop 的编解码器. 
 
 <p align="left"><font size=2>Table 5-2. Hadoop compression codecs</font></p>
 
@@ -1061,20 +1021,7 @@ gzip的.  表5-2列出了可用于Hadoop的编解码器.
 | LZ4  | org.apache.hadoop.io.compress.Lz4Codec |
 | Snappy  | org.apache.hadoop.io.compress.SnappyCodec |
 
-The LZO libraries are GPL licensed and may not be included in Apache distributions,
-so for this reason the Hadoop codecs must be downloaded separately from Google (or
-GitHub, which includes bug fixes and more tools). The  LzopCodec , which is compatible
-with the lzop tool, is essentially the LZO format with extra headers, and is the one you
-normally want. There is also an  LzoCodec for the pure LZO format, which uses
-the .lzo_deflate filename extension (by analogy with DEFLATE, which is gzip without
-the headers).
-
-LZO库是GPL许可的,可能不包含在Apache发行版中,
-所以出于这个原因,Hadoop编解码器必须与Google分别下载（或
-GitHub,其中包括错误修复和更多工具）.  LzopCodec,兼容
-与lzop工具,本质上是LZO格式与额外的标题,并且是你
-通常需要.  还有一个用于纯LZO格式的LzoCodec
-.lzo_deflate文件扩展名（类似于DEFLATE,不带gzip）
-标题）.
+LZO 库是基于 GPL 开源协议的, 可能不包含在 Apache 发行版中, 出于这个原因, Hadoop 依赖的编解码器必须在 Google 上单独下载(或 GitHub, 包括错误修复和更多工具). 你通常需要 LzopCodec, 兼容 lzop 工具, 实质上是 LZO 格式用了额外的标. 还有一个用于纯 LZO 格式的 LzoCodec 编解码器, 它支持 .lzo_deflate 扩展名的文件.
 
 * Compressing and decompressing streams with CompressionCodec
+
