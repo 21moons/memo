@@ -1216,4 +1216,73 @@ public interface Writable {
 }
 ```
 
+让我们来看看一个特定的 Writable, 看看我们可以用它做些什么. 我们将使用 IntWritable, 一个Java int的包装器. 我们可以创建一个并使用 set() 方法来设置它的值:
 
+``` java
+IntWritable writable = new IntWritable();
+writable.set(163);
+```
+
+等价地, 我们可以使用带有整数值的构造函数:
+
+``` java
+IntWritable writable = new IntWritable(163);
+```
+
+为了检查 IntWritable 序列化后的格式, 我们写了一个 helper 方法将 java.io.ByteArrayOutputStream 封装在 java.io.DataOutputStream (java.io.DataOutput 的一个实现) 来捕获序列化流中的字节:
+
+``` java
+public static byte[] serialize(Writable writable) throws IOException {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    DataOutputStream dataOut = new DataOutputStream(out);
+    writable.write(dataOut);
+    dataOut.close();
+    return out.toByteArray();
+}
+```
+
+写入一个整数, 占用四个字节:
+
+``` java
+byte[] bytes = serialize(writable);
+assertThat(bytes.length, is(4));
+```
+
+字节以 big-endian 顺序写入, 我们可以通过调用 Hadoop StringUtils 中的方法来查看其 16 进制表示:
+
+``` java
+assertThat(StringUtils.byteToHexString(bytes), is("000000a3"));
+```
+
+让我们尝试反序列化. 同样, 我们创建一个 helper 方法从字节数组中读取一个 Writable 对象:
+
+``` java
+public static byte[] deserialize(Writable writable, byte[] bytes)
+      throws IOException {
+    ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+    DataInputStream dataIn = new DataInputStream(in);
+    writable.readFields(dataIn);
+    dataIn.close();
+    return bytes;
+}
+```
+
+我们构造一个新的没有值的 IntWritable, 然后调用 deserialize() 读取我们刚才写入的输出数据. 然后我们使用 get() 方法检查读取到的值, 是原始值 163:
+
+``` java
+IntWritable newWritable = new IntWritable();
+deserialize(newWritable, bytes);
+assertThat(newWritable.get(), is(163));
+```
+
+* WritableComparable and comparators
+
+IntWritable 实现了 WritableComparable 接口, WritableComparable 是 Writable 和 java.lang.Comparable 接口的子接口
+
+``` java
+package org.apache.hadoop.io;
+    public interface WritableComparable<T> extends Writable, Comparable<T> {
+}
+```
+
+#### Writable Classes
