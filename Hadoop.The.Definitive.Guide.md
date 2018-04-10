@@ -1025,3 +1025,195 @@ LZO 库是基于 GPL 开源协议的, 可能不包含在 Apache 发行版中, �
 
 * Compressing and decompressing streams with CompressionCodec
 
+要将数据压缩并写入输出流, 请使用 createOutputStream(OutputStream out) 方法创建一个 CompressionOutputStream 指向已经写入的未压缩数据, 并将其以压缩形式写入底层流. 相反的, 为了解压缩从输入流读取的数据, 请调用函数 createInputStream(InputStream in) 以获取 CompressionInputStream, 它允许您从底层流中读取到解压后的数据.
+
+CompressionOutputStream 和 CompressionInputStream 类似于 java.util.zip.DeflaterOutputStream 和 java.util.zip.DeflaterInputStream, 不同的是前者支持重置其底层的压缩器和解压器. 这对于将数据流压缩成许多独立块的应用程序来说非常重要, 如 127 页的 "SequenceFile" 中所述的 SequenceFile 中的单独块.
+
+<p align="center"><font size=2>Example 5-1. A program to compress data read from standard input and write it to standard output</font></p>
+
+``` java
+public class StreamCompressor {
+
+    public static void main(String[] args) throws Exception {
+        String codecClassname = args[0];
+        Class<?> codecClass = Class.forName(codecClassname);
+        Configuration conf = new Configuration();
+        CompressionCodec codec = (CompressionCodec)ReflectionUtils.newInstance(codecClass, conf);
+        CompressionOutputStream out = codec.createOutputStream(System.out);
+        IOUtils.copyBytes(System.in, out, 4096, false);
+        out.finish();
+    }
+}
+```
+
+* Inferring CompressionCodecs using CompressionCodecFactory
+
+CompressionCodecFactory  通过 getCodec() 方法将文件扩展名映射到 CompressionCodec.
+
+<p align="center"><font size=2>Example 5-2. A program to decompress a compressed file using a codec inferred from the file’s extension</font></p>
+
+``` java
+public class FileDecompressor {
+    public static void main(String[] args) throws Exception {
+        String uri = args[0];
+        Configuration conf = new Configuration();
+        FileSystem fs = FileSystem.get(URI.create(uri), conf);
+        Path inputPath = new Path(uri);
+        CompressionCodecFactory factory = new CompressionCodecFactory(conf);
+        CompressionCodec codec = factory.getCodec(inputPath);
+        if (codec == null) {
+            System.err.println("No codec found for " + uri);
+            System.exit(1);
+        }
+        String outputUri = CompressionCodecFactory.removeSuffix(uri, codec.getDefaultExtension());
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = codec.createInputStream(fs.open(inputPath));
+            out = fs.create(new Path(outputUri));
+            IOUtils.copyBytes(in, out, conf);
+        } finally {
+            IOUtils.closeStream(in);
+            IOUtils.closeStream(out);
+        }
+    }
+}
+```
+
+* Native libraries
+Java 中的 Native 代码是为了提升性能.
+
+表 5-4 显示了每种压缩格式的 Java 实现和 native 的实现. 所有格式都有 native 实现, 但并非全部都有 Java 实现(例如 LZO).
+
+<p align="left"><font size=2>Table 5-4. Compression library implementations</font></p>
+
+| Compression format |  Java implementation? |  Native implementation? |
+| ------| ------ | ------ |
+| DEFLATE | Yes | Yes |
+| gzip | Yes | Yes |
+| bzip2 | Yes | Yes |
+| LZO | No | Yes |
+| LZ4 | No | Yes |
+| Snappy | No | Yes |
+
+CodecPool. 如果您正在使用 native 库, 并且你的应用正在进行大量压缩或解压缩操作, 考虑使用 CodecPool, 它允许你重用压缩器和解压缩器, 从而摊销创建这些对象的成本.
+
+<p align="center"><font size=2>Example 5-3. A program to compress data read from standard input and write it to standard output using a pooled compressor</font></p>
+
+``` java
+public class PooledStreamCompressor {
+    public static void main(String[] args) throws Exception {
+        String codecClassname = args[0];
+        Class<?> codecClass = Class.forName(codecClassname);
+        Configuration conf = new Configuration();
+        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(codecClass, conf);
+        Compressor compressor = null;
+        try {
+            compressor = CodecPool.getCompressor(codec);
+            CompressionOutputStream out = codec.createOutputStream(System.out, compressor);
+            IOUtils.copyBytes(System.in, out, 4096, false);
+            out.finish();
+        } finally {
+            CodecPool.returnCompressor(compressor);
+        }
+    }
+}
+```
+
+#### Compression and Input Splits
+
+在考虑如何压缩将由 MapReduce 处理的数据时, 重要的是要了解压缩格式是否支持分割. 假设有一个大小为 1 GB的未压缩文件文件存储在 HDFS 中. HDFS 块大小为 128 MB, 该文件将被存储为 8 个块, 一个使用该文件的 MapReduce 作业将创建 8 个分片, 每个分片对应一个 map 任务.
+
+现在想象一下, 有一个压缩后的 gzip 文件, 大小为 1 GB. 跟之前一样, HDFS 会用 8 个块存储该文件. 但是, 这种情况下应用程序将无法工作, 因为 map 任务无法读取单个块中解压出的数据(对于 gzip 来说, 它认为压缩后输出的是单个文件, 当多个 map 任务同时处理压缩后的分块时, 会导致无法识别, 因为无法得知). gzip 格式使用 DEFLATE 存储压缩后的数据, 并使用 DEFLATE 将数据存储为一系列压缩块. 问题在于, 这些 DEFLATE 压缩块的头部没有保留任何可以用来在文件流中定位的信息, 使得读取数据能够一直读取到下一个块, 从而与流进行同步. 正因为这个原因, gzip 压缩文件不支持框架对其进行分片.
+
+在这种情况下，MapReduce 不会尝试分割 gzip 文件, 因为它知道输入是 gzip 格式 (通过查看文件扩展名). 同时, MapReduce 作业为了能够运行, 不得不牺牲本地性: 框架将调度唯一的 map 任务处理所有 8 个 HDFS 块, 而其中大多数块不在 map 任务运行的服务器上. 此外, 因为 map 任务数量较少, 作业细化程度较低, 运行时间会较长.
+
+如果我们假设的例子中的文件是 LZO 文件, 我们会遇到同样的问题, 因为底层的压缩格式不能为读取者提供与流同步的方式. 但是, 可以使用 Hadoop LZO 库附带的索引器工具 LZO 文件进行预处理, 该工具可以从 101 页上 "编解码器" 中列出的 Google 和 GitHub 站点中获取. 该工具为分片点构建索引, 有效地使得在遇到类似格式的输入时可进行分片.
+
+另一方面, bzip2 文件在块之间提供了同步标记(pi 的 48 位近似值), 所以支持分片. (表 5-1 列出了每个压缩格式是否支持分片.)
+
+#### Using Compression in MapReduce
+
+如果您的输入文件是压缩后的, MapReduce 读取时将自动解压, 解压前通过文件扩展名来确定使用哪个编解码器.
+
+为了压缩 MapReduce 作业的输出, 请在作业配置中将 mapreduce.output.fileoutputformat.compress 属性设置为 true, 并设置 mapreduce.output.fileoutputformat.compress.codec 属性的类名为你想使用的压缩编解码器. 或者, 您可以在代码中调用静态方法 FileOutputFormat 来设置这些属性.
+
+<p align="center"><font size=2>Example 5-4. Application to run the maximum temperature job producing compressed output</font></p>
+
+``` java
+public class MaxTemperatureWithCompression {
+    public static void main(String[] args) throws Exception {
+        if (args.length != 2) {
+            System.err.println("Usage: MaxTemperatureWithCompression <input path> " + "<output path>");
+            System.exit(-1);
+        }
+        Job job = new Job();
+        job.setJarByClass(MaxTemperature.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        FileOutputFormat.setCompressOutput(job, true);
+        FileOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
+        job.setMapperClass(MaxTemperatureMapper.class);
+        job.setCombinerClass(MaxTemperatureReducer.class);
+        job.setReducerClass(MaxTemperatureReducer.class);
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+```
+
+* Compressing map output
+
+即使您的 MapReduce 应用程序读取和写入都是未压缩的数据, 通过压缩 map 阶段的中间输出, 它也可能会受益. map 输出被写入磁盘并通过网络传输到 reducer 节点, 所以通过使用一个快速的压缩器如 LZO, LZ4 或 Snappy, 你可以获得性能提升, 因为压缩后传输的数据量会减少. 配置属性启用 map 输出压缩和设置压缩格式, 如表 5-6 所示.
+
+<p align="left"><font size=2>Table 5-6. Map output compression properties</font></p>
+
+| Property name | Type | Default value | Description |
+| ------| ------ | ------ | ------ |
+| mapreduce.map.output.compress | boolean | false | Whether to compress map outputs |
+| mapreduce.map.output.compress.codec | Class | org.apache.hadoop.io.compress.DefaultCodec | The compression codec to use for map outputs |
+
+### Serialization
+
+序列化是将结构化对象转换为字节流的过程, 字节流通过网络传输或写入永久存储. 反过来将字节流转换回一系列结构化对象的过程被称为反序列化.
+
+序列化用于两个截然不同的分布式数据处理领域: 进程间通信和持久存储.
+
+在 Hadoop 中, 系统中节点之间的进程间通信通过远程调用(RPC)实现. RPC 协议使用序列化将消息转换为二进制流并发送到远端节点, 然后远端节点对其进行反序列化还原为原始消息. 通常来说, RPC 序列化格式应该达成下面的目标:
+
+Compact
+紧凑的格式可以充分利用稀缺的网络带宽资源.
+
+Fast
+进程间通信形成分布式系统的主干, 所以序列化和反序列化过程中的开销应该尽可能少.
+
+Extensible
+协议会不断变化以满足新的需求, 所以它应该以可控的方式为客户端和服务器轻松的演进协议. 例如, 可以为方法添加一个新参数, 同时新服务器也可以兼容旧格式的消息.
+
+Interoperable
+对于某些系统, 希望能够支持客户端与服务器用不同的语言实现, 所以需要设计格式来满足这一点.
+
+表面上看, 序列化框架对数据格式的要求与持久化对数据格式的要求会有所不同. 毕竟，RPC 的生命周期不超过一秒, 而数据可能写入数年后才会被读取. 从这些差异可以看出, RPC 序列化格式的四个理想属性对于持久化存储格式同样重要. 我们希望存储格式紧凑 (以提高存储空间使用效率), 速度快(因此读取或写入 TB 级数据的开销最小), 可扩展 (所以我们可以透明地读取以旧格式写入的数据), 和 可交互 (所以我们可以使用不同的语言读取或写入数据).
+
+Hadoop 使用自己的序列化格式 Writables, 紧凑而且速度快, 但并不容易被 Java 以外的语言扩展或使用. 因为 Writables 是 Hadoop 的核心(大多数 MapReduce 程序都将其作为 key 和 value 的类型), 我们会在接下来的三节中深入研究它们, 然后再看一些 Hadoop 支持的其他序列化框架. 比如 12 章的Avro(这是为了解决 Writables的 一些限制而设计的序列化系统).
+
+
+#### The Writable Interface 
+
+Writable 接口定义了两个方法 : 一个用于将其状态写入 DataOutput 二进制流, 另一个从 DataInput 二进制流中读取其状态:
+
+``` java
+package org.apache.hadoop.io;
+
+import java.io.DataOutput;
+import java.io.DataInput;
+import java.io.IOException;
+
+public interface Writable {
+    void write(DataOutput out) throws IOException;
+    void readFields(DataInput in) throws IOException;
+}
+```
+
+
