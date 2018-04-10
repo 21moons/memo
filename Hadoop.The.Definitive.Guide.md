@@ -481,9 +481,9 @@ hadoop fs -ls file:///               -- 查看本地文件系统类型
 
 * **HTTP**
 
-Hadoop 通过将其文件系统接口公开为 Java API, 来支持 Java 应用程序访问 HDFS. 而对于非 java 语言, 则需要通过 WebHDFS 协议与 HTTP REST API 交互. 要注意的是，HTTP 接口比本地 Java 客户端慢, 因此如果使用 HTTP 接口, 应该尽可能的避免转移非常大的数据.
+Hadoop 通过将其文件系统接口公开为 Java API, 来支持 Java 应用程序访问 HDFS. 而对于非 java 语言, 则需要通过 WebHDFS 协议与 HTTP REST API 交互. 要注意的是,HTTP 接口比本地 Java 客户端慢, 因此如果使用 HTTP 接口, 应该尽可能的避免转移非常大的数据.
 
-有两种方法可以通过 HTTP 访问 HDFS: 直接访问 HDFS, HDFS 守护进程向客户端提供 HTTP 服务; 通过访问 HDFS 的代理客户端代表使用通常的 DistributedFileSystem API. 这两种方式是如图 3-1 所示. 两者都使用 WebHDFS 协议。
+有两种方法可以通过 HTTP 访问 HDFS: 直接访问 HDFS, HDFS 守护进程向客户端提供 HTTP 服务; 通过访问 HDFS 的代理客户端代表使用通常的 DistributedFileSystem API. 这两种方式是如图 3-1 所示. 两者都使用 WebHDFS 协议. 
 
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Accessing_HDFS_over_HTTP.png)
 <p align="center"><font size=2>Figure 3-1. Accessing HDFS over HTTP directly and via a bank of HDFS proxies</font></p>
@@ -587,7 +587,7 @@ public class FileSystemDoubleCat {
 
 <p align="center"><font size=2>Figure 3-2. A client reading data from HDFS</font></p>
 
-这种设计的一个重要方面是客户直接从 datanodes 检索数据, 并且由 namenode 引导到最优的 datanode. 这个设计允许 HDFS 支持大量的并发客户端, 因为数据流量分散到集群中的所有数据节点上. 同时， namenode 只提供数据块位置(它们存储在内存中, 使得查询操作非常高效), 如果不这样做, 随着客户数量的增长, 大量的数据读取很快就会让系统遇到瓶颈.
+这种设计的一个重要方面是客户直接从 datanodes 检索数据, 并且由 namenode 引导到最优的 datanode. 这个设计允许 HDFS 支持大量的并发客户端, 因为数据流量分散到集群中的所有数据节点上. 同时, namenode 只提供数据块位置(它们存储在内存中, 使得查询操作非常高效), 如果不这样做, 随着客户数量的增长, 大量的数据读取很快就会让系统遇到瓶颈.
 
 * **Network Topology and Hadoop**
 
@@ -615,7 +615,7 @@ YARN 提供了一组 API 用于集群资源管理, 但这些 API 通常不会由
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Applications.png)
 <p align="center"><font size=2>Figure 4-1. YARN applications</font></p>
 
-图 4-1 所示的框架上还可以有一个应用层, Pig, Hive 和 Crunch 都是基于 MapReduce, Spark 或 Tez(或者全部三个)的处理框架, 并且它们不直接与YARN交互。
+图 4-1 所示的框架上还可以有一个应用层, Pig, Hive 和 Crunch 都是基于 MapReduce, Spark 或 Tez(或者全部三个)的处理框架, 并且它们不直接与YARN交互. 
 
 ### Anatomy of a YARN Application Run
 
@@ -631,7 +631,7 @@ YARN 通过两种长时间运行的守护进程提供核心服务: 资源管理�
 
 #### Resource Requests
 
-YARN 具有灵活的资源请求模式. 请求一组容器可以细化为每个容器所需的计算机资源量(内存和CPU), 当然也可以注明容器的本地约束。
+YARN 具有灵活的资源请求模式. 请求一组容器可以细化为每个容器所需的计算机资源量(内存和CPU), 当然也可以注明容器的本地约束. 
 
 本地化对于确保分布式数据处理算法有效的使用集群带宽至关重要, 因此 YARN 允许应用对正在请求的容器指定本地约束. 无论在指定节点或机架, 甚至集群上的任何位置(机架外)申请容器, 都可以设置本地约束.
 
@@ -671,7 +671,7 @@ The jobtracker is also
 responsible for storing job history for completed jobs, although it is possible to run a
 job history server as a separate daemon to take the load off the jobtracker.
 
-在 MapReduce 1 中，jobtracker 负责 job 调度(将 tasktrackers 与任务匹配) 和任务进度监控(持续跟踪任务执行, 重启失败或缓慢的任务, 并做任务簿记, 如维护计数器的总数). 而在YARN中, 这些职责由不同的实体处理: 资源管理员和应用程序 master(每个 MapReduce job 一个). jobtracker 也负责存储已完成作业的历史记录, 尽管可以以守护进程的方式运行一个作业历史记录服务器来减少 jobtracker 的负担. 在 YARN 中, timeline 服务器承担了相同的角色.
+在 MapReduce 1 中,jobtracker 负责 job 调度(将 tasktrackers 与任务匹配) 和任务进度监控(持续跟踪任务执行, 重启失败或缓慢的任务, 并做任务簿记, 如维护计数器的总数). 而在YARN中, 这些职责由不同的实体处理: 资源管理员和应用程序 master(每个 MapReduce job 一个). jobtracker 也负责存储已完成作业的历史记录, 尽管可以以守护进程的方式运行一个作业历史记录服务器来减少 jobtracker 的负担. 在 YARN 中, timeline 服务器承担了相同的角色.
 
 The YARN equivalent of a tasktracker is a node manager. The mapping is summarized
 in Table 4-1.
@@ -710,7 +710,7 @@ YARN 支持更大的集群. MapReduce 1 在 4,000 个节点和 40,000 个任务�
 
 * **Multitenancy**
 
-从某种意义上来讲，YARN 最大的好处是使得 Hadoop 对其他除了 MapReduce 以外的分布式应用开放. MapReduce 只是 YARN 支持的众多分布式应用之一.
+从某种意义上来讲,YARN 最大的好处是使得 Hadoop 对其他除了 MapReduce 以外的分布式应用开放. MapReduce 只是 YARN 支持的众多分布式应用之一.
 
 用户甚至可以在同一个 YARN 集群上运行不同版本的 MapReduce, 这使得升级 MapReduce 的过程更加可控.(但是请注意, MapReduce 的某些部分, 例如 job 历史记录服务器, 洗牌(shuffle)处理程序以及 YARN 本身, 仍然需要升级.)
 
@@ -718,7 +718,7 @@ YARN 支持更大的集群. MapReduce 1 在 4,000 个节点和 40,000 个任务�
 
 ### Scheduling in YARN
 
-在理想的世界中，YARN 应用程序所提出的请求将立即得到响应. 然而, 在现实世界中资源是有限的, 并且在繁忙的集群中, 应用程序在请求完成前通常需要等待. YARN 调度器的工作就是依据某些定义好的策略为应用程序分配资源. 通常来说调度是一个难题, 并且没有一个通用的 "最佳" 策略, 这就是 YARN 提供可选择的调度器和可配置策略的原因.
+在理想的世界中,YARN 应用程序所提出的请求将立即得到响应. 然而, 在现实世界中资源是有限的, 并且在繁忙的集群中, 应用程序在请求完成前通常需要等待. YARN 调度器的工作就是依据某些定义好的策略为应用程序分配资源. 通常来说调度是一个难题, 并且没有一个通用的 "最佳" 策略, 这就是 YARN 提供可选择的调度器和可配置策略的原因.
 
 #### Scheduler Options
 
@@ -956,40 +956,9 @@ Datanodes 负责在存储数据之前验证接收数据的一致性. 包括从�
 
 #### LocalFileSystem
 
-The Hadoop  LocalFileSystem performs client-side checksumming. This means that
-when you write a file called filename, the filesystem client transparently creates a hidden
-file, .filename.crc, in the same directory containing the checksums for each chunk of the
-file. The chunk size is controlled by the  file.bytes-per-checksum property, which
-defaults to 512 bytes. The chunk size is stored as metadata in the .crc file, so the file can
-be read back correctly even if the setting for the chunk size has changed. Checksums
-are verified when the file is read, and if an error is detected,  LocalFileSystem throws
-a  ChecksumException
+Hadoop LocalFileSystem 用于客户端的校验. 这意味着当你写入一个文件时, 它会在你不感知的情况下, 在文件的同一目录中创建一个隐藏文件文件 .filename.crc, 这个隐藏文件包含文件中每个块的校验. 块的大小由 file.bytes-per-checksum 属性来控制, 默认为 512 字节. 块大小作为元数据存储在 .crc 文件中, 因此即使块大小设置做了更改, 文件也可以可以正确读回. 读取文件时也会进行校验, 如果检测到错误, 则 LocalFileSystem 抛出一个 ChecksumException 异常.
 
-Hadoop LocalFileSystem 执行客户端校验. 这意味着
-当你写入一个名为 filename 的文件时, 文件系统客户端透明地创建一个隐藏文件
-文件, .filename.crc, 在文件的同一目录中包含文件中每个块的校验. 块的大小由 file.bytes-per-checksum 属性来控制, 
-默认为 512 字节. 块大小作为元数据存储在 .crc 文件中, 因此即使块大小设置已更改, 文件也可以可以正确读回.
-在文件被读取时进行校验, 如果检测到错误, 则 LocalFileSystem 抛出一个 ChecksumException 异常.
-
-Checksums are fairly cheap to compute (in Java, they are implemented in native code),
-typically adding a few percent overhead to the time to read or write a file. For most
-applications, this is an acceptable price to pay for data integrity. It is, however, possible
-to disable checksums, which is typically done when the underlying filesystem supports
-checksums natively. This is accomplished by using  RawLocalFileSystem in place of
-LocalFileSystem. To do this globally in an application, it suffices to remap the imple‐
-mentation for  file URIs by setting the property  fs.file.impl to the value
-org.apache.hadoop.fs.RawLocalFileSystem . Alternatively, you can directly create a
-RawLocalFileSystem instance, which may be useful if you want to disable checksum
-verification for only some reads, for example:
-
-校验和计算起来相当容易(在 Java 中, 它们是用 native 代码实现的), 在读取或写入文件时仅增加几个百分比的开销. 对于大多数应用程序, 这是为了数据完整性能接受的代价. 然而, 这是可能的
-禁用校验和，这通常在底层文件系统支持时完成
-校验和本身。 这是通过使用 RawLocalFileSystem 来代替的
-LocalFileSystem。 要在应用程序中全局执行此操作，只需重新映射执行程序即可，
-通过将属性fs.file.impl设置为该值来验证文件URI
-org.apache.hadoop.fs.RawLocalFileSystem。 或者，您可以直接创建一个
-RawLocalFileSystem实例，如果您想禁用校验和，这可能很有用
-仅对一些读取进行验证，例如：
+校验和计算效率比较高(Java 中它们是用 native 代码实现), 在读取或写入文件时仅增加几个百分比的开销. 对于大多数应用程序来说, 为了保证数据完整性, 这点代价是能够接受的. 但我们也可以禁用校验和, 这通常是因为底层文件系统本身就支持文件校验. 这种情况下使用 RawLocalFileSystem 代替 LocalFileSystem.  要在应用程序中全局使能此操作, 只需通过将属性 fs.file.impl 设置为 org.apache.hadoop.fs.RawLocalFileSystem 来重新映射文件 URIs 即可. 或者, 你只需要在读取场景下禁用校验和, 可以直接创建一个 RawLocalFileSystem 实例, 例如:
 
 ```java
   Configuration conf = ...
@@ -999,59 +968,22 @@ RawLocalFileSystem实例，如果您想禁用校验和，这可能很有用
 
 #### ChecksumFileSystem
 
-LocalFileSystem uses  ChecksumFileSystem to do its work, and this class makes it easy
-to add checksumming to other (nonchecksummed) filesystems, as  Checksum
-FileSystem is just a wrapper around  FileSystem . The general idiom is as follows:
-
-LocalFileSystem 使用 ChecksumFileSystem 来完成它的工作, 而这个类使得
-将校验和添加到其他(非被检查的)文件系统变得容易, 如 ChecksumFileSystem 只是 FileSystem 的一个包装. 一般习语如下:
+LocalFileSystem 使用 ChecksumFileSystem 来完成它的工作(LocalFileSystem 继承了抽象类 ChecksumFileSystem), 而这个类使得将校验功能添加到其他(不支持校验)文件系统变得容易, 如 ChecksumFileSystem 只是 FileSystem 的一个包装. 示例代码如下:
 
 ```java
   FileSystem rawFs = ...
   FileSystem checksummedFs = new ChecksumFileSystem(rawFs);
 ```
 
-The underlying filesystem is called the raw filesystem, and may be retrieved using the
-getRawFileSystem() method on  ChecksumFileSystem .  ChecksumFileSystem has a few
-more useful methods for working with checksums, such as  getChecksumFile() for
-getting the path of a checksum file for any file. Check the documentation for the others.
+底层文件系统被称为 raw filesystem, 可以使用 ChecksumFileSystem 类中的 getRawFileSystem() 方法获取. ChecksumFileSystem 有许多有用的方法, 例如调用 getChecksumFile() 获取文件对应的校验和文件的路径.
 
-底层文件系统被称为原始文件系统，可以使用
-ChecksumFileSystem上的getRawFileSystem（）方法。 ChecksumFileSystem有几个
-更多有用的方法来处理校验和，例如getChecksumFile（）for
-获取任何文件的校验和文件的路径。 检查其他文档。
-
-If an error is detected by  ChecksumFileSystem when reading a file, it will call its
-reportChecksumFailure() method. The default implementation does nothing, but
-LocalFileSystem moves the offending file and its checksum to a side directory on the
-same device called bad_files. Administrators should periodically check for these bad
-files and take action on them.
-
-如果ChecksumFileSystem在读取文件时检测到错误，则会调用它
-reportChecksumFailure（）方法。 默认实现什么都不做，但是
-LocalFileSystem将有问题的文件及其校验和移动到一个侧面目录
-相同的设备称为bad_files。 管理员应定期检查这些不良内容
-文件并对其采取行动。
+如果 ChecksumFileSystem 在读取文件时检测到错误, 则会调用类方法 reportChecksumFailure(). 该函数的默认实现是什么都不做, 但是 LocalFileSystem 类会将有问题的文件及其校验和移动到相同的设备上的 bad_files 目录. 管理员应定期检查这些损坏的文件并采取对应措施. 
 
 ### Compression
 
-File compression brings two major benefits: it reduces the space needed to store files,
-and it speeds up data transfer across the network or to or from disk. When dealing with
-large volumes of data, both of these savings can be significant, so it pays to carefully
-consider how to use compression in Hadoop.
+文件压缩带来两大好处: 它减少了存储文件所需的空间, 加速了数据的传输, 数据的写入及读出. 在处理大量的数据时带来的效率提升是显著的, 所以请仔细考虑如何在 Hadoop 中使用压缩.
 
-文件压缩带来两大好处: 它减少了存储文件所需的空间,
-它可以加速网络或磁盘或数据的数据传输. 在处理时
-大量的数据, 这些节省都可能是显着的, 所以它要小心谨慎
-考虑如何在Hadoop中使用压缩.
-
-There are many different compression formats, tools, and algorithms, each with dif‐
-ferent characteristics. Table 5-1 lists some of the more common ones that can be used
-with Hadoop.
-
-有许多不同的压缩格式，工具和算法，每种都有dif-
-不同的特点。 表5-1列出了一些可以使用的更常见的一些
-与Hadoop。
+有许多不同的压缩格式, 工具和算法, 每种都有不同的特点. 表 5-1 列出了 Hadoop 支持的一些常见算法. 
 
 <p align="left"><font size=2>Table 5-1. A summary of compression formats</font></p>
 
@@ -1071,11 +1003,11 @@ by offering nine different options:  –1 means optimize for speed, and  -9 mean
 for space. For example, the following command creates a compressed file file.gz using
 the fastest compression method:
 
-所有的压缩算法都表现出空间/时间的折衷：更快的压缩和解压缩，
-压缩速度通常以较小的空间节省为代价。 工具
+所有的压缩算法都是出空间效率/时间效率的折衷: 更快的压缩和解压缩,
+压缩速度通常以较小的空间节省为代价.  工具
 列在表5-1中通常会在压缩时对这种权衡提供一些控制
-通过提供九种不同的选项：-1表示优化速度，-9表示优化
-为空间。 例如，以下命令使用创建一个压缩文件file.gz
+通过提供九种不同的选项：-1表示优化速度,-9表示优化
+为空间.  例如,以下命令使用创建一个压缩文件file.gz
 最快的压缩方法：
 
 ```bash
@@ -1089,12 +1021,12 @@ compression speed, but it is still slower than the other formats. LZO, LZ4, and 
 on the other hand, all optimize for speed and are around an order of magnitude faster than gzip, but compress less effectively. Snappy and LZ4 are also significantly faster than
 LZO for decompression.
 
-不同的工具具有非常不同的压缩特性。 gzip是一个通用的，
-并且在空间/时间交换中处于中等位置。 bzip2压缩
-比gzip更有效，但速度更慢。 bzip2的解压速度比它快
-压缩速度，但仍然比其他格式慢。 LZO，LZ4和Snappy，
-另一方面，所有的优化速度都比gzip快一个数量级，但压缩效率较低。 Snappy和LZ4也显着快于
-LZO减压。
+不同的工具具有非常不同的压缩特性.  gzip是一个通用的,
+并且在空间/时间交换中处于中等位置.  bzip2压缩
+比gzip更有效,但速度更慢.  bzip2的解压速度比它快
+压缩速度,但仍然比其他格式慢.  LZO,LZ4和Snappy,
+另一方面,所有的优化速度都比gzip快一个数量级,但压缩效率较低.  Snappy和LZ4也显着快于
+LZO减压. 
 
 The “Splittable” column in Table 5-1 indicates whether the compression format supports
 splitting (that is, whether you can seek to any point in the stream and start reading from
@@ -1102,9 +1034,9 @@ some point further on). Splittable compression formats are especially suitable f
 Reduce; see “Compression and Input Splits” on page 105 for further discussion.
 
 表5-1中的“可拆分”列表示压缩格式是否支持
-分裂（也就是说，你是否可以寻求流中的任何一点并开始阅读
-一些点进一步）。 可拆分的压缩格式特别适用于Map-
-减少; 有关进一步的讨论，请参阅第105页上的“压缩和输入拆分”。
+分裂（也就是说,你是否可以寻求流中的任何一点并开始阅读
+一些点进一步）.  可拆分的压缩格式特别适用于Map-
+减少; 有关进一步的讨论,请参阅第105页上的“压缩和输入拆分”. 
 
 #### Codecs
 
@@ -1113,10 +1045,10 @@ a codec is represented by an implementation of the  CompressionCodec interface. 
 example,  GzipCodec encapsulates the compression and decompression algorithm for
 gzip. Table 5-2 lists the codecs that are available for Hadoop.
 
-编解码器是压缩 - 解压缩算法的实现。 在Hadoop中，
-编解码器由CompressionCodec接口的实现来表示。 因此对于
-例如，GzipCodec封装了压缩和解压缩算法
-gzip的。 表5-2列出了可用于Hadoop的编解码器。
+编解码器是压缩 - 解压缩算法的实现.  在Hadoop中,
+编解码器由CompressionCodec接口的实现来表示.  因此对于
+例如,GzipCodec封装了压缩和解压缩算法
+gzip的.  表5-2列出了可用于Hadoop的编解码器. 
 
 <p align="left"><font size=2>Table 5-2. Hadoop compression codecs</font></p>
 
@@ -1137,12 +1069,12 @@ normally want. There is also an  LzoCodec for the pure LZO format, which uses
 the .lzo_deflate filename extension (by analogy with DEFLATE, which is gzip without
 the headers).
 
-LZO库是GPL许可的，可能不包含在Apache发行版中，
-所以出于这个原因，Hadoop编解码器必须与Google分别下载（或
-GitHub，其中包括错误修复和更多工具）。 LzopCodec，兼容
-与lzop工具，本质上是LZO格式与额外的标题，并且是你
-通常需要。 还有一个用于纯LZO格式的LzoCodec
-.lzo_deflate文件扩展名（类似于DEFLATE，不带gzip）
-标题）。
+LZO库是GPL许可的,可能不包含在Apache发行版中,
+所以出于这个原因,Hadoop编解码器必须与Google分别下载（或
+GitHub,其中包括错误修复和更多工具）.  LzopCodec,兼容
+与lzop工具,本质上是LZO格式与额外的标题,并且是你
+通常需要.  还有一个用于纯LZO格式的LzoCodec
+.lzo_deflate文件扩展名（类似于DEFLATE,不带gzip）
+标题）.
 
 * Compressing and decompressing streams with CompressionCodec
