@@ -1349,3 +1349,129 @@ assertThat(StringUtils.byteToHexString(data), is("8fa3"));
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Writable_class_hierarchy.png)
 <p align="center"><font size=2>Figure 5-1. Writable class hierarchy</font></p>
 
+如何选择固定长度编码和可变长度编码? 当值在整个值空间均匀分布时, 固定长度编码是很好的, 例如散列函数的输出值. 大多数数字变量趋于不均匀的分布, 并且平均而言, 可变长度编码将节省空间. 可变长度编码的另一个优点是你可以从 VIntWritable 切换到 VLongWritable, 因为它们的编码实际上是一样的. 所以, 通过选择一个可变长度的表示, 可以为以后的扩展提供空间.
+
+* Text
+
+文本是可写入的 UTF-8 序列. 它可以被认为是能够 Writable 的 java.lang.String.
+
+Text 类使用 int(可变长度编码) 来存储字符串编码中的字节数, 因此最大值为2 GB. 此外, Text 使用标准的 UTF-8, 这使得与其他支持 UTF-8 的工具进行交互更加容易.
+
+Indexing for the  Text class is in terms of position
+in the encoded byte sequence, not the Unicode character in the string or the Java  char
+code unit (as it is for  String ). For ASCII strings, these three concepts of index position
+coincide. Here is an example to demonstrate the use of the  charAt() method:
+
+Indexing. 由于强调使用标准的 UTF-8, 因此 Text 和 Java String 类有一些区别. Text 类的索引是字符在编码后的字节序列中的位置, 而不是字符串中的 Unicode 字符或 Java char 中的编码单元(与 String 相同). 对于 ASCII 字符串, 这三个索引位置的概念是重合的. 下面是一个演示 charAt() 方法使用的例子:
+
+``` java
+Text t = new Text("hadoop");
+assertThat(t.getLength(), is(6));
+assertThat(t.getBytes().length, is(6));
+assertThat(t.charAt(2), is((int) 'd'));
+assertThat("Out of bounds", t.charAt(100), is(-1));
+```
+
+请注意, charAt() 返回一个表示 Unicode 代码点的 int, 而不像 String 变量一样返回 char. Text 也有一个 find() 方法, 类似于 String 的 indexOf().
+
+``` java
+Text t = new Text("hadoop");
+assertThat("Find a substring", t.find("do"), is(2));
+assertThat("Finds first 'o'", t.find("o"), is(3));
+assertThat("Finds 'o' from position 4 or later", t.find("o", 4), is(4));
+assertThat("No match", t.find("pig"), is(-1));
+```
+
+Unicode. 当我们开始使用多于一个字节编码的字符时, Text 和 String 之间的区别就变得清晰了. 考虑表 5-8 中显示的 Unicode 字符.
+
+<p align="left"><font size=2>Table 5-8. Unicode characters</font></p>
+
+| Unicode code point | U+0041 | U+00DF | U+6771 | U+10400 |
+| ------ | ------ | ------ | ------ | ------ |
+| **Name** | LATIN CAPITAL LETTER A | LATIN SMALL LETTER SHARP S | N/A (a unified Han ideograph) | DESERET CAPITAL LETTER LONG I |
+| **UTF-8 code units** | 41 | c3 9f | e6 9d b1 | f0 90 90 80 |
+| **Java representation** | \u0041 | \u00DF | \u6771 | \uD801\uDC00 |
+
+All but the last character in the table, U+10400, can be expressed using a single Java
+char . U+10400 is a supplementary character and is represented by two Java  char s,
+known as a surrogate pair. The tests in Example 5-5 show the differences between  String
+and  Text when processing a string of the four characters from Table 5-8.
+
+表中的最后一个字符U + 10400可以用一个 Java 字符表示. U + 10400是一个补充字符, 由两个Java char表示, 称为代理对. 例 5-5 中的测试显示了处理表5-8中四个字符的字符串时字符串和文本之间的差异.
+
+<p align="center"><font size=2>Example 5-5. Tests showing the differences between the String and Text classes</font></p>
+
+``` java
+public class StringTextComparisonTest {
+    @Test
+    public void string() throws UnsupportedEncodingException {
+        String s = "\u0041\u00DF\u6771\uD801\uDC00";
+        assertThat(s.length(), is(5));
+        assertThat(s.getBytes("UTF-8").length, is(10));
+        assertThat(s.indexOf("\u0041"), is(0));
+        assertThat(s.indexOf("\u00DF"), is(1));
+        assertThat(s.indexOf("\u6771"), is(2));
+        assertThat(s.indexOf("\uD801\uDC00"), is(3));
+        assertThat(s.charAt(0), is('\u0041'));
+        assertThat(s.charAt(1), is('\u00DF'));
+        assertThat(s.charAt(2), is('\u6771'));
+        assertThat(s.charAt(3), is('\uD801'));
+        assertThat(s.charAt(4), is('\uDC00'));
+        assertThat(s.codePointAt(0), is(0x0041));
+        assertThat(s.codePointAt(1), is(0x00DF));
+        assertThat(s.codePointAt(2), is(0x6771));
+        assertThat(s.codePointAt(3), is(0x10400));
+    }
+
+    @Test
+    public void text() {
+        Text t = new Text("\u0041\u00DF\u6771\uD801\uDC00");
+        assertThat(t.getLength(), is(10));
+        assertThat(t.find("\u0041"), is(0));
+        assertThat(t.find("\u00DF"), is(1));
+        assertThat(t.find("\u6771"), is(3));
+        assertThat(t.find("\uD801\uDC00"), is(6));
+        assertThat(t.charAt(0), is(0x0041));
+        assertThat(t.charAt(1), is(0x00DF));
+        assertThat(t.charAt(3), is(0x6771));
+        assertThat(t.charAt(6), is(0x10400));
+    }
+}
+```
+
+The test confirms that the length of a  String is the number of  char code units it contains
+(five, made up of one from each of the first three characters in the string and a surrogate
+pair from the last), whereas the length of a  Text object is the number of bytes in its
+UTF-8 encoding (10 = 1+2+3+4). Similarly, the  indexOf() method in  String returns
+an index in  char code units, and  find() for  Text returns a byte offset.
+
+该测试确认了一个字符串的长度是它包含的字符代码单元的数量（五个，由字符串中前三个字符中的每一个和最后一个替代对中的一个组成），而文本的长度 object是UTF-8编码中的字节数（10 = 1 + 2 + 3 + 4）。 同样，String中的indexOf（）方法以char代码单位返回一个索引，find（）代表Text返回的字节偏移量。
+
+The  charAt() method in  String returns the  char code unit for the given index, which
+in the case of a surrogate pair will not represent a whole Unicode character. The  code
+PointAt() method, indexed by  char code unit, is needed to retrieve a single Unicode
+character represented as an  int . In fact, the  charAt() method in  Text is more like the
+codePointAt() method than its namesake in  String . The only difference is that it is
+indexed by byte offset.
+
+String中的charAt（）方法返回给定索引的char代码单元，对于代理对来说，它不代表整个Unicode字符。 需要用char代码单元索引的代码PointAt（）方法来检索表示为int的单个Unicode字符。 事实上，Text中的charAt（）方法更像是codePointAt（）方法，而不是String中的同名方法。 唯一的区别是它是按字节偏移索引的。
+
+Iteration. Iterating over the Unicode characters in  Text is complicated by the use of byte offsets for indexing, since you can’t just increment the index. The idiom for iteration is a little obscure (see Example 5-6): turn the  Text object into a  java.nio.ByteBuffer, then repeatedly call the  bytesToCodePoint() static method on  Text with the buffer. This method extracts the next code point as an  int and updates the position in the buffer. The end of the string is detected when  bytesToCodePoint() returns –1.
+
+Iteration. 因为您不能只增加索引，所以使用字节偏移进行索引时，在Text中迭代Unicode字符变得复杂。 迭代方式有点模糊（参见例5-6）：将Text对象转换为java.nio.ByteBuffer，然后用缓冲区重复调用TextTable的byteToCodePoint（）静态方法。 此方法将下一个代码点提取为int并更新缓冲区中的位置。 当bytesToCodePoint（）返回-1时，检测到字符串的结尾。
+
+<p align="center"><font size=2>Example 5-6. Iterating over the characters in a Text object</font></p>
+
+``` java
+public class TextIterator {
+    public static void main(String[] args) {
+        Text t = new Text("\u0041\u00DF\u6771\uD801\uDC00");
+        ByteBuffer buf = ByteBuffer.wrap(t.getBytes(), 0, t.getLength());
+        int cp;
+        while (buf.hasRemaining() && (cp = Text.bytesToCodePoint(buf)) != -1) {
+            System.out.println(Integer.toHexString(cp));
+        }
+    }
+}
+```
+
