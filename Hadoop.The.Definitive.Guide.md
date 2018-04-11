@@ -1285,11 +1285,7 @@ package org.apache.hadoop.io;
 }
 ```
 
-Comparison of types is crucial for MapReduce, where there is a sorting phase during
-which keys are compared with one another. One optimization that Hadoop provides is
-the  RawComparator extension of Java’s  Comparator 
-
-类型的比较对于 MapReduce 来说至关重要, 因为 MapReduce 中有一个排序阶段哪些键相互比较. Hadoop 提供的一项优化是 Java 比较器的 RawComparator 扩展
+类型比较对于 MapReduce 来说至关重要, 因为 MapReduce 中有一个排序阶段会对键进行比较. Hadoop 提供的一项优化是继承了 Java 比较器的 RawComparator 接口:
 
 ``` java
 package org.apache.hadoop.io;
@@ -1299,38 +1295,15 @@ public interface RawComparator<T> extends Comparator<T> {
 }
 ```
 
-This interface permits implementors to compare records read from a stream without
-deserializing them into objects, thereby avoiding any overhead of object creation. For
-example, the comparator for  IntWritable s implements the raw  compare() method by
-reading an integer from each of the byte arrays  b1 and  b2 and comparing them directly
-from the given start positions ( s1 and  s2 ) and lengths ( l1 and  l2 ).
+这个接口允许实现类在反序列化为对象之前比较流中的记录, 从而避免了创建对象的开销. 例如, IntWritable 的比较器是这样实现 raw compare() 方法的, 从两个字节数组 b1 和 b2 中分别读取一个整数并直接从给定的开始位置 (s1 和 s2) 和长度 (l1 和 l2)进行比较.
 
-这个接口允许实现者比较从没有的流中读取的记录
-将它们反序列化为对象，从而避免了对象创建的任何开销。 对于
-例如，IntWritable的比较器通过实现raw compare（）方法
-从每个字节数组b1和b2读取一个整数并直接进行比较
-从给定的开始位置（s1和s2）和长度（l1和l2）。
-
-WritableComparator is a general-purpose implementation of  RawComparator for
-WritableComparable classes. It provides two main functions. First, it provides a default
-implementation of the raw  compare() method that deserializes the objects to be com‐
-pared from the stream and invokes the object  compare() method. Second, it acts as a
-factory for  RawComparator instances (that  Writable implementations have registered).
-For example, to obtain a comparator for  IntWritable , we just use:
-
-WritableComparator是RawComparator for的通用实现
-WritableComparable类。 它提供了两个主要功能。 首先，它提供了一个默认值
-实现原始的compare（）方法，将对象反序列化为com-
-从流中删除并调用对象compare（）方法。 其次，它充当一个
-RawComparator实例的工厂（可写实现已注册）。
-例如，要获得IntWritable的比较器，我们只需使用：
+WritableComparator 是 WritableComparable 类对 RawComparator 接口的通用实现. 它提供了两个主要函数. 首先, 它提供了 raw compare() 方法的默认实现, 将流中的数据反序列化为对象并调用对象的 compare() 方法. 其次, 它充当一个 RawComparator 实例工厂(Writable 实现已注册). 例如, 要获得 IntWritable 的比较器, 我们只需使用:
 
 ``` java
 RawComparator<IntWritable> comparator = WritableComparator.get(IntWritable.class);
 ```
 
-The comparator can be used to compare two  IntWritable objects:
-比较器可用于比较两个IntWritable对象：
+comparator 可用于比较两个 IntWritable 对象:
 
 ``` java
 IntWritable w1 = new IntWritable(163);
@@ -1338,8 +1311,7 @@ IntWritable w2 = new IntWritable(67);
 assertThat(comparator.compare(w1, w2), greaterThan(0));
 ```
 
-or their serialized representations:
-或他们的序列化表示：
+或比较他们的序列化表示:
 
 ``` java
 byte[] b1 = serialize(w1);
@@ -1348,3 +1320,32 @@ assertThat(comparator.compare(b1, 0, b1.length, b2, 0, b2.length), greaterThan(0
 ```
 
 #### Writable Classes
+
+* Writable wrappers for Java primitives
+
+除 char 之外(可以存储在 IntWritable 中), 所有 Java 基本类型都有 Writable wrappers (请参阅表 5-7). 所有类都有 get() 和 set() 方法用来获取和存储包装值.
+
+<p align="left"><font size=2>Table 5-7. Writable wrapper classes for Java primitives</font></p>
+
+| Java primitive | Writable implementation | Serialized size (bytes) |
+| ------| ------ | ------ | ------ |
+| boolean | BooleanWritable | 1 |
+| byte | ByteWritable | 1 |
+| short | ShortWritable | 2 |
+| int | IntWritable | 4 |
+|  | VIntWritable | 1-5 |
+| float | FloatWritable | 4 |
+| long | LongWritable | 8 |
+|  | VLongWritable | 1-9 |
+| double | DoubleWritable | 8 |
+
+谈到整数的编码, 可以选择固定长度格式 (IntWritable 和 LongWritable) 或可变长度格式 (VIntWritable 和 VLongWritable). 可变长度格式在值足够小时 (介于 -112 和 127 之间), 只使用一个字节来对该值进行编码; 否则, 他们用第一个字节表示该值是正值还是负值, 以及后面有多少字节. 例如, 163 需要两个字节来表示:
+
+``` java
+byte[] data = serialize(new VIntWritable(163));
+assertThat(StringUtils.byteToHexString(data), is("8fa3"));
+```
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Writable_class_hierarchy.png)
+<p align="center"><font size=2>Figure 5-1. Writable class hierarchy</font></p>
+
