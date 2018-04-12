@@ -1397,7 +1397,7 @@ char . U+10400 is a supplementary character and is represented by two Java  char
 known as a surrogate pair. The tests in Example 5-5 show the differences between  String
 and  Text when processing a string of the four characters from Table 5-8.
 
-表中的最后一个字符U + 10400可以用一个 Java 字符表示. U + 10400是一个补充字符, 由两个Java char表示, 称为代理对. 例 5-5 中的测试显示了处理表5-8中四个字符的字符串时字符串和文本之间的差异.
+表中的最后一个字符 U + 10400  可以用一个 Java 字符表示. U + 10400 是一个补充字符, 由两个Java char 表示, 称为代理对. 例 5-5 中的测试显示了处理表5-8中四个字符的字符串时字符串和文本之间的差异.
 
 <p align="center"><font size=2>Example 5-5. Tests showing the differences between the String and Text classes</font></p>
 
@@ -1445,7 +1445,7 @@ pair from the last), whereas the length of a  Text object is the number of bytes
 UTF-8 encoding (10 = 1+2+3+4). Similarly, the  indexOf() method in  String returns
 an index in  char code units, and  find() for  Text returns a byte offset.
 
-该测试确认了一个字符串的长度是它包含的字符代码单元的数量（五个，由字符串中前三个字符中的每一个和最后一个替代对中的一个组成），而文本的长度 object是UTF-8编码中的字节数（10 = 1 + 2 + 3 + 4）。 同样，String中的indexOf（）方法以char代码单位返回一个索引，find（）代表Text返回的字节偏移量。
+该测试确认了一个字符串的长度是它包含的字符代码单元的数量 (五个, 由字符串中前三个字符中的每一个和最后一个替代对中的一个组成), 而文本的长度 object 是 UTF-8 编码中的字节数 (10 = 1 + 2 + 3 + 4). 同样, String 中的 indexOf() 方法以 char 代码单位返回一个索引, find() 代表 Text 返回的字节偏移量。
 
 The  charAt() method in  String returns the  char code unit for the given index, which
 in the case of a surrogate pair will not represent a whole Unicode character. The  code
@@ -1454,11 +1454,11 @@ character represented as an  int . In fact, the  charAt() method in  Text is mor
 codePointAt() method than its namesake in  String . The only difference is that it is
 indexed by byte offset.
 
-String中的charAt（）方法返回给定索引的char代码单元，对于代理对来说，它不代表整个Unicode字符。 需要用char代码单元索引的代码PointAt（）方法来检索表示为int的单个Unicode字符。 事实上，Text中的charAt（）方法更像是codePointAt（）方法，而不是String中的同名方法。 唯一的区别是它是按字节偏移索引的。
+String 中的 charAt() 方法返回给定索引的 char 代码单元, 对于代理对来说, 它不代表整个 Unicode 字符. 需要用 char 代码单元索引的代码 PointAt() 方法来检索用 int 表示的单个 Unicode 字符. 事实上, Text 中的 charAt() 方法更像是 codePointAt() 方法，而不是 String 中的同名方法. 唯一的区别是它是按字节偏移索引的.
 
 Iteration. Iterating over the Unicode characters in  Text is complicated by the use of byte offsets for indexing, since you can’t just increment the index. The idiom for iteration is a little obscure (see Example 5-6): turn the  Text object into a  java.nio.ByteBuffer, then repeatedly call the  bytesToCodePoint() static method on  Text with the buffer. This method extracts the next code point as an  int and updates the position in the buffer. The end of the string is detected when  bytesToCodePoint() returns –1.
 
-Iteration. 因为您不能只增加索引，所以使用字节偏移进行索引时，在Text中迭代Unicode字符变得复杂。 迭代方式有点模糊（参见例5-6）：将Text对象转换为java.nio.ByteBuffer，然后用缓冲区重复调用TextTable的byteToCodePoint（）静态方法。 此方法将下一个代码点提取为int并更新缓冲区中的位置。 当bytesToCodePoint（）返回-1时，检测到字符串的结尾。
+Iteration. 因为您不能只增加索引, 所以使用字节偏移进行索引时, 在 Text 中迭代 Unicode 字符变得复杂. 迭代方式有点模糊 (参见例 5-6): 将 Text 对象转换为java.nio.ByteBuffer, 然后用缓冲区重复调用 TextTable 的 byteToCodePoint() 静态方法. 此方法将下一个代码点提取为 int 并更新缓冲区中的位置. 当bytesToCodePoint() 返回 -1 时, 检测到字符串的结尾.
 
 <p align="center"><font size=2>Example 5-6. Iterating over the characters in a Text object</font></p>
 
@@ -1475,3 +1475,601 @@ public class TextIterator {
 }
 ```
 
+Mutability. Another difference from  String is that  Text is mutable (like all  Writable
+implementations in Hadoop, except  NullWritable , which is a singleton). You can reuse
+a  Text instance by calling one of the  set() methods on it. For example:
+
+可变性。 与String的另一个区别是Text是可变的（就像Hadoop中的所有Writable实现，除了NullWritable，它是一个单例）。 您可以通过调用其中一个set（）方法来重用Text实例。 例如：
+
+``` java
+Text t = new Text("hadoop");
+t.set("pig");
+assertThat(t.getLength(), is(3));
+assertThat(t.getBytes().length, is(3));
+```
+
+Resorting to String. Text doesn’t have as rich an API for manipulating strings as
+java.lang.String , so in many cases, you need to convert the  Text object to a  String .
+This is done in the usual way, using the  toString() method:
+
+诉诸字符串。 文本没有像java.lang.String那样丰富的用于处理字符串的API，所以在许多情况下，您需要将Text对象转换为字符串。以常规方式使用toString（）方法完成此操作:
+
+``` java
+assertThat(new Text("hadoop").toString(), is("hadoop"));
+```
+
+* BytesWritable
+
+BytesWritable is a wrapper for an array of binary data. Its serialized format is a 4-byte
+integer field that specifies the number of bytes to follow, followed by the bytes them‐
+selves. For example, the byte array of length 2 with values 3 and 5 is serialized as a 4-
+byte integer ( 00000002 ) followed by the two bytes from the array ( 03 and  05 ):
+
+BytesWritable是一个二进制数据的包装。 它的序列化格式是一个4字节的整数字段，用于指定要跟随的字节数，随后是字节本身。 例如，长度为2且值为3和5的字节数组被序列化为4字节整数（00000002），然后是数组（03和05）中的两个字节：
+
+``` java
+BytesWritable b = new BytesWritable(new byte[] { 3, 5 });
+byte[] bytes = serialize(b);
+assertThat(StringUtils.byteToHexString(bytes), is("000000020305"));
+```
+
+BytesWritable is mutable, and its value may be changed by calling its  set() method.
+As with  Text , the size of the byte array returned from the  getBytes() method for
+BytesWritable —the capacity—may not reflect the actual size of the data stored in the
+BytesWritable . You can determine the size of the  BytesWritable by calling  get
+Length() . To demonstrate:
+
+BytesWritable是可变的，它的值可以通过调用set（）方法来改变。 与Text一样，BytesWritable（容量）的getBytes（）方法返回的字节数组大小可能不会反映
+BytesWritable中存储的数据的实际大小。 您可以通过调用get Length（）来确定BytesWritable的大小。 展示：
+
+``` java
+b.setCapacity(11);
+assertThat(b.getLength(), is(2));
+assertThat(b.getBytes().length, is(11));
+```
+
+* NullWritable
+
+NullWritable is a special type of Writable, as it has a zero-length serialization. No bytes
+are written to or read from the stream. It is used as a placeholder; for example, in Map‐
+Reduce, a key or a value can be declared as a  NullWritable when you don’t need to use
+that position, effectively storing a constant empty value.  NullWritable can also be useful
+as a key in a  SequenceFile when you want to store a list of values, as opposed to key-
+value pairs. It is an immutable singleton, and the instance can be retrieved by calling
+NullWritable.get().
+
+NullWritable是一种特殊类型的Writable，因为它具有零长度序列化。 没有字节被写入或从流中读取。 它用作占位符; 例如，在MapReduce中，当您不需要使用该位置时，可以将键或值声明为NullWritable，从而有效地存储常量空值。 当你想存储一个值列表时，NullWritable也可以用作SequenceFile中的一个键，而不是键值对。 它是一个不可变的单例，可以通过调用NullWritable.get（）来获取实例。
+
+* ObjectWritable and GenericWritable
+
+ObjectWritable is a general-purpose wrapper for the following: Java primitives,
+String ,  enum ,  Writable ,  null , or arrays of any of these types. It is used in Hadoop RPC
+to marshal and unmarshal method arguments and return types.
+
+ObjectWritable是以下通用包装器：Java基元，String，枚举，可写，空或任何这些类型的数组。 它在Hadoop RPC中用于编组和解组方法参数和返回类型。
+
+ObjectWritable is useful when a field can be of more than one type. For example, if
+the values in a  SequenceFile have multiple types, you can declare the value type as an
+ObjectWritable and wrap each type in an  ObjectWritable . Being a general-purpose
+mechanism, it wastes a fair amount of space because it writes the classname of the
+wrapped type every time it is serialized. In cases where the number of types is small and
+known ahead of time, this can be improved by having a static array of types and using
+the index into the array as the serialized reference to the type. This is the approach that
+GenericWritable takes, and you have to subclass it to specify which types to support.
+
+ObjectWritable在字段可以具有多种类型时非常有用。 例如，如果SequenceFile中的值具有多个类型，则可以将值类型声明为ObjectWritable，并将每个类型包装在ObjectWritable中。 作为一个通用机制，它浪费了大量的空间，因为它每次被序列化时都会写入被包装类型的类名。 在类型数量很小并且事先已知的情况下，可以通过使用类型的静态数组并将索引用于数组的序列化引用来改进此类型。 这是GenericWritable所采用的方法，您必须对其进行子类化以指定要支持的类型。
+
+* Writable collections
+
+The  org.apache.hadoop.io package includes six  Writable collection types:  Array
+Writable ,  ArrayPrimitiveWritable ,  TwoDArrayWritable ,  MapWritable ,
+SortedMapWritable , and  EnumSetWritable.
+
+org.apache.hadoop.io包包含六种Writable集合类型：ArrayWritable，ArrayPrimitiveWritable，TwoDArrayWritable，MapWritable，SortedMapWritable和EnumSetWritable。
+
+ArrayWritable and  TwoDArrayWritable are  Writable implementations for arrays and
+two-dimensional arrays (array of arrays) of  Writable instances. All the elements of an 
+ArrayWritable or a  TwoDArrayWritable must be instances of the same class, which is
+specified at construction as follows:
+
+ArrayWritable和TwoDArrayWritable是Writable实例的数组和二维数组（阵列数组）的Writable实现。 ArrayWritable或TwoDArrayWritable的所有元素必须是同一个类的实例，在构造中指定的实例如下：
+
+``` java
+ArrayWritable writable = new ArrayWritable(Text.class);
+```
+
+In contexts where the  Writable is defined by type, such as in  SequenceFile keys or
+values or as input to MapReduce in general, you need to subclass  ArrayWritable (or
+TwoDArrayWritable , as appropriate) to set the type statically. For example:
+
+在Writable由类型定义的上下文中（如SequenceFile键或值）或通常用作MapReduce的输入的上下文中，需要继承ArrayWritable（或TwoDArrayWritable，如适用）的子类来静态设置类型。 例如：
+
+``` java
+public class TextArrayWritable extends ArrayWritable {
+    public TextArrayWritable() {
+        super(Text.class);
+    }
+}
+```
+
+ArrayWritable and  TwoDArrayWritable both have  get() and  set() methods, as well
+as a  toArray() method, which creates a shallow copy of the array (or 2D array).
+
+ArrayWritable和TwoDArrayWritable都有get（）和set（）方法，还有一个toArray（）方法，该方法创建数组（或二维数组）的浅表副本。
+
+ArrayPrimitiveWritable is a wrapper for arrays of Java primitives. The component
+type is detected when you call  set() , so there is no need to subclass to set the type.
+
+ArrayPrimitiveWritable是Java基元数组的封装器。 调用set（）时会检测组件类型，因此不需要子类来设置类型。
+
+MapWritable is an implementation of  java.util.Map<Writable, Writable> , and  Sor
+tedMapWritable is an implementation of  java.util.SortedMap<WritableCompara
+ble, Writable> . The type of each key and value field is a part of the serialization format
+for that field. The type is stored as a single byte that acts as an index into an array of
+types. The array is populated with the standard types in the  org.apache.hadoop.io
+package, but custom  Writable types are accommodated, too, by writing a header that
+encodes the type array for nonstandard types. As they are implemented,  MapWritable
+and  SortedMapWritable use positive  byte values for custom types, so a maximum of
+127 distinct nonstandard  Writable classes can be used in any particular  MapWritable
+or  SortedMapWritable instance. Here’s a demonstration of using a  MapWritable with
+different types for keys and values:
+
+MapWritable是java.util.Map <Writable，Writable>的实现，SortedMapWritable是java.util.SortedMap <WritableComparable，Writable>的实现。 每个键和值字段的类型是该字段的序列化格式的一部分。 该类型被存储为一个单字节，充当一个类型数组的索引。 该数组在org.apache.hadoop.io包中使用标准类型进行填充，但通过编写用于为非标准类型编码类型数组的头部，也可以使用自定义的Writable类型。 在实现它们时，MapWritable和SortedMapWritable对自定义类型使用正字节值，因此在任何特定的MapWritable或SortedMapWritable实例中最多可以使用127个不同的非标准可写类。 下面是使用MapWritable对键和值使用不同类型的演示：
+
+``` java
+MapWritable src = new MapWritable();
+src.put(new IntWritable(1), new Text("cat"));
+src.put(new VIntWritable(2), new LongWritable(163));
+MapWritable dest = new MapWritable();
+WritableUtils.cloneInto(dest, src);
+assertThat((Text) dest.get(new IntWritable(1)), is(new Text("cat")));
+assertThat((LongWritable) dest.get(new VIntWritable(2)), is(new LongWritable(163)));
+```
+
+Conspicuous by their absence are  Writable collection implementations for sets and
+lists. A general set can be emulated by using a  MapWritable (or a  SortedMapWritable
+for a sorted set) with  NullWritable values. There is also  EnumSetWritable for sets of
+enum types. For lists of a single type of  Writable ,  ArrayWritable is adequate, but to
+store different types of  Writable in a single list, you can use  GenericWritable to wrap 
+the elements in an  ArrayWritable . Alternatively, you could write a general  ListWrita
+ble using the ideas from  MapWritable.
+
+缺乏显眼的是集合和列表的可写集合实现。 通用集合可以通过使用MapWritable（或SortedMapWritable作为有序集合）和NullWritable值来模拟。 还有EnumSetWritable用于枚举类型的集合。 对于单一类型Writable的列表，ArrayWritable已经足够，但要将不同类型的Writable存储在单个列表中，可以使用GenericWritable将元素包装在ArrayWritable中。 或者，您可以使用MapWritable的想法编写一个通用的ListWritable。
+
+#### Implementing a Custom Writable
+
+Hadoop comes with a useful set of  Writable implementations that serve most purposes;
+however, on occasion, you may need to write your own custom implementation. With
+a custom  Writable , you have full control over the binary representation and the sort
+order. Because  Writable s are at the heart of the MapReduce data path, tuning the binary
+representation can have a significant effect on performance. The stock  Writable
+implementations that come with Hadoop are well tuned, but for more elaborate struc‐
+tures, it is often better to create a new  Writable type rather than composing the stock
+types.
+
+Hadoop附带一组有用的可写实现，可用于大多数目的; 但是，有时候，您可能需要编写自己的自定义实现。 使用自定义Writable，您可以完全控制二进制表示和排序顺序。 由于Writable是MapReduce数据路径的核心，因此调整二进制表示可能会对性能产生重大影响。 Hadoop附带的股票Writable实现已经很好地调整，但对于更复杂的结构，创建新的Writable类型通常更好，而不是组成股票类型。
+
+To demonstrate how to create a custom  Writable , we shall write an implementation
+that represents a pair of strings, called  TextPair . The basic implementation is shown
+in Example 5-7.
+
+为了演示如何创建自定义的Writable，我们将编写一个代表一对字符串的实现，称为TextPair。 基本实现如例5-7所示。
+
+<p align="center"><font size=2>Example 5-7. A Writable implementation that stores a pair of Text objects</font></p>
+
+``` java
+import java.io.*;
+import org.apache.hadoop.io.*;
+
+public class TextPair implements WritableComparable<TextPair> {
+    private Text first;
+    private Text second;
+
+    public TextPair() {
+        set(new Text(), new Text());
+    }
+
+    public TextPair(String first, String second) {
+        set(new Text(first), new Text(second));
+    }
+
+    public TextPair(Text first, Text second) {
+        set(first, second);
+    }
+
+    public void set(Text first, Text second) {
+        this.first = first;
+        this.second = second;
+    }
+
+    public Text getFirst() {
+        return first;
+    }
+
+    public Text getSecond() {
+        return second;
+    }
+
+    @Override
+    public void write(DataOutput out) throws IOException {
+        first.write(out);
+        second.write(out);
+    }
+
+    @Override
+    public void readFields(DataInput in) throws IOException {
+        first.readFields(in);
+        second.readFields(in);
+    }
+
+    @Override
+    public int hashCode() {
+        return first.hashCode() * 163 + second.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof TextPair) {
+            TextPair tp = (TextPair) o;
+            return first.equals(tp.first) && second.equals(tp.second);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return first + "\t" + second;
+    }
+
+    @Override
+    public int compareTo(TextPair tp) {
+        int cmp = first.compareTo(tp.first);
+        if (cmp != 0) {
+            return cmp;
+        }
+        return second.compareTo(tp.second);
+    }
+}
+```
+
+The first part of the implementation is straightforward: there are two  Text instance
+variables,  first and  second , and associated constructors, getters, and setters. All
+Writable implementations must have a default constructor so that the MapReduce
+framework can instantiate them, then populate their fields by calling  readFields() .
+Writable instances are mutable and often reused, so you should take care to avoid
+allocating objects in the  write() or  readFields() methods.
+
+实现的第一部分很简单：有两个Text实例变量，第一个和第二个，以及相关的构造函数，getter和setter。 所有Writable实现都必须具有默认构造函数，以便MapReduce框架可以实例化它们，然后通过调用readFields（）来填充它们的字段。 可写实例是可变的并且经常重用，所以您应该小心避免在write（）或readFields（）方法中分配对象。
+
+TextPair ’s  write() method serializes each  Text object in turn to the output stream by
+delegating to the  Text objects themselves. Similarly,  readFields() deserializes the bytes
+from the input stream by delegating to each  Text object. The  DataOutput and  DataInput
+interfaces have a rich set of methods for serializing and deserializing Java primitives, so,
+in general, you have complete control over the wire format of your  Writable object.
+
+TextPair的write（）方法通过委托给Text对象将每个Text对象依次序列化为输出流。 同样，readFields（）通过委托给每个Text对象来反序列化输入流中的字节。 DataOutput和DataInput接口拥有一组丰富的用于序列化和反序列化Java基元的方法，因此，通常，您可以完全控制您的Writable对象的有线格式。
+
+Just as you would for any value object you write in Java, you should override the
+hashCode() ,  equals() , and  toString() methods from  java.lang.Object . The  hash
+Code() method is used by the  HashPartitioner (the default partitioner in MapReduce)
+to choose a reduce partition, so you should make sure that you write a good hash func‐
+tion that mixes well to ensure reduce partitions are of a similar size.
+
+就像使用Java编写的任何值对象一样，您应该覆盖java.lang.Object中的hashCode（），equals（）和toString（）方法。 HashPartitioner（MapReduce中的默认分区程序）使用hashCode（）方法来选择reduce分区，所以您应该确保您编写的混合良好的散列函数可以确保减少的分区具有相似的大小。
+
+TextPair is an implementation of  WritableComparable , so it provides an implemen‐
+tation of the  compareTo() method that imposes the ordering you would expect: it sorts
+by the first string followed by the second. Notice that, apart from the number of  Text
+objects it can store,  TextPair differs from  TextArrayWritable (which we discussed in
+the previous section), since  TextArrayWritable is only a  Writable , not a  Writable
+Comparable.
+
+TextPair是WritableComparable的一个实现，因此它提供了一个compareTo（）方法的实现，该方法强加您期望的排序：它按照第一个字符串和第二个字符串排序。 请注意，除了可以存储的Text对象的数量之外，TextPair与TextArrayWritable（我们在前面部分中讨论过）不同，因为TextArrayWritable只是可写的，而不是可写的可比较的。
+
+* Implementing a RawComparator for speed
+
+The code for  TextPair in Example 5-7 will work as it stands; however, there is a further
+optimization we can make. As explained in “WritableComparable and comparators” on
+page 112, when  TextPair is being used as a key in MapReduce, it will have to be dese‐
+rialized into an object for the  compareTo() method to be invoked. What if it were pos‐
+sible to compare two  TextPair objects just by looking at their serialized
+representations?
+
+示例5-7中TextPair的代码将按原样工作; 然而，我们可以进一步优化。 如第112页的“WritableComparable和Comparators”中所述，当TextPair被用作MapReduce中的键时，必须将其反序列化为一个对象，以便调用compareTo（）方法。 如果仅仅通过查看它们的序列化表示就可以比较两个TextPair对象呢？
+
+It turns out that we can do this because  TextPair is the concatenation of two  Text
+objects, and the binary representation of a  Text object is a variable-length integer con‐
+taining the number of bytes in the UTF-8 representation of the string, followed by the 
+UTF-8 bytes themselves. The trick is to read the initial length so we know how long the
+first  Text object’s byte representation is; then we can delegate to  Text ’s  RawCompara
+tor and invoke it with the appropriate offsets for the first or second string. Example 5-8
+gives the details (note that this code is nested in the  TextPair class).
+
+事实证明，我们可以这样做，因为TextPair是两个Text对象的连接，而Text对象的二进制表示是一个可变长度的整数，包含字符串的UTF-8表示中的字节数，随后是 UTF-8字节本身。 诀窍是读取初始长度，以便知道第一个Text对象的字节表示是多久; 那么我们可以委托给Text的RawComparator并用第一个或第二个字符串的适当偏移量调用它。 示例5-8给出了详细信息（请注意，此代码嵌套在TextPair类中）。
+
+<p align="center"><font size=2>Example 5-8. A RawComparator for comparing TextPair byte representations</font></p>
+
+``` java
+public static class Comparator extends WritableComparator {
+    private static final Text.Comparator TEXT_COMPARATOR = new Text.Comparator();
+
+    public Comparator() {
+        super(TextPair.class);
+    }
+
+    @Override
+    public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
+        try {
+            int firstL1 = WritableUtils.decodeVIntSize(b1[s1]) + readVInt(b1, s1);
+            int firstL2 = WritableUtils.decodeVIntSize(b2[s2]) + readVInt(b2, s2);
+            int cmp = TEXT_COMPARATOR.compare(b1, s1, firstL1, b2, s2, firstL2);
+            if (cmp != 0) {
+                return cmp;
+            }
+            return TEXT_COMPARATOR.compare(b1, s1 + firstL1, l1 - firstL1, b2, s2 + firstL2, l2 - firstL2);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+}
+
+static{
+    WritableComparator.define(TextPair.class,new Comparator());
+}
+```
+
+We actually subclass  WritableComparator rather than implementing  RawComparator
+directly, since it provides some convenience methods and default implementations. The
+subtle part of this code is calculating  firstL1 and  firstL2 , the lengths of the first  Text
+field in each byte stream. Each is made up of the length of the variable-length integer
+(returned by  decodeVIntSize() on  WritableUtils ) and the value it is encoding (re‐
+turned by  readVInt() ).
+
+实际上，我们实现了WritableComparator的子类，而不是直接实现RawComparator，因为它提供了一些便利方法和默认实现。 该代码的细微部分是计算firstL1和firstL2，即每个字节流中第一个Text字段的长度。 每个由可变长度整数（由WritableUtils上的decodeVIntSize（）返回）和它正在编码的值（由readVInt（）返回）的长度组成。
+
+The static block registers the raw comparator so that whenever MapReduce sees the
+TextPair class, it knows to use the raw comparator as its default comparator.
+
+静态块注册原始比较器，以便每当MapReduce看到TextPair类时，它都知道使用原始比较器作为其默认比较器。
+
+* Custom comparators
+
+As you can see with  TextPair , writing raw comparators takes some care because you
+have to deal with details at the byte level. It is worth looking at some of the implemen‐
+tations of  Writable in the  org.apache.hadoop.io package for further ideas if you need
+to write your own. The utility methods on  WritableUtils are very handy, too.
+
+正如您在TextPair中看到的那样，编写原始比较器时需要小心，因为您必须在字节级别处理细节。 如果您需要编写自己的代码，那么值得关注org.apache.hadoop.io包中的一些Writable实现，以获得进一步的想法。 WritableUtils上的实用方法也非常方便。
+
+Custom comparators should also be written to be  RawComparator s, if possible. These
+are comparators that implement a different sort order from the natural sort order de‐
+fined by the default comparator. Example 5-9 shows a comparator for  TextPair , called
+FirstComparator , that considers only the first string of the pair. Note that we override
+the  compare() method that takes objects so both  compare() methods have the same
+semantics.
+
+如果可能的话，自定义比较器也应该写成RawComparator。 这些比较器实现与默认比较器定义的自然排序顺序不同的排序顺序。 例5-9显示了一个名为FirstComparator的TextPair比较器，它仅考虑该对中的第一个字符串。 请注意，我们重写了使用对象的compare（）方法，因此两个compare（）方法具有相同的语义。
+
+We will make use of this comparator in Chapter 9, when we look at joins and secondary
+sorting in MapReduce (see “Joins” on page 268).
+
+当我们查看MapReduce中的联接和二级排序时，我们将在第9章中使用这个比较器（请参阅第267页的“联接”）。
+
+<p align="center"><font size=2>Example 5-9. A custom RawComparator for comparing the first field of TextPair byte representations</font></p>
+
+``` java
+public static class FirstComparator extends WritableComparator {
+    private static final Text.Comparator TEXT_COMPARATOR = new Text.Comparator();
+
+    public FirstComparator() {
+        super(TextPair.class);
+    }
+
+    @Override
+    public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
+        try {
+            int firstL1 = WritableUtils.decodeVIntSize(b1[s1]) + readVInt(b1, s1);
+            int firstL2 = WritableUtils.decodeVIntSize(b2[s2]) + readVInt(b2, s2);
+            return TEXT_COMPARATOR.compare(b1, s1, firstL1, b2, s2, firstL2);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    @Override
+    public int compare(WritableComparable a, WritableComparable b) {
+        if (a instanceof TextPair && b instanceof TextPair) {
+            return ((TextPair) a).first.compareTo(((TextPair) b).first);
+        }
+        return super.compare(a, b);
+    }
+}
+```
+
+### Serialization Frameworks
+
+Although most MapReduce programs use  Writable key and value types, this isn’t man‐
+dated by the MapReduce API. In fact, any type can be used; the only requirement is a
+mechanism that translates to and from a binary representation of each type.
+
+尽管大多数MapReduce程序使用Writable键和值类型，但这并不是MapReduce API的要求。 事实上，任何类型都可以使用; 唯一的要求是可以转换为每种类型的二进制表示的机制。
+
+To support this, Hadoop has an API for pluggable serialization frameworks. A seriali‐
+zation framework is represented by an implementation of  Serialization (in the
+org.apache.hadoop.io.serializer package).  WritableSerialization , for example,
+is the implementation of  Serialization for  Writable types.
+
+为了支持这一点，Hadoop为可插入序列化框架提供了一个API。 序列化框架由序列化的实现（在org.apache.hadoop.io.serializer包中）表示。 例如，WritableSerialization是用于可写类型的序列化的实现。
+
+A  Serialization defines a mapping from types to  Serializer instances (for turning
+an object into a byte stream) and  Deserializer instances (for turning a byte stream
+into an object).
+
+序列化定义了从类型到串行器实例（用于将对象转换为字节流）和解串器实例（用于将字节流转换为对象）的映射。
+
+Set the  io.serializations property to a comma-separated list of classnames in order
+to register  Serialization implementations. Its default value includes  org.apache.ha
+doop.io.serializer.WritableSerialization and the Avro Specific and Reflect se‐
+rializations (see “Avro Data Types and Schemas” on page 346), which means that only
+Writable or Avro objects can be serialized or deserialized out of the box.
+
+将io.serializations属性设置为逗号分隔的类名列表，以注册序列化实现。 其默认值包括org.apache.hadoop.io.serializer.WritableSerialization和Avro Specific和Reflect序列化（请参阅第346页上的“Avro数据类型和模式”），这意味着只有Writable或Avro对象可以被序列化或反序列化 的盒子。
+
+Hadoop includes a class called  JavaSerialization that uses Java Object Serialization.
+Although it makes it convenient to be able to use standard Java types such as  Integer
+or  String in MapReduce programs, Java Object Serialization is not as efficient as Writ‐
+ables, so it’s not worth making this trade-off (see the following sidebar).
+
+Hadoop包含一个名为JavaSerialization的类，该类使用Java Object Serialization。
+尽管它可以方便地在MapReduce程序中使用标准Java类型（如Integer或String），但Java对象序列化并不像Writables那样高效，所以不值得进行这种折衷（参见下面的边栏）。
+
+* Serialization IDL
+
+There are a number of other serialization frameworks that approach the problem in a
+different way: rather than defining types through code, you define them in a language-
+neutral, declarative fashion, using an interface description language (IDL). The system
+can then generate types for different languages, which is good for interoperability. They
+also typically define versioning schemes that make type evolution straightforward.
+
+还有一些其他序列化框架以不同的方式解决问题：不是通过代码定义类型，而是使用接口描述语言（IDL）以语言无关的声明方式定义它们。 然后系统可以为不同的语言生成类型，这对互操作性是有利的。 他们通常也会定义版本控制方案，使类型的演变变得简单明了。
+
+Apache Thrift and Google Protocol Buffers are both popular serialization frameworks,
+and both are commonly used as a format for persistent binary data. There is limited
+support for these as MapReduce formats; 3 however, they are used internally in parts of
+Hadoop for RPC and data exchange.
+
+Apache Thrift和Google协议缓冲区都是流行的序列化框架，并且通常用作持久二进制数据的格式。 这些作为MapReduce格式的支持有限; 3然而，它们在Hadoop的部分内部用于RPC和数据交换。
+
+Avro is an IDL-based serialization framework designed to work well with large-scale
+data processing in Hadoop. It is covered in Chapter 12.
+
+Avro是一个基于IDL的序列化框架，旨在与Hadoop中的大规模数据处理很好地协作。 它在第12章中有介绍。
+
+### File-Based Data Structures
+
+For some applications, you need a specialized data structure to hold your data. For doing
+MapReduce-based processing, putting each blob of binary data into its own file doesn’t
+scale, so Hadoop developed a number of higher-level containers for these situations.
+
+对于某些应用程序，您需要一个专门的数据结构来保存您的数据。 为了执行基于MapReduce的处理，将每个二进制数据块放入其自己的文件不会扩展，所以Hadoop为这些情况开发了许多更高级别的容器。
+
+#### SequenceFile
+
+Imagine a logfile where each log record is a new line of text. If you want to log binary
+types, plain text isn’t a suitable format. Hadoop’s  SequenceFile class fits the bill in
+this situation, providing a persistent data structure for binary key-value pairs. To use it
+as a logfile format, you would choose a key, such as timestamp represented by a
+LongWritable , and the value would be a  Writable that represents the quantity being
+logged.
+
+设想一个日志文件，其中每个日志记录都是一行新文本。 如果您想记录二进制类型，纯文本不是合适的格式。 在这种情况下，Hadoop的SequenceFile类适合账单，为二元键值对提供持久的数据结构。 要将其用作日志文件格式，您需要选择一个键，例如由LongWritable表示的时间戳，并且该值将是一个表示记录数量的Writable。
+
+SequenceFile s also work well as containers for smaller files. HDFS and MapReduce are
+optimized for large files, so packing files into a  SequenceFile makes storing
+and processing the smaller files more efficient (“Processing a whole file as a record” on
+page 228 contains a program to pack files into a  SequenceFile ). 
+
+SequenceFile也适用于较小文件的容器。 HDFS和MapReduce针对大文件进行了优化，因此将文件打包到SequenceFile中可使存储和处理小文件的效率更高（第228页上的“将整个文件作为记录处理”包含将文件打包到SequenceFile中的程序）。
+
+* Writing a SequenceFile
+
+To create a  SequenceFile , use one of its  createWriter() static methods, which return
+a  SequenceFile.Writer instance. There are several overloaded versions, but they all
+require you to specify a stream to write to (either an  FSDataOutputStream or a 
+FileSystem and  Path pairing), a  Configuration object, and the key and value types.
+Optional arguments include the compression type and codec, a  Progressable callback
+to be informed of write progress, and a  Metadata instance to be stored in the  Sequen
+ceFile header.
+
+要创建SequenceFile，请使用其一个createWriter（）静态方法，该方法返回一个SequenceFile.Writer实例。 有几个重载版本，但它们都要求您指定要写入的流（FSDataOutputStream或文件系统和路径配对），配置对象以及键和值类型。 可选参数包括压缩类型和编解码器，要通知写入进度的Progressable回调以及要存储在SequenceFile标头中的Metadata实例。
+
+The keys and values stored in a  SequenceFile do not necessarily need to be  Writables. Any types that can be serialized and deserialized by a Serialization may be used.
+
+存储在SequenceFile中的键和值不一定需要是可写的。 可以使用任何可以通过序列化进行序列化和反序列化的类型。
+
+Once you have a  SequenceFile.Writer , you then write key-value pairs using the append() method. When you’ve finished, you call the  close() method ( Sequence File.Writer implements java.io.Closeable ).
+
+一旦你有了一个SequenceFile.Writer，你就可以使用append（）方法编写键值对。 完成后，调用close（）方法（Sequence File.Writer实现java.io.Closeable）。
+
+Example 5-10 shows a short program to write some key-value pairs to a  Sequence File using the API just described.
+例5-10显示了一个简短的程序，用于使用刚刚描述的API将一些键值对写入序列文件。
+
+<p align="center"><font size=2>Example 5-10. Writing a SequenceFile</font></p>
+
+``` java
+public class SequenceFileWriteDemo {
+    private static final String[] DATA = { "One, two, buckle my shoe", "Three, four, shut the door",
+            "Five, six, pick up sticks", "Seven, eight, lay them straight", "Nine, ten, a big fat hen" };
+
+    public static void main(String[] args) throws IOException {
+        String uri = args[0];
+        Configuration conf = new Configuration();
+        FileSystem fs = FileSystem.get(URI.create(uri), conf);
+        Path path = new Path(uri);
+        IntWritable key = new IntWritable();
+        Text value = new Text();
+        SequenceFile.Writer writer = null;
+        try {
+            writer = SequenceFile.createWriter(fs, conf, path, key.getClass(), value.getClass());
+            for (int i = 0; i < 100; i++) {
+                key.set(100 - i);
+                value.set(DATA[i % DATA.length]);
+                System.out.printf("[%s]\t%s\t%s\n", writer.getLength(), key, value);
+                writer.append(key, value);
+            }
+        } finally {
+            IOUtils.closeStream(writer);
+        }
+    }
+}
+```
+
+The keys in the sequence file are integers counting down from 100 to 1, represented as
+IntWritable objects. The values are  Text objects. Before each record is appended to
+the  SequenceFile.Writer , we call the  getLength() method to discover the current
+position in the file. (We will use this information about record boundaries in the next
+section, when we read the file nonsequentially.) We write the position out to the console,
+along with the key and value pairs. The result of running it is shown here:
+
+序列文件中的键是从100到1的整数，表示为IntWritable对象。 这些值是Text对象。 在将每条记录追加到SequenceFile.Writer之前，我们调用getLength（）方法来发现文件中的当前位置。 （当我们以非连续的方式读取文件时，我们将在下一节中使用关于记录边界的信息。）我们将位置与键和值对一起写入控制台。 运行它的结果如下所示：
+
+``` bash
+% hadoop SequenceFileWriteDemo numbers.seq
+[128] 100 One, two, buckle my shoe
+[173] 99 Three, four, shut the door
+[220] 98 Five, six, pick up sticks
+[264] 97 Seven, eight, lay them straight
+[314] 96 Nine, ten, a big fat hen
+[359] 95 One, two, buckle my shoe
+[404] 94 Three, four, shut the door
+[451] 93 Five, six, pick up sticks
+[495] 92 Seven, eight, lay them straight
+[545] 91 Nine, ten, a big fat hen
+...
+[1976] 60 One, two, buckle my shoe
+[2021] 59 Three, four, shut the door
+[2088] 58 Five, six, pick up sticks
+[2132] 57 Seven, eight, lay them straight
+[2182] 56 Nine, ten, a big fat hen
+...
+[4557] 5 One, two, buckle my shoe
+[4602] 4 Three, four, shut the door
+[4649] 3 Five, six, pick up sticks
+[4693] 2 Seven, eight, lay them straight
+[4743] 1 Nine, ten, a big fat hen
+```
+
+* Reading a SequenceFile
+
+Reading sequence files from beginning to end is a matter of creating an instance of
+SequenceFile.Reader and iterating over records by repeatedly invoking one of the
+next() methods. Which one you use depends on the serialization framework you are
+using. If you are using  Writable types, you can use the  next() method that takes a key
+and a value argument and reads the next key and value in the stream into these
+variables:
+
+从头到尾读序列文件是创建SequenceFile.Reader实例并通过重复调用next（）方法迭代记录的问题。 你使用哪一个取决于你正在使用的序列化框架。 如果您使用的是Writable类型，则可以使用带有key和value参数的next（）方法，并将流中的下一个键和值读入这些变量中：
+
+``` java
+public boolean next(Writable key, Writable val)
+```
