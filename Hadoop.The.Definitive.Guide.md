@@ -1362,7 +1362,7 @@ in the encoded byte sequence, not the Unicode character in the string or the Jav
 code unit (as it is for  String ). For ASCII strings, these three concepts of index position
 coincide. Here is an example to demonstrate the use of the  charAt() method:
 
-Indexing. 由于强调使用标准的 UTF-8, 因此 Text 和 Java String 类有一些区别. Text 类的索引是字符在编码后的字节序列中的位置, 而不是字符串中的 Unicode 字符或 Java char 中的编码单元(与 String 相同). 对于 ASCII 字符串, 这三个索引位置的概念是重合的. 下面是一个演示 charAt() 方法使用的例子:
+Indexing. 由于强调使用标准的 UTF-8 编码, 因此 Text 和 Java String 类有一些区别. Text 类在索引时是查找字符在编码后的字节序列中的位置, 而不是字符串中的 Unicode 字符或 Java char 中的编码单元(与 String 相同). 对于 ASCII 字符串, 这三个索引位置的概念是重合的. 下面是一个演示 charAt() 方法使用的例子:
 
 ``` java
 Text t = new Text("hadoop");
@@ -2073,3 +2073,351 @@ variables:
 ``` java
 public boolean next(Writable key, Writable val)
 ```
+
+The return value is  true if a key-value pair was read and  false if the end of the file has
+been reached.
+
+For other, non-Writable serialization frameworks (such as Apache Thrift), you should
+use these two methods:
+
+``` java
+public Object next(Object key) throws IOException
+public Object getCurrentValue(Object val) throws IOException
+```
+In this case, you need to make sure that the serialization you want to use has been set
+in the  io.serializations property; see “Serialization Frameworks” on page 126.
+
+If the  next() method returns a non- null object, a key-value pair was read from the
+stream, and the value can be retrieved using the  getCurrentValue() method. Other‐
+wise, if  next() returns  null , the end of the file has been reached.
+
+The program in Example 5-11 demonstrates how to read a sequence file that has
+Writable keys and values. Note how the types are discovered from the  Sequence
+File.Reader via calls to  getKeyClass() and  getValueClass() , and then  Reflectio
+nUtils is used to create an instance for the key and an instance for the value. This
+technique allows the program to be used with any sequence file that has  Writable keys
+and values.
+
+<p align="center"><font size=2>Example 5-11. Reading a SequenceFile</font></p>
+
+``` java
+public class SequenceFileReadDemo {
+    public static void main(String[] args) throws IOException {
+        String uri = args[0];
+        Configuration conf = new Configuration();
+        FileSystem fs = FileSystem.get(URI.create(uri), conf);
+        Path path = new Path(uri);
+        SequenceFile.Reader reader = null;
+        try {
+            reader = new SequenceFile.Reader(fs, path, conf);
+            Writable key = (Writable) ReflectionUtils.newInstance(reader.getKeyClass(), conf);
+            Writable value = (Writable) ReflectionUtils.newInstance(reader.getValueClass(), conf);
+            long position = reader.getPosition();
+            while (reader.next(key, value)) {
+                String syncSeen = reader.syncSeen() ? "*" : "";
+                System.out.printf("[%s%s]\t%s\t%s\n", position, syncSeen, key, value);
+                position = reader.getPosition(); // beginning of next record
+            }
+        } finally {
+            IOUtils.closeStream(reader);
+        }
+    }
+}
+```
+
+Another feature of the program is that it displays the positions of the sync points in the
+sequence file. A sync point is a point in the stream that can be used to resynchronize
+with a record boundary if the reader is “lost”—for example, after seeking to an arbitrary
+position in the stream. Sync points are recorded by  SequenceFile.Writer , which in‐
+serts a special entry to mark the sync point every few records as a sequence file is being 
+written. Such entries are small enough to incur only a modest storage overhead—less
+than 1%. Sync points always align with record boundaries.
+
+Running the program in Example 5-11 shows the sync points in the sequence file as
+asterisks. The first one occurs at position 2021 (the second one occurs at position 4075,
+but is not shown in the output):
+
+``` bash
+% hadoop SequenceFileReadDemo numbers.seq
+[128] 100 One, two, buckle my shoe
+[173] 99 Three, four, shut the door
+[220] 98 Five, six, pick up sticks
+[264] 97 Seven, eight, lay them straight
+[314] 96 Nine, ten, a big fat hen
+[359] 95 One, two, buckle my shoe
+[404] 94 Three, four, shut the door
+[451] 93 Five, six, pick up sticks
+[495] 92 Seven, eight, lay them straight
+[545] 91 Nine, ten, a big fat hen
+[590] 90 One, two, buckle my shoe
+...
+[1976] 60 One, two, buckle my shoe
+[2021*] 59 Three, four, shut the door
+[2088] 58 Five, six, pick up sticks
+[2132] 57 Seven, eight, lay them straight
+[2182] 56 Nine, ten, a big fat hen
+...
+[4557] 5 One, two, buckle my shoe
+[4602] 4 Three, four, shut the door
+[4649] 3 Five, six, pick up sticks
+[4693] 2 Seven, eight, lay them straight
+[4743] 1 Nine, ten, a big fat hen
+```
+
+There are two ways to seek to a given position in a sequence file. The first is the  seek()
+method, which positions the reader at the given point in the file. For example, seeking
+to a record boundary works as expected:
+
+``` java
+reader.seek(359);
+assertThat(reader.next(key, value), is(true));
+assertThat(((IntWritable) key).get(), is(95));
+```
+
+But if the position in the file is not at a record boundary, the reader fails when the  next()
+method is called:
+
+``` java
+reader.seek(360);
+reader.next(key, value); // fails with IOException
+```
+
+The second way to find a record boundary makes use of sync points. The  sync(long
+position) method on  SequenceFile.Reader positions the reader at the next sync point
+after  position . (If there are no sync points in the file after this position, then the reader
+will be positioned at the end of the file.) Thus, we can call  sync() with any position in 
+the stream—not necessarily a record boundary—and the reader will reestablish itself at
+the next sync point so reading can continue:
+
+``` java
+reader.sync(360);
+assertThat(reader.getPosition(), is(2021L));
+assertThat(reader.next(key, value), is(true));
+assertThat(((IntWritable) key).get(), is(59));
+```
+
+SequenceFile.Writer has a method called  sync() for inserting a
+sync point at the current position in the stream. This is not to be
+confused with the  hsync() method defined by the  Syncable inter‐
+face for synchronizing buffers to the underlying device.
+
+Sync points come into their own when using sequence files as input to MapReduce,
+since they permit the files to be split and different portions to be processed independ‐
+ently by separate map tasks (see “SequenceFileInputFormat” on page 236).
+
+* Displaying a SequenceFile with the command-line interface
+
+The  hadoop fs command has a  -text option to display sequence files in textual form.
+It looks at a file’s magic number so that it can attempt to detect the type of the file and
+appropriately convert it to text. It can recognize gzipped files, sequence files, and Avro
+datafiles; otherwise, it assumes the input is plain text.
+
+For sequence files, this command is really useful only if the keys and values have mean‐
+ingful string representations (as defined by the  toString() method). Also, if you have
+your own key or value classes, you will need to make sure they are on Hadoop’s classpath.
+
+Running it on the sequence file we created in the previous section gives the following
+output:
+
+``` bash
+% hadoop fs -text numbers.seq | head
+100 One, two, buckle my shoe
+99 Three, four, shut the door
+98 Five, six, pick up sticks
+97 Seven, eight, lay them straight
+96 Nine, ten, a big fat hen
+95 One, two, buckle my shoe
+94 Three, four, shut the door
+93 Five, six, pick up sticks
+92 Seven, eight, lay them straight
+91 Nine, ten, a big fat hen
+```
+
+* Sorting and merging SequenceFiles
+
+The most powerful way of sorting (and merging) one or more sequence files is to use
+MapReduce. MapReduce is inherently parallel and will let you specify the number of 
+reducers to use, which determines the number of output partitions. For example, by
+specifying one reducer, you get a single output file. We can use the sort example that
+comes with Hadoop by specifying that the input and output are sequence files and by
+setting the key and value types:
+
+``` bash
+% hadoop jar \
+$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-*.jar \
+sort -r 1 \
+-inFormat org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat \
+-outFormat org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat \
+-outKey org.apache.hadoop.io.IntWritable \
+-outValue org.apache.hadoop.io.Text \
+numbers.seq sorted
+% hadoop fs -text sorted/part-r-00000 | head
+1 Nine, ten, a big fat hen
+2 Seven, eight, lay them straight
+3 Five, six, pick up sticks
+4 Three, four, shut the door
+5 One, two, buckle my shoe
+6 Nine, ten, a big fat hen
+7 Seven, eight, lay them straight
+8 Five, six, pick up sticks
+9 Three, four, shut the door
+10 One, two, buckle my shoe
+```
+
+An alternative to using MapReduce for sort/merge is the  SequenceFile.Sorter class,
+which has a number of  sort() and  merge() methods. These functions predate Map‐
+Reduce and are lower-level functions than MapReduce (for example, to get parallelism,
+you need to partition your data manually), so in general MapReduce is the preferred
+approach to sort and merge sequence files.
+
+* The SequenceFile format
+
+A sequence file consists of a header followed by one or more records (see Figure 5-2).
+The first three bytes of a sequence file are the bytes  SEQ , which act as a magic number;
+these are followed by a single byte representing the version number. The header contains
+other fields, including the names of the key and value classes, compression details, user-
+defined metadata, and the sync marker. 5 Recall that the sync marker is used to allow a
+reader to synchronize to a record boundary from any position in the file. Each file has
+a randomly generated sync marker, whose value is stored in the header. Sync markers
+appear between records in the sequence file. They are designed to incur less than a 1%
+storage overhead, so they don’t necessarily appear between every pair of records (such
+is the case for short records).
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/The_internal_structure_of_a_sequence_file_with_no_compression_and_with_record_compression.png)
+<p align="center"><font size=2>Figure 5-2. The internal structure of a sequence file with no compression and with record compression</font></p>
+
+The internal format of the records depends on whether compression is enabled, and if
+it is, whether it is record compression or block compression.
+
+If no compression is enabled (the default), each record is made up of the record length
+(in bytes), the key length, the key, and then the value. The length fields are written as 4-
+byte integers adhering to the contract of the  writeInt() method of  java.io.DataOut
+put . Keys and values are serialized using the  Serialization defined for the class being
+written to the sequence file.
+
+The format for record compression is almost identical to that for no compression, except
+the value bytes are compressed using the codec defined in the header. Note that keys
+are not compressed.
+
+Block compression (Figure 5-3) compresses multiple records at once; it is therefore
+more compact than and should generally be preferred over record compression because
+it has the opportunity to take advantage of similarities between records. Records are
+added to a block until it reaches a minimum size in bytes, defined by the
+io.seqfile.compress.blocksize property; the default is one million bytes. A sync
+marker is written before the start of every block. The format of a block is a field indicating
+the number of records in the block, followed by four compressed fields: the key lengths,
+the keys, the value lengths, and the values.
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/The_internal_structure_of_a_sequence_file_with_block_compression.png)
+<p align="center"><font size=2>Figure 5-3. The internal structure of a sequence file with block compression</font></p>
+
+#### MapFile
+
+A  MapFile is a sorted  SequenceFile with an index to permit lookups by key. The index
+is itself a  SequenceFile that contains a fraction of the keys in the map (every 128th key,
+by default). The idea is that the index can be loaded into memory to provide fast lookups
+from the main data file, which is another  SequenceFile containing all the map entries
+in sorted key order.
+
+MapFile offers a very similar interface to  SequenceFile for reading and writing—the
+main thing to be aware of is that when writing using  MapFile.Writer , map entries must
+be added in order, otherwise an  IOException will be thrown.
+
+* MapFile variants
+
+Hadoop comes with a few variants on the general key-value  MapFile interface:
+
+• SetFile is a specialization of  MapFile for storing a set of  Writable keys. The keys
+must be added in sorted order.
+
+• ArrayFile is a  MapFile where the key is an integer representing the index of the
+element in the array and the value is a  Writable value.
+
+• BloomMapFile is a  MapFile that offers a fast version of the  get() method, especially
+for sparsely populated files. The implementation uses a dynamic Bloom filter for
+testing whether a given key is in the map. The test is very fast because it is in-
+memory, and it has a nonzero probability of false positives. Only if the test passes
+(the key is present) is the regular  get() method called.
+
+#### Other File Formats and Column-Oriented Formats
+
+While sequence files and map files are the oldest binary file formats in Hadoop, they
+are not the only ones, and in fact there are better alternatives that should be considered
+for new projects.
+
+Avro datafiles (covered in “Avro Datafiles” on page 352) are like sequence files in that they
+are designed for large-scale data processing—they are compact and splittable—but they
+are portable across different programming languages. Objects stored in Avro datafiles
+are described by a schema, rather than in the Java code of the implementation of a
+Writable object (as is the case for sequence files), making them very Java-centric. Avro
+datafiles are widely supported across components in the Hadoop ecosystem, so they are
+a good default choice for a binary format.
+
+Sequence files, map files, and Avro datafiles are all row-oriented file formats, which
+means that the values for each row are stored contiguously in the file. In a column-
+oriented format, the rows in a file (or, equivalently, a table in Hive) are broken up into
+row splits, then each split is stored in column-oriented fashion: the values for each row
+in the first column are stored first, followed by the values for each row in the second
+column, and so on. This is shown diagrammatically in Figure 5-4.
+
+A column-oriented layout permits columns that are not accessed in a query to be skip‐
+ped. Consider a query of the table in Figure 5-4 that processes only column 2. With
+row-oriented storage, like a sequence file, the whole row (stored in a sequence file re‐
+cord) is loaded into memory, even though only the second column is actually read. Lazy
+deserialization saves some processing cycles by deserializing only the column fields that
+are accessed, but it can’t avoid the cost of reading each row’s bytes from disk.
+
+With column-oriented storage, only the column 2 parts of the file (highlighted in the
+figure) need to be read into memory. In general, column-oriented formats work well
+when queries access only a small number of columns in the table. Conversely, row-
+oriented formats are appropriate when a large number of columns of a single row are
+needed for processing at the same time.
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Row-oriented_versus_column-oriented_storage.png)
+<p align="center"><font size=2>Figure 5-4. Row-oriented versus column-oriented storage</font></p>
+
+Column-oriented formats need more memory for reading and writing, since they have
+to buffer a row split in memory, rather than just a single row. Also, it’s not usually possible
+to control when writes occur (via flush or sync operations), so column-oriented formats
+are not suited to streaming writes, as the current file cannot be recovered if the writer
+process fails. On the other hand, row-oriented formats like sequence files and Avro
+datafiles can be read up to the last sync point after a writer failure. It is for this reason
+that Flume (see Chapter 14) uses row-oriented formats.
+
+The first column-oriented file format in Hadoop was Hive’s RCFile, short for Record
+Columnar File. It has since been superseded by Hive’s ORCFile (Optimized Record Col‐
+umnar File), and Parquet (covered in Chapter 13). Parquet is a general-purpose column-
+oriented file format based on Google’s Dremel, and has wide support across Hadoop
+components. Avro also has a column-oriented format called Trevni.
+
+# PART II MapReduce
+
+## CHAPTER 6 Developing a MapReduce Application
+
+In Chapter 2, we introduced the MapReduce model. In this chapter, we look at the
+practical aspects of developing a MapReduce application in Hadoop.
+
+Writing a program in MapReduce follows a certain pattern. You start by writing your
+map and reduce functions, ideally with unit tests to make sure they do what you expect.
+Then you write a driver program to run a job, which can run from your IDE using a
+small subset of the data to check that it is working. If it fails, you can use your IDE’s
+debugger to find the source of the problem. With this information, you can expand your
+unit tests to cover this case and improve your mapper or reducer as appropriate to handle
+such input correctly.
+
+When the program runs as expected against the small dataset, you are ready to unleash
+it on a cluster. Running against the full dataset is likely to expose some more issues,
+which you can fix as before, by expanding your tests and altering your mapper or reducer
+to handle the new cases. Debugging failing programs in the cluster is a challenge, so
+we’ll look at some common techniques to make it easier.
+
+After the program is working, you may wish to do some tuning, first by running through
+some standard checks for making MapReduce programs faster and then by doing task
+profiling. Profiling distributed programs is not easy, but Hadoop has hooks to aid in
+the process.
+
+Before we start writing a MapReduce program, however, we need to set up and configure
+the development environment. And to do that, we need to learn a bit about how Hadoop
+does configuration.
+
+### The Configuration API
