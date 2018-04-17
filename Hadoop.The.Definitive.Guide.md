@@ -1357,12 +1357,11 @@ assertThat(StringUtils.byteToHexString(data), is("8fa3"));
 
 Text 类使用 int(可变长度编码) 来存储字符串编码中的字节数, 因此最大值为2 GB. 此外, Text 使用标准的 UTF-8, 这使得与其他支持 UTF-8 的工具进行交互更加容易.
 
-Indexing for the  Text class is in terms of position
-in the encoded byte sequence, not the Unicode character in the string or the Java  char
-code unit (as it is for  String ). For ASCII strings, these three concepts of index position
-coincide. Here is an example to demonstrate the use of the  charAt() method:
+代码点(Code Point): Unicode 所做的事情就是将我们需要表示的字符表中的每个字符映射成一个数字, 这个数字被称为相应字符的码点(code point). 例如 "严" 字在 Unicode 中对应的码点是 U+0x4E25.
 
-Indexing. 由于强调使用标准的 UTF-8 编码, 因此 Text 和 Java String 类有一些区别. Text 类在索引时是查找字符在编码后的字节序列中的位置, 而不是字符串中的 Unicode 字符或 Java char 中的编码单元(与 String 相同). 对于 ASCII 字符串, 这三个索引位置的概念是重合的. 下面是一个演示 charAt() 方法使用的例子:
+代码单元(Code Unit): 是指一个已编码的文本中具有最短的比特组合的单元. 对于 UTF-8 来说, 代码单元是 8 比特长; 对于 UTF-16 来说, 代码单元是 16 比特长. 换一种说法就是 UTF-8 的是以一个字节为最小单位的, UTF-16 是以两个字节为最小单位的.
+
+Indexing. 由于强调使用标准的 UTF-8 编码, 因此 Text 和 Java String 类有一些区别. Text 类在索引时是查找字符在编码后的字节序列中的位置, 而不是字符串中的 Unicode 字符或 Java char 中的代码单元(与 String 相同). 对于 ASCII 字符串, 这三个索引位置的概念是重合的. 下面是一个演示 charAt() 方法使用的例子:
 
 ``` java
 Text t = new Text("hadoop");
@@ -1382,7 +1381,7 @@ assertThat("Finds 'o' from position 4 or later", t.find("o", 4), is(4));
 assertThat("No match", t.find("pig"), is(-1));
 ```
 
-Unicode. 当我们开始使用多于一个字节编码的字符时, Text 和 String 之间的区别就变得清晰了. 考虑表 5-8 中显示的 Unicode 字符.
+Unicode. 当我们使用编码大于一个字节的字符时, Text 和 String 之间的区别就变得清晰了. 考虑表 5-8 中显示的 Unicode 字符.
 
 <p align="left"><font size=2>Table 5-8. Unicode characters</font></p>
 
@@ -1392,12 +1391,7 @@ Unicode. 当我们开始使用多于一个字节编码的字符时, Text 和 Str
 | **UTF-8 code units** | 41 | c3 9f | e6 9d b1 | f0 90 90 80 |
 | **Java representation** | \u0041 | \u00DF | \u6771 | \uD801\uDC00 |
 
-All but the last character in the table, U+10400, can be expressed using a single Java
-char . U+10400 is a supplementary character and is represented by two Java  char s,
-known as a surrogate pair. The tests in Example 5-5 show the differences between  String
-and  Text when processing a string of the four characters from Table 5-8.
-
-表中的最后一个字符 U + 10400  可以用一个 Java 字符表示. U + 10400 是一个补充字符, 由两个Java char 表示, 称为代理对. 例 5-5 中的测试显示了处理表5-8中四个字符的字符串时字符串和文本之间的差异.
+表中的除了字符 U+10400  外都可以用一个 Java char 表示. U+10400 是一个补充字符, 由两个 Java char 表示, 称为代理对. 例 5-5 中的测试显示了在处理表 5-8 中包含四个字符的字符串时, String 和 Text 的差异.
 
 <p align="center"><font size=2>Example 5-5. Tests showing the differences between the String and Text classes</font></p>
 
@@ -1445,7 +1439,7 @@ pair from the last), whereas the length of a  Text object is the number of bytes
 UTF-8 encoding (10 = 1+2+3+4). Similarly, the  indexOf() method in  String returns
 an index in  char code units, and  find() for  Text returns a byte offset.
 
-该测试确认了一个字符串的长度是它包含的字符代码单元的数量 (五个, 由字符串中前三个字符中的每一个和最后一个替代对中的一个组成), 而文本的长度 object 是 UTF-8 编码中的字节数 (10 = 1 + 2 + 3 + 4). 同样, String 中的 indexOf() 方法以 char 代码单位返回一个索引, find() 代表 Text 返回的字节偏移量。
+测试确认了字符串的长度是它包含的字符单元的数量 (五个, 由字符串中前三个字符和最后一个替代对组成), 而 Text 对象的长度是 UTF-8 编码中的字节数 (10 = 1 + 2 + 3 + 4). 同样, String 类的 indexOf() 方法以 char 为单位返回一个索引, Text 的 find() 方法 返回的是字节偏移量。
 
 The  charAt() method in  String returns the  char code unit for the given index, which
 in the case of a surrogate pair will not represent a whole Unicode character. The  code
@@ -2201,6 +2195,8 @@ sync point at the current position in the stream. This is not to be
 confused with the  hsync() method defined by the  Syncable inter‐
 face for synchronizing buffers to the underlying device.
 
+SequenceFile.Writer有一个名为sync（）的方法，用于在流中当前位置插入一个同步点。 这不要与Syncable接口定义的hsync（）方法混淆，以便将缓冲区同步到基础设备。
+
 Sync points come into their own when using sequence files as input to MapReduce,
 since they permit the files to be split and different portions to be processed independ‐
 ently by separate map tasks (see “SequenceFileInputFormat” on page 236).
@@ -2421,3 +2417,170 @@ the development environment. And to do that, we need to learn a bit about how Ha
 does configuration.
 
 ### The Configuration API
+
+Components in Hadoop are configured using Hadoop’s own configuration API. An
+instance of the  Configuration class (found in the  org.apache.hadoop.conf package) 
+represents a collection of configuration properties and their values. Each property is
+named by a  String , and the type of a value may be one of several, including Java prim‐
+itives such as  boolean ,  int ,  long , and  float ; other useful types such as  String ,  Class ,
+and  java.io.File ; and collections of  String s.
+
+Hadoop中的组件使用Hadoop自己的配置API进行配置。 配置类的一个实例（可在org.apache.hadoop.conf包中找到）表示一组配置属性及其值。 每个属性都由一个字符串命名，并且值的类型可以是几个之一，包括Java基本类型，如boolean，int，long和float; 其他有用的类型，如String，Class和java.io.File; 和String的集合。
+
+Configuration s read their properties from resources—XML files with a simple structure
+for defining name-value pairs. See Example 6-1.
+
+配置从资源中读取它们的属性 - 具有用于定义名称 - 值对的简单结构的XML文件。 见例6-1。
+
+<p align="center"><font size=2>Example 6-1. A simple configuration file, configuration-1.xml</font></p>
+
+``` xml
+<?xml version="1.0"?>
+<configuration>
+  <property>
+    <name>color</name>
+    <value>yellow</value>
+    <description>Color</description>
+  </property>
+
+  <property>
+    <name>size</name>
+    <value>10</value>
+    <description>Size</description>
+  </property>
+
+  <property>
+    <name>weight</name>
+    <value>heavy</value>
+    <final>true</final>
+    <description>Weight</description>
+  </property>
+
+  <property>
+    <name>size-weight</name>
+    <value>${size},${weight}</value>
+    <description>Size and weight</description>
+  </property>
+</configuration>
+```
+
+Assuming this  Configuration is in a file called configuration-1.xml, we can access its properties using a piece of code like this:
+
+假设这个Configuration在一个名为configuration-1.xml的文件中，我们可以使用如下一段代码访问它的属性：
+
+``` java
+Configuration conf = new Configuration();
+conf.addResource("configuration-1.xml");
+assertThat(conf.get("color"), is("yellow"));
+assertThat(conf.getInt("size", 0), is(10));
+assertThat(conf.get("breadth", "wide"), is("wide"));
+```
+
+There are a couple of things to note: type information is not stored in the XML file;
+instead, properties can be interpreted as a given type when they are read. Also, the  get()
+methods allow you to specify a default value, which is used if the property is not defined
+in the XML file, as in the case of  breadth here.
+
+有几点需要注意：类型信息不存储在XML文件中; 相反，属性在读取时可以解释为给定的类型。 此外，get（）方法允许您指定一个默认值，如果该属性未在XML文件中定义，则使用该值，如此处宽度的情况。
+
+#### Combining Resources
+
+Things get interesting when more than one resource is used to define a  Configura
+tion . This is used in Hadoop to separate out the default properties for the system,
+defined internally in a file called core-default.xml, from the site-specific overrides in
+core-site.xml. The file in Example 6-2 defines the  size and  weight properties.
+
+当使用多个资源来定义配置时，情况会变得很有趣。 这在Hadoop中用于从core-site.xml中的站点特定覆盖中分离出系统的默认属性，这些属性在名为core-default.xml的文件内部定义。 例6-2中的文件定义了尺寸和重量属性。
+
+<p align="center"><font size=2>Example 6-2. A second configuration file, configuration-2.xml</font></p>
+
+``` xml
+<?xml version="1.0"?>
+<configuration>
+  <property>
+    <name>size</name>
+    <value>12</value>
+  </property>
+
+  <property>
+    <name>weight</name>
+    <value>light</value>
+  </property>
+</configurat>
+``` 
+
+Resources are added to a  Configuration in order:
+资源按顺序添加到配置中：
+
+``` java
+Configuration conf = new Configuration();
+conf.addResource("configuration-1.xml");
+conf.addResource("configuration-2.xml");
+```
+
+Properties defined in resources that are added later override the earlier definitions. So
+the  size property takes its value from the second configuration file, configuration-2.xml:
+
+在稍后添加的资源中定义的属性会覆盖较早的定义。 所以size属性取自第二个配置文件configuration-2.xml的值：
+
+``` java
+assertThat(conf.getInt("size", 0), is(12));
+```
+
+However, properties that are marked as  final cannot be overridden in later definitions.
+The  weight property is  final in the first configuration file, so the attempt to override
+it in the second fails, and it takes the value from the first:
+
+但是，标记为final的属性在以后的定义中不能被覆盖。weight属性在第一个配置文件中是final的，因此在第二个配置文件中覆盖它的尝试失败，它取自第一个值：
+
+``` java
+assertThat(conf.get("weight"), is("heavy"));
+```
+
+Attempting to override  final properties usually indicates a configuration error, so this
+results in a warning message being logged to aid diagnosis. Administrators mark prop‐
+erties as  final in the daemon’s site files that they don’t want users to change in their
+client-side configuration files or job submission parameters.
+
+尝试覆盖最终属性通常会指示配置错误，因此会导致记录警告消息以帮助诊断。 管理员在守护程序的站点文件中将属性标记为final，并且不希望用户在其客户端配置文件或作业提交参数中进行更改。
+
+#### Variable Expansion
+
+Configuration properties can be defined in terms of other properties, or system prop‐
+erties. For example, the property  size-weight in the first configuration file is defined
+as  ${size},${weight} , and these properties are expanded using the values found in
+the configuration:
+
+配置属性可以用其他属性或系统属性来定义。 例如，第一个配置文件中的属性大小权重定义为$ {size}，$ {weight}，这些属性使用配置中找到的值进行扩展：
+
+``` java
+assertThat(conf.get("size-weight"), is("12,heavy"));
+```
+
+System properties take priority over properties defined in resource files:
+系统属性优先于资源文件中定义的属性：
+
+``` java
+System.setProperty("size", "14");
+assertThat(conf.get("size-weight"), is("14,heavy"));
+```
+
+This feature is useful for overriding properties on the command line by using -Dproperty=value JVM arguments.
+通过使用-Dproperty = value JVM参数，此功能对于重写命令行中的属性很有用。
+
+Note that although configuration properties can be defined in terms of system proper‐
+ties, unless system properties are redefined using configuration properties, they are not
+accessible through the configuration API. Hence:
+
+请注意，尽管可以根据系统属性定义配置属性，但除非使用配置属性重新定义系统属性，否则无法通过配置API访问它们。因此：
+
+``` java
+System.setProperty("length", "2");
+assertThat(conf.get("length"), is((String) null));
+```
+
+
+
+
+
+
