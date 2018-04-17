@@ -1391,7 +1391,7 @@ Unicode. 当我们使用编码大于一个字节的字符时, Text 和 String �
 | **UTF-8 code units** | 41 | c3 9f | e6 9d b1 | f0 90 90 80 |
 | **Java representation** | \u0041 | \u00DF | \u6771 | \uD801\uDC00 |
 
-表中的除了字符 U+10400  外都可以用一个 Java char 表示. U+10400 是一个补充字符, 由两个 Java char 表示, 称为代理对. 例 5-5 中的测试显示了在处理表 5-8 中包含四个字符的字符串时, String 和 Text 的差异.
+表中的除了字符 U+10400  外都可以用一个 Java char 表示. U+10400 是一个补充字符, 由两个 Java char 代码单元表示, 称为 surrogate pair. 例 5-5 中的测试显示了在处理表 5-8 中包含四个字符的字符串时, String 和 Text 的差异.
 
 <p align="center"><font size=2>Example 5-5. Tests showing the differences between the String and Text classes</font></p>
 
@@ -1433,26 +1433,15 @@ public class StringTextComparisonTest {
 }
 ```
 
-The test confirms that the length of a  String is the number of  char code units it contains
-(five, made up of one from each of the first three characters in the string and a surrogate
-pair from the last), whereas the length of a  Text object is the number of bytes in its
-UTF-8 encoding (10 = 1+2+3+4). Similarly, the  indexOf() method in  String returns
-an index in  char code units, and  find() for  Text returns a byte offset.
+测试确认了字符串的长度是它包含的代码单元的数量 (五个, 由字符串中前三个字符和最后一个替代对组成), 而 Text 对象的长度是 UTF-8 编码后的字节数 (10 = 1 + 2 + 3 + 4). 同样, String 类的 indexOf() 方法以 char 代码单元为单位返回一个索引, Text 的 find() 方法返回的是则是字节偏移量。
 
-测试确认了字符串的长度是它包含的字符单元的数量 (五个, 由字符串中前三个字符和最后一个替代对组成), 而 Text 对象的长度是 UTF-8 编码中的字节数 (10 = 1 + 2 + 3 + 4). 同样, String 类的 indexOf() 方法以 char 为单位返回一个索引, Text 的 find() 方法 返回的是字节偏移量。
+<font color=#fd0209 size=4 ><b>注:Java 标准库实现中, 对 char 与 String 的序列化规定使用 UTF-8 作为外码. Java 的 Class 文件中的字符串常量与符号名字也都规定用 UTF-8 编码. 这大概是当时设计者为了平衡运行时的时间效率(采用定长编码的 UTF-16)与外部存储的空间效率(采用变长的 UTF-8 编码)而做的取舍.</b></font>
 
-The  charAt() method in  String returns the  char code unit for the given index, which
-in the case of a surrogate pair will not represent a whole Unicode character. The  code
-PointAt() method, indexed by  char code unit, is needed to retrieve a single Unicode
-character represented as an  int . In fact, the  charAt() method in  Text is more like the
-codePointAt() method than its namesake in  String . The only difference is that it is
-indexed by byte offset.
+不考虑 String 中存在 surrogate pair(两个代码单元表示一个字符) 时, String 中的 charAt() 方法返回给定索引的 char 代码单元. codePointAt() 方法用 char 代码单元来检索, 返回用 int 表示的单个 Unicode 字符. 事实上, Text 中的 charAt() 方法更像是 codePointAt() 方法，而不是 String 中的同名方法. 唯一的区别是前者是按字节偏移索引的.
 
-String 中的 charAt() 方法返回给定索引的 char 代码单元, 对于代理对来说, 它不代表整个 Unicode 字符. 需要用 char 代码单元索引的代码 PointAt() 方法来检索用 int 表示的单个 Unicode 字符. 事实上, Text 中的 charAt() 方法更像是 codePointAt() 方法，而不是 String 中的同名方法. 唯一的区别是它是按字节偏移索引的.
+<font color=#fd0209 size=4 ><b>注:Java 的 char 类型不一定能表示一个 UTF-16 的 "字符", 只有只需 1 个 code unit 的 code point 才可以完整的存在 char 里. 但 String 作为 char 的序列, 可以包含由两个 code unit 组成的 "surrogate pair" 来表示需要 2 个 code unit 表示的 UTF-16 code point.</b></font>
 
-Iteration. Iterating over the Unicode characters in  Text is complicated by the use of byte offsets for indexing, since you can’t just increment the index. The idiom for iteration is a little obscure (see Example 5-6): turn the  Text object into a  java.nio.ByteBuffer, then repeatedly call the  bytesToCodePoint() static method on  Text with the buffer. This method extracts the next code point as an  int and updates the position in the buffer. The end of the string is detected when  bytesToCodePoint() returns –1.
-
-Iteration. 因为您不能只增加索引, 所以使用字节偏移进行索引时, 在 Text 中迭代 Unicode 字符变得复杂. 迭代方式有点模糊 (参见例 5-6): 将 Text 对象转换为java.nio.ByteBuffer, 然后用缓冲区重复调用 TextTable 的 byteToCodePoint() 静态方法. 此方法将下一个代码点提取为 int 并更新缓冲区中的位置. 当bytesToCodePoint() 返回 -1 时, 检测到字符串的结尾.
+Iteration. 因为 Text 使用字节偏移进行索引, 所以在 Text 中遍历 Unicode 字符会比较复杂, 你不能只是简单的增加索引(字符对应的代码单元不是定长的). 迭代实现方式是(参见例 5-6): 将 Text 对象转换为 java.nio.ByteBuffer, 然后重复调用静态方法 byteToCodePoint(). 此方法将下一个代码点提取为 int, 并更新缓冲区中指针的位置. 当 bytesToCodePoint() 返回 -1 时, 意味着遍历已经结束.
 
 <p align="center"><font size=2>Example 5-6. Iterating over the characters in a Text object</font></p>
 
@@ -1469,11 +1458,7 @@ public class TextIterator {
 }
 ```
 
-Mutability. Another difference from  String is that  Text is mutable (like all  Writable
-implementations in Hadoop, except  NullWritable , which is a singleton). You can reuse
-a  Text instance by calling one of the  set() methods on it. For example:
-
-可变性。 与String的另一个区别是Text是可变的（就像Hadoop中的所有Writable实现，除了NullWritable，它是一个单例）。 您可以通过调用其中一个set（）方法来重用Text实例。 例如：
+可变性. 与 Strin g的另一个区别是 Text 是可变的(Hadoop 中所有 Writable 的实现都是这样, 除了 NullWritable, 它是一个单例). 您可以通过调用 set() 方法来重用 Text 实例. 例如:
 
 ``` java
 Text t = new Text("hadoop");
@@ -1482,11 +1467,7 @@ assertThat(t.getLength(), is(3));
 assertThat(t.getBytes().length, is(3));
 ```
 
-Resorting to String. Text doesn’t have as rich an API for manipulating strings as
-java.lang.String , so in many cases, you need to convert the  Text object to a  String .
-This is done in the usual way, using the  toString() method:
-
-诉诸字符串。 文本没有像java.lang.String那样丰富的用于处理字符串的API，所以在许多情况下，您需要将Text对象转换为字符串。以常规方式使用toString（）方法完成此操作:
+诉诸字符串. Text 没有像 java.lang.String 那样丰富的用于处理字符串的 API, 所以在许多情况下, 您需要将 Text 对象转换为 String. 以常规方式使用 toString() 方法完成此操作:
 
 ``` java
 assertThat(new Text("hadoop").toString(), is("hadoop"));
@@ -1499,7 +1480,7 @@ integer field that specifies the number of bytes to follow, followed by the byte
 selves. For example, the byte array of length 2 with values 3 and 5 is serialized as a 4-
 byte integer ( 00000002 ) followed by the two bytes from the array ( 03 and  05 ):
 
-BytesWritable是一个二进制数据的包装。 它的序列化格式是一个4字节的整数字段，用于指定要跟随的字节数，随后是字节本身。 例如，长度为2且值为3和5的字节数组被序列化为4字节整数（00000002），然后是数组（03和05）中的两个字节：
+BytesWritable 是一个二进制数据的包装. 它的序列化格式是一个4字节的整数字段，用于指定要跟随的字节数，随后是字节本身。 例如，长度为2且值为3和5的字节数组被序列化为4字节整数（00000002），然后是数组（03和05）中的两个字节：
 
 ``` java
 BytesWritable b = new BytesWritable(new byte[] { 3, 5 });
