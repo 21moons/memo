@@ -1475,12 +1475,7 @@ assertThat(new Text("hadoop").toString(), is("hadoop"));
 
 * BytesWritable
 
-BytesWritable is a wrapper for an array of binary data. Its serialized format is a 4-byte
-integer field that specifies the number of bytes to follow, followed by the bytes them‐
-selves. For example, the byte array of length 2 with values 3 and 5 is serialized as a 4-
-byte integer ( 00000002 ) followed by the two bytes from the array ( 03 and  05 ):
-
-BytesWritable 是一个二进制数据的包装. 它的序列化格式是一个4字节的整数字段，用于指定要跟随的字节数，随后是字节本身。 例如，长度为2且值为3和5的字节数组被序列化为4字节整数（00000002），然后是数组（03和05）中的两个字节：
+BytesWritable 是一个二进制数组的包装. 它的序列化格式包括一个 4 字节的整数字段, 用来指定跟随的字节数, 随后是字节本身. 例如, 长度为 2 且值为 3 和 5 的字节数组被序列化为 4 字节整数(00000002), 然后是数组(03 和 05)中的两个字节:
 
 ``` java
 BytesWritable b = new BytesWritable(new byte[] { 3, 5 });
@@ -1488,14 +1483,7 @@ byte[] bytes = serialize(b);
 assertThat(StringUtils.byteToHexString(bytes), is("000000020305"));
 ```
 
-BytesWritable is mutable, and its value may be changed by calling its  set() method.
-As with  Text , the size of the byte array returned from the  getBytes() method for
-BytesWritable —the capacity—may not reflect the actual size of the data stored in the
-BytesWritable . You can determine the size of the  BytesWritable by calling  get
-Length() . To demonstrate:
-
-BytesWritable是可变的，它的值可以通过调用set（）方法来改变。 与Text一样，BytesWritable（容量）的getBytes（）方法返回的字节数组大小可能不会反映
-BytesWritable中存储的数据的实际大小。 您可以通过调用get Length（）来确定BytesWritable的大小。 展示：
+BytesWritable 是可变的, 它的值可以通过调用 set() 方法来改变. 与 Text 一样, getBytes() 方法返回的字节数组大小反映的可能不是 BytesWritable 中存储数据的实际大小. 您可以通过调用 getLength() 来获取 BytesWritable 的实际大小. 示例如下:
 
 ``` java
 b.setCapacity(11);
@@ -1505,49 +1493,19 @@ assertThat(b.getBytes().length, is(11));
 
 * NullWritable
 
-NullWritable is a special type of Writable, as it has a zero-length serialization. No bytes
-are written to or read from the stream. It is used as a placeholder; for example, in Map‐
-Reduce, a key or a value can be declared as a  NullWritable when you don’t need to use
-that position, effectively storing a constant empty value.  NullWritable can also be useful
-as a key in a  SequenceFile when you want to store a list of values, as opposed to key-
-value pairs. It is an immutable singleton, and the instance can be retrieved by calling
-NullWritable.get().
-
-NullWritable是一种特殊类型的Writable，因为它具有零长度序列化。 没有字节被写入或从流中读取。 它用作占位符; 例如，在MapReduce中，当您不需要使用该位置时，可以将键或值声明为NullWritable，从而有效地存储常量空值。 当你想存储一个值列表时，NullWritable也可以用作SequenceFile中的一个键，而不是键值对。 它是一个不可变的单例，可以通过调用NullWritable.get（）来获取实例。
+NullWritable 是一种特殊类型的 Writable, 因为它序列化后长度为零. 没有字节被写入流或从流中读取. 它通常被用作占位符; 例如, 在 MapReduce 中, 当您不需要使用该位置时, 可以将键或值声明为 NullWritable, 从而有效地存储常量空值. 当你想存储一个值列表时, NullWritable 也可以用作 SequenceFile 中的一个键, 而不是用很多个键值对. 它是一个不可变的单例, 可以通过调用 NullWritable.get() 来获取实例.
 
 * ObjectWritable and GenericWritable
 
-ObjectWritable is a general-purpose wrapper for the following: Java primitives,
-String ,  enum ,  Writable ,  null , or arrays of any of these types. It is used in Hadoop RPC
-to marshal and unmarshal method arguments and return types.
+ObjectWritable 是以下类的通用包装器：Java 原生类型, String, 枚举, Writable, null 或这些类型构成的数组. 它在 Hadoop RPC 中用于编组和解组方法参数和返回类型.
 
-ObjectWritable是以下通用包装器：Java基元，String，枚举，可写，空或任何这些类型的数组。 它在Hadoop RPC中用于编组和解组方法参数和返回类型。
-
-ObjectWritable is useful when a field can be of more than one type. For example, if
-the values in a  SequenceFile have multiple types, you can declare the value type as an
-ObjectWritable and wrap each type in an  ObjectWritable . Being a general-purpose
-mechanism, it wastes a fair amount of space because it writes the classname of the
-wrapped type every time it is serialized. In cases where the number of types is small and
-known ahead of time, this can be improved by having a static array of types and using
-the index into the array as the serialized reference to the type. This is the approach that
-GenericWritable takes, and you have to subclass it to specify which types to support.
-
-ObjectWritable在字段可以具有多种类型时非常有用。 例如，如果SequenceFile中的值具有多个类型，则可以将值类型声明为ObjectWritable，并将每个类型包装在ObjectWritable中。 作为一个通用机制，它浪费了大量的空间，因为它每次被序列化时都会写入被包装类型的类名。 在类型数量很小并且事先已知的情况下，可以通过使用类型的静态数组并将索引用于数组的序列化引用来改进此类型。 这是GenericWritable所采用的方法，您必须对其进行子类化以指定要支持的类型。
+ObjectWritable 在字段可能是多种类型时非常有用. 例如, 如果 SequenceFile 中的值具有多个类型, 则可以将值类型声明为 ObjectWritable, 并将每个类型包裹在 ObjectWritable 中. 作为一个通用机制, 它浪费了大量的空间, 因为它每次被序列化时都会写入被包装类型的类名. 在要支持的类型较少并且事先已知的情况下, 可以通过静态数组保存类型, 在序列化引用数组中的类型. 这就是 GenericWritable 所采用的方法, 您必须对其进行继承以指定要支持的类型.
 
 * Writable collections
 
-The  org.apache.hadoop.io package includes six  Writable collection types:  Array
-Writable ,  ArrayPrimitiveWritable ,  TwoDArrayWritable ,  MapWritable ,
-SortedMapWritable , and  EnumSetWritable.
+org.apache.hadoop.io 包包含六种 Writable 集合类型: ArrayWritable, ArrayPrimitiveWritable, TwoDArrayWritable, MapWritable, SortedMapWritable 和 EnumSetWritable.
 
-org.apache.hadoop.io包包含六种Writable集合类型：ArrayWritable，ArrayPrimitiveWritable，TwoDArrayWritable，MapWritable，SortedMapWritable和EnumSetWritable。
-
-ArrayWritable and  TwoDArrayWritable are  Writable implementations for arrays and
-two-dimensional arrays (array of arrays) of  Writable instances. All the elements of an 
-ArrayWritable or a  TwoDArrayWritable must be instances of the same class, which is
-specified at construction as follows:
-
-ArrayWritable和TwoDArrayWritable是Writable实例的数组和二维数组（阵列数组）的Writable实现。 ArrayWritable或TwoDArrayWritable的所有元素必须是同一个类的实例，在构造中指定的实例如下：
+ArrayWritable 和 TwoDArrayWritable 是数组和二维数组 (阵列数组) 的 Writable 实现. ArrayWritable 或 TwoDArrayWritable 中的所有元素必须是同一个类的实例, 在构造中指定的实例如下:
 
 ``` java
 ArrayWritable writable = new ArrayWritable(Text.class);
@@ -1557,7 +1515,7 @@ In contexts where the  Writable is defined by type, such as in  SequenceFile key
 values or as input to MapReduce in general, you need to subclass  ArrayWritable (or
 TwoDArrayWritable , as appropriate) to set the type statically. For example:
 
-在Writable由类型定义的上下文中（如SequenceFile键或值）或通常用作MapReduce的输入的上下文中，需要继承ArrayWritable（或TwoDArrayWritable，如适用）的子类来静态设置类型。 例如：
+在 Writable 由类型定义的上下文中 (如 SequenceFile 键或值) 或通常用作 MapReduce 的输入的上下文中, 需要继承 ArrayWritable(或 TwoDArrayWritable, 如适用) 的子类来静态设置类型. 例如:
 
 ``` java
 public class TextArrayWritable extends ArrayWritable {
@@ -1567,15 +1525,14 @@ public class TextArrayWritable extends ArrayWritable {
 }
 ```
 
-ArrayWritable and  TwoDArrayWritable both have  get() and  set() methods, as well
-as a  toArray() method, which creates a shallow copy of the array (or 2D array).
+ArrayWritable and  TwoDArrayWritable both have  get() and  set() methods, as well as a  toArray() method, which creates a shallow copy of the array (or 2D array).
 
-ArrayWritable和TwoDArrayWritable都有get（）和set（）方法，还有一个toArray（）方法，该方法创建数组（或二维数组）的浅表副本。
+ArrayWritable 和 TwoDArrayWritable 都有 get() 和 set() 方法, 还有一个 toArray() 方法, 该方法创建数组(或二维数组) 的浅拷贝副本.
 
 ArrayPrimitiveWritable is a wrapper for arrays of Java primitives. The component
 type is detected when you call  set() , so there is no need to subclass to set the type.
 
-ArrayPrimitiveWritable是Java基元数组的封装器。 调用set（）时会检测组件类型，因此不需要子类来设置类型。
+ArrayPrimitiveWritable 是 Java 基元数组的封装器. 调用 set() 时会检测组件类型, 因此不需要子类来设置类型.
 
 MapWritable is an implementation of  java.util.Map<Writable, Writable> , and  Sor
 tedMapWritable is an implementation of  java.util.SortedMap<WritableCompara
@@ -1589,7 +1546,7 @@ and  SortedMapWritable use positive  byte values for custom types, so a maximum 
 or  SortedMapWritable instance. Here’s a demonstration of using a  MapWritable with
 different types for keys and values:
 
-MapWritable是java.util.Map <Writable，Writable>的实现，SortedMapWritable是java.util.SortedMap <WritableComparable，Writable>的实现。 每个键和值字段的类型是该字段的序列化格式的一部分。 该类型被存储为一个单字节，充当一个类型数组的索引。 该数组在org.apache.hadoop.io包中使用标准类型进行填充，但通过编写用于为非标准类型编码类型数组的头部，也可以使用自定义的Writable类型。 在实现它们时，MapWritable和SortedMapWritable对自定义类型使用正字节值，因此在任何特定的MapWritable或SortedMapWritable实例中最多可以使用127个不同的非标准可写类。 下面是使用MapWritable对键和值使用不同类型的演示：
+MapWritable 是 java.util.Map <Writable，Writable> 的实现, SortedMapWritable 是 java.util.SortedMap <WritableComparable, Writable> 的实现. 每个键和值字段的类型是该字段的序列化格式的一部分. 该类型被存储为一个单字节, 充当一个类型数组的索引. 该数组在 org.apache.hadoop.io 包中使用标准类型进行填充, 但通过编写用于为非标准类型编码类型数组的头部, 也可以使用自定义的 Writable 类型. 在实现它们时, MapWritable 和 SortedMapWritable 对自定义类型使用正字节值, 因此在任何特定的 MapWritable 或 SortedMapWritable 实例中最多可以使用 127 个不同的非标准可写类. 下面是使用 MapWritable 对键和值使用不同类型的演示：
 
 ``` java
 MapWritable src = new MapWritable();
@@ -1622,7 +1579,7 @@ implementations that come with Hadoop are well tuned, but for more elaborate str
 tures, it is often better to create a new  Writable type rather than composing the stock
 types.
 
-Hadoop附带一组有用的可写实现，可用于大多数目的; 但是，有时候，您可能需要编写自己的自定义实现。 使用自定义Writable，您可以完全控制二进制表示和排序顺序。 由于Writable是MapReduce数据路径的核心，因此调整二进制表示可能会对性能产生重大影响。 Hadoop附带的股票Writable实现已经很好地调整，但对于更复杂的结构，创建新的Writable类型通常更好，而不是组成股票类型。
+Hadoop 附带一组有用的可写实现，可用于大多数目的; 但是，有时候，您可能需要编写自己的自定义实现。 使用自定义Writable，您可以完全控制二进制表示和排序顺序。 由于 Writable 是 MapReduce 数据路径的核心，因此调整二进制表示可能会对性能产生重大影响。 Hadoop附带的股票Writable实现已经很好地调整，但对于更复杂的结构，创建新的Writable类型通常更好，而不是组成股票类型。
 
 To demonstrate how to create a custom  Writable , we shall write an implementation
 that represents a pair of strings, called  TextPair . The basic implementation is shown
