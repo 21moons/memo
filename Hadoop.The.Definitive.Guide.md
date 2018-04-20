@@ -1126,7 +1126,7 @@ public class PooledStreamCompressor {
 
 现在想象一下, 有一个压缩后的 gzip 文件, 大小为 1 GB. 跟之前一样, HDFS 会用 8 个块存储该文件. 但是, 这种情况下应用程序将无法工作, 因为 map 任务无法读取单个块中解压出的数据(对于 gzip 来说, 它认为压缩后输出的是单个文件, 当多个 map 任务同时处理压缩后的分块时, 会导致无法识别, 因为无法得知). gzip 格式使用 DEFLATE 存储压缩后的数据, 并使用 DEFLATE 将数据存储为一系列压缩块. 问题在于, 这些 DEFLATE 压缩块的头部没有保留任何可以用来在文件流中定位的信息, 使得读取数据能够一直读取到下一个块, 从而与流进行同步. 正因为这个原因, gzip 压缩文件不支持框架对其进行分片.
 
-在这种情况下，MapReduce 不会尝试分割 gzip 文件, 因为它知道输入是 gzip 格式 (通过查看文件扩展名). 同时, MapReduce 作业为了能够运行, 不得不牺牲本地性: 框架将调度唯一的 map 任务处理所有 8 个 HDFS 块, 而其中大多数块不在 map 任务运行的服务器上. 此外, 因为 map 任务数量较少, 作业细化程度较低, 运行时间会较长.
+在这种情况下, MapReduce 不会尝试分割 gzip 文件, 因为它知道输入是 gzip 格式 (通过查看文件扩展名). 同时, MapReduce 作业为了能够运行, 不得不牺牲本地性: 框架将调度唯一的 map 任务处理所有 8 个 HDFS 块, 而其中大多数块不在 map 任务运行的服务器上. 此外, 因为 map 任务数量较少, 作业细化程度较低, 运行时间会较长.
 
 如果我们假设的例子中的文件是 LZO 文件, 我们会遇到同样的问题, 因为底层的压缩格式不能为读取者提供与流同步的方式. 但是, 可以使用 Hadoop LZO 库附带的索引器工具 LZO 文件进行预处理, 该工具可以从 101 页上 "编解码器" 中列出的 Google 和 GitHub 站点中获取. 该工具为分片点构建索引, 有效地使得在遇到类似格式的输入时可进行分片.
 
@@ -1194,7 +1194,7 @@ Extensible
 Interoperable
 对于某些系统, 希望能够支持客户端与服务器用不同的语言实现, 所以需要设计格式来满足这一点.
 
-表面上看, 序列化框架对数据格式的要求与持久化对数据格式的要求会有所不同. 毕竟，RPC 的生命周期不超过一秒, 而数据可能写入数年后才会被读取. 从这些差异可以看出, RPC 序列化格式的四个理想属性对于持久化存储格式同样重要. 我们希望存储格式紧凑 (以提高存储空间使用效率), 速度快(因此读取或写入 TB 级数据的开销最小), 可扩展 (所以我们可以透明地读取以旧格式写入的数据), 和 可交互 (所以我们可以使用不同的语言读取或写入数据).
+表面上看, 序列化框架对数据格式的要求与持久化对数据格式的要求会有所不同. 毕竟, RPC 的生命周期不超过一秒, 而数据可能写入数年后才会被读取. 从这些差异可以看出, RPC 序列化格式的四个理想属性对于持久化存储格式同样重要. 我们希望存储格式紧凑 (以提高存储空间使用效率), 速度快(因此读取或写入 TB 级数据的开销最小), 可扩展 (所以我们可以透明地读取以旧格式写入的数据), 和 可交互 (所以我们可以使用不同的语言读取或写入数据).
 
 Hadoop 使用自己的序列化格式 Writables, 紧凑而且速度快, 但并不容易被 Java 以外的语言扩展或使用. 因为 Writables 是 Hadoop 的核心(大多数 MapReduce 程序都将其作为 key 和 value 的类型), 我们会在接下来的三节中深入研究它们, 然后再看一些 Hadoop 支持的其他序列化框架. 比如 12 章的Avro(这是为了解决 Writables的 一些限制而设计的序列化系统).
 
@@ -1433,11 +1433,11 @@ public class StringTextComparisonTest {
 }
 ```
 
-测试确认了字符串的长度是它包含的代码单元的数量 (五个, 由字符串中前三个字符和最后一个替代对组成), 而 Text 对象的长度是 UTF-8 编码后的字节数 (10 = 1 + 2 + 3 + 4). 同样, String 类的 indexOf() 方法以 char 代码单元为单位返回一个索引, Text 的 find() 方法返回的是则是字节偏移量。
+测试确认了字符串的长度是它包含的代码单元的数量 (五个, 由字符串中前三个字符和最后一个替代对组成), 而 Text 对象的长度是 UTF-8 编码后的字节数 (10 = 1 + 2 + 3 + 4). 同样, String 类的 indexOf() 方法以 char 代码单元为单位返回一个索引, Text 的 find() 方法返回的是则是字节偏移量.
 
 <font color=#fd0209 size=4 ><b>注:Java 标准库实现中, 对 char 与 String 的序列化规定使用 UTF-8 作为外码. Java 的 Class 文件中的字符串常量与符号名字也都规定用 UTF-8 编码. 这大概是当时设计者为了平衡运行时的时间效率(采用定长编码的 UTF-16)与外部存储的空间效率(采用变长的 UTF-8 编码)而做的取舍.</b></font>
 
-不考虑 String 中存在 surrogate pair(两个代码单元表示一个字符) 时, String 中的 charAt() 方法返回给定索引的 char 代码单元. codePointAt() 方法用 char 代码单元来检索, 返回用 int 表示的单个 Unicode 字符. 事实上, Text 中的 charAt() 方法更像是 codePointAt() 方法，而不是 String 中的同名方法. 唯一的区别是前者是按字节偏移索引的.
+不考虑 String 中存在 surrogate pair(两个代码单元表示一个字符) 时, String 中的 charAt() 方法返回给定索引的 char 代码单元. codePointAt() 方法用 char 代码单元来检索, 返回用 int 表示的单个 Unicode 字符. 事实上, Text 中的 charAt() 方法更像是 codePointAt() 方法, 而不是 String 中的同名方法. 唯一的区别是前者是按字节偏移索引的.
 
 <font color=#fd0209 size=4 ><b>注:Java 的 char 类型不一定能表示一个 UTF-16 的 "字符", 只有只需 1 个 code unit 的 code point 才可以完整的存在 char 里. 但 String 作为 char 的序列, 可以包含由两个 code unit 组成的 "surrogate pair" 来表示需要 2 个 code unit 表示的 UTF-16 code point.</b></font>
 
@@ -1497,7 +1497,7 @@ NullWritable 是一种特殊类型的 Writable, 因为它序列化后长度为�
 
 * ObjectWritable and GenericWritable
 
-ObjectWritable 是以下类的通用包装器：Java 原生类型, String, 枚举, Writable, null 或这些类型构成的数组. 它在 Hadoop RPC 中用于编组和解组方法参数和返回类型.
+ObjectWritable 是以下类的通用包装器: Java 原生类型, String, 枚举, Writable, null 或这些类型构成的数组. 它在 Hadoop RPC 中用于编组和解组方法参数和返回类型.
 
 ObjectWritable 在字段可能是多种类型时非常有用. 例如, 如果 SequenceFile 中的值具有多个类型, 则可以将值类型声明为 ObjectWritable, 并将每个类型包裹在 ObjectWritable 中. 作为一个通用机制, 它浪费了大量的空间, 因为它每次被序列化时都会写入被包装类型的类名. 在要支持的类型较少并且事先已知的情况下, 可以通过静态数组保存类型, 在序列化引用数组中的类型. 这就是 GenericWritable 所采用的方法, 您必须对其进行继承以指定要支持的类型.
 
@@ -1529,7 +1529,7 @@ ArrayWritable 和 TwoDArrayWritable 都有 get() 和 set() 方法, 还有一个 
 
 ArrayPrimitiveWritable 是 Java 原生类型数组的封装器. 调用 set() 方法时会检测组件类型, 因此不需要通过子类来指定类型.
 
-MapWritable 是 java.util.Map <Writable, Writable> 的实现, SortedMapWritable 是 java.util.SortedMap <WritableComparable, Writable> 的实现. 每个键和值字段的类型是该字段序列化格式的一部分. 该类型被存储为一个单字节, 充当一个类型数组的索引. 该数组在 org.apache.hadoop.io 包中使用标准类型进行填充, 但通过编写用于为非标准类型编码类型数组的头部, 也可以加入自定义的 Writable 类型. 在实现它们时, MapWritable 和 SortedMapWritable 对自定义类型使用正字节值, 因此在任何特定的 MapWritable 或 SortedMapWritable 实例中最多可以使用 127 个不同的非标准 Writable 类. 下面是使用 MapWritable 时设置键和值为不同类型的演示：
+MapWritable 是 java.util.Map <Writable, Writable> 的实现, SortedMapWritable 是 java.util.SortedMap <WritableComparable, Writable> 的实现. 每个键和值字段的类型是该字段序列化格式的一部分. 该类型被存储为一个单字节, 充当一个类型数组的索引. 该数组在 org.apache.hadoop.io 包中使用标准类型进行填充, 但通过编写用于为非标准类型编码类型数组的头部, 也可以加入自定义的 Writable 类型. 在实现它们时, MapWritable 和 SortedMapWritable 对自定义类型使用正字节值, 因此在任何特定的 MapWritable 或 SortedMapWritable 实例中最多可以使用 127 个不同的非标准 Writable 类. 下面是使用 MapWritable 时设置键和值为不同类型的演示: 
 
 ``` java
 MapWritable src = new MapWritable();
@@ -1547,7 +1547,7 @@ assertThat((LongWritable) dest.get(new VIntWritable(2)), is(new LongWritable(163
 
 Hadoop 附带一组有用的 Writable 实现, 可满足大部分需求; 但是, 有时候, 您可能需要编写自己的自定义实现. 使用自定义 Writable, 您可以完全控制二进制表示和排序. 由于 Writable 是 MapReduce 数据路径的核心, 因此调整二进制表示可能会对性能产生重大影响. Hadoop 附带的 Writable 实现已经很好地调整, 但对于更复杂的结构, 创建新的 Writable 类型通常比组合已有类型更好.
 
-为了演示如何创建自定义的 Writable, 我们将编写一个字符串对的实现, 称为 TextPair. 基本实现如例 5-7 所示。
+为了演示如何创建自定义的 Writable, 我们将编写一个字符串对的实现, 称为 TextPair. 基本实现如例 5-7 所示.
 
 <p align="center"><font size=2>Example 5-7. A Writable implementation that stores a pair of Text objects</font></p>
 
@@ -1720,27 +1720,17 @@ public static class FirstComparator extends WritableComparator {
 
 为了支持这一点, Hadoop 为可插入序列化框架提供了一个 API. 序列化框架是 Serialization 接口的实现(在 org.apache.hadoop.io.serializer 包中) 表示. 例如, WritableSerialization 用于序列化 Writable 类型.
 
-A  Serialization defines a mapping from types to  Serializer instances (for turning
-an object into a byte stream) and  Deserializer instances (for turning a byte stream
-into an object).
+序列化定义了从类型到 Serializer 实例 (用于将对象转换为字节流) 和 Deserializer 实例 (用于将字节流转换为对象) 的映射.
 
-序列化定义了从类型到串行器实例 (用于将对象转换为字节流) 和解串器实例 (用于将字节流转换为对象) 的映射.
-
-Set the  io.serializations property to a comma-separated list of classnames in order
-to register  Serialization implementations. Its default value includes  org.apache.ha
-doop.io.serializer.WritableSerialization and the Avro Specific and Reflect se‐
-rializations (see “Avro Data Types and Schemas” on page 346), which means that only
-Writable or Avro objects can be serialized or deserialized out of the box.
-
-将io.serializations属性设置为逗号分隔的类名列表，以注册序列化实现。 其默认值包括org.apache.hadoop.io.serializer.WritableSerialization和Avro Specific和Reflect序列化（请参阅第346页上的“Avro数据类型和模式”），这意味着只有Writable或Avro对象可以被序列化或反序列化 的盒子。
+将 io.serializations 属性设置为逗号分隔的类名列表, 以注册序列化实现. 其默认值包括 org.apache.hadoop.io.serializer.WritableSerialization, Avro Specific 和 Reflect 序列化 (请参阅第346页上的 "Avro 数据类型和模式"), 这意味着只有 Writable 或 Avro 对象可以被序列化或反序列化.
 
 Hadoop includes a class called  JavaSerialization that uses Java Object Serialization.
 Although it makes it convenient to be able to use standard Java types such as  Integer
 or  String in MapReduce programs, Java Object Serialization is not as efficient as Writ‐
 ables, so it’s not worth making this trade-off (see the following sidebar).
 
-Hadoop包含一个名为JavaSerialization的类，该类使用Java Object Serialization。
-尽管它可以方便地在MapReduce程序中使用标准Java类型（如Integer或String），但Java对象序列化并不像Writables那样高效，所以不值得进行这种折衷（参见下面的边栏）。
+Hadoop 包含一个名为 JavaSerialization 的类, 该类使用 Java Object Serialization.
+尽管它可以方便地在MapReduce程序中使用标准Java类型 (如Integer或String) , 但Java对象序列化并不像Writables那样高效, 所以不值得进行这种折衷 (参见下面的边栏) .
 
 * Serialization IDL
 
@@ -1750,19 +1740,19 @@ neutral, declarative fashion, using an interface description language (IDL). The
 can then generate types for different languages, which is good for interoperability. They
 also typically define versioning schemes that make type evolution straightforward.
 
-还有一些其他序列化框架以不同的方式解决问题：不是通过代码定义类型，而是使用接口描述语言（IDL）以语言无关的声明方式定义它们。 然后系统可以为不同的语言生成类型，这对互操作性是有利的。 他们通常也会定义版本控制方案，使类型的演变变得简单明了。
+还有一些其他序列化框架以不同的方式解决问题: 不是通过代码定义类型, 而是使用接口描述语言 (IDL) 以语言无关的声明方式定义它们. 然后系统可以为不同的语言生成类型, 这对互操作性是有利的. 他们通常也会定义版本控制方案, 使类型的演变变得简单明了.
 
 Apache Thrift and Google Protocol Buffers are both popular serialization frameworks,
 and both are commonly used as a format for persistent binary data. There is limited
 support for these as MapReduce formats; 3 however, they are used internally in parts of
 Hadoop for RPC and data exchange.
 
-Apache Thrift和Google协议缓冲区都是流行的序列化框架，并且通常用作持久二进制数据的格式。 这些作为MapReduce格式的支持有限; 3然而，它们在Hadoop的部分内部用于RPC和数据交换。
+Apache Thrift和Google协议缓冲区都是流行的序列化框架, 并且通常用作持久二进制数据的格式. 这些作为MapReduce格式的支持有限; 3然而, 它们在Hadoop的部分内部用于RPC和数据交换.
 
 Avro is an IDL-based serialization framework designed to work well with large-scale
 data processing in Hadoop. It is covered in Chapter 12.
 
-Avro是一个基于IDL的序列化框架，旨在与Hadoop中的大规模数据处理很好地协作。 它在第12章中有介绍。
+Avro是一个基于IDL的序列化框架, 旨在与Hadoop中的大规模数据处理很好地协作. 它在第12章中有介绍.
 
 ### File-Based Data Structures
 
@@ -1770,7 +1760,7 @@ For some applications, you need a specialized data structure to hold your data. 
 MapReduce-based processing, putting each blob of binary data into its own file doesn’t
 scale, so Hadoop developed a number of higher-level containers for these situations.
 
-对于某些应用程序，您需要一个专门的数据结构来保存您的数据。 为了执行基于MapReduce的处理，将每个二进制数据块放入其自己的文件不会扩展，所以Hadoop为这些情况开发了许多更高级别的容器。
+对于某些应用程序, 您需要一个专门的数据结构来保存您的数据. 为了执行基于MapReduce的处理, 将每个二进制数据块放入其自己的文件不会扩展, 所以Hadoop为这些情况开发了许多更高级别的容器.
 
 #### SequenceFile
 
@@ -1781,14 +1771,14 @@ as a logfile format, you would choose a key, such as timestamp represented by a
 LongWritable , and the value would be a  Writable that represents the quantity being
 logged.
 
-设想一个日志文件，其中每个日志记录都是一行新文本。 如果您想记录二进制类型，纯文本不是合适的格式。 在这种情况下，Hadoop的SequenceFile类适合账单，为二元键值对提供持久的数据结构。 要将其用作日志文件格式，您需要选择一个键，例如由LongWritable表示的时间戳，并且该值将是一个表示记录数量的Writable。
+设想一个日志文件, 其中每个日志记录都是一行新文本. 如果您想记录二进制类型, 纯文本不是合适的格式. 在这种情况下, Hadoop的SequenceFile类适合账单, 为二元键值对提供持久的数据结构. 要将其用作日志文件格式, 您需要选择一个键, 例如由LongWritable表示的时间戳, 并且该值将是一个表示记录数量的Writable.
 
 SequenceFile s also work well as containers for smaller files. HDFS and MapReduce are
 optimized for large files, so packing files into a  SequenceFile makes storing
 and processing the smaller files more efficient (“Processing a whole file as a record” on
 page 228 contains a program to pack files into a  SequenceFile ). 
 
-SequenceFile也适用于较小文件的容器。 HDFS和MapReduce针对大文件进行了优化，因此将文件打包到SequenceFile中可使存储和处理小文件的效率更高（第228页上的“将整个文件作为记录处理”包含将文件打包到SequenceFile中的程序）。
+SequenceFile也适用于较小文件的容器. HDFS和MapReduce针对大文件进行了优化, 因此将文件打包到SequenceFile中可使存储和处理小文件的效率更高 (第228页上的“将整个文件作为记录处理”包含将文件打包到SequenceFile中的程序) .
 
 * Writing a SequenceFile
 
@@ -1800,18 +1790,18 @@ Optional arguments include the compression type and codec, a  Progressable callb
 to be informed of write progress, and a  Metadata instance to be stored in the  Sequen
 ceFile header.
 
-要创建SequenceFile，请使用其一个 createWriter() 静态方法，该方法返回一个SequenceFile.Writer实例。 有几个重载版本，但它们都要求您指定要写入的流（FSDataOutputStream或文件系统和路径配对），配置对象以及键和值类型。 可选参数包括压缩类型和编解码器，要通知写入进度的Progressable回调以及要存储在SequenceFile标头中的Metadata实例。
+要创建SequenceFile, 请使用其一个 createWriter() 静态方法, 该方法返回一个SequenceFile.Writer实例. 有几个重载版本, 但它们都要求您指定要写入的流(FSDataOutputStream 或文件系统和路径配对), 配置对象以及键和值类型. 可选参数包括压缩类型和编解码器, 要通知写入进度的 Progressable 回调以及要存储在SequenceFile 标头中的 Metadata 实例.
 
 The keys and values stored in a  SequenceFile do not necessarily need to be  Writables. Any types that can be serialized and deserialized by a Serialization may be used.
 
-存储在SequenceFile中的键和值不一定需要是可写的。 可以使用任何可以通过序列化进行序列化和反序列化的类型。
+存储在SequenceFile中的键和值不一定需要是可写的. 可以使用任何可以通过序列化进行序列化和反序列化的类型.
 
 Once you have a  SequenceFile.Writer , you then write key-value pairs using the append() method. When you’ve finished, you call the  close() method ( Sequence File.Writer implements java.io.Closeable ).
 
-一旦你有了一个SequenceFile.Writer，你就可以使用append（）方法编写键值对。 完成后，调用close（）方法（Sequence File.Writer实现java.io.Closeable）。
+一旦你有了一个SequenceFile.Writer, 你就可以使用append () 方法编写键值对. 完成后, 调用close () 方法 (Sequence File.Writer实现java.io.Closeable) .
 
 Example 5-10 shows a short program to write some key-value pairs to a  Sequence File using the API just described.
-例5-10显示了一个简短的程序，用于使用刚刚描述的API将一些键值对写入序列文件。
+例 5-10 显示了一个简短的程序, 用于使用刚刚描述的 API 将一些键值对写入序列文件.
 
 <p align="center"><font size=2>Example 5-10. Writing a SequenceFile</font></p>
 
@@ -1850,7 +1840,7 @@ position in the file. (We will use this information about record boundaries in t
 section, when we read the file nonsequentially.) We write the position out to the console,
 along with the key and value pairs. The result of running it is shown here:
 
-序列文件中的键是从100到1的整数，表示为IntWritable对象。 这些值是Text对象。 在将每条记录追加到SequenceFile.Writer之前，我们调用getLength（）方法来发现文件中的当前位置。 （当我们以非连续的方式读取文件时，我们将在下一节中使用关于记录边界的信息。）我们将位置与键和值对一起写入控制台。 运行它的结果如下所示：
+序列文件中的键是从100到1的整数, 表示为IntWritable对象. 这些值是Text对象. 在将每条记录追加到SequenceFile.Writer之前, 我们调用getLength () 方法来发现文件中的当前位置.  (当我们以非连续的方式读取文件时, 我们将在下一节中使用关于记录边界的信息.) 我们将位置与键和值对一起写入控制台. 运行它的结果如下所示: 
 
 ``` bash
 % hadoop SequenceFileWriteDemo numbers.seq
@@ -1887,17 +1877,19 @@ using. If you are using  Writable types, you can use the  next() method that tak
 and a value argument and reads the next key and value in the stream into these
 variables:
 
-从头到尾读序列文件是创建SequenceFile.Reader实例并通过重复调用next（）方法迭代记录的问题。 你使用哪一个取决于你正在使用的序列化框架。 如果您使用的是Writable类型，则可以使用带有key和value参数的next（）方法，并将流中的下一个键和值读入这些变量中：
+从头到尾读序列文件是创建 SequenceFile.Reader 实例并通过重复调用 next() 方法迭代记录的问题. 你使用哪一个取决于你正在使用的序列化框架. 如果您使用的是Writable 类型, 则可以使用带有 key 和 value 参数的 next() 方法, 并将流中的下一个键和值读入这些变量中: 
 
 ``` java
 public boolean next(Writable key, Writable val)
 ```
 
-The return value is  true if a key-value pair was read and  false if the end of the file has
-been reached.
+The return value is  true if a key-value pair was read and  false if the end of the file has been reached.
 
-For other, non-Writable serialization frameworks (such as Apache Thrift), you should
-use these two methods:
+如果已经读取了键值对, 返回值为true, 如果文件已到达, 则返回false.
+
+For other, non-Writable serialization frameworks (such as Apache Thrift), you should use these two methods:
+
+对于其他非可写序列化框架 (如Apache Thrift) , 您应该使用以下两种方法: 
 
 ``` java
 public Object next(Object key) throws IOException
@@ -1906,9 +1898,13 @@ public Object getCurrentValue(Object val) throws IOException
 In this case, you need to make sure that the serialization you want to use has been set
 in the  io.serializations property; see “Serialization Frameworks” on page 126.
 
+在这种情况下, 您需要确保您要使用的序列化已经在io.serializations属性中设置; 请参阅第126页上的“序列化框架”.
+
 If the  next() method returns a non- null object, a key-value pair was read from the
 stream, and the value can be retrieved using the  getCurrentValue() method. Other‐
 wise, if  next() returns  null , the end of the file has been reached.
+
+如果next () 方法返回一个非空对象, 则从流中读取一个键值对, 并且可以使用getCurrentValue () 方法检索该值. 否则, 如果next () 返回null, 则已达到文件的结尾.
 
 The program in Example 5-11 demonstrates how to read a sequence file that has
 Writable keys and values. Note how the types are discovered from the  Sequence
@@ -1916,6 +1912,8 @@ File.Reader via calls to  getKeyClass() and  getValueClass() , and then  Reflect
 nUtils is used to create an instance for the key and an instance for the value. This
 technique allows the program to be used with any sequence file that has  Writable keys
 and values.
+
+例5-11中的程序演示了如何读取具有Writable键和值的序列文件. 请注意, 如何通过调用getKeyClass () 和getValueClass () 从SequenceFile.Reader中发现类型, 然后使用ReflectionUtils为该键创建实例并为该值创建实例. 该技术允许程序与任何具有可写键和值的序列文件一起使用.
 
 <p align="center"><font size=2>Example 5-11. Reading a SequenceFile</font></p>
 
@@ -1952,9 +1950,13 @@ serts a special entry to mark the sync point every few records as a sequence fil
 written. Such entries are small enough to incur only a modest storage overhead—less
 than 1%. Sync points always align with record boundaries.
 
+该程序的另一个功能是显示序列文件中同步点的位置. 同步点是流中的一个点, 如果阅读器“丢失”, 例如在查找流中的任意位置之后, 该点可用于与记录边界重新同步. 同步点由SequenceFile.Writer记录, 该序列插入一个特殊条目, 以便在序列文件正在写入时为每个记录标记同步点. 这些条目足够小, 只会产生适度的存储开销 - 小于1％. 同步点始终与记录边界对齐.
+
 Running the program in Example 5-11 shows the sync points in the sequence file as
 asterisks. The first one occurs at position 2021 (the second one occurs at position 4075,
 but is not shown in the output):
+
+运行示例5-11中的程序将序列文件中的同步点显示为星号. 第一个发生在位置2021 (第二个发生在位置4075, 但未在输出中显示) : 
 
 ``` bash
 % hadoop SequenceFileReadDemo numbers.seq
@@ -1987,6 +1989,8 @@ There are two ways to seek to a given position in a sequence file. The first is 
 method, which positions the reader at the given point in the file. For example, seeking
 to a record boundary works as expected:
 
+有两种方法可以查找序列文件中的给定位置. 第一种是seek () 方法, 它将读者定位在文件中的给定位置. 例如, 寻求创纪录的边界如预期的那样工作: 
+
 ``` java
 reader.seek(359);
 assertThat(reader.next(key, value), is(true));
@@ -1995,6 +1999,8 @@ assertThat(((IntWritable) key).get(), is(95));
 
 But if the position in the file is not at a record boundary, the reader fails when the  next()
 method is called:
+
+但是, 如果文件中的位置不在记录边界上, 则在调用next () 方法时读取器将失败: 
 
 ``` java
 reader.seek(360);
@@ -2008,6 +2014,8 @@ will be positioned at the end of the file.) Thus, we can call  sync() with any p
 the stream—not necessarily a record boundary—and the reader will reestablish itself at
 the next sync point so reading can continue:
 
+找到记录边界的第二种方法是使用同步点. SequenceFile.Reader上的同步 (长位置) 方法将阅读器置于位置之后的下一个同步点.  (如果在该位置之后文件中没有同步点, 则阅读器将位于文件的末尾) .因此, 我们可以在流中的任何位置调用sync ()  (不一定是记录边界) , 并且 读者将在下一个同步点重新建立自己的阅读状态, 以便继续阅读: 
+
 ``` java
 reader.sync(360);
 assertThat(reader.getPosition(), is(2021L));
@@ -2020,11 +2028,13 @@ sync point at the current position in the stream. This is not to be
 confused with the  hsync() method defined by the  Syncable inter‐
 face for synchronizing buffers to the underlying device.
 
-SequenceFile.Writer有一个名为sync（）的方法，用于在流中当前位置插入一个同步点。 这不要与Syncable接口定义的hsync（）方法混淆，以便将缓冲区同步到基础设备。
+SequenceFile.Writer有一个名为sync () 的方法, 用于在流中当前位置插入一个同步点. 这不要与Syncable接口定义的hsync () 方法混淆, 以便将缓冲区同步到基础设备.
 
 Sync points come into their own when using sequence files as input to MapReduce,
 since they permit the files to be split and different portions to be processed independ‐
 ently by separate map tasks (see “SequenceFileInputFormat” on page 236).
+
+当使用序列文件作为MapReduce的输入时, 同步点会自动生成, 因为它们允许将文件拆分并通过单独的映射任务独立处理不同的部分(请参见第 212 页的"SequenceFileInputFormat")
 
 * Displaying a SequenceFile with the command-line interface
 
@@ -2033,12 +2043,18 @@ It looks at a file’s magic number so that it can attempt to detect the type of
 appropriately convert it to text. It can recognize gzipped files, sequence files, and Avro
 datafiles; otherwise, it assumes the input is plain text.
 
+hadoop fs命令有一个-text选项以文本形式显示序列文件. 它会查看文件的幻数, 以便它可以尝试检测文件的类型并将其适当地转换为文本. 它可以识别gzip文件, 序列文件和Avro数据文件; 否则, 它假定输入是纯文本.
+
 For sequence files, this command is really useful only if the keys and values have mean‐
 ingful string representations (as defined by the  toString() method). Also, if you have
 your own key or value classes, you will need to make sure they are on Hadoop’s classpath.
 
+对于序列文件, 仅当键和值具有有意义的字符串表示形式 (由toString () 方法定义) 时, 此命令才非常有用. 另外, 如果您有自己的键或值类, 则需要确保它们位于Hadoop的类路径中.
+
 Running it on the sequence file we created in the previous section gives the following
 output:
+
+在我们在前一节创建的序列文件上运行它会得到以下输出结果: 
 
 ``` bash
 % hadoop fs -text numbers.seq | head
@@ -2062,6 +2078,8 @@ reducers to use, which determines the number of output partitions. For example, 
 specifying one reducer, you get a single output file. We can use the sort example that
 comes with Hadoop by specifying that the input and output are sequence files and by
 setting the key and value types:
+
+排序 (和合并) 一个或多个序列文件的最有效方式是使用MapReduce. MapReduce本质上是并行的, 可让您指定要使用的还原器的数量, 这决定了输出分区的数量. 例如, 通过指定一个reducer, 可以得到一个输出文件. 通过指定输入和输出是序列文件并通过设置键和值类型, 我们可以使用Hadoop附带的排序示例: 
 
 ``` bash
 % hadoop jar \
@@ -2091,6 +2109,8 @@ Reduce and are lower-level functions than MapReduce (for example, to get paralle
 you need to partition your data manually), so in general MapReduce is the preferred
 approach to sort and merge sequence files.
 
+使用MapReduce进行排序/合并的另一种方法是SequenceFile.Sorter类, 它有许多sort () 和merge () 方法. 这些函数在MapReduce之前, 是比MapReduce更低级别的函数 (例如, 为了获得并行性, 您需要手动划分数据) , 所以通常MapReduce是排序和合并序列文件的首选方法.
+
 * The SequenceFile format
 
 A sequence file consists of a header followed by one or more records (see Figure 5-2).
@@ -2104,11 +2124,15 @@ appear between records in the sequence file. They are designed to incur less tha
 storage overhead, so they don’t necessarily appear between every pair of records (such
 is the case for short records).
 
+一个序列文件由一个头部和一个或多个记录组成 (见图5-2) .序列文件的前三个字节是字节SEQ, 后者充当幻数;后面是一个单字节, 代表 版本号. 标题包含其他字段, 包括键和值类的名称, 压缩细节, 用户定义的元数据和同步标记. 5回想一下, 同步标记用于允许读者从文件中的任何位置同步到记录边界. 每个文件都有一个随机生成的同步标记, 其值存储在标题中. 同步标记出现在序列文件中的记录之间. 它们被设计为产生少于1％的存储开销, 所以它们不一定出现在每对记录之间 (对于短记录而言是这种情况) .
+
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/The_internal_structure_of_a_sequence_file_with_no_compression_and_with_record_compression.png)
 <p align="center"><font size=2>Figure 5-2. The internal structure of a sequence file with no compression and with record compression</font></p>
 
 The internal format of the records depends on whether compression is enabled, and if
 it is, whether it is record compression or block compression.
+
+记录的内部格式取决于是否启用压缩, 如果是, 是记录压缩还是块压缩.
 
 If no compression is enabled (the default), each record is made up of the record length
 (in bytes), the key length, the key, and then the value. The length fields are written as 4-
@@ -2116,9 +2140,13 @@ byte integers adhering to the contract of the  writeInt() method of  java.io.Dat
 put . Keys and values are serialized using the  Serialization defined for the class being
 written to the sequence file.
 
+如果未启用压缩 (默认) , 则每条记录都由记录长度 (以字节为单位) , 密钥长度, 密钥以及值组成. 长度字段被写为遵守java.io.DataOut put的writeInt () 方法的合约的4字节整数. 键和值使用为正在写入序列文件的类定义的序列化进行序列化.
+
 The format for record compression is almost identical to that for no compression, except
 the value bytes are compressed using the codec defined in the header. Note that keys
 are not compressed.
+
+记录压缩的格式与没有压缩的格式几乎相同, 只是值字节使用标头中定义的编解码器进行压缩. 请注意, 密钥未被压缩.
 
 Block compression (Figure 5-3) compresses multiple records at once; it is therefore
 more compact than and should generally be preferred over record compression because
@@ -2128,6 +2156,8 @@ io.seqfile.compress.blocksize property; the default is one million bytes. A sync
 marker is written before the start of every block. The format of a block is a field indicating
 the number of records in the block, followed by four compressed fields: the key lengths,
 the keys, the value lengths, and the values.
+
+数据块压缩(图 5-3)一次压缩多个记录; 因此它比记录压缩更紧凑, 通常应该优选, 因为它有机会利用记录之间的相似性. 记录被添加到一个块, 直到它达到由io.seqfile.compress.blocksize属性定义的最小字节大小; 默认值是一百万字节. 在每个块的开始之前写入同步标记. 块的格式是一个字段, 指示块中的记录数, 后跟四个压缩字段: 密钥长度, 密钥, 值长度和值.
 
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/The_internal_structure_of_a_sequence_file_with_block_compression.png)
 <p align="center"><font size=2>Figure 5-3. The internal structure of a sequence file with block compression</font></p>
@@ -2140,19 +2170,27 @@ by default). The idea is that the index can be loaded into memory to provide fas
 from the main data file, which is another  SequenceFile containing all the map entries
 in sorted key order.
 
+MapFile是一个有序索引的排序SequenceFile, 允许按键查找. 该索引本身就是一个SequenceFile, 它包含映射中的一小部分键 (默认情况下每128个键) . 这个想法是索引可以被加载到内存中以提供主数据文件的快速查找, 这是另一个SequenceFile, 它包含按排序键顺序排列的所有映射条目.
+
 MapFile offers a very similar interface to  SequenceFile for reading and writing—the
 main thing to be aware of is that when writing using  MapFile.Writer , map entries must
 be added in order, otherwise an  IOException will be thrown.
+
+MapFile为SequenceFile提供了一个非常类似的接口来读写, 主要的一点是, 在使用MapFile.Writer编写时, 必须按顺序添加map条目, 否则会抛出IOException异常.
 
 * MapFile variants
 
 Hadoop comes with a few variants on the general key-value  MapFile interface:
 
+Hadoop在常规键值MapFile界面上提供了几个变体: 
+
 • SetFile is a specialization of  MapFile for storing a set of  Writable keys. The keys
 must be added in sorted order.
+SetFile是MapFile专用于存储一组Writable键. 密钥必须按排序顺序添加.
 
 • ArrayFile is a  MapFile where the key is an integer representing the index of the
 element in the array and the value is a  Writable value.
+ArrayFile是一个MapFile, 其中的键是一个整数, 表示数组中元素的索引, 并且该值是一个Writable值.
 
 • BloomMapFile is a  MapFile that offers a fast version of the  get() method, especially
 for sparsely populated files. The implementation uses a dynamic Bloom filter for
@@ -2160,11 +2198,15 @@ testing whether a given key is in the map. The test is very fast because it is i
 memory, and it has a nonzero probability of false positives. Only if the test passes
 (the key is present) is the regular  get() method called.
 
+BloomMapFile 是一个 MapFile, 它提供 get() 方法的快速版本, 特别是对于稀疏填充的文件. 该实现使用动态布隆过滤器来测试给定密钥是否在地图中. 测试非常快, 因为它在内存中, 并且具有非零概率的误报. 只有测试通过 (键存在) 才是调用的常规 get() 方法.
+
 #### Other File Formats and Column-Oriented Formats
 
 While sequence files and map files are the oldest binary file formats in Hadoop, they
 are not the only ones, and in fact there are better alternatives that should be considered
 for new projects.
+
+虽然序列文件和映射文件是Hadoop中最早的二进制文件格式, 但它们并不是唯一的, 实际上, 有更好的替代方案应该在新项目中考虑.
 
 Avro datafiles (covered in “Avro Datafiles” on page 352) are like sequence files in that they
 are designed for large-scale data processing—they are compact and splittable—but they
@@ -2174,12 +2216,16 @@ Writable object (as is the case for sequence files), making them very Java-centr
 datafiles are widely supported across components in the Hadoop ecosystem, so they are
 a good default choice for a binary format.
 
+Avro数据文件 (在第352页的“Avro数据文件”中介绍) 与序列文件类似, 它们专为大规模数据处理而设计 - 它们是紧凑和可拆分的, 但它们可跨不同的编程语言移植. 存储在Avro数据文件中的对象由架构来描述, 而不是在可执行对象的Java代码中 (如序列文件的情况) , 这使得它们非常以Java为中心. Avro数据文件广泛支持Hadoop生态系统中的各个组件, 因此它们是二进制格式的一个很好的默认选择.
+
 Sequence files, map files, and Avro datafiles are all row-oriented file formats, which
 means that the values for each row are stored contiguously in the file. In a column-
 oriented format, the rows in a file (or, equivalently, a table in Hive) are broken up into
 row splits, then each split is stored in column-oriented fashion: the values for each row
 in the first column are stored first, followed by the values for each row in the second
 column, and so on. This is shown diagrammatically in Figure 5-4.
+
+序列文件, 映射文件和Avro数据文件都是面向行的文件格式, 这意味着每行的值都连续存储在文件中. 在面向列的格式中, 文件中的行 (或者相当于Hive中的表格) 被分解成行分割, 然后每个分割以列式方式存储: 第一列中每行的值是 先存储, 然后是第二列中每行的值, 依此类推. 这在图5-4中示意性地示出.
 
 A column-oriented layout permits columns that are not accessed in a query to be skip‐
 ped. Consider a query of the table in Figure 5-4 that processes only column 2. With
@@ -2188,11 +2234,15 @@ cord) is loaded into memory, even though only the second column is actually read
 deserialization saves some processing cycles by deserializing only the column fields that
 are accessed, but it can’t avoid the cost of reading each row’s bytes from disk.
 
+面向列的布局允许在查询中不访问的列被跳过. 考虑图5-4中表格的查询, 该表格只处理第2列.对于面向行的存储, 就像序列文件一样, 整行 (存储在序列文件记录中) 被加载到内存中, 即使只有 第二列实际上是读取. 延迟反序列化通过反序列化只访问被访问的列字段来节省一些处理周期, 但它无法避免从磁盘读取每行字节的成本.
+
 With column-oriented storage, only the column 2 parts of the file (highlighted in the
 figure) need to be read into memory. In general, column-oriented formats work well
 when queries access only a small number of columns in the table. Conversely, row-
 oriented formats are appropriate when a large number of columns of a single row are
 needed for processing at the same time.
+
+使用面向列的存储时, 只需将文件的第2列部分 (图中突出显示) 读入内存. 通常, 当查询只访问表中的少量列时, 面向列的格式就可以很好地工作. 相反, 当需要同时处理大量单行的列时, 面向行的格式是合适的.
 
 ![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop/Row-oriented_versus_column-oriented_storage.png)
 <p align="center"><font size=2>Figure 5-4. Row-oriented versus column-oriented storage</font></p>
@@ -2205,11 +2255,15 @@ process fails. On the other hand, row-oriented formats like sequence files and A
 datafiles can be read up to the last sync point after a writer failure. It is for this reason
 that Flume (see Chapter 14) uses row-oriented formats.
 
+面向列的格式在读取和写入时需要更多的内存, 因为它们必须在内存中缓冲行分割, 而不仅仅是单行. 此外, 通常不可能控制何时发生写操作 (通过刷新或同步操作) , 因此面向列的格式不适合流写入, 因为如果写入器进程失败, 当前文件无法恢复. 另一方面, 序列文件和Avro数据文件等面向行的格式可以在写入器故障后读取到最后一个同步点. 正是由于这个原因, Flume (见第14章) 使用了面向行的格式.
+
 The first column-oriented file format in Hadoop was Hive’s RCFile, short for Record
 Columnar File. It has since been superseded by Hive’s ORCFile (Optimized Record Col‐
 umnar File), and Parquet (covered in Chapter 13). Parquet is a general-purpose column-
 oriented file format based on Google’s Dremel, and has wide support across Hadoop
 components. Avro also has a column-oriented format called Trevni.
+
+Hadoop中第一个面向列的文件格式是Hive的RCFile, 即Record Columnar File的缩写. 它已被Hive的ORCFile (优化记录组文件) 和Parquet (第13章介绍) 取代. Parquet是基于Google Dremel的通用列式文件格式, 并且在Hadoop组件中得到广泛的支持. Avro还有一个名为Trevni的列式格式.
 
 # PART II MapReduce
 
@@ -2217,6 +2271,8 @@ components. Avro also has a column-oriented format called Trevni.
 
 In Chapter 2, we introduced the MapReduce model. In this chapter, we look at the
 practical aspects of developing a MapReduce application in Hadoop.
+
+在第2章中, 我们介绍了MapReduce模型. 在本章中, 我们将探讨在Hadoop中开发MapReduce应用程序的实际方面.
 
 Writing a program in MapReduce follows a certain pattern. You start by writing your
 map and reduce functions, ideally with unit tests to make sure they do what you expect.
@@ -2226,20 +2282,28 @@ debugger to find the source of the problem. With this information, you can expan
 unit tests to cover this case and improve your mapper or reducer as appropriate to handle
 such input correctly.
 
+在MapReduce中编写程序遵循一定的模式. 您首先编写地图并减少功能, 理想情况下使用单元测试来确保它们按照您的期望执行. 然后你编写一个驱动程序来运行一个作业, 该作业可以使用一小部分数据从IDE运行, 以检查它是否正常工作. 如果失败, 您可以使用IDE的调试器来查找问题的根源. 有了这些信息, 您可以扩展单元测试以涵盖这种情况, 并根据需要改进您的映射器或缩减器, 以正确处理此类输入.
+
 When the program runs as expected against the small dataset, you are ready to unleash
 it on a cluster. Running against the full dataset is likely to expose some more issues,
 which you can fix as before, by expanding your tests and altering your mapper or reducer
 to handle the new cases. Debugging failing programs in the cluster is a challenge, so
 we’ll look at some common techniques to make it easier.
 
+当程序按照预期针对小数据集运行时, 您已准备好将其释放到群集中. 针对完整数据集运行可能会暴露更多问题, 您可以像以前一样修复这些问题, 方法是扩展测试并更改映射器或缩减器以处理新案例. 在群集中调试失败的程序是一项挑战, 因此我们将看一些常用技术以使其更容易.
+
 After the program is working, you may wish to do some tuning, first by running through
 some standard checks for making MapReduce programs faster and then by doing task
 profiling. Profiling distributed programs is not easy, but Hadoop has hooks to aid in
 the process.
 
+程序运行后, 您可能希望进行一些调整, 首先通过执行一些标准检查来更快地创建MapReduce程序, 然后执行任务分析. 对分布式程序进行性能分析并不容易, 但Hadoop具有挂钩功能以帮助实现这一过程.
+
 Before we start writing a MapReduce program, however, we need to set up and configure
 the development environment. And to do that, we need to learn a bit about how Hadoop
 does configuration.
+
+然而, 在我们开始编写MapReduce程序之前, 我们需要设置和配置开发环境. 为此, 我们需要了解一些关于Hadoop如何配置的信息.
 
 ### The Configuration API
 
@@ -2250,12 +2314,12 @@ named by a  String , and the type of a value may be one of several, including Ja
 itives such as  boolean ,  int ,  long , and  float ; other useful types such as  String ,  Class ,
 and  java.io.File ; and collections of  String s.
 
-Hadoop中的组件使用Hadoop自己的配置API进行配置。 配置类的一个实例（可在org.apache.hadoop.conf包中找到）表示一组配置属性及其值。 每个属性都由一个字符串命名，并且值的类型可以是几个之一，包括Java基本类型，如boolean，int，long和float; 其他有用的类型，如String，Class和java.io.File; 和String的集合。
+Hadoop中的组件使用Hadoop自己的配置API进行配置. 配置类的一个实例 (可在org.apache.hadoop.conf包中找到) 表示一组配置属性及其值. 每个属性都由一个字符串命名, 并且值的类型可以是几个之一, 包括Java基本类型, 如boolean, int, long和float; 其他有用的类型, 如String, Class和java.io.File; 和String的集合.
 
 Configuration s read their properties from resources—XML files with a simple structure
 for defining name-value pairs. See Example 6-1.
 
-配置从资源中读取它们的属性 - 具有用于定义名称 - 值对的简单结构的XML文件。 见例6-1。
+配置从资源中读取它们的属性 - 具有用于定义名称 - 值对的简单结构的XML文件. 见例6-1.
 
 <p align="center"><font size=2>Example 6-1. A simple configuration file, configuration-1.xml</font></p>
 
@@ -2291,7 +2355,7 @@ for defining name-value pairs. See Example 6-1.
 
 Assuming this  Configuration is in a file called configuration-1.xml, we can access its properties using a piece of code like this:
 
-假设这个Configuration在一个名为configuration-1.xml的文件中，我们可以使用如下一段代码访问它的属性：
+假设这个Configuration在一个名为configuration-1.xml的文件中, 我们可以使用如下一段代码访问它的属性: 
 
 ``` java
 Configuration conf = new Configuration();
@@ -2306,7 +2370,7 @@ instead, properties can be interpreted as a given type when they are read. Also,
 methods allow you to specify a default value, which is used if the property is not defined
 in the XML file, as in the case of  breadth here.
 
-有几点需要注意：类型信息不存储在XML文件中; 相反，属性在读取时可以解释为给定的类型。 此外，get（）方法允许您指定一个默认值，如果该属性未在XML文件中定义，则使用该值，如此处宽度的情况。
+有几点需要注意: 类型信息不存储在 XML 文件中; 相反, 属性在读取时可以解释为给定的类型. 此外, get() 方法允许您指定一个默认值, 如果该属性未在 XML 文件中定义, 则使用该值, 如此处宽度的情况.
 
 #### Combining Resources
 
@@ -2315,7 +2379,7 @@ tion . This is used in Hadoop to separate out the default properties for the sys
 defined internally in a file called core-default.xml, from the site-specific overrides in
 core-site.xml. The file in Example 6-2 defines the  size and  weight properties.
 
-当使用多个资源来定义配置时，情况会变得很有趣。 这在Hadoop中用于从core-site.xml中的站点特定覆盖中分离出系统的默认属性，这些属性在名为core-default.xml的文件内部定义。 例6-2中的文件定义了尺寸和重量属性。
+当使用多个资源来定义配置时, 情况会变得很有趣. 这在Hadoop中用于从core-site.xml中的站点特定覆盖中分离出系统的默认属性, 这些属性在名为core-default.xml的文件内部定义. 例6-2中的文件定义了尺寸和重量属性.
 
 <p align="center"><font size=2>Example 6-2. A second configuration file, configuration-2.xml</font></p>
 
@@ -2335,7 +2399,7 @@ core-site.xml. The file in Example 6-2 defines the  size and  weight properties.
 ``` 
 
 Resources are added to a  Configuration in order:
-资源按顺序添加到配置中：
+资源按顺序添加到配置中: 
 
 ``` java
 Configuration conf = new Configuration();
@@ -2346,7 +2410,7 @@ conf.addResource("configuration-2.xml");
 Properties defined in resources that are added later override the earlier definitions. So
 the  size property takes its value from the second configuration file, configuration-2.xml:
 
-在稍后添加的资源中定义的属性会覆盖较早的定义。 所以size属性取自第二个配置文件configuration-2.xml的值：
+在稍后添加的资源中定义的属性会覆盖较早的定义. 所以size属性取自第二个配置文件configuration-2.xml的值: 
 
 ``` java
 assertThat(conf.getInt("size", 0), is(12));
@@ -2356,7 +2420,7 @@ However, properties that are marked as  final cannot be overridden in later defi
 The  weight property is  final in the first configuration file, so the attempt to override
 it in the second fails, and it takes the value from the first:
 
-但是，标记为final的属性在以后的定义中不能被覆盖。weight属性在第一个配置文件中是final的，因此在第二个配置文件中覆盖它的尝试失败，它取自第一个值：
+但是, 标记为final的属性在以后的定义中不能被覆盖.weight属性在第一个配置文件中是final的, 因此在第二个配置文件中覆盖它的尝试失败, 它取自第一个值: 
 
 ``` java
 assertThat(conf.get("weight"), is("heavy"));
@@ -2367,7 +2431,7 @@ results in a warning message being logged to aid diagnosis. Administrators mark 
 erties as  final in the daemon’s site files that they don’t want users to change in their
 client-side configuration files or job submission parameters.
 
-尝试覆盖最终属性通常会指示配置错误，因此会导致记录警告消息以帮助诊断。 管理员在守护程序的站点文件中将属性标记为final，并且不希望用户在其客户端配置文件或作业提交参数中进行更改。
+尝试覆盖最终属性通常会指示配置错误, 因此会导致记录警告消息以帮助诊断. 管理员在守护程序的站点文件中将属性标记为final, 并且不希望用户在其客户端配置文件或作业提交参数中进行更改.
 
 #### Variable Expansion
 
@@ -2376,14 +2440,14 @@ erties. For example, the property  size-weight in the first configuration file i
 as  ${size},${weight} , and these properties are expanded using the values found in
 the configuration:
 
-配置属性可以用其他属性或系统属性来定义。 例如，第一个配置文件中的属性大小权重定义为$ {size}，$ {weight}，这些属性使用配置中找到的值进行扩展：
+配置属性可以用其他属性或系统属性来定义. 例如, 第一个配置文件中的属性大小权重定义为$ {size}, $ {weight}, 这些属性使用配置中找到的值进行扩展: 
 
 ``` java
 assertThat(conf.get("size-weight"), is("12,heavy"));
 ```
 
 System properties take priority over properties defined in resource files:
-系统属性优先于资源文件中定义的属性：
+系统属性优先于资源文件中定义的属性: 
 
 ``` java
 System.setProperty("size", "14");
@@ -2391,18 +2455,21 @@ assertThat(conf.get("size-weight"), is("14,heavy"));
 ```
 
 This feature is useful for overriding properties on the command line by using -Dproperty=value JVM arguments.
-通过使用-Dproperty = value JVM参数，此功能对于重写命令行中的属性很有用。
+通过使用-Dproperty = value JVM参数, 此功能对于重写命令行中的属性很有用.
 
 Note that although configuration properties can be defined in terms of system proper‐
 ties, unless system properties are redefined using configuration properties, they are not
 accessible through the configuration API. Hence:
 
-请注意，尽管可以根据系统属性定义配置属性，但除非使用配置属性重新定义系统属性，否则无法通过配置API访问它们。因此：
+请注意, 尽管可以根据系统属性定义配置属性, 但除非使用配置属性重新定义系统属性, 否则无法通过配置API访问它们.因此: 
 
 ``` java
 System.setProperty("length", "2");
 assertThat(conf.get("length"), is((String) null));
 ```
+
+* **Setting Up the Development Environment**
+省略
 
 
 
