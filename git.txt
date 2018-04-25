@@ -1,2 +1,6 @@
---git ¼òÒ×Ö¸ÄÏ
---http://www.bootcss.com/p/git-guide/
+Git ç®€æ˜“æŒ‡å—
+http://www.bootcss.com/p/git-guide/
+
+
+Git åˆå¹¶å¤šä¸ª Commit
+https://www.jianshu.com/p/964de879904a
