@@ -14,7 +14,7 @@
 
 按照默认规定, 只有一个参数的构造函数也定义了一个隐式转换, 将该构造函数对应数据类型的数据转换为该类对象
 
-``` C++
+```cpp
 class String {
     String ( const char* p ); // 用C风格的字符串p作为初始化值
 }
@@ -23,7 +23,7 @@ String s1 = “hello”; //OK 隐式转换，等价于String s1 = String(“hell
 
 但是有的时候可能会不需要这种隐式转换, 如下:
 
-``` C++
+```cpp
 class String {
     String ( int n ); //本意是预先分配n个字节给字符串
     String ( const char* p ); // 用C风格的字符串p作为初始化值
@@ -32,14 +32,14 @@ class String {
 
 下面两种写法比较正常:
 
-``` C plus plus
+```cpp
 String s2 ( 10 );   //OK 分配10个字节的空字符串
 String s3 = String ( 10 ); //OK 分配10个字节的空字符串
 ```
 
 下面两种写法就比较疑惑了:
 
-``` C++
+```cpp
 String s4 = 10; //编译通过，也是分配10个字节的空字符串
 String s5 = 'a'; //编译通过，分配int（‘a’）个字节的空字符串
 ```
@@ -53,3 +53,25 @@ s4 和 s5 分别把一个 int 型和 char 型, 隐式转换成了分配若干字
 ## boost
 
 *  在 C++ 里, 拷贝有等号拷贝和构造拷贝之分, 类的等号拷贝和构造拷贝都是可以重载的, 如果不重载，默认的拷贝模式是对每个类成员依次执行拷贝. boost::noncopyable 主要用于单例的情况, C++ 11 中为不可拷贝类提供了更简单的实现方法, 使用 delete 关键字即可
+
+## RAII 机制(Resource Acquisition Is Initialization 资源获取即初始化)
+
+## 智能指针(smart pointer)
+
+如果对象是用声明的方式在栈上创建的(一个局部), 那么 RAII 机制会工作正常, 当离开作用域时对象会自动销毁从而调用析构函数释放资源. 但如果对象是用 new 操作符在堆上创建的, 那么它的析构函数不会自动调用, 程序员必须明确地应用对应的 delete 操作符销毁它才能释放资源.
+
+* scoped_ptr
+一旦 scoped_ptr 获取了对象的管理权, 我们就无法再从它那里取回来.
+scoped_ptr 同时把拷贝构造函数和赋值操作符都声明为私有的, 禁止对智能指针的拷贝操作, 保证了被它管理的指针不能被转让所有权.
+
+* scoped_array
+
+* shared_ptr
+
+* shared_array
+
+* weak_ptr
+
+* intrusive_ptr
+
+
