@@ -111,3 +111,16 @@ EventLoop 本身只由一个线程驱动, 其处理了一个 Channel 的所有 I
 
 # 2 你的第一款 Netty 应用程序
 
+* Channel-andler 可以被多个 Channel 安全地共享
+* 每个 Channel 都拥有一个与之相关联的 ChannelPipeline, 其持有一个 ChannelHandler 的实例链. 因此, 如果 exceptionCaught() 方法没有被该链中的某处实现, 那么所接收的异常将会被传递到 ChannelPipeline 的尾端并被记录. 为此, 你的应用程序应该提供至少有一个实现了 exceptionCaught() 方法的 ChannelHandle.
+* 在架构上, ChannelHandler 有助于保持业务逻辑与网络处理代码的分离. 这简化了开发过程, 因为代码必须不断地演化以响应不断变化的需求.
+
+# 3 Netty 的组件和设计
+
+## 3.1 Channel、EventLoop 和 ChannelFuture
+
+* Channel — Socket
+* EventLoop — 控制流、多线程处理、并发
+* ChannelFuture — 异步通知
+
+### 3.1.1 Channel 接口
