@@ -177,5 +177,55 @@ ChannelHandler 是专为支持广泛的用途而设计的, 可以将它看作是
 
 通过使用作为参数传递到每个方法的 ChannelHandlerContext(在 ChannelHandler 之间传递事件), 事件可以被传递给当前 ChannelHandler 链中的下一个 ChannelHandler. 因为你有时会忽略那些不感兴趣的事件, 所以 Netty 提供了抽象基类 ChannelInboundHandlerAdapter 和 ChannelOutboundHandlerAdapter. 通过调用 ChannelHandlerContext 上的对应方法, 每个都提供了简单地将事件传递给下一个ChannelHandler 的方法的实现.
 
-当 ChannelHandler 被添加到 ChannelPipeline 时, 它将会被分配一个ChannelHandlerContext, 其代表了 ChannelHandler 和 ChannelPipeline 之间的绑定.
+当 ChannelHandler 被添加到 ChannelPipeline 时, 它将会被分配一个 ChannelHandlerContext, 其代表了 ChannelHandler 和 ChannelPipeline 之间的绑定. ChannelHandlerContext 的主要功能是管理通过同一个 ChannelPipeline 关联的 ChannelHandler 之间的交互.
+
+ChannelHandlerContext 有许多方法, 其中一些也出现在 Channel 和ChannelPipeline 本身. 然而,如果您通过 Channel 或 ChannelPipeline 的实例来调用这些方法, 他们就会在整个 pipeline 中传播. 相比之下, 一样的方法在 ChannelHandlerContext 的实例上调用, 就只会从当前的 ChannelHandler 开始并传播到相关管道中的下一个有处理事件能力的 ChannelHandler.
+
+类似 ChannelInboundHandlerAdapter 的适配器提供了大量默认的 ChannelHandler 实现, 其旨在简化应用程序处理逻辑的开发过程, 你只需要重写那些你想要特殊处理的方法和事件.
+
+接下来我们将研究 3 个 ChannelHandler 的子类型: 编码器, 解码器和 SimpleChannelInboundHandler<T> —— ChannelInboundHandlerAdapter 的一个子类.
+
+ >                                                 I/O Request
+>                                       via Channel or ChannelHandlerContext
+ >                                                      |
+ >  +---------------------------------------------------+---------------+
+ >  |                           ChannelPipeline         |               |
+ >  |                                                  \|/              |
+ >  |    +---------------------+            +-----------+----------+    |
+ >  |    | Inbound Handler  N  |            | Outbound Handler  1  |    |
+ >  |    +----------+----------+            +-----------+----------+    |
+ >  |              /|\                                  |               |
+ >  |               |                                  \|/              |
+ >  |    +----------+----------+            +-----------+----------+    |
+ >  |    | Inbound Handler N-1 |            | Outbound Handler  2  |    |
+ >  |    +----------+----------+            +-----------+----------+    |
+ >  |              /|\                                  .               |
+ >  |               .                                   .               |
+ >  | ChannelHandlerContext.fireIN_EVT() ChannelHandlerContext.OUT_EVT()|
+ >  |        [ method call]                       [method call]         |
+ >  |               .                                   .               |
+ >  |               .                                  \|/              |
+ >  |    +----------+----------+            +-----------+----------+    |
+ >  |    | Inbound Handler  2  |            | Outbound Handler M-1 |    |
+ >  |    +----------+----------+            +-----------+----------+    |
+ >  |              /|\                                  |               |
+ >  |               |                                  \|/              |
+ >  |    +----------+----------+            +-----------+----------+    |
+ >  |    | Inbound Handler  1  |            | Outbound Handler  M  |    |
+ >  |    +----------+----------+            +-----------+----------+    |
+ >  |              /|\                                  |               |
+ >  +---------------+-----------------------------------+---------------+
+ >                  |                                  \|/
+ >  +---------------+-----------------------------------+---------------+
+ >  |               |                                   |               |
+ *> |       [ Socket.read() ]                    [ Socket.write() ]     |
+ >  |                                                                   |
+ >  |  Netty Internal I/O Threads (Transport Implementation)            |
+ >  +-------------------------------------------------------------------+
+
+
+### 3.2.4 编码器和解码器
+
+
+
 

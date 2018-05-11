@@ -128,9 +128,9 @@
 ---
 ## java
 
-* 在Java中, 构造方法无法被继承, 无法设置默认值
-* Jboss同时是Web容器和EJB容器. Tomcat只是Web容器
-* HashMap几乎可以等价于Hashtable, 除了HashMap是非synchronized的, 并可以接受null(HashMap可以接受为null的键值(key)和值(value), 而Hashtable则不行)
+* 在 Java 中, 构造方法无法被继承, 无法设置默认值
+* Jboss 同时是 Web 容器和 EJB 容器. Tomcat 只是Web容器
+* HashMap 几乎可以等价于 Hashtable, 除了 HashMap 是非 synchronized 的, 并可以接受null(HashMap可以接受为null的键值(key)和值(value), 而Hashtable则不行)
 * HashMap 是非 synchronized, 而 Hashtable 是 synchronized, 这意味着 Hashtable 是线程安全的, 多个线程可以共享一个 Hashtable; 而如果没有正确的同步的话, 多个线程是不能共享 HashMap 的.
 
 **关于final的知识点**
@@ -175,17 +175,37 @@ loans = new Vector();  //not valid
 * 抽象类可以有构造器, 而接口不能有构造器.
 * 抽象方法可以有 public, protected 和 default 这些修饰符, 接口方法默认修饰符是 public, 你不可以使用其它修饰符.
 * 抽象方法比接口速度要快.
-* 接口可以继承多个接口.
+* **接口可以继承多个接口**.
 * 接口中没有 this 指针, 没有构造函数, 不能拥有实例字段(实例变量)或实例方法, 无法保存状态(state), 抽象方法中可以.
 * 从设计理念上, 接口反映的是 "like-a" 关系, 抽象类反映的是 "is-a" 关系.
 * 除了默认方法, Java 8 还在允许在接口中定义静态方法.
 * 接口中的静态方法必须是 public 的, public 修饰符可以省略, static 修饰符不能省略.
 
+###  **Java 编码注意事项**
+* 容器中 entry 的删除要使用迭代器
+
+###  泛型
+* 定义泛型的时候使用 SomeName<T>, 对已经定义的泛型, 我们不想给她一个具体的类型做为类型参数, 我们可以给她一个不确定的类型作为参数 SomeName<?>
+* 在定义泛型类时, 任意一个大写字母都可以, 但为了提高可读性，大家还是用有意义的字母比较好，一般来讲，在不同的情境下使用的字母意义如下:
+E    — Element, 常用在 java Collection 里, 如: List<E>, Iterator<E>, Set<E>
+K, V — Ke, Value, 代表 Map 的键值对
+N    — Number, 数字
+T    — Type, 类型, 如 String, Integer 等等
+* Java 支持泛型类和泛型函数, 函数返回值如果是泛型, 函数定义时在返回值前加上<T>标识泛型
+* static 方法无法访问泛型类的类型参数, 若要 static 方法支持泛型参数, 必须使其成为泛型方法
+* Class<T> 和 Class<?> 代表 T 所对应的类
+* <? extends T> 受限通配, 表示 T 的一个未知子类
+* <? super  T> 受限通配, 表示 T 的一个未知父类
+* Class<T> 的完整定义为：
+public final class Class<T> extends Object implements Serializable, GenericDeclaration, Type, AnnotatedElement
+
+
+
 ---
 ## docker
 - docker 要求必须部署在64位机器上
 - 容器内的数据是临时性的, 它会随着容器生命周期的结束而消失
-- 默认的 Docker volume （driver = ‘loclal’）不管是哪种形式, 本质上都是将容器所在的主机上的一个目录 mount 到容器内的一个目录, 因此, 它不具备可移植性. 
+- 默认的 Docker volume （driver = ‘loclal’）不管是哪种形式, 本质上都是将容器所在的主机上的一个目录 mount 到容器内的一个目录, 因此, 它不具备可移植性.
 
 ---
 
