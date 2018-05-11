@@ -64,7 +64,7 @@ java.nio.channels.Selector 是 Java 的非阻塞 I/O 实现的关键. 它使用�
 * 非阻塞网络调用使得我们可以不必等待一个操作的完成. 完全异步的 I/O 正是基于这个特性构建的, 并且更进一步: 异步方法调用会立即返回, 并且在它完成时, 会直接或者在稍后的某个时间点通知用户.
 * 选择器使得我们能够通过较少的线程便可监视许多连接上的事件.
 
-<font color=#fd0209 size=6 >问题：这里提到的事件是谁发出的, socket 由谁来监视?</font>
+<font color=#fd0209 size=6 >问题: 这里提到的事件是谁发出的, socket 由谁来监视?</font>
 
 ## 1.3 异步和事件驱动
 
@@ -97,7 +97,7 @@ Netty 的 Future 实现支持对 Future 注册 listener.
 Netty 的异步编程模型是建立在 Future 和回调的概念之上的, 而将事件派发到 ChannelHandler 的方法则发生在更深的层次上(操作系统层面?). 
 拦截操作以及高速地转换入站数据和出站数据, 都只需要你提供回调或者利用操作所返回的 Future. 这使得链接操作变得既简单又高效, 并且促进了可重用的通用代码的编写.
 
-<font color=#fd0209 size=6 >问题：什么场景下只提供回调, 什么场景下利用操作所返回的 Future?</font>
+<font color=#fd0209 size=6 >问题: 什么场景下只提供回调, 什么场景下利用操作所返回的 Future?</font>
 
 **选择器, 事件和 EventLoop**
 Netty 通过触发事件将 Selector 从应用程序中抽象出来, 消除了所有本来将需要手动编写的派发代码. 在内部, 将会为每个 Channel 分配一个 EventLoop, 用以处理所有事件, 包括:
@@ -107,7 +107,7 @@ Netty 通过触发事件将 Selector 从应用程序中抽象出来, 消除了�
 
 EventLoop 本身只由一个线程驱动, 其处理了一个 Channel 的所有 I/O 事件, 并且在该 EventLoop 的整个生命周期内都不会改变. 这个简单而强大的设计消除了你可能有的在 ChannelHandler 实现中需要进行同步的任何顾虑, 因此, 你可以专注于提供正确的逻辑.
 
-<font color=#fd0209 size=6 >问题：Channel 可以共用 EventLoop 吗?</font>
+<font color=#fd0209 size=6 >问题: Channel 可以共用 EventLoop 吗? <br> 答: 可以</font>
 
 # 2 你的第一款 Netty 应用程序
 
@@ -124,3 +124,58 @@ EventLoop 本身只由一个线程驱动, 其处理了一个 Channel 的所有 I
 * ChannelFuture — 异步通知
 
 ### 3.1.1 Channel 接口
+
+* EmbeddedChannel
+* LocalServerChannel
+* NioDatagramChannel
+* NioSctpChannel
+* NioSocketChannel
+
+### 3.1.2 EventLoop 接口
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/xxx.png)
+53p
+
+<p align="center"><font size=2>Channel, EventLoop 和 EventLoopGroup 的关系</font></p>
+
+
+* 一个 EventLoopGroup 包含一个或者多个 EventLoop
+* **一个 EventLoop 在它的生命周期内只和一个 Thread 绑定**
+* 所有由 EventLoop 处理的 I/O 事件都将在它专有的 Thread 上被处理
+* 一个 Channel 在它的生命周期内只注册于一个 EventLoop
+* 一个 EventLoop 可能会被分配给一个或多个 Channel
+
+**注意, 在这种设计中，一个给定 Channel 的 I/O 操作都是由相同的 Thread 执行的, 实际上消除了对于同步的需要**
+
+### 3.1.3 ChannelFuture 接口
+
+## 3.2 ChannelHandler 和 ChannelPipeline
+
+### 3.2.1 ChannelHandler 接口
+
+### 3.2.2 ChannelPipeline 接口
+
+ChannelPipeline 提供了 ChannelHandler 链的容器, 并定义了用于在该链上传播入站和出站事件流的 API. 当 Channel 被创建时, 它会被自动地分配到它专属的 ChannelPipeline.
+
+ChannelHandler 安装到 ChannelPipeline 中的过程如下所示:
+* 一个 ChannelInitializer 的实现被注册到了 ServerBootstrap 中
+* 当 ChannelInitializer.initChannel() 方法被调用时, ChannelInitializer 将在 ChannelPipeline 中安装一组自定义的 ChannelHandler
+* ChannelInitializer 将它自己从 ChannelPipeline 中移除
+
+ChannelHandler 是专为支持广泛的用途而设计的, 可以将它看作是处理往来 ChannelPipeline 事件 (包括数据)的任何代码的通用容器.
+
+使得事件流经 ChannelPipeline 是 ChannelHandler 的工作, 它们是在应用程序的初始化或者引导阶段被安装的. 这些对象接收事件, 执行它们所实现的处理逻辑, 并将数据传递给链中的下一个 ChannelHandler. 它们的执行顺序是由它们被添加的顺序所决定的.
+
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/xxx.png)
+56p
+
+<p align="center"><font size=2>包含入站和出站 ChannelHandler 的 ChannelPipeline</font></p>
+
+上图也显示了入站和出站 ChannelHandler 可以被安装到同一个 ChannelPipeline 中. 如果一个消息或者任何其他的入站事件被读取, 那么它会从 ChannelPipeline 的头部开始流动, 并被传递给第一个 ChannelInboundHandler. 这个 ChannelHandler 不一定会实际地修改数据, 具体取决于它的具体功能, 在这之后，数据将会被传递给链中的下一个 ChannelInboundHandler. 最终, 数据将会到达 ChannelPipeline 的尾端, 此时所有处理就结束了.
+
+数据的出站运动(即正在被写的数据)在概念上也是一样的. 在这种情况下, 数据将从 ChannelOutboundHandler 链的尾端开始流动, 直到它到达链的头部为止. 在这之后, 出站数据将会到达网络传输层, 这里显示为 Socket. 通常情况下, 这将触发一个写操作.
+
+通过使用作为参数传递到每个方法的 ChannelHandlerContext(在 ChannelHandler 之间传递事件), 事件可以被传递给当前 ChannelHandler 链中的下一个 ChannelHandler. 因为你有时会忽略那些不感兴趣的事件, 所以 Netty 提供了抽象基类 ChannelInboundHandlerAdapter 和 ChannelOutboundHandlerAdapter. 通过调用 ChannelHandlerContext 上的对应方法, 每个都提供了简单地将事件传递给下一个ChannelHandler 的方法的实现.
+
+当 ChannelHandler 被添加到 ChannelPipeline 时, 它将会被分配一个ChannelHandlerContext, 其代表了 ChannelHandler 和 ChannelPipeline 之间的绑定.
+
