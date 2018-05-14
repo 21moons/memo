@@ -128,8 +128,6 @@ EventLoop 本身只由一个线程驱动, 其处理了一个 Channel 的所有 I
 
 ![EventLoop](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_3_1.jpg)
 
-![EventLoopGroups](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_3_2_Server_with_two_EventLoopGroups.jpg)
-
 <p align="center"><font size=2>Channel, EventLoop 和 EventLoopGroup 的关系</font></p>
 
 
@@ -219,6 +217,211 @@ ChannelHandlerContext 有许多方法, 其中一些也出现在 Channel 和Chann
 
 ### 3.2.4 编码器和解码器
 
+###3.2.5 抽象类 SimpleChannelInboundHandler
 
+最常见的情况是, 你的应用程序会利用一个 ChannelHandler 来接收解码消息, 并对该数据应用业务逻辑. 要创建一个这样的 ChannelHandler, 你只需要扩展基类 SimpleChannelInboundHandler<T>, 其中 T 是你要处理的消息的 Java 类型. 在这个 ChannelHandler 中, 你需要重写基类的一个或者多个方法，并且获取一个到 ChannelHandlerContext 的引用, 这个引用将作为输入参数传递给 ChannelHandler 的所有方法.
+在这种类型的 ChannelHandler 中, 最重要的方法是 channelRead0(ChannelHandlerContext,T). 除了要求不要阻塞当前的 I/O 线程之外，其具体实现完全取决于你.
+
+## 3.3 引导(Bootstrap)
+
+有两种类型的引导: 一种用于客户端(简单地称为 Bootstrap), 而另一种
+(ServerBootstrap)用于服务器.
+
+问什么引导一个客户端只需要一个 EventLoopGroup, 但是 ServerBootstrap 则需要两个(也可以是同一个实例)?
+
+因为服务器需要两组不同的 Channel. 第一组将只包含一个 ServerChannel, 代表已绑定到某个本地端口的, 正在监听的套接字. 而第二组用来处理所有已创建连接上的事件. 
+
+![Server_with_two_EventLoopGroups](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_3_2_Server_with_two_EventLoopGroups.jpg)
+
+# 4 传输
+
+OIO: 阻塞传输
+NIO: 异步传输
+
+## 4.1 案例研究: 传输迁移
+
+### 4.1.2 阻塞的 Netty 版本
+
+``` java
+public class NettyOioServer {
+    public void server(int port) throws Exception {
+    final ByteBuf buf = Unpooled.unreleasableBuffer(Unpooled.copiedBuffer("Hi!\r\n", Charset.forName("UTF-8")));
+    EventLoopGroup group = new OioEventLoopGroup();
+
+    try {
+        ServerBootstrap b = new ServerBootstrap();
+        b.group(group)
+            // 使用 OioEventLoopGroup 以允许阻塞模式
+            .channel(OioServerSocketChannel.class)
+            .localAddress(new InetSocketAddress(port))
+            // 指定 ChannelInitializer, 对于每个已接受的连接都调用它
+            .childHandler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                public void initChannel(SocketChannel ch)
+                    throws Exception {
+                    ch.pipeline().addLast(
+                        new ChannelInboundHandlerAdapter() {
+                            @Override
+                            public void channelActive(ChannelHandlerContext ctx)
+                                throws Exception {
+                                // 将消息写到客户端, 并添加 ChannelFutureListener,
+                                // 以便消息一被写完就关闭连接
+                                ctx.writeAndFlush(buf.duplicate())
+                                    .addListener(ChannelFutureListener.CLOSE);
+                            }
+                        }
+                    );
+                }
+            });
+        // 绑定服务器以接受连接
+        ChannelFuture f = b.bind().sync();
+        f.channel().closeFuture().sync();
+    } finally {
+        group.shutdownGracefully().sync();
+    }
+    }
+}
+```
+
+### 4.1.3 非阻塞的 Netty 版本
+
+``` java
+public class NettyOioServer {
+    public void server(int port) throws Exception {
+    final ByteBuf buf = Unpooled.unreleasableBuffer(Unpooled.copiedBuffer("Hi!\r\n", Charset.forName("UTF-8")));
+    EventLoopGroup group = new NioEventLoopGroup();
+
+    try {
+        ServerBootstrap b = new ServerBootstrap();
+        b.group(group)
+            // 使用 OioEventLoopGroup 以允许阻塞模式
+            .channel(NioServerSocketChannel.class)
+            .localAddress(new InetSocketAddress(port))
+            // 指定 ChannelInitializer, 对于每个已接受的连接都调用它
+            .childHandler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                public void initChannel(SocketChannel ch)
+                    throws Exception {
+                    ch.pipeline().addLast(
+                        new ChannelInboundHandlerAdapter() {
+                            @Override
+                            public void channelActive(ChannelHandlerContext ctx)
+                                throws Exception {
+                                // 将消息写到客户端, 并添加 ChannelFutureListener,
+                                // 以便消息一被写完就关闭连接
+                                ctx.writeAndFlush(buf.duplicate())
+                                    .addListener(ChannelFutureListener.CLOSE);
+                            }
+                        }
+                    );
+                }
+            });
+        // 绑定服务器以接受连接
+        ChannelFuture f = b.bind().sync();
+        f.channel().closeFuture().sync();
+    } finally {
+        group.shutdownGracefully().sync();
+    }
+    }
+}
+```
+
+## 4.2 传输 API
+
+![Channel](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_4.1_Channel_interface_hierarchy.jpg)
+
+ChannelPipeline 持有所有将应用于入站和出站数据以及事件的 ChannelHandler 实例, 这些 ChannelHandler 实现了应用程序用于处理状态变化以及数据处理的逻辑. ChannelHandler 的典型用途包括:
+* 将数据从一种格式转换为另一种格式;
+* 提供异常的通知;
+* 提供 Channel 变为活动的或者非活动的通知;
+* 提供当 Channel 注册到 EventLoop 或者从 EventLoop 注销时的通知;
+* 提供有关用户自定义事件的通知.
+
+ChannelPipeline 实现了一种常见的设计模式--拦截过滤器(Intercepting Filter)
+
+Netty 的 Channel 实现是线程安全的
+
+### 4.3.1 NIO —— 非阻塞 I/O
+
+选择器背后的基本概念是充当一个注册表, 在那里你可以在 Channel 的状态发生变化时得到通知. 可能的状态变化有:
+* 新的 Channel 已被接受并且就绪;
+* Channel 连接已经完成;
+* Channel 有已经就绪的可供读取的数据;
+*  Channel 可用于写数据.
+
+选择器运行在一个线程上, 检查所有 Channel 的状态变化并做出响应, 在应用程序对状态的改变做出响应之后, 选择器将会被重置, 然后重复这个过程。
+
+![Selecting_and_Processing_State_Changes](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_4.2_Selecting_and_Processing_State_Changes.jpg)
+
+<font color=#fd0209 size=6 >问题: select() 函数是主动的扫描 channel 上的事件, 还是被动的等待操作系统通知?</font>
+
+>零拷贝
+>零拷贝(zero-copy)是一种目前只有在使用 NIO 和 Epoll 传输时才可使用的特性. 它使你可以快速>高效地将数据从文件系统移动到网络接口, 而不需要将其从内核空间复制到用户空间, 其在像 FTP 或>者 HTTP 这样的协议中可以显著地提升性能. 但是, 并不是所有的操作系统都支持这一特性. 特别
+>地, 它对于实现了数据加密或者压缩的文件系统是不可用的——只能传输文件的原始内容.
+
+### 4.3.2 Epoll — 用于 Linux 的本地非阻塞传输
+
+Netty 为 Linux 提供了一组 NIO API, 其以一种和它本身的设计更加一致的方式使用 epoll, 并且以一种更加轻量的方式使用中断. JDK 的实现是水平触发, 而 Netty 的(默认的)是边沿触发.
+
+### 4.3.3 OIO — 旧的阻塞 I/O
+
+Netty 是如何能够使用和用于异步传输相同的 API 来支持 OIO 的呢?
+答案就是 Netty 利用了 SO_TIMEOUT 这个 Socket 标志, 它指定了等待一个 I/O 操作完成的最大毫秒数. 如果操作在指定的时间间隔内没有完成, 则将会抛出一个 SocketTimeout Exception. Netty 将捕获这个异常并继续处理循环. 在 EventLoop 下一次运行时, 它将再次尝试. 这实际上也是类似 Netty 这样的异步框架能够支持 OIO 的唯一方式.
+
+![OIO-Processing_logic](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_4.3_OIO-Processing_logic.jpg)
+
+### 4.3.4 用于 JVM 内部通信的 Local 传输
+
+Netty 提供了一个 Local 传输, 用于在同一个 JVM 中运行的客户端和服务器程序之间的异步通信. 同样, 这个传输也支持对于所有 Netty 传输实现都共同的 API.
+
+### 4.3.5 Embedded 传输(测试你的 ChannelHandler 实现)
+
+Netty 提供了一种额外的传输, 使得你可以将一组 ChannelHandler 作为帮助器类嵌入到其他的 ChannelHandler 内部. 通过这种方式, 你将可以扩展一个 ChannelHandler 的功能, 而又不需要修改其内部代码.
+
+# 5 ByteBuf
+
+Java NIO 提供了 ByteBuffer 作为字节容器, 但是这个类使用起来过于复杂, 而且也有些繁琐.
+Netty 提供了 ByteBuffer 的替代品 ByteBuf.
+
+## 5.1 ByteBuf 的 API
+
+Netty 的数据处理 API 通过两个组件暴露 -- abstract class ByteBuf 和 interface ByteBufHolder
+
+ByteBuf API 的优点:
+* 通过内置的复合缓冲区类型实现了透明的零拷贝
+* 容量可以按需增长
+* 在读和写这两种模式之间切换不需要调用 ByteBuffer 的 flip() 方法
+* 读和写使用了不同的索引
+* 支持方法的链式调用
+* 支持引用计数
+* 支持池化
+
+<font color=#fd0209 size=6 >问题: 什么是支持池化?</font>
+
+## 5.2 ByteBuf 类 -- Netty 的数据容器
+
+ByteBuf 维护了两个不同的索引: 一个用于读取, 一个用于写入. 当你从 ByteBuf 读取时, readerIndex 将会递增读取的字节数. 同样地, 当你写入 ByteBuf 时, writerIndex 也会递增.
+
+### 5.2.2 ByteBuf 的使用模式
+
+#### 堆缓冲区
+最常用的 ByteBuf 模式是将数据存储在 JVM 的堆空间中. 这种模式被称为支撑数组(backing array), 它能在没有使用池化的情况下提供快速的分配和释放. 这种方式, 如代码清单 5-1 所示, 非常适合于有遗留的数据需要处理的情况.
+
+``` java
+ByteBuf heapBuf = ...;
+// 检查 ByteBuf 是否有一个支撑数组
+if (heapBuf.hasArray()) {
+    // 如果有, 则获取对该数组的引用
+    byte[] array = heapBuf.array();
+    // 计算第一个字节的偏移量
+    int offset = heapBuf.arrayOffset() + heapBuf.readerIndex();
+    // 获得可读字节数
+    int length = heapBuf.readableBytes();
+    // 使用数组、偏移量和长度作为参数调用你的方法
+    handleArray(array, offset, length);
+}
+```
+
+#### 直接缓冲区
 
 
