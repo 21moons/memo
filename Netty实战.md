@@ -26,24 +26,15 @@ while ((request = in.readLine()) != null) {
 
 上面的代码片段在同一时间内只能处理一个连接, 要处理多个并发的客户端, 一种方案是为每个新的客户端 Socket 创建一个新的 Thread, 但是这种方案占用系统资源较多.
 
-```flow
-op1=>operation: Socket
-op2=>operation: 读/写
-op3=>operation: Thread
-op1->op2->op3
-```
+![Blocking_IO](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_1_1_Blocking_IO.jpg)
 
 ### 1.1.1 Java NIO
 
 ### 1.1.2 选择器
 
-```flow
-op1=>operation: Socket
-op2=>operation: 读/写
-op3=>operation: Selector
-op4=>operation: Thread
-op1->op2->op3->op4
-```
+![selector](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_1_2_Nonblocking_IO.jpg)
+
+<br>
 
 java.nio.channels.Selector 是 Java 的非阻塞 I/O 实现的关键. 它使用了事件通知 API 以确定在一组非阻塞套接字中有哪些已经就绪能够进行 I/O 相关的操作. 因为可以在任何的时间检查任意的读操作或者写操作的完成状态, 所以一个单一的线程便可以处理多个并发的连接.
 
@@ -91,6 +82,8 @@ Netty 的 Future 实现支持对 Future 注册 listener.
 ### 1.3.4 事件和 ChannelHandler
 每个 ChannelHandler 的实例都类似于一种为了响应特定事件而被执行的回调
 
+![Event_Flow](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_1_3_Event_Flow.jpg)
+
 ### 1.3.5 把它们放在一起
 
 **Future, 回调和 ChannelHandler**
@@ -133,8 +126,9 @@ EventLoop 本身只由一个线程驱动, 其处理了一个 Channel 的所有 I
 
 ### 3.1.2 EventLoop 接口
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/xxx.png)
-53p
+![EventLoop](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_3_1.jpg)
+
+![EventLoopGroups](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_3_2_Server_with_two_EventLoopGroups.jpg)
 
 <p align="center"><font size=2>Channel, EventLoop 和 EventLoopGroup 的关系</font></p>
 
@@ -166,8 +160,7 @@ ChannelHandler 是专为支持广泛的用途而设计的, 可以将它看作是
 
 使得事件流经 ChannelPipeline 是 ChannelHandler 的工作, 它们是在应用程序的初始化或者引导阶段被安装的. 这些对象接收事件, 执行它们所实现的处理逻辑, 并将数据传递给链中的下一个 ChannelHandler. 它们的执行顺序是由它们被添加的顺序所决定的.
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/xxx.png)
-56p
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_3_4_ChannelPipeline_with_inbound_and_outbound_ChannelHandlers.jpg)
 
 <p align="center"><font size=2>包含入站和出站 ChannelHandler 的 ChannelPipeline</font></p>
 
