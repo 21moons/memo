@@ -407,6 +407,8 @@ ByteBuf 维护了两个不同的索引: 一个用于读取, 一个用于写入. 
 #### 堆缓冲区
 最常用的 ByteBuf 模式是将数据存储在 JVM 的堆空间中. 这种模式被称为支撑数组(backing array), 它能在没有使用池化的情况下提供快速的分配和释放. 这种方式, 如代码清单 5-1 所示, 非常适合于有遗留的数据需要处理的情况.
 
+<p align="center"><font size=2>代码清单 5-1 支撑数组</font></p>
+
 ``` java
 ByteBuf heapBuf = ...;
 // 检查 ByteBuf 是否有一个支撑数组
@@ -424,4 +426,70 @@ if (heapBuf.hasArray()) {
 
 #### 直接缓冲区
 
+直接缓冲区的内容将驻留在常规的会被垃圾回收的堆之外.
+
+<p align="center"><font size=2>代码清单 5-2 访问直接缓冲区的数据</font></p>
+
+``` java
+ByteBuf directBuf = ...;
+// 检查 ByteBuf 是否有支撑数组, 如果不是则这是一个直接缓冲区
+if (!directBuf.hasArray()) {
+    // 获取可读字节数
+    int length = directBuf.readableBytes();
+    // 分配一个新的数组来保存具有该长度的字节数据
+    byte[] array = new byte[length];
+    // 将字节复制到数组
+    directBuf.getBytes(directBuf.readerIndex(), array);
+    // 使用数组、偏移量和长度作为参数调用你的方法
+    handleArray(array, 0, length);
+}
+```
+
+#### 复合缓冲区
+
+<p align="center"><font size=2>代码清单 5-3 使用 ByteBuffer 的复合缓冲区模式</font></p>
+
+``` java
+// Use an array to hold the message parts
+ByteBuffer[] message = new ByteBuffer[] { header, body };
+// Create a new ByteBuffer and use copy to merge the header and body
+ByteBuffer message2 =
+ByteBuffer.allocate(header.remaining() + body.remaining());
+message2.put(header);
+message2.put(body);
+message2.flip();
+```
+
+<p align="center"><font size=2>代码清单 5-4 使用 CompositeByteBuf 的复合缓冲区模式</font></p>
+
+``` java
+CompositeByteBuf messageBuf = Unpooled.compositeBuffer();
+ByteBuf headerBuf = ...; // can be backing or direct
+ByteBuf bodyBuf = ...; // can be backing or direct
+// 将 ByteBuf 实例追加到 CompositeByteBuf
+messageBuf.addComponents(headerBuf, bodyBuf);
+.....
+// 删除位于索引位置为 0 (第一个组件) 的 ByteBuf
+messageBuf.removeComponent(0); // remove the header
+// 循环遍历所有的 ByteBuf 实例
+for (ByteBuf buf : messageBuf) {
+    System.out.println(buf.toString());
+}
+```
+
+<p align="center"><font size=2>代码清单 5-5 访问 CompositeByteBuf 中的数据</font></p>
+
+``` java
+CompositeByteBuf compBuf = Unpooled.compositeBuffer();
+// 获得可读字节数
+int length = compBuf.readableBytes();
+// 分配一个具有可读字节数长度的新数组
+byte[] array = new byte[length];
+// 将字节读到该数组中
+compBuf.getBytes(compBuf.readerIndex(), array);
+// 使用偏移量和长度作为参数使用该数组
+handleArray(array, 0, array.length);
+```
+
+## 5.3 字节级操作
 
