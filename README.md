@@ -198,7 +198,7 @@ T    — Type, 类型, 如 String, Integer 等等
 * <? super  T> 受限通配, 表示 T 的一个未知父类
 * Class<T> 的完整定义为：
 public final class Class<T> extends Object implements Serializable, GenericDeclaration, Type, AnnotatedElement
-  Class 类的实例表示正在运行的 Java 应用程序中的类和接口
+  Class 类的实例表示正在运行的 Java 应用程序中的类和接口, 枚举是一种类, 注释是一种接口.
 
 
 

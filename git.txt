@@ -1,6 +1,0 @@
-Git 简易指南
-http://www.bootcss.com/p/git-guide/
-
-
-Git 合并多个 Commit
-https://www.jianshu.com/p/964de879904a
