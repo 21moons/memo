@@ -405,13 +405,15 @@ ByteBuf 维护了两个不同的索引: 一个用于读取, 一个用于写入. 
 ### 5.2.2 ByteBuf 的使用模式
 
 #### 堆缓冲区
-最常用的 ByteBuf 模式是将数据存储在 JVM 的堆空间中. 这种模式被称为支撑数组(backing array), 它能在没有使用池化的情况下提供快速的分配和释放. 这种方式, 如代码清单 5-1 所示, 非常适合于有遗留的数据需要处理的情况.
+最常用的 ByteBuf 模式是将数据存储在 JVM 的堆空间中. 这是通过将数据存储在数组来实现的, 这种模式被称为支持数组(backing array), 它能在没有使用池化的情况下提供快速的分配和释放. 
+堆缓冲区可以快速分配, 当不使用时也可以快速释放. 它还提供了直接访问数组的方法, 通过 ByteBuf.array() 来获取 byte[] 中保存的数据.
+这种方式, 如代码清单 5-1 所示, 非常适合于有遗留的数据需要处理的情况.
 
-<p align="center"><font size=2>代码清单 5-1 支撑数组</font></p>
+<p align="center"><font size=2>代码清单 5-1 支持数组</font></p>
 
 ``` java
 ByteBuf heapBuf = ...;
-// 检查 ByteBuf 是否有一个支撑数组
+// 检查 ByteBuf 是否有支持数组
 if (heapBuf.hasArray()) {
     // 如果有, 则获取对该数组的引用
     byte[] array = heapBuf.array();
@@ -419,20 +421,32 @@ if (heapBuf.hasArray()) {
     int offset = heapBuf.arrayOffset() + heapBuf.readerIndex();
     // 获得可读字节数
     int length = heapBuf.readableBytes();
-    // 使用数组、偏移量和长度作为参数调用你的方法
+    // 使用数组、偏移量和长度作为参数调用方法
     handleArray(array, offset, length);
 }
 ```
 
+注意:
+* 访问非堆缓冲区 ByteBuf 的数组会导致UnsupportedOperationException， 可以使用 ByteBuf.hasArray()来检查是否支持访问数组。
+* 这个用法与 JDK 的 ByteBuffer 类似
+
 #### 直接缓冲区
 
-直接缓冲区的内容将驻留在常规的会被垃圾回收的堆之外.
+在 JDK1.4 中被引入 NIO 的ByteBuffer 类允许 JVM 通过本地方法调用分配内存, 其目的是:
+* 通过免去中间交换的内存拷贝, 提升IO处理速度;
+* DirectBuffer 在 -XX:MaxDirectMemorySize=xxM 大小限制下, 使用 Heap 之外的内存, GC对此”无能为力”, 也就意味着规避了高负载下频繁的 GC 过程对应用线程的中断影响.
+
+直接缓冲区的内容可以驻留在垃圾回收扫描的堆区以外.
+
+这就解释了为什么 "直接缓冲区" 对于那些通过 socket 实现数据传输的应用来说, 是一种非常理想的方式. 如果你的数据是存放在堆中分配的缓冲区, 那么在通过 socket 发送数据之前, JVM 要先将数据复制到直接缓冲区.
+
+但是直接缓冲区的缺点是在内存空间的分配和释放上比堆缓冲区更复杂, 另外一个缺点是如果要将数据传递给遗留代码处理, 因为数据不是在堆上, 你可能不得不进行一次拷贝, 如下：
 
 <p align="center"><font size=2>代码清单 5-2 访问直接缓冲区的数据</font></p>
 
 ``` java
 ByteBuf directBuf = ...;
-// 检查 ByteBuf 是否有支撑数组, 如果不是则这是一个直接缓冲区
+// 检查 ByteBuf 是否有支持数组, 如果没有则是一个直接缓冲区
 if (!directBuf.hasArray()) {
     // 获取可读字节数
     int length = directBuf.readableBytes();
@@ -440,12 +454,24 @@ if (!directBuf.hasArray()) {
     byte[] array = new byte[length];
     // 将字节复制到数组
     directBuf.getBytes(directBuf.readerIndex(), array);
-    // 使用数组、偏移量和长度作为参数调用你的方法
+    // 使用数组、偏移量和长度作为参数调用处理方法
     handleArray(array, 0, length);
 }
 ```
 
-#### 复合缓冲区
+#### 复合缓冲区(COMPOSITE BUFFER)
+
+最后一种模式是复合缓冲区, 我们可以创建多个不同的 ByteBuf, 然后提供一个这些 ByteBuf 组合的视图. 复合缓冲区就像一个列表, 我们可以动态的添加和删除其中的 ByteBuf, JDK 的 ByteBuffer 没有这样的功能.
+
+Netty 提供了 ByteBuf 的子类 CompositeByteBuf 类来处理复合缓冲区, CompositeByteBuf 只是一个视图.
+
+*警告*
+*如果 CompositeByteBuf 既包含堆缓冲区, 也包含直接缓冲区, CompositeByteBuf.hasArray() 返回 false*
+
+例如一条消息由 header 和 body 两部分组成, 将 header 和 body 组装成一条消息发送出去, 可能 body 相同, 只是 header 不同, 使用CompositeByteBuf 就不用每次都重新分配一个新的缓冲区. 下图显示 CompositeByteBuf 组成 header 和 body:
+
+![CompositeByteBuf](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_5.2_CompositeByteBuf_holding_a_header_and_body.jpg)
+
 
 <p align="center"><font size=2>代码清单 5-3 使用 ByteBuffer 的复合缓冲区模式</font></p>
 
@@ -477,6 +503,8 @@ for (ByteBuf buf : messageBuf) {
 }
 ```
 
+CompositeByteBuf 不允许访问其内部可能存在的支持数组, 也不允许直接访问数据, 这一点类似于直接缓冲区模式.
+
 <p align="center"><font size=2>代码清单 5-5 访问 CompositeByteBuf 中的数据</font></p>
 
 ``` java
@@ -491,5 +519,14 @@ compBuf.getBytes(compBuf.readerIndex(), array);
 handleArray(array, 0, array.length);
 ```
 
+Netty 尝试使用 CompositeByteBuf 优化 socket I/O 操作, 消除原生 JDK 中可能存在的的性能低和内存消耗问题. 虽然这是在 Netty 的核心代码中进行的优化, 并且是不对外暴露的, 但是作为开发者还是应该意识到其影响.
+
 ## 5.3 字节级操作
+
+除了基本的读写操作, ByteBuf 还提供了它所包含的数据的修改方法.
+
+### 5.3.1 随机访问索引
+
+
+
 
