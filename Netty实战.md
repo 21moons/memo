@@ -527,6 +527,36 @@ Netty 尝试使用 CompositeByteBuf 优化 socket I/O 操作, 消除原生 JDK �
 
 ### 5.3.1 随机访问索引
 
+ByteBuf 使用 zero-based 的 indexing(从0开始的索引), 第一个字节的索引是 0, 最后一个字节的索引是 ByteBuf 的 capacity - 1, 下面代码是遍历 ByteBuf 的所有字节:
+
+<p align="center"><font size=2>代码清单 5-6 Access data</font></p>
+
+``` java
+	ByteBuf buffer = ...;
+    for (int i = 0; i < buffer.capacity(); i++) {
+        byte b = buffer.getByte(i);
+        System.out.println((char) b);
+    }
+```
+
+注意通过索引访问时不会推进 readerIndex (读索引)和 writerIndex(写索引), 我们可以通过 ByteBuf 的 readerIndex(index) 或 writerIndex(index) 来分别偏移读索引或写索引.
+
+### 5.3.2 顺序访问索引
+
+虽然 ByteBuf 同时具有读索引和写索引, 但是 JDK 的 ByteBuffer 却只有一个索引, 这就是为什么 ByteBuffer 必须调用 flip() 方法在读模式和写模式之间进行切换. 下图展示了 ByteBuf 是如何被它的两个索引划分成 3 个区域的.
+
+![ByteBuf_internal_segmentation](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_5.3_ByteBuf_internal_segmentation.jpg)
+
+### 5.3.3 可丢弃字节
+
+在图 5-3 中标记为可丢弃字节的分段包含了已经被读过的字节. 通过调用  discardReadBytes()方法, 可以丢弃它们并回收空间.
+
+
+
+
+
+
+
 
 
 
