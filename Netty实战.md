@@ -549,7 +549,182 @@ ByteBuf 使用 zero-based 的 indexing(从0开始的索引), 第一个字节的�
 
 ### 5.3.3 可丢弃字节
 
-在图 5-3 中标记为可丢弃字节的分段包含了已经被读过的字节. 通过调用  discardReadBytes()方法, 可以丢弃它们并回收空间.
+在图 5-3 中标记为可丢弃字节的分段包含了已经被读过的字节. 通过调用  discardReadBytes()方法, 可以丢弃它们并回收空间. 这个分段的初始大小为 0, 存储在 readerIndex 中, 会随着 read 操作的执行而增加.
+
+图 5-4 展示了在图 5-3 中所展示的缓冲区上调用 discardReadBytes() 函数后的结果. 可以看到, 可丢弃字节分段中的空间已经变为可写的了. 注意, 在调用 discardReadBytes() 之后, 对可写分段的内容并没有任何的保证(只移动了索引, 而没有对所有可写入的字节进行擦除写).
+
+![ByteBuf_after_discarding_read_bytes](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_5.4_ByteBuf_after_discarding_read_bytes.jpg)
+
+
+虽然你可能会倾向于频繁地调用 discardReadBytes() 方法以确保可写分段的最大化, 但是请注意, 这将极有可能会导致内存复制, 因为可读字节(图中标记为 CONTENT 的部分)必须被移动到缓冲区的开始位置. 我们建议只在有真正需要的时候才这样做, 例如, 当内存非常宝贵的时候.
+
+### 5.3.4 可读字节
+
+ByteBuf 的可读字节分段存储了实际数据. 新分配的, 包装的或者复制的缓冲区的默认的 readerIndex 值为 0. 任何名称以 read 或者 skip 开头的操作都将检索或者跳过位于当前 readerIndex 前面的数据, 并且将它增加已读字节数.
+
+如果所谓的读操作是一个指定 ByteBuf 参数作为写入的对象, 并且没有一个目标索引参数, 目标缓冲区的 writerIndex 也会增加. 例如:
+
+``` java
+    readBytes(ByteBuf dest);
+```
+
+如果试图从可读字节数已经用尽的缓冲器读取字节, 则抛出 IndexOutOfBoundsException.
+
+``` java
+    //遍历缓冲区的可读字节
+    ByteBuf buffer= ...;
+    while (buffer.isReadable()) {
+        System.out.println(buffer.readByte());
+    }
+```
+
+### 5.3.5 可写字节
+
+可写字节分段是指一个拥有未定义内容的, 写入就绪的内存区域. 新分配的缓冲区的 writerIndex 的默认值为 0. 任何名称以 write 开头的操作都将从当前的 writerIndex 处开始写数据, 并将它递增已经写入的字节数. 如果写操作的目标也是 ByteBuf, 并且没有指定源索引, 则源缓冲区的 readerIndex 也同样会被增加相同的大小. 这个调用如下所示:
+
+``` java
+    writeBytes(ByteBuf dest);
+```
+
+如果试图写入超出目标的容量, 则抛出 IndexOutOfBoundException.
+
+代码清单 5-8 是一个用随机整数值填充缓冲区, 直到它空间不足为止的例子. writeableBytes() 方法在这里被用来确定该缓冲区中是否还有足够的空间.
+
+``` java
+    //填充随机整数到缓冲区中
+    ByteBuf buffer = ...;
+    while (buffer.writableBytes() >= 4) {
+        buffer.writeInt(random.nextInt());
+    }
+```
+
+### 5.3.6 索引管理
+
+JDK 的 InputStream 定义了 mark(int readlimit) 和 reset() 方法. 这些是分别用来标记流中的当前位置和复位流到该位置. 同样, 可以通过调用 markReaderIndex(), markWriterIndex(), resetWriterIndex() 和 resetReaderIndex() 来标记和重置 ByteBuf 的 readerIndex 和 writerIndex.
+
+也可以通过调用 readerIndex(int) 或者 writerIndex(int) 来将索引移动到指定位置. 试图将任何一个索引设置到一个无效的位置都将导致一个 IndexOutOfBoundsException.
+
+可以通过调用 clear() 方法来将 readerIndex 和 writerIndex 都设置为 0. 注意, 这并不会清除内存中的内容.图 5-5(重复上面的图 5-3)展示了它是如何工作的。
+
+![Before_clear_is_called](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_5.5_Before_clear_is_called.jpg)
+
+![After_clear_is_called](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_5.6_After_clear_is_called.jpg)
+
+调用 clear()比调用 discardReadBytes() 轻量得多, 因为它将只是重置索引而不会复制任何的内存.
+
+### 5.3.7 查找操作
+
+有几种方法可以在缓冲区中查找指定值的索引. 最简单的是使用 indexOf() 方法. 更复杂的搜索方法使用 ByteBufProcessor 作为参数. 这个接口定义了一个方法, boolean process(byte value), 它将检查输入值 value 是否是指定值.
+
+代码清单 5-9 展示了一个查找回车符 (\r) 的例子.
+
+``` java
+    ByteBuf buffer = ...;
+    int index = buffer.forEachByte(ByteBufProcessor.FIND_CR);
+```
+
+### 5.3.8 派生缓冲区
+
+派生缓冲区为 ByteBuf 提供了以专门的方式来呈现其内容的视图. 这类视图是通过以下方法被创建的:
+* duplicate()
+* slice()
+* slice(int, int)
+* Unpooled.unmodifiableBuffer(…)
+* order(ByteOrder)
+* readSlice(int)
+
+每个这些方法都将返回一个新的 ByteBuf 实例, 它具有自己的读索引, 写索引和标记索引. 其内部存储和 JDK 的 ByteBuffer 一样也是共享的. 这使得派生缓冲区的创建成本很低廉, 但是这也意味着, 如果你修改了它的内容, 也同时修改了其对应的源实例, 所以要小心.
+
+**ByteBuf 复制** 如果需要一个现有缓冲区的真实副本, 请使用 copy() 或者 copy(int, int) 方法. 不同于派生缓冲区, 由这个调用所返回的 ByteBuf 拥有独立的数据副本.
+
+<p align="center"><font size=2>代码清单 5-10 对 ByteBuf 进行切片</font></p>
+
+``` java
+    Charset utf8 = Charset.forName("UTF-8");
+    // 创建一个用于保存给定字符串的 ByteBuf
+    ByteBuf buf = Unpooled.copiedBuffer("Netty in Action rocks!", utf8);
+    // 基于该 ByteBuf 从索引 0 到索引 15 的部分创建一个切片
+    ByteBuf sliced = buf.slice(0, 14);
+    // 将打印 "Netty in Action"
+    System.out.println(sliced.toString(utf8));
+    // 更新索引 0 处的字节
+    buf.setByte(0, (byte) 'J');
+    // 将会成功, 因为数据是共享的, 对其中一个所做的更改对另外一个也是可见的
+    assert buf.getByte(0) == sliced.getByte(0);
+```
+
+<p align="center"><font size=2>代码清单 5-11 复制一个 ByteBuf</font></p>
+
+``` java
+    Charset utf8 = Charset.forName("UTF-8");
+    // 创建一个用于保存给定字符串的 ByteBuf
+    ByteBuf buf = Unpooled.copiedBuffer("Netty in Action rocks!", utf8);
+    // 基于该 ByteBuf 从索引 0 到索引 15 的部分创建一个副本
+    ByteBuf copy = buf.copy(0, 15);
+    // 将打印 "Netty in Action"
+    System.out.println(copy.toString(utf8));
+    // 更新索引 0 处的字节
+    buf.setByte(0, (byte) 'J');
+    // 将会成功, 因为数据不是共享的
+    assert buf.getByte(0) != copy.getByte(0);
+```
+
+### 5.3.9 读/写操作
+
+有两种类别的读/写操作:
+* get() 和 set() 操作, 从给定的索引开始, 并且保持索引不变;
+* read() 和 write() 操作, 从给定的索引开始, 并且会根据已经访问过的字节数递增当前的写索引或
+读索引.
+
+### 5.3.10 更多的操作
+
+方法名称     | 描述
+-------- | ---
+isReadable() | Returns true if at least one byte can be read.
+isWritable() | Returns true if at least one byte can be written.
+readableBytes() | Returns the number of bytes that can be read.
+writablesBytes() | Returns the number of bytes that can be written.
+capacity() | Returns the number of bytes that the ByteBuf can hold. After this it will try to expand again until maxCapacity() is reached.
+maxCapacity() | Returns the maximum number of bytes the ByteBuf can hold.
+hasArray() | Returns true if the ByteBuf is backed by a byte array.
+array() | Returns the byte array if the ByteBuf is backed by a byte array, otherwise throws an UnsupportedOperationException.
+
+## 5.4 ByteBufHolder 接口
+
+我们经常发现, 除了实际的数据负载之外, 我们还需要存储各种属性值. HTTP 响应便是一个很好的例子, 除了表示为字节的内容, 还包括状态码, cookie 等.
+
+Netty 提供 ByteBufHolder 处理这种常见的情况. ByteBufHolder 还提供对于 Netty 的高级功能, 如缓冲池, 其中保存实际数据的 ByteBuf 可以从池中借用, 如果需要还可以自动释放.
+
+ByteBufHolder 只有几种用于访问底层数据和引用计数的方法. 表 5-6 列出了它们(这里不包括它继承自 ReferenceCounted 的那些方法).
+
+public interface ByteBufHolder extends ReferenceCounted
+
+Table 5.7 ByteBufHolder operations
+
+名称     | 描述
+-------- | ---
+content() | 返回由这个 ByteBufHolder 所持有的 ByteBuf
+copy() | 返回这个 ByteBufHolder 的一个深拷贝, 包括一个其所包含的 ByteBuf 的非共享拷贝
+duplicate() | 返回这个 ByteBufHolder 的一个浅拷贝, 包括一个其所包含的 ByteBuf 的共享拷贝
+replace(ByteBuf content) | 返回包含指定内容的新 ByteBufHolder 
+
+## 5.5 ByteBuf 分配
+
+### 5.5.1 按需分配: ByteBufAllocator 接口
+
+为了降低分配和释放内存的开销, Netty 通过 interface ByteBufAllocator 实现了ByteBuf 的池化, 它可以用来分配我们所描述过的任意类型的 ByteBuf 实例.
+
+名称     | 描述
+-------- | ---
+buffer() <br> buffer(int initialCapacity) <br> buffer(int initialCapacity, int maxCapacity) | 返回一个基于堆或者直接内存存储的 ByteBuf.
+heapBuffer() <br> heapBuffer(int initialCapacity) <br> heapBuffer(int initialCapacity, int maxCapacity) | 返回一个基于堆内存存储的 ByteBuf
+directBuffer() <br> directBuffer(int initialCapacity) <br> directBuffer(int initialCapacity, int maxCapacity) | 返回一个基于直接内存存储的 ByteBuf
+compositeBuffer() <br> compositeBuffer(int maxNumComponents) <br> compositeDirectBuffer() <br> compositeDirectBuffer(int maxNumComponents) <br> compositeHeapBuffer() <br> compositeHeapBuffer(int maxNumComponents) | 返回一个可以通过添加最大到指定数目的基于堆的或者直接内存存储的缓冲区来扩展的 CompositeByteBuf
+ioBuffer() | 返回一个用于套接字的 I/O 操作的 ByteBuf
+
+
+
+
 
 
 
