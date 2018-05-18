@@ -906,20 +906,88 @@ write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise)  | 当请�
 > ChannelPromise vs. ChannelFuture
 ChannelPromise 与 ChannelFuture ChannelOutboundHandler 中的大部分方法都需要一个 ChannelPromise 参数, 以便在操作完成时得到通知.
 
-
 ### 6.1.5 ChannelHandler 适配器
 
 你可以使用 ChannelInboundHandlerAdapter 和 ChannelOutboundHandlerAdapter类作为自己的 ChannelHandler 的起始点. 这两个适配器分别提供了 ChannelInboundHandler 和 ChannelOutboundHandler 的基本实现. 通过扩展抽象类 ChannelHandlerAdapter, 它们获得了它们共同的超接口 ChannelHandler 的方法.
 
+![ChannelHandlerAdapter](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_6.2_ChannelHandlerAdapter.png)
 
+<font color=#fd0209 size=6 >问题: 这里难道不会有多重继承导致的菱形继承问题么?</font>
 
-ChannelPromise 是 ChannelFuture 的一个子类, 其定义了一些可写的方法, 如 setSuccess() 和 setFailure(), 从而使 ChannelFuture 不可变.
+ChannelHandlerAdapter 还提供了实用方法 isSharable(). 如果其对应的实现被标注为 Sharable, 那么这个方法将返回 true, 表示它可以被添加到多个 ChannelPipeline 中.
 
+在 ChannelInboundHandlerAdapter 和 ChannelOutboundHandlerAdapter 中所提供的方法体调用了其相关联的 ChannelHandlerContext 上的等效方法, 从而将事件转发到了 ChannelPipeline 中的下一个 ChannelHandler 中.
+
+你要想在自己的 ChannelHandler 中使用这些适配器类, 只需要简单地扩展它们, 并且重写那些你想要自定义的方法.
+
+### 6.1.6 资源管理
+
+每当通过调用 ChannelInboundHandler.channelRead() 或者 ChannelOutboundHandler.write() 方法来处理数据时, 你都需要确保没有任何的资源泄漏.
+
+为了让用户更加简单的找到遗漏的释放, Netty 包含了一个 ResourceLeakDetector, 将会从已分配的缓冲区 1% 作为样品来检查是否存在在应用程序泄漏.
+
+实现 ChannelInboundHandler.channelRead() 和 ChannelOutboundHandler.write() 方法时, 应该如何使用这个诊断工具来防止泄露呢? 让我们看看 channelRead() 函数直接消费入站消息的场景; 也就是说, 它不会通过调用 ChannelHandlerContext.fireChannelRead() 方法将入站消息转发给下一个 ChannelInboundHandler. 代码清单6-3 展示了如何释放消息.
+
+<p align="center"><font size=2>代码清单 6-3 消费并释放入站消息</font></p>
+
+``` java
+    @ChannelHandler.Sharable
+    // 扩展了 ChannelInboundandlerAdapter
+    public class DiscardInboundHandler extends ChannelInboundHandlerAdapter {
+        @Override
+        public void channelRead(ChannelHandlerContext ctx,
+                                         Object msg) {
+            // 调用 ReferenceCountUtil.release() 方法释放资源
+            ReferenceCountUtil.release(msg);
+        }
+    }
+```
+
+>SimpleChannelInboundHandler -- 消费入站消息的简单方式
+>由于消费入站数据是一项常规任务, 所以 Netty 提供了一个特殊的称为 SimpleChannelInboundHandler 的 ChannelInboundHandler 实现. 这个实现会在消息被 channelRead0() 方法消费之后自动释放消息.
+
+在出站方向这边, 如果你处理了 write() 操作并丢弃了一个消息, 那么你也应该负责释放它占用的内存. 代码清单 6-4 展示了一个丢弃所有的写入数据的实现.
+
+<p align="center"><font size=2>代码清单 6-4 丢弃并释放出站消息</font></p>
+
+``` java
+@ChannelHandler.Sharable
+// 扩展了 ChannelOutboundHandlerAdapter
+public class DiscardOutboundHandler
+        extends ChannelOutboundHandlerAdapter {
+
+    @Override
+    public void write(ChannelHandlerContext ctx,
+                                     Object msg, ChannelPromise promise) {
+        // 通过使用 ReferenceCountUtil.realse() 方法释放资源
+        ReferenceCountUtil.release(msg);
+        // 通知 ChannelPromise 数据已经被处理了
+        promise.setSuccess();
+    }
+
+}
+```
+
+重要的是, 不仅要释放资源, 还要通知 ChannelPromise. 否则可能会出现 ChannelFutureListener 收不到某个消息已经被处理了的通知的情况. 总之, 如果一个消息被消费或者丢弃了, 并且没有传递给 ChannelPipeline 中的下一个 ChannelOutboundHandler, 那么用户就有责任调用 ReferenceCountUtil.release() 释放消息占用的内存. 如果消息到达了实际的传输层, 那么当它被写入时或者 Channel 关闭时, 都将被自动释放.
+
+## 6.2 ChannelPipeline 接口
+
+ChannelPipeline 是一系列 ChannelHandler 实例组成的实例链, 用于拦截流经一个 Channel 的入站和出站事件, ChannelPipeline 允许用户自定义对入站/出站事件的处理逻辑, 以及 pipeline 里的各个 Handler 之间的交互.
+
+每一个新创建的 Channel 都将会被分配一个新的 ChannelPipeline. 这项关联是永久性的; Channel 既不能附加另外一个 ChannelPipeline, 也不能分离其当前的.
+
+根据事件的起源, 事件将会被 ChannelInboundHandler 或者ChannelOutboundHandler 处理. 随后, 通过调用 ChannelHandlerContext 它将被转发给同一超类型的下一个 ChannelHandler.
+
+> ChannelHandlerContext
+> ChannelHandlerContext 使得 ChannelHandler 能够和其所属的 ChannelPipeline 以及其他 ChannelHandler 交互. ChannelHandler 可以通知其所属的 ChannelPipeline 中的下一个 ChannelHandler, 甚至可以动态修改它所属的 ChannelPipeline(这里的修改是指修改其所属的 ChannelPipeline 中 ChannelHandler 的编排, ChannelHandlerContext 是 ChannelPipeline 的控制模块).
 
 <p align="center"><font size=2>图 6-3 ChannelPipeline 和它的 ChannelHandler</font></p>
 
 ![ChannelPipeline_and_ChannelHandlers](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_6.2_ChannelPipeline_and_ChannelHandlers.jpg)
 
+在 ChannelPipeline 传播事件时, 它会测试 ChannelPipeline 中的下一个 ChannelHandler 的类型是否和事件的运动方向相匹配. 如果不匹配, ChannelPipeline 将跳过该 ChannelHandler 并前进到下一个, 直到它找到和该事件所期望的方向相匹配的为止.(当然, ChannelHandler 也可以同时实现 ChannelInboundHandler 接口和 ChannelOutboundHandler 接口).
+
+### 6.2.1 修改 ChannelPipeline
 
 
 
