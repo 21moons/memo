@@ -701,12 +701,14 @@ public interface ByteBufHolder extends ReferenceCounted
 
 Table 5.7 ByteBufHolder operations
 
-名称     | 描述
--------- | ---
-content() | 返回由这个 ByteBufHolder 所持有的 ByteBuf
-copy() | 返回这个 ByteBufHolder 的一个深拷贝, 包括一个其所包含的 ByteBuf 的非共享拷贝
-duplicate() | 返回这个 ByteBufHolder 的一个浅拷贝, 包括一个其所包含的 ByteBuf 的共享拷贝
-replace(ByteBuf content) | 返回包含指定内容的新 ByteBufHolder 
+| 名称     | 描述 |
+| -------- | --- |
+| content() | 返回由这个 ByteBufHolder 所持有的 ByteBuf |
+| copy() | 返回这个 ByteBufHolder 的一个深拷贝, 包括一个其所包含的 ByteBuf 的非共享拷贝 |
+| duplicate() | 返回这个 ByteBufHolder 的一个浅拷贝, 包括一个其所包含的 ByteBuf 的共享拷贝 |
+| replace(ByteBuf content) | 返回包含指定内容的新 ByteBufHolder |
+
+<font color=#fd0209 size=6 >问题: 为什么需要 ByteBufHolder?</font>
 
 ## 5.5 ByteBuf 分配
 
@@ -721,6 +723,185 @@ heapBuffer() <br> heapBuffer(int initialCapacity) <br> heapBuffer(int initialCap
 directBuffer() <br> directBuffer(int initialCapacity) <br> directBuffer(int initialCapacity, int maxCapacity) | 返回一个基于直接内存存储的 ByteBuf
 compositeBuffer() <br> compositeBuffer(int maxNumComponents) <br> compositeDirectBuffer() <br> compositeDirectBuffer(int maxNumComponents) <br> compositeHeapBuffer() <br> compositeHeapBuffer(int maxNumComponents) | 返回一个可以通过添加最大到指定数目的基于堆的或者直接内存存储的缓冲区来扩展的 CompositeByteBuf
 ioBuffer() | 返回一个用于套接字的 I/O 操作的 ByteBuf
+
+得到一个 ByteBufAllocator 的引用很简单. 你可以得到从 Channel (在理论上, 每 Channel 可具有不同的 ByteBufAllocator), 或通过绑定到的 ChannelHandler 的 ChannelHandlerContext 得到它, 用它实现了你数据处理逻辑.
+
+<p align="center"><font size=2>代码清单 5-14 获取一个到 ByteBufAllocator 的引用</font></p>
+
+``` java
+    // 从 Channel 获取一个到 ByteBufAllocator 的引用
+	Channel channel = ...;
+	ByteBufAllocator allocator = channel.alloc();
+	....
+    // 从 ChannelHandlerContext 获取一个到 ByteBufAllocator 的引用
+	ChannelHandlerContext ctx = ...;
+	ByteBufAllocator allocator2 = ctx.alloc();
+	...
+```
+
+Netty 提供了两种 ByteBufAllocator 的实现, 一种是 PooledByteBufAllocator, 用 ByteBuf 实例池改进性能并将内存使用降到最低, 此实现使用一个 "[jemalloc](http://people.freebsd.org/~jasone/jemalloc/bsdcan2006/jemalloc.pdf)" 内存分配. 另一种是 UnpooledByteBufAllocator , 它的实现不池化 ByteBuf, 每次调用都会返回一个新的 ByteBuf 实例.
+
+### 5.5.2 Unpooled 缓冲区
+
+可能某些情况下, 你未能获取一个到 ByteBufAllocator 的引用. 对于这种情况, Netty 提供了一个简单的称为 Unpooled 的工具类, 它提供了静态的辅助方法来创建未池化的 ByteBuf 实例.
+
+Table 5.9 Unpooled helper class
+
+名称     | 描述
+-------- | ---
+buffer() <br> buffer(int initialCapacity) <br> buffer(int initialCapacity, int maxCapacity)  | 返回一个未池化的基于堆内存存储的 ByteBuf |
+directBuffer() <br> directBuffer(int initialCapacity) <br> directBuffer(int initialCapacity, int maxCapacity) | 返回一个未池化的基于直接内存存储的 ByteBuf
+wrappedBuffer()  | 返回一个包装了给定数据的 ByteBuf
+copiedBuffer()  | 返回一个复制了给定数据的 ByteBuf
+
+
+在非联网项目, 该 Unpooled 类也使得它更容易使用的 ByteBuf API, 获得一个高性能的可扩展缓冲 API, 而不需要 Netty 的其他部分的.
+
+### 5.5.3 ByteBufUtil 类
+
+ByteBufUtil 提供了用于操作 ByteBuf 的静态的辅助方法. 因为这个 API 是通用的, 并且和池化无关, 所以这些方法已然在分配类的外部实现.
+
+这些静态方法中最有价值的可能就是 hexdump() 方法, 它以十六进制的表示形式打印 ByteBuf 的内容.
+
+另一个有用的方法是 boolean equals(ByteBuf, ByteBuf), 它被用来判断两个 ByteBuf 实例的相等性.
+
+## 5.6 引用计数
+
+引用计数是一种通过在某个对象所持有的资源不再被其他对象引用时释放该对象所持有的资源来优化内存使用和性能的技术. Netty 在第 4 版中为 ByteBuf 和 ByteBufHolder 引入了引用计数技术, 它们都实现了 ReferenceCounted 接口.
+
+引用计数对于池化实现 (如 PooledByteBufAllocator) 来说是至关重要的, 它降低了内存分配的开销. 代码清单 5-15 和代码清单 5-16 展示了相关的示例:
+
+<p align="center"><font size=2>代码清单 5-15 引用计数</font></p>
+
+``` java
+    Channel channel = ...;
+    // 从 Channel 获取 ByteBufAllocator
+    ByteBufAllocator allocator = channel.alloc();
+    ....
+    // 从 ByteBufAllocator 分配一个 ByteBuf
+    ByteBuf buffer = allocator.directBuffer();
+    // 检查引用计数是否为预期的 1
+    assert buffer.refCnt() == 1;
+    ...
+```
+
+<p align="center"><font size=2>代码清单 5-16 释放引用计数的对象</font></p>
+
+``` java
+    ByteBuf buffer = ...;
+    // 减少到该对象的活动引用. 当减少到 0 时, 该对象被释放, 并且该方法返回 true
+    boolean released = buffer.release();
+    ...
+```
+
+试图访问一个已经被释放的引用计数的对象, 将会导致一个 IllegalReferenceCount-Exception.
+
+注意, 一个特定的(实现了 ReferenceCounted 接口)类, 可以用它自己的独特方式来定义它的引用计数规则. 例如, 我们可以设计一个类, 其 release() 方法的实现总是将引用计数设为零, 而不用关心它的当前值, 从而一次性地使所有的活动引用都失效.
+
+> 谁负责释放?
+> 一般来说, 是由最后访问(引用计数)对象的那一方来负责将它释放. 在第 6 章中, 我
+> 们将会解释这个概念和 ChannelHandler 以及 ChannelPipeline 的相关性.
+
+# 6 ChannelHandler 和 ChannelPipeline
+
+本章主要内容
+
+- Channel
+- ChannelHandler
+- ChannePipeline
+- ChannelHandlerContext
+
+我们在上一章研究的 ByteBuf 是一个用来 "包装" 数据的容器. 在本章我们将探讨这些容器是如何在应用程序中进行传输的, 以及如何处理它们 "包装" 的数据.
+
+Netty 在这方面提供了强大的支持. 它让 Channelhandler 链接在 ChannelPipeline 上, 从而使数据处理更加灵活和模块化.
+
+在这一章中我们会遇到各种各样 Channelhandler 和 ChannelPipeline 的使用案例, 以及重要的相关的类 Channelhandlercontext. 我们将展示如何利用这些组件来实现干净可重用的处理逻辑.
+
+### 6.1.1 Channel 的生命周期
+
+Interface Channel 定义了一组和 ChannelInboundHandler API 密切相关的简单但
+功能强大的状态模型, 表 6-1 列出了 Channel 的这 4 个状态:
+
+| 状态     | 描述 |
+| -------- | --- |
+| ChannelUnregistered  | Channel 已经被创建, 但还未注册到 EventLoop |
+| ChannelRegistered  | Channel 已经被注册到了 EventLoop |
+| ChannelActive  | Channel 处于活动状态 (已经连接到它的远程节点). 它现在可以接收和发送数据了 |
+| ChannelInactive  | Channel 没有连接到远程节点 |
+
+![Channel_State_Model](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_6.1_Channel_State_Model.jpg)
+
+### 6.1.2 ChannelHandler 的生命周期
+
+<p align="center"><font size=2>表 6-2 ChannelHandler 的生命周期方法</font></p>
+
+| 类型     | 描述 |
+| -------- | --- |
+| handlerAdded  | 当把 ChannelHandler 添加到 ChannelPipeline 中时被调用 |
+| handlerRemoved  | 当从 ChannelPipeline 中移除 ChannelHandler 时被调用 |
+| exceptionCaught  | 当处理过程中在 ChannelPipeline 中有错误产生时被调用 |
+
+Netty 定义了下面两个重要的 ChannelHandler 子接口:
+* ChannelInboundHandler -- 处理入站数据以及各种状态变化;
+* ChannelOutboundHandler -- 处理出站数据并且允许拦截所有的操作.
+
+### 6.1.3 ChannelInboundHandler 接口
+
+<p align="center"><font size=2>表 6-3 ChannelInboundHandler 的方法</font></p>
+
+| 类型     | 描述 |
+| -------- | --- |
+| channelRegistered  | 当 Channel 已经注册到它的 EventLoop 并且能够处理 I/O 时被调用 |
+| channelUnregistered  | 当 Channel 从它的 EventLoop 注销并且无法处理任何 I/O 时被调用 |
+| channelActive  | 当 Channel 处于活动状态时被调用; Channel 已经连接/绑定并且已经就绪 |
+| channelInactive  | 当 Channel 离开活动状态并且不再连接它的远程节点时被调用 |
+| channelReadComplete  | 当 Channel 上的一个读操作完成时被调用 |
+| channelRead  | 当从 Channel 读取数据时被调用 |
+| ChannelWritabilityChanged  | 当 Channel 的可写状态发生改变时被调用. 用户可以确保写操作不会完成得太快(以避免发生 OutOfMemoryError)或者可以在 Channel 变为再次可写时恢复写入. 可以通过调用 Channel 的 isWritable() 方法来检测Channel 的可写性. 与可写性相关的阈值可以通过 Channel.config().setWriteHighWaterMark() 和 Channel.config().setWriteLowWaterMark() 方法来设置. |
+| userEventTriggered  | 当 ChannelnboundHandler.fireUserEventTriggered() 方法被调用时被调用, 因为一个 POJO 被传经了 ChannelPipeline |
+
+当某个 ChannelInboundHandler 的实现重写 channelRead() 方法时, 它将负责显式地释放与池化的 ByteBuf 实例相关的内存.
+
+<p align="center"><font size=2>代码清单 6-1 释放消息资源</font></p>
+
+``` java
+    @Sharable
+    // 扩展了 ChannelInboundHandlerAdapter
+    public class DiscardHandler extends ChannelInboundHandlerAdapter {
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg) {
+            // 丢弃已接收的消息
+            ReferenceCountUtil.release(msg);
+        }
+    }
+```
+
+<font color=#fd0209 size=6 >问题: 这里继承的为什么是 ChannelInboundHandlerAdapter, 而不是 ChannelInboundHandler?</font>
+
+Netty 将使用 WARN 级别的日志消息记录未释放的资源, 使得可以非常简单地在代码中发现违规的实例.
+另外 SimpleChannelInboundHandler 可以自动释放资源, 所以你不应该存储指向任何消息的引用供将来使用, 因为这些引用都将会失效.
+
+### 6.1.4 ChannelOutboundHandler 接口
+
+出站操作和数据将由 ChannelOutboundHandler 处理. 它的方法将被 Channel, ChannelPipeline 以及ChannelHandlerContext 调用.
+ChannelOutboundHandler 的一个强大的功能是可以按需推迟操作或者事件, 这使得可以通过一些复杂的方法来处理请求. 例如, 如果到远程节点的写入被暂停了, 那么你可以推迟冲刷操作并在稍后继续.
+
+
+
+
+ChannelPromise 与 ChannelFuture ChannelOutboundHandler 中的大部分方法都需要一个 ChannelPromise 参数, 以便在操作完成时得到通知. ChannelPromise 是ChannelFuture 的一个子类, 其定义了一些可写的方法, 如 setSuccess() 和setFailure(), 从而使 ChannelFuture 不可变.
+
+
+
+
+
+
+
+<p align="center"><font size=2>图 6-3 ChannelPipeline 和它的 ChannelHandler</font></p>
+
+![ChannelPipeline_and_ChannelHandlers](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_6.2_ChannelPipeline_and_ChannelHandlers.jpg)
+
+
 
 
 
