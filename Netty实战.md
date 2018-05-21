@@ -1306,6 +1306,12 @@ Bootstrap 类负责为客户端和使用无连接协议的应用程序创建 Cha
 
 ![引导过程](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_8.2_引导过程.png)
 
+### 8.3.2 引导服务器
+
+![ServerBootstrap和ServerChannel](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_8.3_ServerBootstrap和ServerChannel.png)
+
+
+
 
 
 
