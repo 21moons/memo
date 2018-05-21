@@ -989,6 +989,51 @@ ChannelPipeline 是一系列 ChannelHandler 实例组成的实例链, 用于拦�
 
 ### 6.2.1 修改 ChannelPipeline
 
+可以通过添加, 删除或者替换 ChannelHandler 来实时修改 ChannelPipeline 的布局.
+
+<p align="center"><font size=2>表 6-6 ChannelHandler 的用于修改 ChannelPipeline 的方法</font></p>
+
+名称 | 描述
+------ | ----
+addFirst <br> addBefore <br> addAfter <br> addLast | 将一个 ChannelHandler 添加到 ChannelPipeline 中
+Remove | 将一个 ChannelHandler 从 ChannelPipeline 中移除
+Replace | 将 ChannelPipeline 中的一个 ChannelHandler 替换为另一个 ChannelHandler
+
+
+>**ChannelHandler 的执行和阻塞**
+通常 ChannelPipeline 中的每一个 ChannelHandler 都是通过它的 EventLoop (I/O 线程) 来处理传递给它的事件的. 所以重要的是不要阻塞这个线程, 因为这会对整体的 I/O 处理产生负面的影响.
+但有时可能需要与那些使用阻塞 API 的遗留代码进行交互. 对于这种情况, ChannelPipeline 有一些接受一个 EventExecutorGroup 的 add() 方法. 如果一个事件被传递给一个自定义的 EventExecutorGroup, 它将被包含在这个 EventExecutorGroup 中的某个 EventExecutor 所处理, 从而被从该
+Channel 本身的 EventLoop 中移除. 对于这种场景, Netty 提供了一个叫 DefaultEventExecutorGroup 的默认实现.
+
+<p align="center"><font size=2>表 6-7 ChannelPipeline 的用于访问 ChannelHandler 的操作</font></p>
+
+名称 | 描述
+------ | ----
+get() | 通过类型或者名称返回 ChannelHandler
+context() | 返回和 ChannelHandler 绑定的 ChannelHandlerContext
+names() | 返回 ChannelPipeline 中所有 ChannelHandler 的名称
+
+<font color=#fd0209 size=6 >问题: 一个 ChannelPipeline 上的 ChannelHandler 可以绑定多少个 ChannelHandlerContext?</font>
+
+### 6.2.2 触发事件
+
+ChannelPipeline 的 API 公开了用于调用入站和出站操作的附加方法. 表 6-8 列出了入站操作, 用于通知 ChannelInboundHandler 在 ChannelPipeline 中所发生的事件.
+
+<p align="center"><font size=2>表 6-8 ChannelPipeline 的入站操作</font></p>
+
+名称 | 描述
+-----|---
+fireChannelRegistered | 调用 ChannelPipeline 中下一个 ChannelInboundHandler 的 channelRegistered(ChannelHandlerContext) 方法
+fireChannelUnregistered | 调用 ChannelPipeline 中下一个 ChannelInboundHandler 的 channelUnregistered(ChannelHandlerContext) 方法
+fireChannelActive | 调用 ChannelPipeline 中下一个 ChannelInboundHandler 的 channelActive(ChannelHandlerContext) 方法
+fireChannelInactive | 调用 ChannelPipeline 中下一个 ChannelInboundHandler 的 channelInactive(ChannelHandlerContext) 方法
+fireExceptionCaught | 调用 ChannelPipeline 中下一个 ChannelInboundHandler 的 exceptionCaught(ChannelHandlerContext, Throwable) 方法
+fireUserEventTriggered | 调用 ChannelPipeline 中下一个 ChannelInboundHandler 的 userEventTriggered(ChannelHandlerContext, Object) 方法
+fireChannelRead | 调用 ChannelPipeline 中下一个 ChannelInboundHandler 的 channelRead(ChannelHandlerContext, Object msg) 方法
+fireChannelReadComplete | 调用 ChannelPipeline 中下一个 ChannelInboundHandler 的 channelReadComplete(ChannelHandlerContext) 方法
+fireChannelWritabilityChanged | 调用 ChannelPipeline 中下一个 ChannelInboundHandler 的 channelWritabilityChanged(ChannelHandlerContext) 方法
+
+
 
 
 
