@@ -1233,7 +1233,7 @@ public class OutboundExceptionHandler extends ChannelOutboundHandlerAdapter {
 
 ## 7.2 EventLoop 接口
 
-![Executor的执行逻辑](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_7.2_EventLoop的类层次结构.png)
+![EventLoop的类层次结构](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_7.2_EventLoop的类层次结构.png)
 
 ### 7.2.1 Netty 4 中的 I/O 和事件处理
 
@@ -1257,10 +1257,23 @@ newSingleThreadScheduledExecutor() <br> newSingleThreadScheduledExecutor(ThreadF
 ### 7.4.1 线程管理
 
 Netty线程模型的卓越性能取决于对于当前执行的Thread的身份的确定, 也就是说, 确定它是否是分配给当前 Channel 以及它的 EventLoop 的那一个线程. (回想一下 EventLoop 将负责处理一个 Channel 的整个生命周期内的所有事件).
+如果(当前)调用线程正是支撑 EventLoop 的线程, 那么所提交的代码块将会被直接执行. 否则, EventLoop 将调度该任务以便稍后执行, 并将它放入到内部队列中. 当 EventLoop下次处理它的事件时, 它会执行队列中的那些任务/事件. 这也就解释了任何的 Thread 是如何与 Channel 直接交互而无需在 ChannelHandler 中进行额外同步的.
+
+注意, 每个 EventLoop 都有它自已的任务队列, 独立于任何其他的 EventLoop. 图 7-3 展示了 EventLoop 用于调度任务的执行逻辑. 这是 Netty 线程模型的关键组成部分.
 
 ![EventLoop的执行逻辑](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_7.3_EventLoop的执行逻辑.png)
 
+"永远不要将一个长时间运行的任务放入到执行队列中, 因为它将阻塞需要在同一线程上执行的任何其他任务." 如果必须要进行阻塞调用或者执行长时间运行的任务, 我们建议使用一个专门的 EventExecutor.
 
+### 7.4.2 EventLoop/线程的分配
+
+服务于 Channel 的 I/O 和事件的 EventLoop 包含在 EventLoopGroup 中.
+
+### 1. 异步传输
+
+异步传输实现只使用了少量的 EventLoop(以及和它们相关联的 Thread), 而且在当前的线程模型中, 它们可能会被多个 Channel 所共享. 这使得可以通过尽可能少量的 Thread 来支撑大量的 Channel, 而不是每个 Channel 分配一个 Thread.
+
+图 7-4 显示了一个 EventLoopGroup, 它具有3 个固定大小的 EventLoop (每个 EventLoop 都由一个 Thread 支撑). 在创建 EventLoopGroup 时就直接分配了 EventLoop(以及支撑它们的 Thread), 以确保在需要时它们是可用的.
 
 
 
