@@ -1097,10 +1097,135 @@ writeAndFlush  | 通过这个实例写入并冲刷消息并经过 ChannelPipelin
 
 ![Channel_ChannelPipeline_ChannelHandler_and_ChannelHandlerContext](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_6.4_Channel_ChannelPipeline_ChannelHandler_and_ChannelHandlerContext.png)
 
+<br>
+<br>
 
+下图中我们可以看到, 虽然在 Channel 或 ChannelPipeline 上调用 write() 方法会使事件通过整个 ChannelPipeline, 但是在 ChannelHandler 的级别上, 事件从一个 ChannelHandler 传播到下一个 ChannelHandler 是通过 ChannelHandlerContext 上的调用完成的.
 
+![通过 Channel 或者 ChannelPipeline 进行的事件传播](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_6.5_Event_propagation_via_the_Channel_or_the_ChannelPipeline.png)
 
+<br>
+<br>
 
+要想让某个特定的 ChannelHandler 处理事件, 必须获取到指定  ChannelHandler 之前的 ChannelHandler 关联的 ChannelHandlerContext. 这个 ChannelHandlerContext 将调用指定的 ChannelHandler.
+
+![通过 ChannelHandlerContext 触发的操作的事件流](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_6.6_Event_flow_for_operations_triggered_via_the_ChannelHandlerContext.png)
+
+### 6.3.2 ChannelHandler 和 ChannelHandlerContext 的高级用法
+
+你可以通过调用 ChannelHandlerContext 上的 pipeline() 方法来获得被封闭的 ChannelPipeline 的引用. 这使得运行时得以操作 ChannelPipeline 中的 ChannelHandler 链, 我们可以利用这一点来实现一些复杂的设计. 例如, 你可以通过将 ChannelHandler 添加到 ChannelPipeline 中来实现动态的协议切换.
+
+另一种高级的用法是缓存到 ChannelHandlerContext 的引用以供稍后使用, 这可能会发生在任何的 ChannelHandler 方法之外, 甚至来自于不同的线程. 代码清单 6-9 展示了用这种模式来触发事件.
+
+<p align="left"><font size=2>代码清单 6-9 缓存到 ChannelHandlerContext 的引用</font></p>
+
+``` java
+    public class WriteHandler extends ChannelHandlerAdapter {
+        private ChannelHandlerContext ctx;
+
+        @Override
+        public void handlerAdded(ChannelHandlerContext ctx) {
+            // 存储到 ChannelHandlerContext 的引用以供稍后使用
+            this.ctx = ctx;
+        }
+
+        // 使用之前存储的到 ChannelHandlerContext 的引用来发送消息
+        public void send(String msg) {
+            ctx.writeAndFlush(msg);
+        }
+    }
+```
+
+因为一个 ChannelHandler 可以从属于多个 ChannelPipeline, 所以它也可以绑定到多个 ChannelHandlerContext 实例. 对于这种用法指在多个 ChannelPipeline 中共享同一个 ChannelHandler, 对应的 ChannelHandler 必须要使用 `@Sharable` 注解标注; 否则, 试图将它添加到多个 ChannelPipeline 时将会触发异常. 显而易见, 为了安全地被用于多个并发的 Channel(即连接), 这样的 ChannelHandler 必须是线程安全的.
+
+<p align="left"><font size=2>代码清单 6-10 可共享的 ChannelHandler</font></p>
+
+``` java
+    @Sharable
+    public class SharableHandler extends ChannelInboundHandlerAdapter {
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg) {
+            System.out.println("channel read message " + msg);
+            // 转发给下一个 ChannelHandler
+            ctx.fireChannelRead(msg);
+        }
+    }
+```
+
+前面的 ChannelHandler 实现符合所有的将其加入到多个 ChannelPipeline 的需求, 即它使用了注解 `@Sharable` 标注, 并且也不持有任何的状态.
+
+<p align="left"><font size=2>代码清单 6-11 @Sharable 的错误用法</font></p>
+
+``` java
+    @Sharable
+    public class SharableHandler extends ChannelInboundHandlerAdapter {
+        private int count;
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg) {
+            count++;
+            System.out.println("channelRead(...) called the " + count + " time");
+            // 转发给下一个 ChannelHandler
+            ctx.fireChannelRead(msg);
+        }
+    }
+```
+
+这段代码的问题在于它拥有状态, 即用于跟踪方法调用次数的实例变量count. 将这个类的一个实例添加到 ChannelPipeline 将极有可能在它被多个并发的Channel 访问时导致问题. (当然, 这个简单的问题可以通过使channelRead()方法变为同步方法来修正)
+总之, 只应该在确定了你的 ChannelHandler 是线程安全的时才使用 `@Sharable` 注解.
+在多个 ChannelPipeline 中安装同一个 ChannelHandler 通常是为了收集跨越多个 Channel 的统计信息.
+
+### 6.4.1 处理入站异常
+
+* ChannelHandler.exceptionCaught()的默认实现是简单地将当前异常转发给 ChannelPipeline 中的下一个 ChannelHandler;
+* 如果异常到达了 ChannelPipeline 的尾端, 它将会被记录为未被处理;
+* 要想定义自定义的处理逻辑, 你需要重写 exceptionCaught() 方法.然后你需要决定是否需要将该异常传播出去.
+
+### 6.4.2 处理出站异常
+
+* 每个出站操作都将返回一个 ChannelFuture. 注册到 ChannelFuture 的 ChannelFutureListener 将在操作完成时被通知该操作是成功了还是出错了.
+* 几乎所有的 ChannelOutboundHandler 上的方法都会传入一个 ChannelPromise 的实例. 作为 ChannelFuture 的子类, ChannelPromise 也可以被分配用于异步通知的监听器. 但是, ChannelPromise 还具有提供立即通知的可写方法: ChannelPromise setSuccess(); ChannelPromise setFailure(Throwable cause);
+
+<p align="left"><font size=2>代码清单 6-13 添加 ChannelFutureListener 到 ChannelFuture</font></p>
+
+``` java
+ChannelFuture future = channel.write(someMessage);
+future.addListener(new ChannelFutureListener() {
+    @Override
+    public void operationComplete(ChannelFuture f) {
+        if (!f.isSuccess()) {
+            f.cause().printStackTrace();
+            f.channel().close();
+        }
+    }
+}
+);
+```
+
+<p align="left"><font size=2>代码清单 6-14 添加 ChannelFutureListener 到 ChannelPromise</font></p>
+
+``` java
+public class OutboundExceptionHandler extends ChannelOutboundHandlerAdapter {
+    @Override
+    public void write(ChannelHandlerContext ctx, Object msg,
+        ChannelPromise promise) {
+        promise.addListener(new ChannelFutureListener() {
+            @Override
+            public void operationComplete(ChannelFuture f) {
+                if (!f.isSuccess()) {
+                    f.cause().printStackTrace();
+                    f.channel().close();
+                }
+            }
+        });
+    }
+}
+```
+
+#  7 EventLoop 和线程模型
+
+## 7.1 线程模型概述
 
 
 
