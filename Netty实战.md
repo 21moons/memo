@@ -1329,12 +1329,32 @@ Bootstrap 类负责为客户端和使用无连接协议的应用程序创建 Cha
 或者, 你也可以在调用 EventLoopGroup.shutdownGracefully() 方法之前, 显式地在所有活动的 Channel 上调用 Channel.close() 方法. 但是在任何情况下, 都请记得关闭 EventLoopGroup 本身.
 
 
+# 10 编解码器框架
+
+网络只将数据看作是原始的字节序列, 而我们的应用程序则会把这些字节组
+织成有意义的信息. 在数据和网络字节流之间做相互转换是最常见的编程任务
+之一. 
+
+将应用程序的数据转换为网络格式, 以及将网络格式转换为应用程序的数据的组件分别叫作`编码器`和`解码器`, 同时具有这两种功能的单一组件叫作`编解码器`.
+
+## 10.2 解码器
+
+* 将字节解码为消息 -- ByteToMessageDecoder 和 ReplayingDecoder;
+* 将一种消息类型解码为另一种 -- MessageToMessageDecoder;
+
+### 10.2.1 抽象类 ByteToMessageDecoder
+
+由于你不可能知道远程节点是否会一次性地发送一个完整的消息, 所以这个类会对入站数据进行缓冲, 直到它准备好处理.
+
+<p align="left"><font size=2>表 10-1 ByteToMessageDecoder API</font></p>
+
+方法 | 描述
+------ | ----
+decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) | 这是你必须实现的唯一抽象方法. decode() 方法被调用时将会传入一个包含了传入数据的 ByteBuf, 以及一个用来添加解码消息的 List. 对这个方法的调用将会重复进行, 直到确定没有新的元素被添加到该 List, 或者该 ByteBuf 中没有更多可读取的字节时为止. 然后, 如果该 List 不为空, 那么它的内容将会被传递给 ChannelPipeline 中的下一个 ChannelInboundHandler.
+decodeLast(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) | Netty提供的这个默认实现只是简单地调用了 decode() 方法. 当 Channel 的状态变为非活动时, 这个方法将会被调用一次. 可以重写该方法以提供特殊的处理.
 
 
-
-
-
-
+![ToIntegerDecoder](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_10.1_ToIntegerDecoder.png)
 
 
 
