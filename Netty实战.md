@@ -1356,12 +1356,49 @@ decodeLast(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) | Netty提�
 
 ![ToIntegerDecoder](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_10.1_ToIntegerDecoder.png)
 
+> **编解码器中的引用计数**
+正如我们在第 5 章和第 6 章中所提到的, 引用计数需要特别的注意. 对于编码器和解码器来说, 其过程也是相当的简单: 一旦消息被编码或者解码, 它就会被ReferenceCountUtil.release(message) 调用自动释放. 如果你需要保留引用以便稍后使用, 那么你可以调用 ReferenceCountUtil.retain(message) 方法. 这将会增加该引用计数, 从而防止该消息被释放.
+
+### 10.2.2 抽象类 ReplayingDecoder
+
+ReplayingDecoder 扩展了 ByteToMessageDecoder类, 使得我们在解码数据前不必调用 readableBytes() 方法进行长度检查. 它通过一个自定义的ByteBuf ReplayingDecoderByteBuf 包装传入的 ByteBuf 实现了这一点, ReplayingDecoderByteBuf 在内部执行长度检查.
+
+<p align="left"><font size=2>代码清单 10-2 ToIntegerDecoder2 类扩展了 ReplayingDecoder</font></p>
+
+``` java
+    public class ToIntegerDecoder2 extends ReplayingDecoder<Void> {
+
+        @Override
+        // 传入的 ByteBuf 是 ReplayingDecoderByteBuf
+        public void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out)
+                throws Exception {
+            // 从入站 ByteBuf 中读取一个 int，并将其添加到解码消息的 List 中
+            out.add(in.readInt());
+        }
+    }
+```
+
+### 10.2.3 抽象类 MessageToMessageDecoder
+
+![IntegerToStringDecoder](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_10.2_IntegerToStringDecoder.png)
 
 
+### 10.2.4 TooLongFrameException 类
 
+由于 Netty 是一个异步框架, 所以需要在字节可以解码之前在内存中缓冲它们. 因此, 不能让解码器缓冲大量的数据以至于耗尽可用的内存. 为了解除这个常见的顾虑, Netty 提供了 TooLongFrameException 类, 其将由解码器在帧超出指定的大小限制时抛出.
 
+### 10.3.1 抽象类 MessageToByteEncoder
 
+这个类只有一个方法, 而解码器有两个. 原因是解码器通常需要在 Channel 关闭之后产生最后一个消息(因此也就有了 decodeLast()方法). 这显然不适用于
+编码器的场景--在连接被关闭之后仍然产生一个消息是毫无意义.
 
+![ShortToByteEncoder](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_10.3_ShortToByteEncoder.png)
+
+### 10.3.2 抽象类 MessageToMessageEncoder
+
+![IntegerToStringEncoder](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_10.4_IntegerToStringEncoder.png)
+
+### 10.4.1 抽象类 ByteToMessageCodec
 
 
 
