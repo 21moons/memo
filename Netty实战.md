@@ -1237,6 +1237,29 @@ public class OutboundExceptionHandler extends ChannelOutboundHandlerAdapter {
 
 ### 7.2.1 Netty 4 中的 I/O 和事件处理
 
+Netty 4 中所采用的线程模型, 通过在同一个线程中处理某个给定的 EventLoop 中所产生的所有事件, 解决了这个问题. 这提供了一个更加简单的执行体系架构, 并且消除了在多个 ChannelHandler 中进行同步的需要(除了任何可能需要在多个 Channel 中共享的).
+
+## 7.3 任务调度
+
+### 7.3.1 JDK 的任务调度 API
+
+<p align="left"><font size=2>表 7-1 java.util.concurrent.Executors 类的工厂方法</font></p>
+
+方法 | 描述
+------ | ----
+newScheduledThreadPool(int corePoolSize) <br> newScheduledThreadPool(int corePoolSize, ThreadFactorythreadFactory) | 创建一个 ScheduledThreadExecutorService, 用于调度命令在指定延迟之后运行或者周期性地执行. 它使用 corePoolSize 参数来设置线程数.
+newSingleThreadScheduledExecutor() <br> newSingleThreadScheduledExecutor(ThreadFactorythreadFactory) | 创建一个 ScheduledThreadExecutorService, 用于调度命令在指定延迟之后运行或者周期性地执行. 它使用一个线程来执行被调度的任务.
+
+### 7.3.2 使用 EventLoop 调度任务
+
+## 7.4 实现细节
+
+### 7.4.1 线程管理
+
+Netty线程模型的卓越性能取决于对于当前执行的Thread的身份的确定, 也就是说, 确定它是否是分配给当前 Channel 以及它的 EventLoop 的那一个线程. (回想一下 EventLoop 将负责处理一个 Channel 的整个生命周期内的所有事件).
+
+![EventLoop的执行逻辑](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_7.3_EventLoop的执行逻辑.png)
+
 
 
 
