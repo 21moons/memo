@@ -1328,7 +1328,6 @@ Bootstrap 类负责为客户端和使用无连接协议的应用程序创建 Cha
 
 或者, 你也可以在调用 EventLoopGroup.shutdownGracefully() 方法之前, 显式地在所有活动的 Channel 上调用 Channel.close() 方法. 但是在任何情况下, 都请记得关闭 EventLoopGroup 本身.
 
-
 # 10 编解码器框架
 
 网络只将数据看作是原始的字节序列, 而我们的应用程序则会把这些字节组
@@ -1400,8 +1399,33 @@ ReplayingDecoder 扩展了 ByteToMessageDecoder类, 使得我们在解码数据�
 
 ### 10.4.1 抽象类 ByteToMessageCodec
 
+### 10.4.2 抽象类 MessageToMessageCodec
 
+### 10.4.3 CombinedChannelDuplexHandler 类
 
+结合一个解码器和编码器可能会对可重用性造成影响. 但是, 有一种方法既能够避免这种惩罚, 又不会牺牲将一个解码器和一个编码器作为一个单独的单元部署所带来的便利性. CombinedChannelDuplexHandler 提供了这个解决方案，其声明为:
+
+``` java
+public class CombinedChannelDuplexHandler
+    <I extends ChannelInboundHandler, O extends ChannelOutboundHandler>
+```
+
+这个类充当了 ChannelInboundHandler 和 ChannelOutboundHandler(该类的类型参数 I 和 O)的容器. 通过提供分别继承了解码器类和编码器类的类型, 我们可以实现一个编解码器, 而又不必直接扩展抽象的编解码器类.
+
+# 11 预置的 ChannelHandler 和编解码器
+
+## 11.1 通过 SSL/TLS 保护 Netty 应用程序
+
+![通过SslHandler进行解密和加密的数据流](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_11.1_通过SslHandler进行解密和加密的数据流.png)
+
+> **Netty 的 OpenSSL/SSLEngine 实现**
+Netty 还提供了使用 OpenSSL 工具包(www.openssl.org)的 SSLEngine 实现. 这个 OpenSslEngine 类提供了比 JDK 提供的 SSLEngine 实现更好的性能.
+
+### 11.2.1 HTTP 解码器、编码器和编解码器
+
+![HTTP请求的组成部分](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_11.2_HTTP请求的组成部分.png)
+
+![HTTP响应的组成部分](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_11.3_HTTP响应的组成部分.png)
 
 
 
