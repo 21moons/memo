@@ -1575,12 +1575,30 @@ ChunkedNioStream | 从 ReadableByteChannel 中逐块传输内容
 
 ## 11.6 序列化数据
 
+JDK 提供了 ObjectOutputStream 和 ObjectInputStream 通过网络将原始数据类型和 POJO 进行序列化和反序列化. API并不复杂, 可以应用到任何对象, 支持 java.io.Serializable 接口. 但它并不非常高效.
 
+### 11.6.1 JDK 序列化
 
+### 11.6.2 使用 JBoss Marshalling 进行序列化
 
+### 11.6.3 通过 Protocol Buffers 序列化
 
+# 12 WebSocket
 
+## 12.2 我们的 WebSocket 示例应用程序
 
+![WebSocket 应用程序逻辑](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_12.1_WebSocket应用程序逻辑.png)
+
+## 12.3 添加 WebSocket 支持
+
+在从标准的 HTTP 或者 HTTPS 协议切换到 WebSocket 时, 将会使用一种称为升级握手的机制. 因此, 使用 WebSocket 的应用程序将始终以 HTTP/S 作为开始, 然后再执行升级.
+
+我们的应用程序将采用下面的约定: 如果被请求的 URL 以/ws 结尾, 那么我们将会把该协议升级为 WebSocket; 否则, 服务器将使用基本的 HTTP/S. 在连接已经升级完成之后, 所有数
+据都将会使用 WebSocket 进行传输.
+
+![服务器逻辑](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_12.2_服务器逻辑.png)
+
+### 12.3.1 处理 HTTP 请求
 
 
 
