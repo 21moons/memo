@@ -1310,6 +1310,27 @@ Bootstrap 类负责为客户端和使用无连接协议的应用程序创建 Cha
 
 ![ServerBootstrap和ServerChannel](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_8.3_ServerBootstrap和ServerChannel.png)
 
+## 8.4 从 Channel 引导客户端(代理服务器场景)
+
+![在两个Channel之间共享EventLoop](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_8.4_在两个Channel之间共享EventLoop.png)
+
+## 8.5 在引导过程中添加多个 ChannelHandler
+
+一个必须要支持多种协议的应用程序将会有很多的 ChannelHandler, 但是,  如果在引导的过程中你只能设置一个 ChannelHandler, 那么你应该怎么做到这一点呢?
+
+针对于这个场景, Netty 提供了一个特殊的 ChannelInboundHandlerAdapter 子类 ChannelInitializer, 它定义了下面的方法 initChannel, 该方法可以将多个 ChannelHandler 添加到一个 ChannelPipeline 中.
+
+你只需要简单地向 Bootstrap 或 ServerBootstrap 的实例提供你的 ChannelInitializer 实现即可, 并且一旦 Channel 被注册到了它的 EventLoop 之后, 就会调用你的 initChannel() 方法. 在该方法返回之后, ChannelInitializer 的实例将会从 ChannelPipeline 中移除它自己.
+
+## 8.8 关闭
+
+你需要关闭 EventLoopGroup, 它将处理任何挂起的事件和任务, 并且随后释放所有活动的线程. 这就是调用 EventLoopGroup.shutdownGracefully() 方法. 这个方法调用将会返回一个 Future, 这个 Future 将在关闭完成时接收到通知. 需要注意的是, shutdownGracefully() 方法也是一个异步的操作, 所以你需要阻塞等待直到它完成, 或者向所返回的 Future 注册一个监听器以在关闭完成时获得通知.
+
+或者, 你也可以在调用 EventLoopGroup.shutdownGracefully() 方法之前, 显式地在所有活动的 Channel 上调用 Channel.close() 方法. 但是在任何情况下, 都请记得关闭 EventLoopGroup 本身.
+
+
+
+
 
 
 
