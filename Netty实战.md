@@ -1526,9 +1526,54 @@ LengthFieldBasedFrameDecoder | 根据编码进帧头部中的长度值提取帧,
 
 ## 11.5 写大型数据
 
+由于写操作是非阻塞的, 所以即使没有写出所有的数据, 写操作也会在后续完成时返回并通知 ChannelFuture. 当这种情况发生时, 如果仍然不停地写入, 就有内存耗尽的风险. 所以在写大型数据时, 需要考虑到远程节点的连接是慢速连接的情况, 这种情况会导致内存释放的延迟.
 
+在需要将数据从文件系统复制到用户内存中时, 可以使用 ChunkedWriteHandler, 它支持异步写大型数据流, 而又不会导致大量的内存消耗.
 
+<p align="center"><font size=2>表 11-7 ChunkedInput 的实现</font></p>
 
+名称 | 描述
+-----|----
+ChunkedFile | 从文件中逐块获取数据, 当你的平台不支持零拷贝或者你需要转换数据时使用
+ChunkedNioFile | 与 ChunkedFile 类似, 处理使用了NIOFileChannel
+ChunkedStream | 从 InputStream 中逐块传输内容
+ChunkedNioStream | 从 ReadableByteChannel 中逐块传输内容
+
+<p align="center"><font size=2>代码清单 11-12 使用 ChunkedStream 传输文件内容</font></p>
+
+``` java
+    public class ChunkedWriteHandlerInitializer extends ChannelInitializer<Channel> {
+        private final File file;
+        private final SslContext sslCtx;
+
+        public ChunkedWriteHandlerInitializer(File file, SslContext sslCtx) {
+            this.file = file;
+            this.sslCtx = sslCtx;
+        }
+
+        @Override
+        protected void initChannel(Channel ch) throws Exception {
+            ChannelPipeline pipeline = ch.pipeline();
+            pipeline.addLast(new SslHandler(sslCtx.createEngine());
+            // 添加 ChunkedWriteHandler 以处理作为ChunkedInput 传入的数据
+            pipeline.addLast(new ChunkedWriteHandler());
+            // 一旦连接建立, WriteStreamHandler 就开始写文件数据
+            pipeline.addLast(new WriteStreamHandler());
+        }
+
+        public final class WriteStreamHandler extends ChannelInboundHandlerAdapter {
+
+            @Override
+            // 当连接建立时, channelActive() 方法将使用 ChunkedInput 写文件数据
+            public void channelActive(ChannelHandlerContext ctx) throws Exception {
+                super.channelActive(ctx);
+                ctx.writeAndFlush(new ChunkedStream(new FileInputStream(file)));
+            }
+        }
+    }
+```
+
+## 11.6 序列化数据
 
 
 
