@@ -1287,6 +1287,41 @@ EventLoopGroup 负责为每个新创建的 Channel 分配一个 EventLoop. 在�
 
 用于像 OIO(旧的阻塞式 I/O), 设计会略有不同, 如图 7-5 所示:
 
+这里每一个 Channel 都将被分配给一个 EventLoop.
+
+![阻塞传输的EventLoop分配方式](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_7.5_阻塞传输的EventLoop分配方式.png)
+
+# 8 引导(Bootstrap)
+
+## 8.1 Bootstrap 类
+
+![引导类的层次结构](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_8.1_引导类的层次结构.png)
+
+>**为什么引导类是 Cloneable 的**
+你有时可能会创建多个具有类似配置或者完全相同配置的 Channel. 为了支持这种模式而又不需要为每个 Channel 都创建并配置一个新的引导类实例, AbstractBootstrap 被标记为了Cloneable. 注意, 这种方式只会创建引导类实例的 EventLoopGroup 的一个浅拷贝, 所以, EventLoopGroup 会在所有克隆的 Channel 实例之间共享. 这是可行的, 因为通常这些克隆的 Channel 的生命周期都很短暂, 一个典型的场景是创建一个 Channel 以进行一次 HTTP 请求.
+
+### 8.2.1 引导客户端
+
+Bootstrap 类负责为客户端和使用无连接协议的应用程序创建 Channel.
+
+![引导过程](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_8.2_引导过程.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
