@@ -1492,6 +1492,63 @@ public class IdleStateHandlerInitializer extends ChannelInitializer<Channel> {
 }
 ```
 
+如果连接超过 60 秒没有接收或者发送任何的数据, 那么 IdleStateHandler 将会调用 fireUserEventTriggered() 方法发送 IdleStateEvent 事件. HeartbeatHandler 实现了 userEventTriggered() 方法, 如果这个方法检测到 IdleStateEvent 事件, 它将会发送心跳消息, 并且添加一个将在发送操作失败时关闭该连接的 ChannelFutureListener.
+
+### 11.4.1 基于分隔符的协议
+
+基于分隔符的(delimited)消息协议使用定义的字符来标记的消息或者消息段(通常被称为帧)的开头或者结尾.
+
+<p align="center"><font size=2>表 11-5 用于处理基于分隔符的协议和基于长度的协议的解码器</font></p>
+
+名称 | 描述
+-----|----
+DelimiterBasedFrameDecoder | 使用任何由用户提供的分隔符来提取帧的通用解码器
+LineBasedFrameDecoder | 提取由行尾符(\n 或者 \r\n)分隔的帧的解码器. 这个解码器比 DelimiterBasedFrameDecoder 更快.
+
+![由行尾符分隔的帧](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_11.5_由行尾符分隔的帧.png)
+
+### 11.4.2 基于长度的协议
+
+基于长度的协议通过将它的长度编码到帧的头部来定义帧, 而不是使用特殊的分隔符来标记它的结束.
+
+<p align="center"><font size=2>表 11-6 用于基于长度的协议的解码器</font></p>
+
+名称 | 描述
+-----|----
+FixedLengthFrameDecoder | 提取在调用构造函数时指定的定长帧
+LengthFieldBasedFrameDecoder | 根据编码进帧头部中的长度值提取帧, 该字段的偏移量以及长度在构造函数中指定
+
+![解码长度为8字节的帧](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_11.6_解码长度为8字节的帧.png)
+
+你将经常会遇到被编码到消息头部的帧大小不是固定值的协议. 为了处理这种变长帧, 你可以使用 LengthFieldBasedFrameDecoder, 它将从头部字段确定帧长, 然后从数据流中提取指定的字节数.
+
+![将变长帧大小编码进头部的消息](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_11.7_将变长帧大小编码进头部的消息.png)
+
+## 11.5 写大型数据
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
