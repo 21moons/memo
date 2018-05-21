@@ -1227,6 +1227,15 @@ public class OutboundExceptionHandler extends ChannelOutboundHandlerAdapter {
 
 ## 7.1 线程模型概述
 
+![Executor的执行逻辑](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_7.1_Executor的执行逻辑.png)
+
+虽然池化和重用线程相对于简单地为每个任务都创建和销毁线程是一种进步, 但是它并不能消除由上下文切换所带来的开销, 开销将随着线程数量的增加很迅速增长, 并且在高负载下愈演愈烈.
+
+## 7.2 EventLoop 接口
+
+![Executor的执行逻辑](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_7.2_EventLoop的类层次结构.png)
+
+### 7.2.1 Netty 4 中的 I/O 和事件处理
 
 
 
