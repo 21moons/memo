@@ -1427,9 +1427,70 @@ Netty 还提供了使用 OpenSSL 工具包(www.openssl.org)的 SSLEngine 实现.
 
 ![HTTP响应的组成部分](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_11.3_HTTP响应的组成部分.png)
 
+### 11.2.2 聚合 HTTP 消息
 
+引入自动聚合机制只不过是向 ChannelPipeline 中添加另外一个 ChannelHandler 罢了.
 
+### 11.2.3 HTTP 压缩
 
+### 11.2.4 使用 HTTPS
+
+只需要简单地将一个 ChannelHandler 添加到 ChannelPipeline 中, 便可以提供一项新功能, 甚至像加密这样重要的功能都能提供.
+
+### 11.2.5 WebSocket
+
+WebSocket 在一个 TCP 连接上提供双向的通信. WebSocket 现在可以用于传输任意类型的数据, 很像普通的套接字. 
+
+图 11-4 给出了 WebSocket 协议的一般概念. 在这个场景下, 通信将作为普通的 HTTP 协议开始, 随后升级到双向的 WebSocket 协议. 要想向你的应用程序中添加对于 WebSocket 的支持, 你需要将适当的客户端或者服务器 WebSocket ChannelHandler 添加到 ChannelPipeline 中. 这个类将处理由 WebSocket 定义的称为帧的特殊消息类型. WebSocketFrame 可以被分为数据帧和控制帧.
+
+![WebSocket协议](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_11.4_WebSocket协议.png)
+
+### 11.3 空闲的连接和超时
+
+检测空闲连接和超时是为了及时释放资源. 常见的方法发送消息用于测试一个不活跃的连接来, 通常称为 "心跳", 到远端来确定它是否还活着.
+
+<p align="center"><font size=2>表 11-4 用于空闲连接以及超时的 ChannelHandler</font></p>
+
+名称 | 描述
+-----|----
+IdleStateHandler | 如果连接闲置时间过长, Handler 会触发 IdleStateEvent 事件. 然后, 你可以在你的 ChannelInboundHandler 中重写 userEventTriggered() 方法来处理 IdleStateEvent 事件
+ReadTimeoutHandler | 在指定的时间间隔内没有接收到入站数据则会抛出 ReadTimeoutException 并关闭 Channel. ReadTimeoutException 可以通过覆盖 ChannelHandler 的 exceptionCaught(…) 方法检测到.
+WriteTimeoutHandler | 如果在指定的时间间隔内没有任何出站数据写入, 则抛出一个 WriteTimeoutException 并关闭对应的 Channel. WriteTimeoutException 可以通过覆盖 ChannelHandler 的 exceptionCaught(…) 方法检测到.
+
+<p align="center"><font size=2>代码清单 11-7 发送心跳</font></p>
+
+``` java
+public class IdleStateHandlerInitializer extends ChannelInitializer<Channel> {
+
+    @Override
+    protected void initChannel(Channel ch) throws Exception {
+        ChannelPipeline pipeline = ch.pipeline();
+        // IdleStateHandler 将在被触发时发送一个 IdleStateEvent事件
+        pipeline.addLast(new IdleStateHandler(0, 0, 60, TimeUnit.SECONDS));
+        // 将一个 HeartbeatHandler 添加到 ChannelPipeline 中
+        pipeline.addLast(new HeartbeatHandler());
+    }
+
+    public static final class HeartbeatHandler extends ChannelInboundHandlerAdapter {
+        // 发送到远程节点的心跳消息
+        private static final ByteBuf HEARTBEAT_SEQUENCE = Unpooled.unreleasableBuffer(
+                Unpooled.copiedBuffer("HEARTBEAT", CharsetUtil.ISO_8859_1));  //2
+
+        // 实现 userEventTriggered() 方法以发送心跳消息
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+            if (evt instanceof IdleStateEvent) {
+                // 发送心跳消息, 并在发送失败时关闭该连接
+                ctx.writeAndFlush(HEARTBEAT_SEQUENCE.duplicate())
+                        .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+            } else {
+                // 不是 IdleStateEvent 事件, 所以将它传递给下一个 ChannelInboundHandler
+                super.userEventTriggered(ctx, evt);
+            }
+        }
+    }
+}
+```
 
 
 
