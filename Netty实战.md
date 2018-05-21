@@ -1275,5 +1275,19 @@ Netty线程模型的卓越性能取决于对于当前执行的Thread的身份的
 
 图 7-4 显示了一个 EventLoopGroup, 它具有3 个固定大小的 EventLoop (每个 EventLoop 都由一个 Thread 支撑). 在创建 EventLoopGroup 时就直接分配了 EventLoop(以及支撑它们的 Thread), 以确保在需要时它们是可用的.
 
+![用于非阻塞传输的EventLoop分配方式](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_7.4_用于非阻塞传输的EventLoop分配方式.png)
+
+EventLoopGroup 负责为每个新创建的 Channel 分配一个 EventLoop. 在当前实现中, 使用顺序循环(round-robin)的方式进行分配以获取一个均衡的分布, 并且相同的 EventLoop 可能会被分配给多个 Channel.(这一点在将来的版本中可能会改变)
+
+一旦一个 Channel 被分配给一个 EventLoop, 它将在它的整个生命周期中都使用这个 EventLoop(以及相关联的 Thread). 请牢记这一点, 因为它可以使你从担忧你的 ChannelHandler 实现中的线程安全和同步问题中解脱出来.
+
+另外, 需要注意的是 EventLoop 的分配方式对 ThreadLocal 使用的影响. 因为一个 EventLoop 通常会被用于支撑多个 Channel, 所以对于所有关联的 Channel 来说, ThreadLocal 都将是一样的. 这使得它对于实现状态追踪等功能来说是个糟糕的选择. 然而, 在一些无状态的上下文中, 它仍然可以被用于在多个 Channel 之间共享一些重度的或者代价昂贵的对象, 甚至是事件.
+
+### 2. 阻塞传输
+
+用于像 OIO(旧的阻塞式 I/O), 设计会略有不同, 如图 7-5 所示:
+
+
+
 
 
