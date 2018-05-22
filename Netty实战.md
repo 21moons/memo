@@ -1905,8 +1905,12 @@ Java Thrift 的初始版本使用了 OIO 套接字, 并且服务器为每个活�
 
 ![对于流水线化的请求的并行处理的请求响应流](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_15.3_对于流水线化的请求的并行处理的请求响应流.png)
 
+### 15.1.4 Nifty 异步客户端的设计
 
+1. 流水线化
+**请求的流水线化**. 流水线化是一种在同一连接上发送多个请求, 而不需要等待其响应的能力.
 
+2. 多路复用
 
 
 
