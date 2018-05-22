@@ -532,7 +532,7 @@ ByteBuf 使用 zero-based 的 indexing(从0开始的索引), 第一个字节的�
 <p align="center"><font size=2>代码清单 5-6 Access data</font></p>
 
 ``` java
-	ByteBuf buffer = ...;
+    ByteBuf buffer = ...;
     for (int i = 0; i < buffer.capacity(); i++) {
         byte b = buffer.getByte(i);
         System.out.println((char) b);
@@ -730,13 +730,13 @@ ioBuffer() | 返回一个用于套接字的 I/O 操作的 ByteBuf
 
 ``` java
     // 从 Channel 获取一个到 ByteBufAllocator 的引用
-	Channel channel = ...;
-	ByteBufAllocator allocator = channel.alloc();
-	....
+    Channel channel = ...;
+    ByteBufAllocator allocator = channel.alloc();
+    ....
     // 从 ChannelHandlerContext 获取一个到 ByteBufAllocator 的引用
-	ChannelHandlerContext ctx = ...;
-	ByteBufAllocator allocator2 = ctx.alloc();
-	...
+    ChannelHandlerContext ctx = ...;
+    ByteBufAllocator allocator2 = ctx.alloc();
+    ...
 ```
 
 Netty 提供了两种 ByteBufAllocator 的实现, 一种是 PooledByteBufAllocator, 用 ByteBuf 实例池改进性能并将内存使用降到最低, 此实现使用一个 "[jemalloc](http://people.freebsd.org/~jasone/jemalloc/bsdcan2006/jemalloc.pdf)" 内存分配. 另一种是 UnpooledByteBufAllocator , 它的实现不池化 ByteBuf, 每次调用都会返回一个新的 ByteBuf 实例.
@@ -1600,18 +1600,177 @@ JDK 提供了 ObjectOutputStream 和 ObjectInputStream 通过网络将原始数�
 
 ### 12.3.1 处理 HTTP 请求
 
+<p align="center"><font size=2>代码清单 12-1 HTTPRequestHandler</font></p>
 
+``` java
+    // 扩展 SimpleChannelInboundHandler 以处理 FullHttpRequest 消息
+    public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+        private final String wsUri;
+        private static final File INDEX;
 
+        static {
+            URL location = HttpRequestHandler.class.getProtectionDomain().getCodeSource().getLocation();
+            try {
+                String path = location.toURI() + "index.html";
+                path = !path.contains("file:") ? path : path.substring(5);
+                INDEX = new File(path);
+            } catch (URISyntaxException e) {
+                throw new IllegalStateException("Unable to locate index.html", e);
+            }
+        }
 
+        public HttpRequestHandler(String wsUri) {
+            this.wsUri = wsUri;
+        }
 
+        @Override
+        public void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
+            if (wsUri.equalsIgnoreCase(request.getUri())) {
+                // 如果请求了 WebSocket 协议升级, 则调用 retain() 方法增加引用计数防止被释放, 并将它传递给下一个 ChannelInboundHandler
+                ctx.fireChannelRead(request.retain());
+            } else {
+                if (HttpHeaders.is100ContinueExpected(request)) {
+                    // 处理 100 Continue 请求以符合 HTTP 1.1 规范
+                    send100Continue(ctx);
+                }
 
+                // 读取 index.html
+                RandomAccessFile file = new RandomAccessFile(INDEX, "r");
 
+                HttpResponse response = new DefaultHttpResponse(request.getProtocolVersion(), HttpResponseStatus.OK);
+                response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8");
 
+                boolean keepAlive = HttpHeaders.isKeepAlive(request);
 
+                if (keepAlive) {
+                    // 如果请求了keep-alive, 则添加所需要的 HTTP 头信息
+                    response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, file.length());
+                    response.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                }
 
+                // 将 HttpResponse 写到客户端
+                ctx.write(response);
 
+                if (ctx.pipeline().get(SslHandler.class) == null) {
+                    // 将 index.html 写到客户端
+                    // 如果不需要加密和压缩, 那么可以通过将 index.html 的内容存储到 DefaultFileRegion 中来达到最佳效率.
+                    // 这将会利用零拷贝特性来进行内容的传输
+                    ctx.write(new DefaultFileRegion(file.getChannel(), 0, file.length()));
+                } else {
+                    ctx.write(new ChunkedNioFile(file.getChannel()));
+                }
 
+                // 写LastHttpContent 并冲刷至客户端
+                ChannelFuture future = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
+                if (!keepAlive) {
+                    // 如果没有请求 keep-alive, 则在写操作完成后关闭 Channel
+                    future.addListener(ChannelFutureListener.CLOSE);
+                }
+            }
+        }
 
+        private static void send100Continue(ChannelHandlerContext ctx) {
+            FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.CONTINUE);
+            ctx.writeAndFlush(response);
+        }
 
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
+                throws Exception {
+            cause.printStackTrace();
+            ctx.close();
+        }
+    }
+```
 
+### 12.3.2 处理 WebSocket 帧
 
+<p align="center"><font size=2>表 12-1 WebSocketFrame 的类型</font></p>
+
+帧类型 | 描述
+----- | ----
+BinaryWebSocketFrame  |  包含了二进制数据
+TextWebSocketFrame  | 包含了文本数据
+ContinuationWebSocketFrame  | 包含属于上一个 BinaryWebSocketFrame 或 TextWebSocketFrame 的文本数据或者二进制数据
+CloseWebSocketFrame  | 表示一个 CLOSE 请求, 包含一个关闭的状态码和关闭的原因
+PingWebSocketFrame  | 请求传输一个 PongWebSocketFrame
+PongWebSocketFrame  | 作为一个对于 PingWebSocketFrame 的响应被发送
+
+<p align="center"><font size=2>代码清单 12-2 处理文本帧</font></p>
+
+``` java
+    // 扩展 SimpleChannelInboundHandler, 并处理 TextWebSocketFrame 消息
+    public class TextWebSocketFrameHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
+        private final ChannelGroup group;
+
+        public TextWebSocketFrameHandler(ChannelGroup group) {
+            this.group = group;
+        }
+
+        @Override
+        // 重写 userEventTriggered() 方法以处理自定义事件
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+            if (evt == WebSocketServerProtocolHandler.ServerHandshakeStateEvent.HANDSHAKE_COMPLETE) {
+                // 如果该事件表示握手成功, 则从该 Channelipeline 中移除 HttpRequestHandler, 因为将不会接收到任何 HTTP 消息了
+                ctx.pipeline().remove(HttpRequestHandler.class);
+                // 通知所有已经连接的 WebSocket 客户端新的客户端已经连接上了
+                group.writeAndFlush(new TextWebSocketFrame("Client " + ctx.channel() + " joined"));//4
+                // 将新的 WebSocket Channel 添加到 ChannelGroup 中, 以便它可以接收到所有的消息
+                group.add(ctx.channel());
+            } else {
+                super.userEventTriggered(ctx, evt);
+            }
+        }
+
+        @Override
+        public void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
+            // 增加消息的引用计数, 并将它写到 ChannelGroup 中所有已经连接的客户端
+            group.writeAndFlush(msg.retain());
+        }
+    }
+```
+
+和之前一样, 对于 retain() 方法的调用是必需的, 因为当 channelRead0() 方法返回时, TextWebSocketFrame 的引用计数将会减少. 由于所有的操作都是异步的, 因此, writeAndFlush() 方法可能会在 channelRead0() 方法返回之后完成, 有可能访问一个已经失效的引用.
+
+### 12.3.3 初始化 ChannelPipeline
+
+<p align="center"><font size=2>代码清单 12-3 初始化 ChannelPipeline</font></p>
+
+``` java
+    public class ChatServerInitializer extends ChannelInitializer<Channel> {
+        private final ChannelGroup group;
+
+        public ChatServerInitializer(ChannelGroup group) {
+            this.group = group;
+        }
+
+        @Override
+        protected void initChannel(Channel ch) throws Exception {
+            // 将所有需要的 ChannelHandler 添加到 ChannelPipeline 中
+            ChannelPipeline pipeline = ch.pipeline();
+            pipeline.addLast(new HttpServerCodec());
+            pipeline.addLast(new HttpObjectAggregator(64 * 1024));
+            pipeline.addLast(new ChunkedWriteHandler());
+            pipeline.addLast(new HttpRequestHandler("/ws"));
+            pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
+            pipeline.addLast(new TextWebSocketFrameHandler(group));
+        }
+    }
+```
+
+<p align="center"><font size=2>表 12-2 基于 WebSocket 聊天服务器的 ChannelHandler</font></p>
+
+ChannelHandler　|　职责
+-------------- | ----
+HttpServerCodec | 将字节解码为 HttpRequest, HttpContent 和 LastHttpContent. 并将 HttpRequest, HttpContent 和 LastHttpContent 编码为字节
+ChunkedWriteHandler | 写入一个文件的内容
+HttpObjectAggregator | 将一个 HttpMessage 和跟随它的多个 HttpContent 聚合为单个 FullHttpRequest 或者 FullHttpResponse (取决于它是被用来处理请求还是响应). 安装了这个之后, ChannelPipeline 中的下一个 ChannelHandler 将只会收到完整的 HTTP 请求或响应
+HttpRequestHandler | 处理 FullHttpRequest (那些不发送到 /ws URI 的请求)
+WebSocketServerProtocolHandler | 按照 WebSocket 规范的要求, 处理 WebSocket 升级握手, PingWebSocketFrames, PongWebSocketFrames 和 CloseWebSocketFrames.
+TextWebSocketFrameHandler | 处理 TextWebSocketFrame 和握手完成事件
+
+Netty 的 WebSocketServerProtocolHandler 处理了所有委托管理的 WebSocket 帧类型以及升级握手本身. 如果握手成功, 那么所需的 ChannelHandler 将会被添加到 ChannelPipeline 中, 而那些不再需要的ChannelHandler 则将会被移除.
+
+![WebSocket协议升级之前的ChannelPipeline](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_12.3_WebSocket协议升级之前的ChannelPipeline.png)
+
+![WebSocket协议升级之后的ChannelPipeline](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_12.4_WebSocket协议升级之后的ChannelPipeline.png)
