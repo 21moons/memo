@@ -34,6 +34,7 @@
 - [DeepLearningBook](https://github.com/HFTrader/DeepLearningBook)
 - [monkeylearn](https://monkeylearn.com/)
 - [The Neural Network Zoo](http://www.asimovinstitute.org/neural-network-zoo/)
+- [马尔可夫链蒙特卡罗方法(MCMC)](http://www.cnblogs.com/pinard/p/6625739.html)
 
 ---
 
