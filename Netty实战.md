@@ -1774,3 +1774,165 @@ Netty 的 WebSocketServerProtocolHandler 处理了所有委托管理的 WebSocke
 ![WebSocket协议升级之前的ChannelPipeline](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_12.3_WebSocket协议升级之前的ChannelPipeline.png)
 
 ![WebSocket协议升级之后的ChannelPipeline](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_12.4_WebSocket协议升级之后的ChannelPipeline.png)
+
+### 12.3.4 引导
+
+<p align="left"><font size=2>代码清单 12-4 引导服务器</font></p>
+
+``` java
+    public class ChatServer {
+        // 创建 DefaultChannelGroup, 其将保存所有已经连接的 WebSocket Channel
+        private final ChannelGroup channelGroup = new DefaultChannelGroup(ImmediateEventExecutor.INSTANCE);
+        private final EventLoopGroup group = new NioEventLoopGroup();
+        private Channel channel;
+
+        public ChannelFuture start(InetSocketAddress address) {
+            ServerBootstrap bootstrap  = new ServerBootstrap();
+            bootstrap.group(group)
+                    .channel(NioServerSocketChannel.class)
+                    .childHandler(createInitializer(channelGroup));
+            ChannelFuture future = bootstrap.bind(address);
+            future.syncUninterruptibly();
+            channel = future.channel();
+            return future;
+        }
+
+        protected ChannelInitializer<Channel> createInitializer(ChannelGroup group) {
+           return new ChatServerInitializer(group);
+        }
+
+        // 处理服务器关闭, 并释放所有的资源
+        public void destroy() {
+            if (channel != null) {
+                channel.close();
+            }
+            channelGroup.close();
+            group.shutdownGracefully();
+        }
+
+        public static void main(String[] args) throws Exception{
+            if (args.length != 1) {
+                System.err.println("Please give port as argument");
+                System.exit(1);
+            }
+            int port = Integer.parseInt(args[0]);
+
+            final ChatServer endpoint = new ChatServer();
+            ChannelFuture future = endpoint.start(new InetSocketAddress(port));
+
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
+                public void run() {
+                    endpoint.destroy();
+                }
+            });
+            future.channel().closeFuture().syncUninterruptibly();
+        }
+    }
+```
+
+# 13 使用 UDP 广播事件
+
+## 13.1 UDP 的基础知识
+
+UDP 这样的无连接协议中并没有持久化连接这样的概念, 并且每个消息(一个 UDP 数据报)都是一个单独的传输单元. 此外, UDP 也没有 TCP 的纠错机制. TCP 连接就像打电话, 其中一系列的有序消息将会在两个方向上流动. 相反, UDP 则类似于往邮箱中投入一叠明信片. 你无法知道它们将以何种顺序到达它们的目的地, 或者它们是否所有的都能够到达它们的目的地.
+
+## 13.3 UDP 示例应用程序
+
+我们的示例程序将打开一个文件, 随后将会通过 UDP 把每一行都作为一个消息广播到一个指定的端口.
+
+![广播系统概览](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_13.1_广播系统概览.png)
+
+## 13.4 消息 POJO: LogEvent
+
+在消息处理应用程序中, 数据通常由 POJO 表示, 除了实际上的消息内容, 其还可以包含配置或处理信息.
+
+## 13.5 编写广播者
+
+![通过DatagramPacket发送日志条目](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_13.2_通过DatagramPacket发送日志条目.png)
+
+![ChannelPipeline和LogEvent事件流](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_13.3_ChannelPipeline和LogEvent事件流.png)
+
+正如你所看到的, 所有的将要被传输的数据都被封装在了 LogEvent 消息中. LogEventBroadcaster 将把这些写入到 Channel 中, 并通过 ChannelPipeline 发送它们, 在那里它们将会被转换(编码)为 DatagramPacket 消息. 最后, 他们都将通过 UDP 被广播, 并由远程节点接收.
+
+## 13.6 编写监视器
+
+![LogEventMonitor](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_13.4_LogEventMonitor.png)
+
+# 14 案例研究, 第一部分
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
