@@ -1896,7 +1896,14 @@ Java Thrift 的初始版本使用了 OIO 套接字, 并且服务器为每个活�
 
 ![同步的请求响应流](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_15.1_同步的请求响应流.png)
 
-![对于流水线化的请求的顺序化处理的请求响应流](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_15.1_对于流水线化的请求的顺序化处理的请求响应流.png)
+服务器可能会在它完成处理第一个请求之前, 从单个客户端读取多个请求, 此时为了保证顺序地处理同一个连接上的所有传入消息, 同时不会强制所有这些消息都在同一个执行器线程上运行, 可以使用 Netty 4 的 EventExecutor 或者 Netty 3.x 中的 OrderedMemoryAwareThreadPoolExcecutor.
+图 15-2 展示了流水线化的请求是如何被以正确的顺序处理的, 这也就意味着对应于第一个请求的响应将会被首先返回, 然后是对应于第二个请求的响应, 以此类推.
+
+![对于流水线化的请求的顺序化处理的请求响应流](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_15.2_对于流水线化的请求的顺序化处理的请求响应流.png)
+
+我们希望允许来自于单个连接上的多个流水线化的请求的处理器能够被并行处理, 但是那样我们控制不了这些处理器完成的先后顺序, 此时我们使用了一种涉及缓冲响应的方案, 如果客户端要求响应保序, 我们将会缓冲提前完成的响应, 一旦所有较早的响应都已经完成, 我们将按照所要求的顺序将它们一起发送出去. 见图 15-3 所示.
+
+![对于流水线化的请求的并行处理的请求响应流](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_15.3_对于流水线化的请求的并行处理的请求响应流.png)
 
 
 
