@@ -103,10 +103,48 @@ Kafka 对 Zookeeper 的延迟和超时比较敏感, 与 Zookeeper 群组之间�
 
 # 3 Kafka 生产者--向 Kafka 写入数据
 
-Kafka 可以作为 消息队列, 消息总线还有数据存储平台.
+Kafka 可以作为消息队列, 消息总线还有数据存储平台. 不同的使用场景意味着不同的需求:
+是否每个消息都很重要?
+是否允许丢失一小部分消息?
+消息重复是否可以接受?
+是否有严格的延迟和吞吐量要求?
 
 ![Kafka生产者组件图](https://raw.githubusercontent.com/21moons/memo/master/res/img/kafka/Figure_3.1_Kafka生产者组件图.jpg)
 
+## 3.2 创建 Kafka 生产者
+
+发送消息主要有下面三种方式:
+* 发送并忘记
+* 同步发送
+* 异步发送
+
+``` java
+    // 发送并忘记
+    ProducerRecord<String, String> record = new ProducerRecord<>("CustomerCountry", "Precision Products", "France");
+
+    try{
+        producer.send(record);
+    } catch (Exception e) {
+        // 可能的异常包括, SerializationException(序列化失败), BufferExhaustedException 或 TimeoutException (缓冲区已满) 
+        // InterruptException(发送线程被中断)
+        e.printStackTrace();
+    }
+```
+
+### 3.3.1 同步发送消息
+
+``` java
+    // 同步发送
+    ProducerRecord<String, String> record = new ProducerRecord<>("CustomerCountry", "Precision Products", "France");
+
+    try{
+        producer.send(record).get();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+```
+
+KafkaProducer 一般会发生两类错误, 一类是可重试错误
 
 
 
