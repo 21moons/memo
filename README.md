@@ -109,6 +109,7 @@
 - [进程间通信-创建管道实现机制](http://blog.csdn.net/tiankong_/article/details/76468140)
 - [Linux 中的零拷贝技术, 第 1 部分](https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy1/)
 - [Linux 中的零拷贝技术, 第 2 部分](https://www.ibm.com/developerworks/cn/linux/l-cn-zerocopy2/)
+- [libevent深入浅出](https://www.gitbook.com/book/aceld/libevent)
 
 ---
 
@@ -127,14 +128,21 @@
 - [图说设计模式](http://design-patterns.readthedocs.io)
 
 ---
+## 数据结构
+
+- [HashedWheelTimer](https://zacard.net/2016/12/02/netty-hashedwheeltimer/)
+
+---
 ## java
 
 * 在 Java 中, 构造方法无法被继承, 无法设置默认值
 * Jboss 同时是 Web 容器和 EJB 容器. Tomcat 只是Web容器
 * HashMap 几乎可以等价于 Hashtable, 除了 HashMap 是非 synchronized 的, 并可以接受null(HashMap可以接受为null的键值(key)和值(value), 而Hashtable则不行)
 * HashMap 是非 synchronized, 而 Hashtable 是 synchronized, 这意味着 Hashtable 是线程安全的, 多个线程可以共享一个 Hashtable; 而如果没有正确的同步的话, 多个线程是不能共享 HashMap 的.
+* 对于 volatile 变量, 写的时候会将线程本地内存的数据刷新到主内存上, 读的时候会将主内存的数据加载到本地内存里
+* [AtomicIntegerFieldUpdater使用](http://www.cnblogs.com/hithlb/p/4516078.html)
 
-**关于final的知识点**
+#### 关于final的知识点
 * final关键字可以用于成员变量, 本地变量, 方法以及类.
 * final成员变量必须在声明的时候初始化或者在构造器中初始化, 否则就会报编译错误.
 * 你不能够对 final 变量再次赋值.
@@ -163,7 +171,7 @@ list.add("personal loan"); //valid
 loans = new Vector();  //not valid
 ```
 
-**抽象类和接口的区别**
+#### 抽象类和接口的区别
 * 如果一个类没有包含足够多的信息来描述一个具体的对象, 这样的类就是抽象类.
 * 抽象类在实际应用中, 更多的是因为类中有抽象方法. 抽象方法: 只声明, 不实现. 具体的实现由继承它的子类来实现. 实际点就是:被 abstract 修饰的方法, 只有方法名没有方法实现, 具体的实现要由子类实现. 方法名后面直接跟一个分号, 而不是花括号.
 * 一个类中含有抽象方法(被 abstract 修饰), 那么这个类必须被声明为抽象类(被 abstract 修饰).
@@ -182,10 +190,7 @@ loans = new Vector();  //not valid
 * 除了默认方法, Java 8 还在允许在接口中定义静态方法.
 * 接口中的静态方法必须是 public 的, public 修饰符可以省略, static 修饰符不能省略.
 
-###  **Java 编码注意事项**
-* 容器中 entry 的删除要使用迭代器
-
-###  泛型
+####  泛型
 * 定义泛型的时候使用 SomeName<T>, 对已经定义的泛型, 我们不想给她一个具体的类型做为类型参数, 我们可以给她一个不确定的类型作为参数 SomeName<?>
 * 在定义泛型类时, 任意一个大写字母都可以, 但为了提高可读性，大家还是用有意义的字母比较好，一般来讲，在不同的情境下使用的字母意义如下:
 E    — Element, 常用在 java Collection 里, 如: List<E>, Iterator<E>, Set<E>
@@ -201,8 +206,8 @@ T    — Type, 类型, 如 String, Integer 等等
 public final class Class<T> extends Object implements Serializable, GenericDeclaration, Type, AnnotatedElement
   Class 类的实例表示正在运行的 Java 应用程序中的类和接口, 枚举是一种类, 注释是一种接口.
 
-
-
+####  Java 编码注意事项
+* 容器中 entry 的删除要使用迭代器
 ---
 ## docker
 - docker 要求必须部署在64位机器上
