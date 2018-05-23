@@ -57,9 +57,25 @@ Kafka 通过分区来实现数据冗余和伸缩性, 分区可以分布在不同
 
 ### 1.2.5 broker与集群
 
+一个独立的 Kafka 服务器被称为 broker. broker 接收来自生产者的消息, 为消息设置偏移量, 并提交消息到磁盘保存.
+根据特定的硬件及其性能特征, 单个 broker 可以轻松处理数千个分区以及每秒百万级的消息量.
+
+broker 是集群的组成部分, 每个集群都有一个 broker 同时充当了`集群控制器`的角色.
+控制器通过算法从 broken 中选出, 它负责将分区分配给 broker 和监控 broker 状态.
+在集群中, 一个分区从属于一个 broker, 该 broker 被称为分区的首领. 一个分区可以分配给多个 broker, 这个时候会发生分区复制, 这种复制机制为分区提供了消息冗余, 防止节点失效导致的消息丢失.
+
 ![集群里的分区复制](https://raw.githubusercontent.com/21moons/memo/master/res/img/kafka/Figure_1.7_集群里的分区复制.jpg)
 
+保留消息(在一定期限内)是 Kafka 的一个重要特性. Kafka broker 默认的消息保留策略是这样的, 要么保留一段时间, 要么保留到消息达到一定大小的字节数.
 
+### 1.2.6 多集群
+
+Kafka 的消息复制机制只能在单个集群里进行, 不能在多个集群之间进行.
+Kafka 提供了一个叫做 MirrorMaker 的工具, 可以用它来实现集群间的消息复制.
+
+![多数据中心架构](https://raw.githubusercontent.com/21moons/memo/master/res/img/kafka/Figure_1.8_多数据中心架构.jpg)
+
+## 1.3 为什么选择 Kafka
 
 
 
