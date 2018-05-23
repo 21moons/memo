@@ -77,9 +77,35 @@ Kafka 提供了一个叫做 MirrorMaker 的工具, 可以用它来实现集群�
 
 ## 1.3 为什么选择 Kafka
 
+* 支持多个生产者
+* 支持多个消费者
+* 基于磁盘的数据存储
+每个主题可以单独设置保留规则
+* 伸缩性
+要提高集群的容错能力, 需要配置较高的复制系数.
+* 高性能
+* 生态系统
 
+使用场景
+* 用户活动跟踪
+* 传递消息
+* 度量指标和日志记录
+* 提交日志
+* 流处理
 
+# 2 安装 Kafka
 
+Kafka 使用 Zookeeper 来保存 broker, 主题和分区的元数据信息和消费者信息.
+
+磁盘性能影响生产者, 内存容量影响消费者.
+
+Kafka 对 Zookeeper 的延迟和超时比较敏感, 与 Zookeeper 群组之间的一个通信异常就可能导致 Kafka 服务器出现无法预测的行为.
+
+# 3 Kafka 生产者--向 Kafka 写入数据
+
+Kafka 可以作为 消息队列, 消息总线还有数据存储平台.
+
+![Kafka生产者组件图](https://raw.githubusercontent.com/21moons/memo/master/res/img/kafka/Figure_3.1_Kafka生产者组件图.jpg)
 
 
 
