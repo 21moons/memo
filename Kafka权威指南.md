@@ -138,13 +138,52 @@ Kafka 可以作为消息队列, 消息总线还有数据存储平台. 不同的�
     ProducerRecord<String, String> record = new ProducerRecord<>("CustomerCountry", "Precision Products", "France");
 
     try{
+        // producer.send() 方法先返回一个 Future 对象, 然后调用 Future 对象的 get() 方法等待 Kafka 响应
         producer.send(record).get();
     } catch (Exception e) {
         e.printStackTrace();
     }
 ```
 
-KafkaProducer 一般会发生两类错误, 一类是可重试错误
+KafkaProducer 一般会发生两类错误, 一类是可重试错误, 这类错误可以通过重发消息来解决. 比如对于连接错误, 可以通过再次建立连接来解决, "no leader" 错误则可以通过重新为分区选举首领来解决. KafkaProducer 可以被配置成自动重试, 如果多次重试后仍无法解决问题, 应用程序会收到一个重试异常. 另一类错误无法通过重试解决, 比如 "消息太大" 异常, 对于这类错误, KafkaProducer 不会进行任何重试, 直接抛出异常.
+
+### 3.3.1 异步发送消息
+
+``` java
+// 实现回调接口
+private class DemoProducerCallback implements Callback {
+    @Override
+    public void onCompletion(RecordMetadata recordMetadata, Exception e){
+        if(e != null){
+            e.printStackTrace();
+        }
+    }
+}
+
+ProducerRecord<String, String> record = new ProducerRecord<>("CustomerCountry", "Biomedical Materials", "USA");
+
+// 发送消息时传进去一个回调对象
+producer.send(record, new DemoProducerCallback());
+```
+
+### 3.4 生产者的配置
+
+1. acks
+acks 参数指定了必须要有多少个分区副本收到消息, 生产者才会认为消息写入是成功的.
+* acks=0, 生产者写入消息前不会等待任何来自服务器的响应, 强调消息的吞吐量
+* acks=1, 只要集群的首领节点收到消息, 生产者就会收到一个来自服务器的成功响应.
+* acks=all, 只有当所有参与复制的节点全部收到消息时, 生成者才会收到一个来自服务器的成功响应.延迟最高.
+
+2. buffer.memory
+设置生产者内存缓冲区的大小, 如果应用程序生成消息的速度超过发送消息的速度, 会导致生产者空间不足.
+
+3. compression.type
+消息压缩类型
+
+4. retries
+生产者可以重发消息的次数, 如果重发达到这个次数, 生产者会放弃重试并返回错误.
+建议在设置重试次数
+
 
 
 
