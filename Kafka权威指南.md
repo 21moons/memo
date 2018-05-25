@@ -219,6 +219,143 @@ Kafka 可以保证同一个分区里的消息时有序的. 也就是说, 如果�
 
 ### 3.5.1 自定义序列化器
 
+假设你创建了一个简单的类来表示一个客户:
+
+``` java
+public class Customer {
+    private int customerID;
+    private String customerName;
+
+    public Customer(int ID, String name){
+        this.customerID = ID;
+        this.customerName = name;
+    }
+
+    public int getID(){
+        return customerID;
+    }
+
+    public String getName(){
+        return customerName;
+    }
+}
+```
+
+在我们要为这个类创建一个序列化器, 它看起来可能是这样的:
+
+``` java
+import org.apache.kafka.common.errors.SerializationException;
+
+import java.nio.ByteBuffer;
+import java.util.Map;
+
+public class CustomerSerializer implements Serializer<Customer> {
+
+    @Override
+    public void configure(Map configs, boolean isKey){
+        // 不做任何配置
+    }
+
+    @Override
+    /* Customer 对象将被序列化成:
+    表示 customeID 的 4 字节整数
+    表示 customerName 长度的 4 字节整数(如果 customeName 为空, 则长度为0)
+    表示 customerName 的 N 个字节
+    */
+    public byte[] serialize(String topic, Customer data){
+        try{
+            byte[] serializedName;
+            int stringSize;
+
+            if(data == null) return null;
+            else {
+                if(data.getName() != null){
+                    serializedName = data.getName().getBytes("UTF-8");
+                    stringSize = serializedName.length;
+                }else{
+                    serilizedName = new byte[0];
+                    stringSize = 0;                }
+            }
+
+            ByteBuffer buffer = BuyeBuffer.allocate(4 + 4 + stringSize);
+            buffer.putInt(data.getID());
+            buffer.putInt(stringSize);
+            buffer.put(serializedName);
+
+            return buffer.array();
+        } catch (Exception e) {
+            throw new SerializationException("Error when serializing Customer to byte[]" + e);
+        }
+
+    }
+
+    @Override
+    public void close(){
+        // 不需要关闭任何东西
+    }
+}
+```
+
+### 3.5.2 使用 Avro 序列化
+
+Apache Avro 是一种与编程语言无关的序列化格式.
+
+Avro 数据通过与语言无关的 schena 来定义. schema 通过 JSON 来描述, 数据被序列化成二进制文件或 JSON 文件, 不过一般会使用二进制文件. Avro 在读写文件时需要用到 schema, `schema 一般会被内嵌在数据文件里`.
+
+Avro 有一个很有意思的特性是, 当负责写消息的应用程序使用了新的 schema, 负责读消息的应用程序可以继续处理消息而无需做任何改动.
+
+假设有这样一个 schema:
+
+{
+    "namespace": "customerManagement.avro",
+    "type": "record",
+    "name": "Customer",
+    "fields": [
+        {"name": "id", "type" : "int"},
+        {"name": "name", "type" : "string"},
+        {"name": "faxNumber", "type" : ["null", "string"], "default": "null"}
+    ]
+}
+
+id 和 name 字段是必须的, faxNumber 字段是可选的, 默认为 null.
+
+在新版 schema 中, 我们将 faxNumer 字段改为 email 字段
+{
+    "namespace": "customerManagement.avro",
+    "type": "record",
+    "name": "Customer",
+    "fields": [
+        {"name": "id", "type" : "int"},
+        {"name": "name", "type" : "string"},
+        {"name": "email", "type" : ["null", "string"], "default": "null"}
+    ]
+}
+
+使用 Avro 的好处是: 在我们修改了消息的 schema 后, 但没有在读取方更新 schema, 而这样只会导致某个字段为空, 不会出现异常或阻断性错误, 也不需要对现有数据进行大幅更新. 不过这里有以下两个需要注意的地方:
+* 用于写入数据和读取数据的 schema 必须是相互兼容的, 这里的兼容是指满足一些兼容性原则.
+* 反序列化器需要用到已经写入数据的 schema, 即使它可能与用于读取数据的 schema 不一样. Avro 数据文件里包含了用于写入数据的 schema, 不过在 Kafk里有一种更好的处理方式, 下一小节我们会介绍它.
+
+### 3.5.3 在 Kafka 里使用 Avro
+
+Avro 的数据文件里包含了整个 schema, 但是 Kafka 要处理成千上万的消息, 这样的开销是不可接受的. 为了解决这个问题, 我们通常用 "schema 注册表" 来达到目的. 我们把所有写人数据需要用到的 schema 保存在注册表里, 然后在记录里引用 schema 的标识符. 负责读取数据的应用程序使用标识符从注册表里拉取 schema 来反序列化记录. 序列化器和反序列化器分别负责处理 schema 的注册和拉取.
+
+## 3.6 分区
+
+键有两个用途: 可以作为消息的附加信息, 也可以用来决定消息该被写到主题的哪个分区. 拥有相同键的悄息将被写到同一个分区. 也就是说, 如果一个进程只从一个主题的分区读取数据(第 4 章会介绍更多细节), 那么具有相同键的所有记录都会被该进程读取.
+
+如果键值为 null, 井且使用了默认的分区器, 那么记录将被随机地发送到主题内各个可用的分区上. 分区器使用轮询(RoundRobin)算法将消息均衡地分布到各个分区上.
+
+如果键不为空, 并且使用了默认的分区器, 那么 Kafka 会对键进行散列(使用 Kafka 自己的散列算法, 即使升级 Java 版本, 散列值也不会发生变化), 然后根据散列值把消息映射到特定的分区上. 这里的关键之处在于, 同一个键总是被映射到同一个分区上, 所以在进行映射时, 我们会使用主题所有的分区, 而不仅仅是可用的分区. 这也意味着, 如果写入数据的分区是不可用的, 那么就会发生错误. 但这种情况很少发生, 我们将在第 6 章讨论 Kafka 的复制功能和可用性.
+
+只有在不改变主题分区数量的情况下, 键与分区之间的映射才能保持不变. 举个例子, 在分区数量保持不变的情况下, 可以保证用户 045189 的记录总是被写到分区 34. 在从分区读取数据时, 可以进行各种优化. 不过, 一旦主题增加了新的分区, 这些就无陆保证了--旧数据仍然留在分区 34, 但新的记录可能被写到其他分区上. 如果要使用键来映射分区, 那么最好在创建主题的时候就把分区规划好(第 2 章介绍了如何确定合适的分区数量), 而且永远不要增加新分区.
+
+支持实现自定义分区策略, 分区最重要的一个原则是数据在分区之间的分布均衡.
+
+# 4 Kafka 消费者--从 Kafka 读取数据
+
+
+
+
 
 
 
