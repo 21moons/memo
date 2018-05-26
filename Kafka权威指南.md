@@ -608,6 +608,15 @@ try{
 
 ## 4.7 再均衡监听器
 
+在提交偏移量一节中提到过, 消费者在退出和进行分区再均衡之前, 会做一些清理工作. 
+
+你会在消费者失去对一个分区的所有权之前提交最后一个已处理记录的偏移量, 如果消费者准备了一个缓冲区用于处理偶发的事件, 那么在失去分区所有权之前, 需要处理在缓冲区累积下来的记录. 你可能还需要关闭文件句柄, 数据库连接等.
+
+在为消费者分配新分区或移除旧分区时, 可以通过消费者 API 执行一些应用程序代码, 在调用 subscribe() 方法时传进去一个 ConsumerRebalanceListener 实例就可以了. ConsumerRebalanceListener 有两个需要实现的方法.
+1.  public  void  onPartitionsRevoked(Collection<TopicPartition> partitions)方法会在再均衡开始之前和消费者停止读取消息之后被调用. 如果在这里提交偏移量, 下一个接管分区的消费者就知道该从哪里开始读取了.
+2.  public  void  onPartitionsAssigned(Collection<TopicPartition> partitions) 方法会在重新分配分区之后和消者开始读取消息之前被调用.
+下面的例子将演示如何在失去分区所有权之前通过 onPartitionsRevoked() 方法来提交偏移量. 在下一节, 我们会演示另一个同时使用了 onPartitionsAssigned() 方法的例子.
+
 
 
 
