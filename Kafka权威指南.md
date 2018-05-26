@@ -391,7 +391,6 @@ Kafka 消费者经常会做一些高延迟的操作, 比如把数据写到数据
 
 消息轮询是消费者 API 的核心, 通过一个简单的轮询向服务器请求数据. 一旦消费者订阅了主题, 轮询就会处理所有的细节, 包括群组协调, 分区再均衡, 发送心跳和获取数据.
 
-
 ``` java
     try{
         // 这是一个无限循环. 消费者实际上是一个长期运行的应用程序, 它通过持续轮询向 Kafka请求数据
@@ -485,4 +484,138 @@ socket 在读写数据时用到的 TCP 缓冲区也可以设置大小. 如果它
 将 auto.commit.offset 设为 false, 让应用程序决定何时提交偏移量. 使用 commitSync() 提交偏移量最简单也最可靠. 这个 API 会提交由 poll() 方法返回的最新偏移量, 提交成功后马上返回, 如果提交失败就抛出异常. 
 
 要记住, commitSync() 提交的是 poll() 返回的最新偏移量, 所以在处理完所有记录后要确保调用了 commitSync(), 否则还是会有丢失消息的风险. 和自动提交一样, 如果提交前发生了再均衡, 从最近一批消息到发生再均衡之间的所有消息都将被重复处理.
+
+``` java
+    while(true){
+        ConsumerRecords<String, String> records = consumer.poll(100);
+        for (ConsumerRecord<String, String> record : records)
+        {
+            System.out.printf("topic = %s, partitiion = %s, offset = %d, customer = %s, country = %s\n",
+                record.topic(), record.partition(), record.offset(), record.key(), record.value());
+        }
+
+        try{
+            // 处理完当前批次的消息后, 调用 commitSync() 方法提交当前批次最新的偏移量
+            consumer.commitSync();
+        }catch (CommitFailedException e){
+            // 只要没有发生不可恢复的错误, commitSync() 会一直尝试直至提交成功
+            log.error("commit failed", e);
+        }
+    }
+```
+
+### 4.6.3 异步提交
+
+手动提交的不足之处是在 broker 对提交请求作出回应之前, 应用程序会一直阻塞, 这样会限制应用程序的吞吐量. 我们可以通过降低提交频率来提升吞吐量, 但如果提交前发生了再均衡, 重复消息的数量会增加, 这个时候可以使用异步提交 API, 消费者只管发送提交请求, 无需等待 broker 的响应.
+
+``` java
+    while(true){
+        ConsumerRecords<String, String> records = consumer.poll(100);
+        for (ConsumerRecord<String, String> record : records)
+        {
+            System.out.printf("topic = %s, partitiion = %s, offset = %d, customer = %s, country = %s\n",
+                record.topic(), record.partition(), record.offset(), record.key(), record.value());
+        }
+
+        consumer.commitAsync();
+    }
+```
+
+成功提交或碰到无怯恢复的错误之前, commitSync() 会一直重试, 但是 commitAsync() 不会, 这也是 commitAsync() 不好的一个地方. 它之所以不进行重试, 是因为它是异步的, 在它收到服务器响应的时候, 可能有一个更大的偏移量已经提交成功. 假设我们发出一个请求用于提交偏移量 2000, 这个时候发生了短暂的通信问题, 服务器收不到请求, 自然也不会作出任何响应. 同时, 我们已经处理完了另外一批消息, 并成功提交了偏移量 3000. 如果 commitAsync() 重新尝试提交偏移量 2000 成功, 偏移量会从 3000 变成 2000. 这个时候如果发生再均衡, 就会出现重复消息. 
+
+我们之所以提到这个问题的复杂性和提交顺序的重要性，是因为 commitAsync() 也支持回调, 在 broker 作出响应时会执行回调. 回调经常被用于记录提交错误或生成度量指标, 不过如果你要用它来进行重试, 一定要注意提交的顺序.
+
+``` java
+    while(true){
+        ConsumerRecords<String, String> records = consumer.poll(100);
+        for (ConsumerRecord<String, String> record : records)
+        {
+            System.out.printf("topic = %s, partitiion = %s, offset = %d, customer = %s, country = %s\n",
+                record.topic(), record.partition(), record.offset(), record.key(), record.value());
+        }
+
+        consumer.commitAsync(new OffsetCommitCallback() {
+            public void onComplete(Map<TopicPartition, OffsetAndMetadata> offsets, Exception e){
+                if (e != null)
+                    log.error("Commit failed for offsets {}", offsets, e);
+            }
+        });
+    }
+```
+
+>重试异步提交
+我们可以使用一个单调递增的序列号来维护异步提交的顺序. 在每次提交偏移量之后或在回调里提交偏移量时递增序列号. 在进行重试前, 先检查回调的序列号和即将提交的偏移量是否相等, 如果相等, 说明没有新的提交, 那么可以安全地进行重试. 如果序列号比较大, 说明有一个新的提交已经发送出去了, 应该停止重试.
+
+### 4.6.4 同步和异步组合提交
+
+一般情况下, 针对偶尔出现的提交失败, 不进行重试不会有太大问题, 因为如果提交失败是因为临时问题导致的, 那么后续的提交总会有成功的. 但如果这是发生在关闭消费者或再均衡前的最后一次提交, 就要确保能够提交成功. 因此, 在消费者关闭前一般会组合使用 commitAsync() 和 commitSync(). 它们的工作原理如下(后面讲到再均衡监听器时, 我们会讨论如何在发生再均衡前提交偏移量):
+
+``` java
+try{
+    while(true){
+        ConsumerRecords<String, String> records = consumer.poll(100);
+        for (ConsumerRecord<String, String> record : records)
+        {
+            System.out.printf("topic = %s, partitiion = %s, offset = %d, customer = %s, country = %s\n",
+                record.topic(), record.partition(), record.offset(), record.key(), record.value());
+        }
+        // 如果一切正常, 我们使用 commitAsync 方法来提交. 这样速度更快, 而且即使这次提交失败, 下一次提交很可能会成功
+        consumer.commitAsync();
+    }
+} catch (Exception e) {
+    log.error("Unexpected error", e);
+} finally {
+    try {
+        // 如果直接关闭消费者, 就没有所谓的 "下一次提交" 了. commitSync 方法会一直重试, 直到提交成功或发生无法恢复的错误.
+        consumer.commitSync();
+    } finally {
+        consumer.close();
+    }
+}
+```
+
+### 4.6.5 提交特定的偏移量
+
+提交偏移量的频率与处理消息批次的频率是一样的. 但如果想要更频繁地提交出怎么办? 如果 poll() 方法返回一大批数据, 为了避免因再均衡引起的重复处理整批消息, 想要在批次未处理完就提交偏移量该怎么办? 这种情况无法通过直接调用 commitSync() 或 commitAsync() 来实现, 因为直接调用时提交的偏移量无法设置, 而此时该批次里的消息还没有全部处理完.
+
+幸运的是, 消费者 API 允许在调用 commitSync() 和 commitAsync() 方法时传进去希望提交的分区和偏移量的 map. 假设你处理了批次中的一部分消息, 最后一个来自主题 "customers" 分区 3 的消息的偏移量是 5000, 你可以调用 commitSync() 方怯来提交它. 不过, 因为消费者可能不只读取一个分区, 你需要跟踪所有分区的偏移量, 所以从这个角度来说控制偏移量的提交会让代码变复杂.
+
+``` java
+    private Map<TopicPartitioin, OffsetAndMetaData> currentOffsets = new HashMap<>();
+    int count = 0;
+
+    ....
+
+    while(true){
+        ConsumerRecords<String, String> records = consumer.poll(100);
+        for (ConsumerRecord<String, String> record : records)
+        {
+            System.out.printf("topic = %s, partitiion = %s, offset = %d, customer = %s, country = %s\n",
+                record.topic(), record.partition(), record.offset(), record.key(), record.value());
+
+            currentOffsets.put(new TopicPartition(record.topic(), record.partition()),
+                new OffsetAndMetadata(record.offset() + 1, "no metadata"));
+
+            if(count % 1000 == 0)
+                consumer.commitAsync(currentOffsets, null);
+
+            count++;
+        }
+        // 如果一切正常, 我们使用 commitAsync 方法来提交. 这样速度更快, 而且即使这次提交失败, 下一次提交很可能会成功
+        consumer.commitAsync();
+    }
+```
+
+## 4.7 再均衡监听器
+
+
+
+
+
+
+
+
+
+
+
 
