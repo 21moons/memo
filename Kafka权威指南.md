@@ -613,9 +613,69 @@ try{
 你会在消费者失去对一个分区的所有权之前提交最后一个已处理记录的偏移量, 如果消费者准备了一个缓冲区用于处理偶发的事件, 那么在失去分区所有权之前, 需要处理在缓冲区累积下来的记录. 你可能还需要关闭文件句柄, 数据库连接等.
 
 在为消费者分配新分区或移除旧分区时, 可以通过消费者 API 执行一些应用程序代码, 在调用 subscribe() 方法时传进去一个 ConsumerRebalanceListener 实例就可以了. ConsumerRebalanceListener 有两个需要实现的方法.
-1.  public  void  onPartitionsRevoked(Collection<TopicPartition> partitions)方法会在再均衡开始之前和消费者停止读取消息之后被调用. 如果在这里提交偏移量, 下一个接管分区的消费者就知道该从哪里开始读取了.
-2.  public  void  onPartitionsAssigned(Collection<TopicPartition> partitions) 方法会在重新分配分区之后和消者开始读取消息之前被调用.
+
+1. public  void  onPartitionsRevoked(Collection<TopicPartition> partitions) 方法会在再均衡开始之前和消费者停止读取消息之后被调用. 如果在这里提交偏移量, 下一个接管分区的消费者就知道该从哪里开始读取了.
+
+2. public  void  onPartitionsAssigned(Collection<TopicPartition> partitions) 方法会在重新分配分区之后和消者开始读取消息之前被调用.
+
 下面的例子将演示如何在失去分区所有权之前通过 onPartitionsRevoked() 方法来提交偏移量. 在下一节, 我们会演示另一个同时使用了 onPartitionsAssigned() 方法的例子.
+
+``` java
+    private Map<TopicPartitioin, OffsetAndMetaData> currentOffsets = new HashMap<>();
+
+    // 实现 ConsumerRebalanceListener 接口
+    private class HandleRebalance implements ConsumerRebalanceListener {
+        public void onPartitionsAssigned(Collection<TopicPartition> partitions)
+        {
+        }
+
+        public void onPartitionsRevoked(Collection<TopicPartition> partitions){
+            System.out.println("Lost partitions in rebalance. Committing current offsets:"
+                + currentOffsets);
+            // 发生再均衡, 在即将失去分区所有权时提交偏移量
+            consumer.commitSync(currentOffsets);
+        }
+    }
+
+    try {
+        // 订阅分区时将 ConsumerRebalanceListener 对象一起传过去
+        consumer.subcribe(topics, new HandleRebalance());
+
+        while (true) {
+            ConsumerRecords<String, String> records = consumer.poll(100);
+
+            for(ConsumerRecord<String, String> record : records)
+            {
+                System.out.printf("topic = %s, partitiion = %s, offset = %d, customer = %s, country = %s\n",
+                    record.topic(), record.partition(), record.offset(), record.key(), record.value());
+                currentOffsets.put(new TopicPartition(record.topic(), record.partition()),
+                    new OffsetAndMetadata(record.offset() + 1, "no metadata"));
+            }
+
+            consumer.commitAsync(currentOffsets, null);
+        }
+
+    } catch(WakeupException e){
+        // 忽略异常, 正在关闭消费者
+    } catch(Exception e){
+        log.error("Unexpected error", e);
+    } finally {
+        try {
+            consumer.commitSync(currentOffsets);
+        } finally {
+            consumer.close();
+            System.out.println("Closed consumer and we are done");
+        }
+    }
+
+```
+
+## 4.8 从特定偏移量处开始处理记录
+
+目前为止, 我们知道了如何使用 poll() 方法从各个分区的最近偏移量处开始处理消息. 不过, 有时候我们也需要从指定的偏移量处开始读取消息.
+
+
+
 
 
 
