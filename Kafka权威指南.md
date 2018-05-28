@@ -743,7 +743,7 @@ Kafka 也为我们提供了用于查找特定偏移量的 API. 它有很多用�
 
 ## 4.9 如何退出
 
-如果确定要退出循环, 需要通过另一个线程调用 consumer.wakeup() 方法. 如果循环运行在主线程里, 可以在 ShutdownHook 里调用该方法. 要记住, consumer.wakeup() 是消费者唯一一个可以从其他线程里安全调用的方法. 调用 consumer.wakeup() 可以退出 poll(), 并抛出 WakeupException 异常, 或者如果调用 cconsumer.wakeup() 时线程没有等待轮询, 那么异常将在下一轮调用 poll() 时抛出.我们不需要处理 WakeupException, 因为它只是用于跳出循环的一种标识. 不过, 在退出线程之前调用(WakeupException 的异常处理) consumer.close() 是很有必要的, 它会提交任何还没有提交的东西, 并向群组协调器发送消息, 告知自己要离开群组, 接下来就会马上触发再均衡, 而不必等待会话超时.
+如果确定要退出循环, 需要通过另一个线程调用 consumer.wakeup() 方法. 如果循环运行在主线程里, 可以在 ShutdownHook 里调用该方法. 要记住, consumer.wakeup() 是消费者唯一一个可以从其他线程里安全调用的方法. 调用 consumer.wakeup() 可以退出 poll(), 并抛出 WakeupException 异常, 或者如果调用 cconsumer.wakeup() 时线程没有等待轮询, 那么异常将在下一轮调用 poll() 时抛出.我们不需要处理 WakeupException, 因为它只是用于跳出循环的一种标识. 不过, 在退出线程之前调用 consumer.close() 是很有必要的, 它会提交任何还没有提交的东西, 并向群组协调器发送消息, 告知自己要离开群组, 接下来就会马上触发再均衡, 而不必等待会话超时.
 
 下面是运行在主线程上的消费者退出线程的代码.
 
@@ -761,8 +761,36 @@ Runtime.getRuntime().addShutdownHook(new Thread(){
 
     }
 })
+
+....
+
+try {
+    // 按下 Ctrl + C 键, 上面代码注册的关闭钩子函数会在退出时进行清理
+    while(true){
+        ConeumerRecords<String, String> records = movingAvg.consumer.poll(1000);
+        System.out.println(System.currentTimeMillis() + " -- waiting for data --");
+
+        for(ConsumerRecord<String, String> record : records) {
+            System.out.printf("offset = %d, key = %s, value = %s\n", record.offset(),
+                record.key(), record.value());
+        }
+
+        for(TopicPartition tp : consumer.assignment())
+            System.out.println("Committing offset at position:" + consumer.position(tp));
+
+        movingAvg.consumer.commitSync();
+    }
+} catch (WakeupExcetion e) {
+    // 忽略关闭异常
+} finally {
+    consumer.close();
+    System.out.println("Closed consumer and we are done");
+}
 ```
 
+## 4.10 反序列化器
+
+消费者需要用反序列化器把从 Kafka 接收到的字节数组转换成 Java 对象. 在前面的例子里, 我们假设每个消息的键值对都是字符串, 所以我们使用了默认的 StringDeserializer.
 
 
 
