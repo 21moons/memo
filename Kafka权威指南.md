@@ -674,9 +674,94 @@ try{
 
 目前为止, 我们知道了如何使用 poll() 方法从各个分区的最近偏移量处开始处理消息. 不过, 有时候我们也需要从指定的偏移量处开始读取消息.
 
+如果你想从分区的起始位置开始读取消息, 或者直接跳到分区的末尾开始读取消息, 可以使用 seekToBeginning(Collection<TopicPatition> tp) 和 seekToEnd(Collection<TopicPatition> tp) 这两个方法.
 
+Kafka 也为我们提供了用于查找特定偏移量的 API. 它有很多用途, 比如向后回退几个消息或者向前跳过几个消息(对时间比较敏感的应用程序在处理滞后的情况下希望能够向前跳过若干个消息). 在使用 Kafka 以外的系统来存储偏移量时, 它将给我们带来更大的惊喜.
 
+想象一下这样的场景: 应用程序从 Kafka 读取事件(可能是网站的用户点击事件流), 对它们进行处理(可能是使用自动程序清理点击操作井添加会话信息), 然后把结果保存到数据库, NoSQL 存储引擎或 Hadoop. 同时假设我们不想丢失任何数据, 也不想在数据库里多次保存相同的结果.
 
+这种情况下, 消费者的代码可能是这样的:
+
+``` java
+    while(true){
+        ConsumerRecords<String, String> records = consumer.poll(100);
+        for (ConsumerRecord<String, String> record : records)
+        {
+            currentOffsets.put(new TopicPartition(record.topic(), record.partition()),
+                new OffsetAndMetadata(record.offset() + 1));
+
+            processRecord(record);
+            storeRecordInDB(record);
+            consumer.commitAsync(currentOffsets);
+        }
+    }
+```
+
+在这个例子里, 每处理一条记录就提交一次偏移量. 尽管如此, 在记录被保存到数据库之后以及偏移量被提交之前, 应用程序仍然有可能发生崩溃, 导致重复处理数据, 数据库里就会出现重复记录.
+
+如果保存记录到数据库和提交偏移量可以在一个原子操作里完成, 就可以避免出现上述情况. 记录和偏移量要么一起完成, 要么都不完成. 但是, 记录是保存在数据库里而偏移量是提交到 Kafka 上, 无法实现原子操作(原子操作一般粒度都比较小且限制为本地操作, 如果对多个网络IO做原子操作则会导致整个系统长时间阻塞). 不过, 如果在同一个事务里把记录和偏移量都写到数据库里会怎样? 那么我们就可以数据库的事务机制, 记录和偏移量要么都成功, 要么都没有, 然后重新处理记录.
+
+现在的问题是: 如果偏移量是保存在数据库里而不是 Kafka 里, 那么消费者在得到新分区时怎么知道该从哪里开始读取? 这个时候可以使用 seek() 方法. 在消费者启动或分配到新分区时, 可以使用 seek() 方法查找保存在数据库里的偏移量. 下面的例子大致说明了如何使用这个 API. 使用 ConsumerRebalanceListener 和 seek() 方法确保我们是从数据库里保存的偏移量所指定的位置开始处理消息的。
+
+``` java
+    public class SaveOffsetsOnRebalance implements ConsumerRebalanceListener {
+        public void onPartitionsRevoked(Collection<TopicPartition> partitons){
+            // 数据库事务
+            commitDBTransaction();
+        }
+
+        public void onPartitionsAssigned(Collectino<TopicPartition> partitions){
+            for(TopicPartition partition : partitions){
+                // 获取偏移量
+                consumer.seek(partition, getOffsetFromDB(partition));
+            }
+        }
+    }
+
+    // 订阅主题
+    consumer.subscribe(topics, new SaveOffsetOnRebalance(consumer));
+    // 消费者加入消费者群组, 并获取分配到的分区
+    consumer.poll(0);
+
+    for(TopicPartition partitioin : consumer.assignment())
+        // 获取分区偏移量
+        consumer.seek(partition, getOffsetFromDB(partition));
+
+    while(true){
+        ConsumerRecords<String, String> records = consumer.poll(100);
+
+        for (ConsumerRecord<String, String> record : records)
+        {
+            processRecord(record);
+            storeRecordInDB(record);
+            // 更新数据库中保存的偏移量
+            storeOffsetInDB(record.topic(), record.partition(), record.offset());
+        }
+        commitDBTransaction();
+    }
+```
+
+## 4.9 如何退出
+
+如果确定要退出循环, 需要通过另一个线程调用 consumer.wakeup() 方法. 如果循环运行在主线程里, 可以在 ShutdownHook 里调用该方法. 要记住, consumer.wakeup() 是消费者唯一一个可以从其他线程里安全调用的方法. 调用 consumer.wakeup() 可以退出 poll(), 并抛出 WakeupException 异常, 或者如果调用 cconsumer.wakeup() 时线程没有等待轮询, 那么异常将在下一轮调用 poll() 时抛出.我们不需要处理 WakeupException, 因为它只是用于跳出循环的一种标识. 不过, 在退出线程之前调用(WakeupException 的异常处理) consumer.close() 是很有必要的, 它会提交任何还没有提交的东西, 并向群组协调器发送消息, 告知自己要离开群组, 接下来就会马上触发再均衡, 而不必等待会话超时.
+
+下面是运行在主线程上的消费者退出线程的代码.
+
+``` java
+Runtime.getRuntime().addShutdownHook(new Thread(){
+    public void run(){
+        System.out.println("Starting exit...");
+        consumer.wakeup();
+
+        try {
+            mainTread.join();
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+
+    }
+})
+```
 
 
 
