@@ -891,6 +891,10 @@ broker 会在它所监听的每一个端口上运行一个 Acceptor 线程, 这�
 
 ![Kafka处理请求的内部流程](https://raw.githubusercontent.com/21moons/memo/master/res/img/kafka/Figure_5.1_Kafka处理请求的内部流程.jpg)
 
+生产请求和获取请求都必须发送给分区的首领副本. 如果 broker 收到一个针对特定分区的请求, 而该分区的首领在另一个 broker 上, 那么发送请求的客户端会收到一个 "非分区首领" 的错误响应. 当针对特定分区的获取请求被发送到一个不含有该分区首领的 broker 上, 也会出现同样的错误. Kafka 客户端要自己保证把生产请求和获取请求发送到正确的 broker 上.
+
+
+
 
 
 
