@@ -792,6 +792,64 @@ try {
 
 消费者需要用反序列化器把从 Kafka 接收到的字节数组转换成 Java 对象. 在前面的例子里, 我们假设每个消息的键值对都是字符串, 所以我们使用了默认的 StringDeserializer.
 
+生成消息使用的序列化器与读取悄息使用的反序列化器应该是一一对应的. 我们并不建议使用自定义序列化器和自定义反序列化器. 它们把生产者和消费者紧紧地耦合在一起, 井且很脆弱, 容易出错. 我们建议使用标准的消息格式, 比如 JSON, Thrift, Protobuf 或 Avro.
+
+##  4.11 独立消费者--为什么以及怎样使用没有群组的消费者
+
+有时候你可能只需要一个消费者从一个主题的所有分区或者某个特定的分区读取数据. 这个时候就不需要消费者群组和再均衡了, 只需要把主题或者分区分配给消费者, 然后开始读取消息井提交偏移量.
+
+如果是这样的话, 就不需要订阅主题, 取而代之的是为自己分配分区. `一个消费者可以订阅主题(并加入消费者群组), 或者为自己分配分区, 但不能同时做这两件事情.` 下面的例子显示了一个消费者是如何为自己分配分区并从分区里读取消息的:
+
+``` java
+    List<PartitionInfo> partitionInfos = null;
+    // 向集群请求可用的分区
+    partitionInfos = consumer.partitionsFor("topic");
+
+    if(partitionInfos != null) {
+        for(PartitionInfo partition : partitionInfos)
+            partitions.add(new TopicPartition(partition.topic(), partition,partitioin()));
+
+        // 获取分区
+        consumer.assign(partitions);
+
+        while(true){
+            ConsumerRecords<String, String> records = consumer.poll(1000);
+
+            for(ConsumerRecord<String, String> record : records){
+                System.out.println("topic = %s, partition = %s, offset = %d, customer = %s, country = %s\n", 
+                    record.topic(), record.partition(), record.offset(), record.key(), record.value());
+            }
+
+            consumer.commitSync();
+        }
+    }
+```
+
+除了不会发生再均衡, 也不需要手动查找分区, 其他的看起来一切正常. 不过要记住, 如果主题增加了新的分区, 消费者并不会收到通知. 所以, 要么周期性地调用 consumer.partitionsFor() 方法来检查是否有新分区加入, 要么在添加新分区后重启应用程序.
+
+# 5 深入 Kafka
+
+* Kafka 如何进行复制;
+* Kafka 如何处理来自生产者和消费者的请求;
+* Kafka 的存储细节, 比如文件格式和索引.
+
+## 5.1 集群成员关系
+
+Kafka 使用 Zookeeper 来维护集群成员的信息. 每个 broker 都有一个唯一标识符, 这个标识符可以在配置文件里指定, 也可以自动生成. 在 broker 启动的时候, 它通过创建临时节点把自己的 ID 注册到 Zookeeper. Kafka 组件订阅 Zookeeper 的 /brokers/ids 路径(broker 在 Zookeeper 上的注册路径), 当有 broker 加入集群或退出集群时, 这些组件就可以获得通知.
+
+在 broker 停机, 出现网络分区或长时间垃圾回收停顿时, broker 会从 Zookeeper 上断开连接, 此时 broker 在启动时创建的临时节点会自动从Zookeeper 上移除. 监听 broker 列表的 Kafka 组件会被告知该 broker 已移除. 
+
+在关闭 broker 时, Zookeeper 上它对应的节点也会消失, 不过它的 ID 会继续存在于其他数据结构中. 例如, 主题的副本列表里就可能包含这些 ID. 在完全关闭一个 broker 之后, 如果使用相同的 ID 启动另一个全新的 broker, 它会立即加入集群, 并拥有与旧 broker 相同的分区和主题.
+
+## 5.2 控制器
+
+控制器其实就是一个 broker, 只不过它除了具有一般 broker 的功能之外, 还负责分区首领的选举. 集群里第一个启动的 broker 通过在 Zookeeper 里创建一个临时节点 /controller 让自己成为控制器. 其他 broker 在启动时也会尝试创建这个节点, 不过它们会收到一个"节点已存在"的异常, 然后 "意识" 到控制器节点已存在, 也就是说集群里已经有一个控制器了. 其他 broker 在控制器节点上创建 Zookeeper watch 对象, 这样它们就可以收到这个节点的变更通知. 这种方式可以确保集群里一次只有一个控制器存在.
+
+
+
+
+
+
 
 
 
