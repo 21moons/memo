@@ -1375,6 +1375,11 @@ Kafka 集群之间的通信延迟随着集群间物理距离的增长而增加. 
 
 ### 8.2.1 Hub 和 Spoke 架构
 
+多个本地 Kafka 集群作为消费者, 连接到中心 Kafka 集群.
+
+![一个中心Kafka集群对应多个本地Kafka集群](https://raw.githubusercontent.com/21moons/memo/master/res/img/kafka/Figure_8.1_一个中心Kafka集群对应多个本地Kafka集群.jpg)
+
+![一个首领对应一个追随者](https://raw.githubusercontent.com/21moons/memo/master/res/img/kafka/Figure_8.2_一个首领对应一个追随者.jpg)
 
 
 
