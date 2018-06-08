@@ -1630,6 +1630,8 @@ broker 将 JMX 端口作为整个 broker 配置信息的一部分保存在 Zooke
 
 ![物化仓库变更事件流](https://raw.githubusercontent.com/21moons/memo/master/res/img/kafka/Figure_11.1_物化仓库变更事件流.jpg)
 
+### 11.2.4 时间窗口
+
 
 
 
