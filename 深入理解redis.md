@@ -14,6 +14,15 @@ Redis 是`单线程`应用程序, 占用较少的内存. 它通过在数据中�
 
 当你拥有大量不经常使用的数据且无须立即存取时, Redis 可能不是佳技术方案. 基于 SQL 的关系型数据库或者文档存储型的 NoSQL 技术, 例如 CouchDB 或者 MongoDB, 相较 Redis 而言可能是更好的选择. 但是, 随着第三版 Redis 完全支持集群, 在 Redis 中的大型数据集可以作为分布式键值数据存储. 越来越多的组织和个体从使用 Redis 集群中获取经验, 期望会有更多的项目选择使用 Redis.
 
+![Redis_MARC_子字段集合](https://raw.githubusercontent.com/21moons/memo/master/res/img/redis/Figure_1.3_Redis_MARC_子字段集合.jpg)
+
+## 流行的使用模式
+
+对 Redis 来说, 一种非常受欢迎的使用模式是作为 Web 应用程序的内存缓存. 对诸如 Django, Ruby-on-Rails, Node.js 和 Flask 等流行的 Web 框架来说, Redis 都可以作为其缓存的选项. 作为受欢迎的缓存技术, Redis 在 Web 应用程序方面擅长在存储新数据的同时驱逐(evict)老旧的数据. 对于 Web 应用程序来说, 缓存的数据内容可以是 HTML 页面字符串, 窗口小部件, 元素, 以及所有网页和整个站点.
+
+![Redis作为Web缓存](https://raw.githubusercontent.com/21moons/memo/master/res/img/redis/Figure_1.4_Redis作为Web缓存.jpg)
+
+
 
 
 
