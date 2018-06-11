@@ -6,6 +6,12 @@ Redis 是`单线程`应用程序, 占用较少的内存. 它通过在数据中�
 
 ![关系数据库和NoSQL](https://raw.githubusercontent.com/21moons/memo/master/res/img/redis/Figure_1.1_关系数据库和NoSQL.jpg)
 
+其他像 MongoDB 和 Elastic search 这样的 NoSQL 数据存储技术需要在数据装载到实际存储之前转换为 JSON 文档数据格式. 虽然 Redis 跳过了这种中间转换, 但是在其他技术方面更进一步, 为特定的数据结构提供了一系列命令. 这些数据结构包括字符串, 列表, 哈希表, 集合及有序集合. 这样的设计使得你可以通过算法和数据进行交互, 以数据在 Redis 中的存储方式及可用的命令直接构造解决方案, 同时能以更直接的方式对目标操作系统的内存和磁盘空间进行调优和监控.
+
+![Redis数据结构服务器](https://raw.githubusercontent.com/21moons/memo/master/res/img/redis/Figure_1.2_Redis数据结构服务器.jpg)
+
+
+
 
 
 
