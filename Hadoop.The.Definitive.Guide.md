@@ -144,7 +144,7 @@ public class MaxTemperatureMapper
 
 <p align="center"><font size=2>Example 2-3. Mapper for the maximum temperature example</font></p>
 
-Mapper 类包括四个参数:  input key, input value, output key, output value types
+Mapper 类包括四个参数: input key, input value, output key, output value types
 
 为了针对网络序列化场景进行优化, Hadoop 提供了一组自己的基本类型, 用于替换原生 Java 类型. 这些类型可以在 org.apache.hadoop.io 包中找到. 这里我们使用的 LongWritable, 它对应于 Java 中的 Long 类型, Text 对应 Java 中的 字符串, 和 IntWritable 对应 Java 中的 Integer.
 
