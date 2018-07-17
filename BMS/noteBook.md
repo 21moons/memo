@@ -10,6 +10,7 @@
 * DED         Data Entry Display
 * DBU         Digital Backup
 * DMS         Display Management Switch(HOTAS 上的按钮)
+* DTC         Data Transfer Cartridge
 * EPU         Emergency Power Unit
 * ETA         Estimated Time of Arrival
 * ETE         Estimated Time Enroute
@@ -20,15 +21,19 @@
 * FLIR        Forward Looking Infra-Red(需要 LANTIRN 吊舱)
 * FPM         Flight Path Marker
 * HDG         Heading
+* HMCS        Helmet Mounted Cueing System
+* HSD         Horizontal Situation Display
 * HSI         Horizontal Situation Indicator
 * HUD         Heads Up Display
 * ICP         Integrated Control Panel
 * LG          Landing Gear
+* INS         Inertial Navigation System
 * MFD         Multi Function Displays
 * MFL         Maintenance Fault List
 * MSA         Minimum Safe Altitude
 * MSL FLOOR   Minimum Safe Level floor
 * OBOGS       On Board Oxygen Generating System
+* OSB         Option Selection Button
 * PFL         Pilot Fault List
 * PFLD        Pilot Fault List Display
 * PMG         Permanent Magnet Generator
@@ -78,6 +83,7 @@ PREV/NEXT 按钮在 DCS 按钮左边.
 # DED(Data Entry Display)
 
 ## CNI
+
 CNI(通信, 导航和识别)页面是 DED 的默认页面.
 只有当 AUX COMMS 面板上的 CNI 开关设置为 UFC 时, 才能访问 CNI 页面. 当置于 BACKUP 中时, UFC 不起作用, 所有备用系统都处于活动状态并由侧面板控制.
 
@@ -94,10 +100,39 @@ CRUS 的子页面通过 DCS SEQ 开关进入.
 
 选择 EDR 模式时, 会在速度条上显示插入符号, 标识在当前高度下最大滞空时间对应的参考速度.
 
+## MARK
+
+
+## LIST
+
+LIST 页面用于访问其他子页面. 按下相关的 ICP 按钮可以访问每个页面: 1 表示 DEST, 2 表示 BNGO 等. 请注意: RCL, ENTR 和 M-SEL 0 按钮也分别用于进入 INTG, DLINK 和 MISC 子页面.
+
+5 MAN 页面用于设置机炮射击的 GUN EEGS 漏斗宽度.
+
+# DTC
+
+在现实生活中, 一般在正电脑或笔记本电脑完成任务计划. 这些数据需要带到飞机上并加载到战机的任务计算机. 这些都是通过 DTC 完成的. 您可以将 DTC 视为用来将数据从一台计算机传输到另一台计算机的记忆棒.
+在 BMS 中, DTC 通过程序进行配置, 并保存在 callsign.ini 文件中.
+
+DTS 包括如下配置:
+EWS programs and settings
+MFD settings
+Radio/Nav
+Nav Offsets
+Aircraft systems
+Weapons settings
 
 # MFD(Multi Function Displays)
 
+MFD 由右侧控制台上 AVIONICS POWER 面板上的 MFD 开关供电.
 
+MFD 顶部, 左侧和右侧的按钮的功能取决于显示的页面, 而底部按钮(OSB11 至 15)的功能通常与当前显示的页面无关.
+
+OSB#15 始终是一个 SWAP 按钮，它将交换左右 MFD 的显示内容.
+OSB#11 按钮在大多数页面上标记为 DCLT. 这代表 "declutter", 可用于删除非必要信息以使页面更易于阅读.
+OSB#11 不用于 declutter 的唯一页面是 SMS 页面, 在该页面中按下 OSB#11 将切换到 S-J(选择性 Jettison)主模式.
+
+底部中间的 3 个按钮 OSB(#12, #13, #14)是直接访问(Direct Access)按钮, 可以依据主模式(master mode)来配置, 配置保存在 DTC 中. 在不同的主模式下, 每个 MFD 可以最多为 DA 按钮分配三个不同页面. 显示的页面格式突出显示 DA 助记符. 通过按下对应的 OSB 按钮, 可以在不同模式间轻松切换, 也可以通过使用 HOTAS 上的 DMS 按钮在不同模式间循环: DMS 右键选择当前 DA 模式右侧的模式, DMS 左键选择当前 DA 模式左侧的模式. 请注意, 您不能同时在两个 MFD 上显示相同的页面, 因此当左侧 MFD 显示 FCR 时, 你想尝试在右侧 MFD 上显示 FCR,  则 FCR 对应的左侧 MFD DA 按钮将变为空槽.
 
 
 # HUD(HEAD UP DISPLAY)
