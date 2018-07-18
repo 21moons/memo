@@ -2,6 +2,9 @@
 
 * ADI         Attitude Direction Indicator
 * BIT         Built-In Tests
+* CAS         Calibrated Air Speed(校准空速)
+* CCIP        Constantly-calculated Impact point
+* CCRP        Constantly-calculated release point
 * CG          Center of Gravity
 * CMS         Countermeasures Management
 * CNI         Communication, Navigation & Identification
@@ -20,6 +23,8 @@
 * FLCP        FLT CONTROL Panel
 * FLIR        Forward Looking Infra-Red(需要 LANTIRN 吊舱)
 * FPM         Flight Path Marker
+* GS          Ground Speed
+* HADB        High Altitude Dive Bombing
 * HDG         Heading
 * HMCS        Helmet Mounted Cueing System
 * HSD         Horizontal Situation Display
@@ -31,7 +36,9 @@
 * MFD         Multi Function Displays
 * MFL         Maintenance Fault List
 * MSA         Minimum Safe Altitude
+* MSL         Main Sea Level
 * MSL FLOOR   Minimum Safe Level floor
+* OA          Offset Aimpoint
 * OBOGS       On Board Oxygen Generating System
 * OSB         Option Selection Button
 * PFL         Pilot Fault List
@@ -41,14 +48,18 @@
 * RWR         Radar Warning Receiver
 * SOI         Sensor of Interest
 * SPI         Steerpoint of Interest/System Point of Interest
+* TAS         True Airspeed(TAS 是您实际在空中移动的速度)
 * TF          Terrain Following
 * TMS         Target Management
 * TOS         Time Over Steerpoint
 * TWS         Threat Warning System
 * SMS         Stores Management Set
 * UFC         Up Front Controller
+* VIP         Visual Initial Point
+* VRP         Visual Reference Point
 * VMS         Voice Message Service
 * VVI         Vertical Velocity Indicator
+* WDP         Weapon Delivery Planner
 
 # ICP(Integrated Control Panel)
 
@@ -119,7 +130,19 @@ MARK 页面用于创建标记点. 自建的标记点用 26-30 导航点存储. �
 
 LIST 页面用于访问其他子页面. 按下相关的 ICP 按钮可以访问每个页面: 1 表示 DEST, 2 表示 BNGO 等. 请注意: RCL, ENTR 和 M-SEL 0 按钮也分别用于进入 INTG, DLINK 和 MISC 子页面.
 
-5 MAN 页面用于设置机炮射击的 GUN EEGS 漏斗宽度.
+* 1 DEST 可以用来设置 OA 点
+* 2 BNGO 页面用于设置燃油不足告警
+* 3 VIP(Visual Initial Point) 数据可以从 DTC 加载
+* 5 MAN 页面用于设置机炮射击的 GUN EEGS 漏斗宽度.
+* 9 VRP
+
+# VIP&VRP&OA
+
+VIP(目视接触点), OA(偏移瞄准点)和 VRP(视觉参考点) 的基本功能是对空对地任务中的攻击方向进行微调. 相较于用于任务导航的正常航路点, VIP, OA 和 VRP 是可以围绕目标航路点设置的附加参考点, 以改善态势感知(但是, 它们仅在 HUD 中可见并且仅在选择目标航点时). 它们可用于微调攻击路线, 因此允许高精度跃升(pop-up)攻击. 跃升攻击是一种安全的轰炸方式, 因为你只给敌人很少的时间来对你做出反应, 比如说用 AAA 或 MANPADS 对你进行射击. 但是, 这种攻击需要精心准备. 此外, 通过仔细的对任务进行预先规划, VIP, OA 和 VRP 允许对地面目标实施多人攻击.
+
+VIP: 跃升点, 从低空进入目标区域之后, 这是我们在滚动和指向目标之前拉杆爬升到指定高度的地方.
+OA: 与跃升点相关, 用作目标航向的参考点, 当飞行员跃升完成并打算将机头指向目标时, OA 可以提供有关目标方位的额外信息(因为我们将其设置为跃升点和目标之间虚线的扩展).
+VRP: 攻击后成功脱离的参考点.
 
 # DTC
 
