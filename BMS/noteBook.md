@@ -146,7 +146,7 @@ VIP(目视接触点), OA(偏移瞄准点)和 VRP(视觉参考点)的基本用途
 
 VIP(Visual Initial Point): 当参考点(RP)不是目标时, 我们使用 VIP.
 OA: 与跃升点相关, 用作目标航向的参考点, 当飞行员跃升完成并打算将机头指向目标时, OA 可以提供有关目标方位的额外信息(因为我们将其设置为跃升点和目标之间虚线的扩展).
-VRP: 当参考点是目标时, 我们使用 VRP.
+VRP: 当参考点是目标时, 我们使用 VRP, VRP 通常用作退出点.
 PUP: 跃升点, 开始转向和爬升的点, 相对参考点的方位和距离已知.
 
 ## 低空突防和高空突防(High or Low level ingress)
@@ -171,11 +171,15 @@ PUP: 跃升点, 开始转向和爬升的点, 相对参考点的方位和距离�
 
 TOSS 将使你一直在低空并与目标保持距离, 但攻击准确性较小. LAT 代表低海拔 TOSS. 在这个过程中, 炸弹将在战机的爬升过程中被向上甩出去. 攻击范围将变大同时准确度会变小. 因此, 这种攻击方式一般选择集束炸弹. 这是一种攻击 SA-2 或 SA-3 等车辆的好方法. 但也可以使用自由落体炸弹对抗大型目标.
 
+![TOSS](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/TOSS(LAT).png)
+
 HADB 对应高空突防:
 
 * High Altitude Dive Bombing
 
 HADB 会让你待在大多数 MANPAD 和小型 SAM 的攻击范围外, 但你将成为 SA-5 等远程防空导弹的一个很好目标. 攻击过程中你应该保持在计划的高度以上, 适合打击所有类型的静态目标, 如建筑物, 桥梁和车辆. 可以使用任何类型的炸弹, 甚至包括像 AGM-65 这样的导弹.
+
+![HADB](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/HADB.png)
 
 ## Ordnance
 
