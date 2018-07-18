@@ -141,8 +141,14 @@ LIST 页面用于访问其他子页面. 按下相关的 ICP 按钮可以访问�
 * 9 VRP 设置 VRP 点
 * 11 A-G DL  数据链设置
 * 0 MISC
-  5 LASER
-  8 BULLSEYE(靶心)
+  ** 5 LASER
+  此页面用于设置激光系统. 它由 4 行组成.第一个用于设置 TGP CODE, 它必须与武器用来识别目标的激光脉冲编码一致(在 LOADOUT 屏幕中设置). 如果 TGP CODE 与武器代码不匹配, GBU 将不会得到指导并且按照弹道学坠落. 因此, 现在可以通过输入你的僚机挂载炸弹的武器代码来进行伙伴激光照射. 第二行设置激光点跟踪代码. 第三行使用 M-SEL 0 按钮将激光从训练模式切换到战斗模式. 第四行设置激光器计时. 在炸弹命中目标前 16 秒进行激光照射以进行末端引导, 并且该设置项可以通过 DTC 加载. 建议将其设置为 20 秒, 并在攻击移动目标和使用宝石路 III 时进行手动照射.
+
+  ** 8 BULLSEYE(靶心)
+  Bullseye 默认分配给 25 号导航点, 但您可以使用 PREV/NEXT ICP 按钮将其更改为任何导航点(最大 25).
+  是否显示 Bullseye 信息取决于是否选择了 BULLSEYE 模式. 模式选择由 M-SEL 0 按钮切换, 当暂存器星号环绕 "BULLSEYE" 文本时开启 BULLSEYE 模式, 默认情况下该模式处于打开状态。
+  当 Bullseye 处于模式选择状态时, HUD 的左下角显示到 Bullseye 的方位和距离. 如果未选择模式, 您将无法在 HUD 中对 Bullseye 进行方位和距离指示.
+  在 MFD(FCR 和 HSD 页面)中, 当 BULLSEYE 模式被选择时, 相对于 Bullseye 位置显示光标位置的方位和距离信息, 当 BULLSEYE 模式未选择时, 显示相对于当前导航点的方位和距离信息.
 
 # A-G attack
 
@@ -219,6 +225,29 @@ OSB#11 不用于 declutter 的唯一页面是 SMS 页面, 在该页面中按下 
 
 底部中间的 3 个按钮 OSB(#12, #13, #14)是直接访问(Direct Access)按钮, 可以依据主模式(master mode)来配置, 配置保存在 DTC 中. 在不同的主模式下, 每个 MFD 可以最多为 DA 按钮分配三个不同页面. 设置完成的页面格式会用显示 DA 助记符显示在 MFD 上. 通过按下对应的 OSB 按钮, 可以在三个不同模式间轻松切换, 也可以通过使用 HOTAS 上的 DMS 按钮在不同模式间循环: DMS 右键选择当前 DA 模式右侧的模式, DMS 左键选择当前 DA 模式左侧的模式. 请注意, 您不能同时在两个 MFD 上显示相同的页面, 因此当左侧 MFD 显示 FCR 时, 你想尝试在右侧 MFD 上显示 FCR,  则 FCR 对应的左侧 MFD DA 按钮将变为空槽.
 
-虽然建议在 DTC 中为每个主模式设置三个最需要的 MFD 页面, 但也可以通过直接修改 DA 按钮设置. 首先选择所需的主模式, 然后 MFD 会显示要更改的页面, 按高亮显示的 DA 按钮, MFD 显示 MENU 页面. 从页面中选择您想要访问的子页面, DA 按钮上会显示新页面助记符, 替换前一个.
+虽然建议在 DTC 中为每个主模式设置三个最需要的 MFD 页面, 但也可以通过 MFD 操作直接修改 DA 按钮对应的页面. 首先选择主模式, 然后 MFD 会显示默认页面, 此时按下高亮显示的 DA 按钮, MFD 显示 MENU 页面, 从页面中选择您想要访问的子页面, DA 按钮上会显示新页面助记符, 替换掉前一个关联的子页面.
+
+* SMS(Stores Management System) page
+* HSD(Horizontal Situation Display) page
+* DTE(Data Transfer Equipment) page
+* TEST page
+* FLCS page
+* FLIR(Forward Looking Infra Red) page
+* TFR(Terrain Following Radar) page
+* WPN(Weapon) page
+* TGP(Targeting Pod) page
+* FCR(Fire Control Radar) page
+* BLANK page
+* HAD(HARM Attack Display) page
+* RCCE(Reconnaissance) page
+* RESET page.
+
+##  Sensor of Interest (SOI)
+
+有时候你需要选择两个 MFD 中的一个开始工作. 要让系统知道您选择的是哪个 MFD, 您需要使用 SOI 机制. 想象一下这个例子: 左侧 MFD 显示的 FCR 页面是 SOI, 右侧 MFD 显示 HSD 页面. 你想删除右侧 HSD 页面上的威胁环, 但如果你移动光标, 两个 MFD 会同时响应. 为了告诉系统你想在 HSD 页面上做操作, 你需要将 HSD 设置为 SOI. 要做到这一点, 只需在向下移动 HOTAS 上的 DMS 按钮. SOI 将从一个 MFD 切换到另一个. SOI 的视觉提示是 MFD 外侧的大方框. 如果 MFD 不是 SOI, NOT SOI 将显示在屏幕中央.
+
+##  HSD Page
+
+
 
 # HUD(HEAD UP DISPLAY)
