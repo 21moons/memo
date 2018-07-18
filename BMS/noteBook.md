@@ -33,6 +33,7 @@
 * HUD         Heads Up Display
 * ICP         Integrated Control Panel
 * LG          Landing Gear
+* HAD         HARM Attack Display
 * INS         Inertial Navigation System
 * MFD         Multi Function Displays
 * MFL         Maintenance Fault List
@@ -141,8 +142,7 @@ LIST 页面用于访问其他子页面. 按下相关的 ICP 按钮可以访问�
 * 11 A-G DL  数据链设置
 * 0 MISC
   5 LASER
-  8 BULLSEYE
-  
+  8 BULLSEYE(靶心)
 
 # A-G attack
 
@@ -219,5 +219,6 @@ OSB#11 不用于 declutter 的唯一页面是 SMS 页面, 在该页面中按下 
 
 底部中间的 3 个按钮 OSB(#12, #13, #14)是直接访问(Direct Access)按钮, 可以依据主模式(master mode)来配置, 配置保存在 DTC 中. 在不同的主模式下, 每个 MFD 可以最多为 DA 按钮分配三个不同页面. 设置完成的页面格式会用显示 DA 助记符显示在 MFD 上. 通过按下对应的 OSB 按钮, 可以在三个不同模式间轻松切换, 也可以通过使用 HOTAS 上的 DMS 按钮在不同模式间循环: DMS 右键选择当前 DA 模式右侧的模式, DMS 左键选择当前 DA 模式左侧的模式. 请注意, 您不能同时在两个 MFD 上显示相同的页面, 因此当左侧 MFD 显示 FCR 时, 你想尝试在右侧 MFD 上显示 FCR,  则 FCR 对应的左侧 MFD DA 按钮将变为空槽.
 
+虽然建议在 DTC 中为每个主模式设置三个最需要的 MFD 页面, 但也可以通过直接修改 DA 按钮设置. 首先选择所需的主模式, 然后 MFD 会显示要更改的页面, 按高亮显示的 DA 按钮, MFD 显示 MENU 页面. 从页面中选择您想要访问的子页面, DA 按钮上会显示新页面助记符, 替换前一个.
 
 # HUD(HEAD UP DISPLAY)
