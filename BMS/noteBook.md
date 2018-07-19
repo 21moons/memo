@@ -14,6 +14,7 @@
 * DBU         Digital Backup
 * DMS         Display Management Switch(HOTAS 上的按钮)
 * DTC         Data Transfer Cartridge
+* DTOS        DTOS is a visual CCRP
 * EPU         Emergency Power Unit
 * ETA         Estimated Time of Arrival
 * ETE         Estimated Time Enroute
@@ -327,6 +328,87 @@ OSB 19 TISL Target Identification Set, Laser (N/I)
 OSB 20 UFC Up-Front Controls (N/I)
 
 ## SMS page
+
+SMS 页面将根据您选择的主模式而有所不同:
+
+### SMS in NAV mode
+
+SMS 页面将以图形方式显示系统清单, 描绘飞机本身及其挂架的装载情况.
+
+在真正的喷气机中, 这个页面是完全可编程的, 但在 BMS 中只是忠实的反映了预加载情况.
+
+请注意, OSB #11(DA) 上常见的 DCLT 页面被替换为 S-J 页面. 按下该按钮进入 S-J 主模式和并显示相关的 MFD 子页面.
+
+### SMS in A-G mode
+
+![SMS_in_A-G_mode](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/SMS_in_A-G_mode.png)
+
+MFD 中心显示的信息是当前的武器的投放设置(CNTL 页面设置)
+* OSB #1 显示当前的主模式, 按下后将选择 A-G strafe gun 模式并显示关联的子页面.
+* OSB #2　用于切换投弹模式 CCIP-CCRP-DTOS-LADD&MAN. 每个都有一个相关的子页面.
+* OSB #4 标记为 INV 并显示 Inventory 页面, 一般非 NAV 主模式才需要它.
+* OSB #5(CNTL) 是当前选定武器的控制页面.
+* OSB #6 显示当前激活的武器, 类型和数量. 按下时将按顺序选择另一种 A-G 武器. 请注意, 侧杆(sidestick)上的 MSL STEP 按钮不执行相同的功能-它会切换到下一个装有相同类型 A-G 武器的挂架. 这允许飞行员在需要的情况下对相同类型的导弹进行独立的预编程, 例如用于 POS EOM 发射的 HARM 导弹.
+* OSB #7 设置当前使用的用于自由落体的 A-G 武器投放的配置. SMS 能够保存两个不同的武器配置文件 PROF1 和 PROF2. 默认情况下, CNTL 设置关联 PROF1, 但是如果你按下 OSB #7 并选择 PROF2, 所有设置将记录到 PROF2. 这允许飞行员保存两个武器投放配置并根据实际情况轻松的从一个切换到另一个.
+* OSB #8 设置 A-G 武器的单个投放(SinGLe)或成对投放(PAIR). 按下按钮将在 SGL 和 PAIR 之间切换.
+* OSB #9 是 A-G 武器的 ripple release (涟漪投放)的投放间距. 按下后 SMS 进入特定的页面, 可以输入以英尺为单位的间距值. 当投放多个炸弹时, 可以用来正确地分布杀伤范围.
+* OSB #10 是 A-G 武器 ripple release (涟漪投放)的投放数量. 每次你按下 pickle 时都会投放对应数量的武器, 按下后会进入特定页面并输入新值.
+* OSB #18 是 A-G 商店的引信设置. 按下后将会在 NOSE, TAIL 和 NSTL(包括 NOSE 和 TAIL)之间切换.
+
+#### SMS A-G Control page
+
+按下 OSB #5 显示 CNTL 页面.
+
+顶部和底部 OSB 行与主 SMS 页面相同. 不同的是左边一排 OSB 按钮(#16 到 #20)和右侧的 OSB #6, 对应 5 种不同的武器设置: C1, C2, C3, C4 和 LADD.
+
+C1(OSB #20)与通用武器或激光制导武器有关, 提供两种不同的引信开启延迟(投放后). 一个用于 NOSE 引信, 第二个用于 TAIL 引信. 按下 OSB #20 可以进入子页面设置两个时间.
+
+C2(OSB #19) 与集束炸弹或任何需要空中散布 Burst Altitude(BA) 的武器有关. 按 OSB #19 将进入一个 SMS 子页面, 其中包括引信开启延迟(投放后)和可以设置散布爆破的高度.
+
+C3(OSB #18) 与 C2 相同, 是集束炸弹的第二个配置.
+
+C4(OSB #17)专门用于双引信集束炸弹. 在此页面上可以设置第一个引信开启延迟(AD1), 第二个引信开启延迟(AD2)和散布爆破的高度(BA).
+
+OSB #10是计划释放角度的设置, 计算机需要此值来计算 DTOS 投弹的正确符号.
+
+### SMS in A-A mode
+
+
+
+
+## Selective Jettison (S-J) page
+
+## TFR page
+
+## DTE page
+
+## FLCS page
+
+## Forward Looking Infra-Red (FLIR) page
+
+
+## WPN page
+
+## TGP page
+
+## HAD page
+
+## BLANK page
+
+## RCCE page
+
+## RESET MENU page
+
+## FCR page
+
+
+
+
+
+
+
+
+
 
 
 
