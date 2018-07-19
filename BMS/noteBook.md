@@ -23,6 +23,7 @@
 * FLCS        Flight Control System
 * FLCP        FLT CONTROL Panel
 * FLIR        Forward Looking Infra-Red(需要 LANTIRN 吊舱)
+* FOV         Field Of View
 * FPM         Flight Path Marker
 * GS          Ground Speed
 * HADB        High Altitude Dive Bombing
@@ -46,6 +47,7 @@
 * PFL         Pilot Fault List
 * PFLD        Pilot Fault List Display
 * PMG         Permanent Magnet Generator
+* PPTs        Pre-Planned Threat points
 * PUP         Pull Up Point
 * QNH         Query: Nautical Height(修正海平面气压)
 * RWR         Radar Warning Receiver
@@ -148,7 +150,7 @@ LIST 页面用于访问其他子页面. 按下相关的 ICP 按钮可以访问�
   Bullseye 默认分配给 25 号导航点, 但您可以使用 PREV/NEXT ICP 按钮将其更改为任何导航点(最大 25).
   是否显示 Bullseye 信息取决于是否选择了 BULLSEYE 模式. 模式选择由 M-SEL 0 按钮切换, 当暂存器星号环绕 "BULLSEYE" 文本时开启 BULLSEYE 模式, 默认情况下该模式处于打开状态。
   当 Bullseye 处于模式选择状态时, HUD 的左下角显示到 Bullseye 的方位和距离. 如果未选择模式, 您将无法在 HUD 中对 Bullseye 进行方位和距离指示.
-  在 MFD(FCR 和 HSD 页面)中, 当 BULLSEYE 模式被选择时, 相对于 Bullseye 位置显示光标位置的方位和距离信息, 当 BULLSEYE 模式未选择时, 显示相对于当前导航点的方位和距离信息.
+  在 MFD(FCR 和 HSD 页面)中, 当 BULLSEYE 模式被选择时, 显示当前位置相对于 Bullseye 位置的方位和距离信息, 当 BULLSEYE 模式未选择时, 显示相对于当前导航点的方位和距离信息.
 
 # A-G attack
 
@@ -242,11 +244,31 @@ OSB#11 不用于 declutter 的唯一页面是 SMS 页面, 在该页面中按下 
 * RCCE(Reconnaissance) page
 * RESET page.
 
-##  Sensor of Interest (SOI)
+## Sensor of Interest (SOI)
 
 有时候你需要选择两个 MFD 中的一个开始工作. 要让系统知道您选择的是哪个 MFD, 您需要使用 SOI 机制. 想象一下这个例子: 左侧 MFD 显示的 FCR 页面是 SOI, 右侧 MFD 显示 HSD 页面. 你想删除右侧 HSD 页面上的威胁环, 但如果你移动光标, 两个 MFD 会同时响应. 为了告诉系统你想在 HSD 页面上做操作, 你需要将 HSD 设置为 SOI. 要做到这一点, 只需在向下移动 HOTAS 上的 DMS 按钮. SOI 将从一个 MFD 切换到另一个. SOI 的视觉提示是 MFD 外侧的大方框. 如果 MFD 不是 SOI, NOT SOI 将显示在屏幕中央.
 
-##  HSD Page
+## HSD Page
+
+HSD 显示页面提供了以飞机为中心的上帝视角, 其中包括您的雷达锥, 同心距离环, 雷达光标位置, 靶心位置(或方位和距离), 带有转向点的 INS 飞行计划, 路线, PPT(预先计划威胁点)及其可编程范围环, IDM 信息等.
+
+OSB #19 和 #20 用来设置 HSD 范围.
+
+HSD 内环被 4 个基数标记分开. 小旗指示正北. 较长的线表示正南, 两条较小的线分别表示东和西. 这些基本方向对于快速确定你的航向非常有用. 它们对于感知靶心方位来说也非常有帮助. 通过连接正北和正南标记, 你可以绘制一条参考线, 用来快速识别靶心的方位.
+
+OSB #1 标记为 DEP(抑制), 按下后按钮标记为 CEN(居中).
+在 DEP 中, 飞机标记显示在 MFD 中心下方, 从底部向上四分之一的位置, 此时飞机前方的可见范围要好于后方. 当选择 CEN 时, 飞机标记显示在 MFD 中间, 飞机前方的可见范围和后方一样. 请注意, DEP 或 CEN 显示的范围是不同的. DEP 的最小范围是 8Nm, 而 CEN 的最小范围可以低至 5Nm, 另外 CEN 模式可以更好的匹配 FCR 范围.
+
+OSB #2 标记为 DCPL(解耦), 当按下时切换到 CPL(耦合), 将 HSD 显示范围关联到 FCR 范围. 在 CPL 模式下, OSB #19 和 #20 被禁用(不显示箭头), HSD 将根据 FCR 标度(范围)改变标度.
+
+为了保持 HSD 和 FCR(有助于 SA)之间的良好对应, 建议在 CPL 和 CEN 模式下使用 HSD. 这可确保 HSD 和 FCR 页面显示的范围相同, HSD 显示的范围将与 FCR 范围一起同步变化.
+
+OSB #3 标记为 NORM/EXPAND, 当 HSD 为 SOI 时, 改变 HSD 的 FOV. 这也可以使用 HOTAS 小指开关(inky switch)完成.
+
+OSB #5 是 HSD 的 CNTL(控制)页面. 按下时, 大多数 OSB 按钮上会显示一系列选项. 高亮显示的选项当前处于激活状态, 当按下已经高亮显示的 OSB 时, 该选项变为非活动状态(未突出显示), 并且相关的符号系统在 HSD 隐藏.
+
+OSB #7 在主 HSD 页面上标记为 FZ, 作用是冻结当前世界位置和本机方向的显示. 飞机现在可以继续移动, MFD 上的世界位置保持不变而飞机位置不再固定在 MFD 中心. 再次按下 FZ 按钮可解除 HSD 世界位置冻结.
+
 
 
 
