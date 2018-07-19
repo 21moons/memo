@@ -1,6 +1,7 @@
 # Communication
 
 * ADI         Attitude Direction Indicator
+* BATR        Bullets at Target Range
 * BIT         Built-In Tests
 * CAS         Calibrated Air Speed(校准空速)
 * CCIP        Constantly-calculated Impact point
@@ -344,11 +345,11 @@ SMS 页面将以图形方式显示系统清单, 描绘飞机本身及其挂架�
 ![SMS_in_A-G_mode](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/SMS_in_A-G_mode.png)
 
 MFD 中心显示的信息是当前的武器的投放设置(CNTL 页面设置)
-* OSB #1 显示当前的主模式, 按下后将选择 A-G strafe gun 模式并显示关联的子页面.
+* OSB #1 显示当前的主模式, 按下后将进入 A-G strafe gun 子页面.
 * OSB #2　用于切换投弹模式 CCIP-CCRP-DTOS-LADD&MAN. 每个都有一个相关的子页面.
 * OSB #4 标记为 INV 并显示 Inventory 页面, 一般非 NAV 主模式才需要它.
 * OSB #5(CNTL) 是当前选定武器的控制页面.
-* OSB #6 显示当前激活的武器, 类型和数量. 按下时将按顺序选择另一种 A-G 武器. 请注意, 侧杆(sidestick)上的 MSL STEP 按钮不执行相同的功能-它会切换到下一个装有相同类型 A-G 武器的挂架. 这允许飞行员在需要的情况下对相同类型的导弹进行独立的预编程, 例如用于 POS EOM 发射的 HARM 导弹.
+* OSB #6 显示当前激活的武器, 武器类型和数量. 按下时将按顺序选择另一种 A-G 武器. 请注意, 侧杆(sidestick)上的 MSL STEP 按钮不执行相同的功能-它会切换到下一个装有相同类型 A-G 武器的挂架. 这允许飞行员在需要的情况下对相同类型的导弹进行独立的预编程, 例如用于 POS EOM 发射的 HARM 导弹.
 * OSB #7 设置当前使用的用于自由落体的 A-G 武器投放的配置. SMS 能够保存两个不同的武器配置文件 PROF1 和 PROF2. 默认情况下, CNTL 设置关联 PROF1, 但是如果你按下 OSB #7 并选择 PROF2, 所有设置将记录到 PROF2. 这允许飞行员保存两个武器投放配置并根据实际情况轻松的从一个切换到另一个.
 * OSB #8 设置 A-G 武器的单个投放(SinGLe)或成对投放(PAIR). 按下按钮将在 SGL 和 PAIR 之间切换.
 * OSB #9 是 A-G 武器的 ripple release (涟漪投放)的投放间距. 按下后 SMS 进入特定的页面, 可以输入以英尺为单位的间距值. 当投放多个炸弹时, 可以用来正确地分布杀伤范围.
@@ -373,12 +374,25 @@ OSB #10是计划释放角度的设置, 计算机需要此值来计算 DTOS 投�
 
 ### SMS in A-A mode
 
-
-
+* OSB #1 显示当前的主模式, 按下后将进入 A-A gun 子页面.
+* 当携带红外制导武器时, OSB #3 处于活动状态并显示 SPOT. 它将 AIM 导引头从 SPOT 改为 SCAN.
+* OSB #4 标记为 INV 并显示 Inventory 页面
+* OSB #5(CNTL) 是当前选定武器的控制页面.
+* OSB #6 显示当前激活的武器, 武器类型和数量. 按下时将按顺序选择已挂载另一种 A-A 导弹的挂点. 请注意, 侧杆(sidestick)上的 MSL STEP 按钮在按下 0.5 秒后将执行相同的功能, 如果按下的时间不到 0.5 秒, 它会切换到下一个挂有相同类型 A-A 导弹的挂点.
+* 携带红外制导武器时会显示 OSB #8(WARM/COOL), 标示导弹红外导引头状态. 按下 WARM 可以冷却导引头. 如果主模式是 DGFT 且 MASTER ARM 开关处于 ARM 或 SIM 位置, 该操作将自动完成.
+* OSB #18 依赖于导弹类型. 对于雷达制导导弹, 它设定 PRF 范围, 并在未知, 大, 中和小之间选择目标类型. 大型用于轰炸机, 中型用于战斗机, 小型用于拦截导弹(未实现). 对于红外制导导弹, 它在 BP(旁路) 和TD (阈值检测)之间选择. 设置为 TD 时, 导弹会自动解禁制导头(Uncaged). 当设置为 BP 时, 导弹需要手动解禁制导头.
+* OSB #19 切换 SLAVE 和 BORE 模式. 雷达制导导弹可以设置为 SLAVE 模式或 BORE 模式. 当设置为 SLAVE 模式时, 导弹由火控雷达引导, 当设置为 BORE(孔径)时, 导弹指向 HUD 上机炮标记下方六度, 并将无制导发射, 发射后导弹将立即打开自己的雷达开始引导. 这是一个 MADDOG 发射, 因为导弹将跟踪它看到的第一个目标(无论敌友).
 
 ## Selective Jettison (S-J) page
 
+当主模式是 NAV, A-G或A-A时, 可以进入 SMS 页面并按下 OSB #11 来访问 S-J 页面. Selective Jettison 也是一种主模式.
+这使得飞行员能够从飞机上丢弃未解锁和未制导的武器和挂架. 该页面只会展示可丢弃的挂载供选择. 飞行员按下 S-J 页面上显示的挂载附近的 OSB 按钮, 所选挂载将在 S-J 页面上突出显示, 表示它已被选中. 如果选中挂载对应的挂架也是可抛式的, 可以通过再次按下同一个 OSB 来选择, 第三次按下 OSB 将取消当前的所有选择. 飞行员可以在 S-J 主模式下预选一个 S-J 配置, 在主模式切换时该配置将被保存. 当 MASTER ARM 开关在 ARM 位置时, 使用 pickle 按钮即可丢弃挂载. 在挂载被释放后, 对应显示将从 S-J 页面中移除, 相关武器数量为零. S-J 模式可以无视任何其他武器设置.
+
 ## TFR page
+
+该页面仅适用于搭载了 LANTIRN 吊舱的 F-16(Block 25/30/32/40 EAF/42/52+, KF-16 & F-16I).
+TFR 是一种短程(36000 英尺)前下视雷达, 可让你在非常低的高度跟踪地形, 并具有自动爬升保护功能.
+
 
 ## DTE page
 
