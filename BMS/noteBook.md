@@ -248,7 +248,7 @@ OSB#11 不用于 declutter 的唯一页面是 SMS 页面, 在该页面中按下 
 
 有时候你需要选择两个 MFD 中的一个开始工作. 要让系统知道您选择的是哪个 MFD, 您需要使用 SOI 机制. 想象一下这个例子: 左侧 MFD 显示的 FCR 页面是 SOI, 右侧 MFD 显示 HSD 页面. 你想删除右侧 HSD 页面上的威胁环, 但如果你移动光标, 两个 MFD 会同时响应. 为了告诉系统你想在 HSD 页面上做操作, 你需要将 HSD 设置为 SOI. 要做到这一点, 只需在向下移动 HOTAS 上的 DMS 按钮. SOI 将从一个 MFD 切换到另一个. SOI 的视觉提示是 MFD 外侧的大方框. 如果 MFD 不是 SOI, NOT SOI 将显示在屏幕中央.
 
-## HSD Page
+## HSD page
 
 HSD 显示页面提供了以飞机为中心的上帝视角, 其中包括您的雷达锥, 同心距离环, 雷达光标位置, 靶心位置(或方位和距离), 带有转向点的 INS 飞行计划, 路线, PPT(预先计划威胁点)及其可编程范围环, IDM 信息等.
 
@@ -287,7 +287,46 @@ HSD 光标的 Bullseye 读数(HSD SOI)位于屏幕的右侧, 并且具有与幽�
 
 ![Bullseye_symbols](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/Bullseye_symbols.png)
 
-## TEST Page
+## TEST page
+
+TEST 页面显示各种内置测试(BIT). BIT1 和 BIT2 显示在飞行期间遇到的维护故障列表(MFL). 每次故障时都会记录以下内容:
+1. 发生故障的子系统(与 PFL 相同)
+2. 测试失败编号
+3. 该子系统的故障数量
+4. 首次故障发生时间(自 FCC 上电以来)
+
+此外有两个伪故障会被强制记录; 起飞时间(TOF)和着陆时间(LAN). 每当空速达到 120节且机轮收起时, 就会记录 TOF. 当机轮放下且空速小于 80 节时, 就会记录 LAND.
+
+按 CLR 按钮将清除故障列表并启动故障调查. 最多可记录 17 个故障(包括两个伪故障). 如果存在超过 17 个故障, 则最先发生的故障将被新的故障替换. 飞行结束后飞行员可以在 DTC 文件中查看飞行过程中的完整 MFL. 所有 MFL 都在飞行结束后都会记录在 dtc_last_flight_faults.txt (\User\Logs) 文件中. 每次新任务都会覆盖该文件.
+
+在冷启动时, TEST 页面上显示故障是正常的. 系统上线后这些故障将会清除. 如果遇到实际问题, 可能需要使用OSB #3 清除 MFL 以启动故障调查. 在清除 MFL 后如果系统仍然存在故障, 故障将再次显示在 MFL 上, 允许飞行员采取适当的措施来解决问题.
+
+PAGE 1
+OSB #1 BIT1 Indicates BIT1 tests. Pressing this button changes to the BIT2 page
+OSB #3 CLR Clears the Maintenance Fault List (MFL) if displayed in the centre of the MFD
+OSB #6 MFDS MFD Self-Test (N/I)
+OSB #7 RALT Radar Altimeter test
+OSB #8 TGP Targeting Pod test (N/I)
+OSB #9 FINS Fixed Imaging Navigation Set (N/I)
+OSB #10 TFR Terrain Following Radar Test (N/I)
+OSB #16 RSU Rate Sensor Unit (N/I)
+OSB #17 INS Inertial Navigation System test (N/I)
+OSB #18 SMS Stores Management System test (N/I)
+OSB #19 FCR Fire Control Radar test switches the MFD to the FCR page and starts the FCR BIT
+OSB #20 DTE Data Test Loading (N/I)
+
+PAGE 2
+此页面包含其他内置测试. OSB 1(BIT2)表示这些是 BIT2 测试. 再次按此按钮将切换到 BIT1 页面.
+OSB 3 CLR Clear fault list (N/I)
+OSB 6 IFF1 IFF1 self-test (N/I)
+OSB 7 IFF2 IFF2 test (N/I)
+OSB 8 IFF3 IFF3 test (N/I)
+OSB 9 IFFC IFF Mode C test (N/I)
+OSB 10 TCN TACAN Test (N/I)
+OSB 19 TISL Target Identification Set, Laser (N/I)
+OSB 20 UFC Up-Front Controls (N/I)
+
+## SMS page
 
 
 
