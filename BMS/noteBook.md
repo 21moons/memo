@@ -36,6 +36,7 @@
 * HUD         Heads Up Display
 * ICP         Integrated Control Panel
 * LG          Landing Gear
+* LPI         Low Probability of Intercept
 * HAD         HARM Attack Display
 * INS         Inertial Navigation System
 * MFD         Multi Function Displays
@@ -53,6 +54,7 @@
 * PUP         Pull Up Point
 * QNH         Query: Nautical Height(修正海平面气压)
 * RWR         Radar Warning Receiver
+* SCP         Set Clearance Plane
 * SOI         Sensor of Interest
 * SPI         Steerpoint of Interest/System Point of Interest
 * TAS         True Airspeed(TAS 是您实际在空中移动的速度)
@@ -63,6 +65,7 @@
 * SMS         Stores Management Set
 * UFC         Up Front Controller
 * VIP         Visual Initial Point
+* VLC         Very Low Clearance
 * VRP         Visual Reference Point
 * VMS         Voice Message Service
 * VVI         Vertical Velocity Indicator
@@ -391,8 +394,14 @@ OSB #10是计划释放角度的设置, 计算机需要此值来计算 DTOS 投�
 ## TFR page
 
 该页面仅适用于搭载了 LANTIRN 吊舱的 F-16(Block 25/30/32/40 EAF/42/52+, KF-16 & F-16I).
+
 TFR 是一种短程(36000 英尺)前下视雷达, 可让你在非常低的高度跟踪地形, 并具有自动爬升保护功能.
 
+TFR 的主要功能是沿飞机飞行路径检测地形, 并为飞行员(在手动模式下) 或 FLCS(在自动模式下)生成垂直方向上的爬升/下降命令(g 命令), 以便飞行员在飞行中与地面保持设置的距离.
+
+TFR 功能包括地形跟踪, 障碍物警告和有限制的恶劣天气飞行. 在正常模式下, 可以将 SCP 设置为 200 到 1000 英尺 AGL 之间. 除了 TFR 的正常操作之外, 其他模式可用于特定的操作条件. 这些模式包括天气(WX), 低拦截概率(LPI)和极低净空(VLC).
+
+![TFR_MFD](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/TFR_MFD.png)
 
 ## DTE page
 
