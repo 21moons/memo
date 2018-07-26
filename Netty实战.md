@@ -39,6 +39,7 @@ while ((request = in.readLine()) != null) {
 java.nio.channels.Selector 是 Java 的非阻塞 I/O 实现的关键. 它使用了事件通知 API 以确定在一组非阻塞套接字中有哪些已经就绪能够进行 I/O 相关的操作. 因为可以在任何的时间检查任意的读操作或者写操作的完成状态, 所以一个单一的线程便可以处理多个并发的连接.
 
 总体来看, 与阻塞 I/O 模型相比, 这种模型提供了更好的资源管理:
+
 * 使用较少的线程便可以处理许多连接, 因此也减少了内存管理和上下文切换所带来开销;
 * 当没有 I/O 操作需要处理的时候, 线程也可以被用于其他任务.
 
@@ -52,6 +53,7 @@ java.nio.channels.Selector 是 Java 的非阻塞 I/O 实现的关键. 它使用�
 ### 1.2.2 异步和事件驱动
 
 异步和可伸缩性之间的联系又是什么呢?
+
 * 非阻塞网络调用使得我们可以不必等待一个操作的完成. 完全异步的 I/O 正是基于这个特性构建的, 并且更进一步: 异步方法调用会立即返回, 并且在它完成时, 会直接或者在稍后的某个时间点通知用户.
 * 选择器使得我们能够通过较少的线程便可监视许多连接上的事件.
 
@@ -60,6 +62,7 @@ java.nio.channels.Selector 是 Java 的非阻塞 I/O 实现的关键. 它使用�
 ## 1.3 异步和事件驱动
 
 Netty 的核心组件:
+
 * Channel
 * 回调
 * Future
@@ -80,6 +83,7 @@ Netty 的 Future 实现支持对 Future 注册 listener.
 事实上, 回调和 Future 是相互补充的机制.
 
 ### 1.3.4 事件和 ChannelHandler
+
 每个 ChannelHandler 的实例都类似于一种为了响应特定事件而被执行的回调
 
 ![Event_Flow](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_1_3_Event_Flow.jpg)
@@ -94,9 +98,10 @@ Netty 的异步编程模型是建立在 Future 和回调的概念之上的, 而�
 
 **选择器, 事件和 EventLoop**
 Netty 通过触发事件将 Selector 从应用程序中抽象出来, 消除了所有本来将需要手动编写的派发代码. 在内部, 将会为每个 Channel 分配一个 EventLoop, 用以处理所有事件, 包括:
-- 注册感兴趣的事件;
-- 将事件派发给 ChannelHandler;
-- 安排进一步的动作.
+
+* 注册感兴趣的事件;
+* 将事件派发给 ChannelHandler;
+* 安排进一步的动作.
 
 EventLoop 本身只由一个线程驱动, 其处理了一个 Channel 的所有 I/O 事件, 并且在该 EventLoop 的整个生命周期内都不会改变. 这个简单而强大的设计消除了你可能有的在 ChannelHandler 实现中需要进行同步的任何顾虑, 因此, 你可以专注于提供正确的逻辑.
 
@@ -150,6 +155,7 @@ EventLoop 本身只由一个线程驱动, 其处理了一个 Channel 的所有 I
 ChannelPipeline 提供了 ChannelHandler 链的容器, 并定义了用于在该链上传播入站和出站事件流的 API. 当 Channel 被创建时, 它会被自动地分配到它专属的 ChannelPipeline.
 
 ChannelHandler 安装到 ChannelPipeline 中的过程如下所示:
+
 * 一个 ChannelInitializer 的实现被注册到了 ServerBootstrap 中
 * 当 ChannelInitializer.initChannel() 方法被调用时, ChannelInitializer 将在 ChannelPipeline 中安装一组自定义的 ChannelHandler
 * ChannelInitializer 将它自己从 ChannelPipeline 中移除
@@ -344,10 +350,11 @@ Netty 的 Channel 实现是线程安全的
 ### 4.3.1 NIO —— 非阻塞 I/O
 
 选择器背后的基本概念是充当一个注册表, 在那里你可以在 Channel 的状态发生变化时得到通知. 可能的状态变化有:
+
 * 新的 Channel 已被接受并且就绪;
 * Channel 连接已经完成;
 * Channel 有已经就绪的可供读取的数据;
-*  Channel 可用于写数据.
+* Channel 可用于写数据.
 
 选择器运行在一个线程上, 检查所有 Channel 的状态变化并做出响应, 在应用程序对状态的改变做出响应之后, 选择器将会被重置, 然后重复这个过程。
 
@@ -427,12 +434,14 @@ if (heapBuf.hasArray()) {
 ```
 
 注意:
-* 访问非堆缓冲区 ByteBuf 的数组会导致UnsupportedOperationException， 可以使用 ByteBuf.hasArray()来检查是否支持访问数组。
+
+* 访问非堆缓冲区 ByteBuf 的数组会导致 UnsupportedOperationException, 可以使用 ByteBuf.hasArray() 来检查是否支持访问数组。
 * 这个用法与 JDK 的 ByteBuffer 类似
 
 #### 直接缓冲区
 
 在 JDK1.4 中被引入 NIO 的ByteBuffer 类允许 JVM 通过本地方法调用分配内存, 其目的是:
+
 * 通过免去中间交换的内存拷贝, 提升IO处理速度;
 * DirectBuffer 在 -XX:MaxDirectMemorySize=xxM 大小限制下, 使用 Heap 之外的内存, GC对此”无能为力”, 也就意味着规避了高负载下频繁的 GC 过程对应用线程的中断影响.
 
@@ -471,7 +480,6 @@ Netty 提供了 ByteBuf 的子类 CompositeByteBuf 类来处理复合缓冲区, 
 例如一条消息由 header 和 body 两部分组成, 将 header 和 body 组装成一条消息发送出去, 可能 body 相同, 只是 header 不同, 使用CompositeByteBuf 就不用每次都重新分配一个新的缓冲区. 下图显示 CompositeByteBuf 组成 header 和 body:
 
 ![CompositeByteBuf](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_5.2_CompositeByteBuf_holding_a_header_and_body.jpg)
-
 
 <p align="center"><font size=2>代码清单 5-3 使用 ByteBuffer 的复合缓冲区模式</font></p>
 
@@ -626,6 +634,7 @@ JDK 的 InputStream 定义了 mark(int readlimit) 和 reset() 方法. 这些是�
 ### 5.3.8 派生缓冲区
 
 派生缓冲区为 ByteBuf 提供了以专门的方式来呈现其内容的视图. 这类视图是通过以下方法被创建的:
+
 * duplicate()
 * slice()
 * slice(int, int)
@@ -672,9 +681,9 @@ JDK 的 InputStream 定义了 mark(int readlimit) 和 reset() 方法. 这些是�
 ### 5.3.9 读/写操作
 
 有两种类别的读/写操作:
+
 * get() 和 set() 操作, 从给定的索引开始, 并且保持索引不变;
-* read() 和 write() 操作, 从给定的索引开始, 并且会根据已经访问过的字节数递增当前的写索引或
-读索引.
+* read() 和 write() 操作, 从给定的索引开始, 并且会根据已经访问过的字节数递增当前的写索引或读索引.
 
 ### 5.3.10 更多的操作
 
@@ -806,10 +815,10 @@ ByteBufUtil 提供了用于操作 ByteBuf 的静态的辅助方法. 因为这个
 
 本章主要内容
 
-- Channel
-- ChannelHandler
-- ChannePipeline
-- ChannelHandlerContext
+* Channel
+* ChannelHandler
+* ChannePipeline
+* ChannelHandlerContext
 
 我们在上一章研究的 ByteBuf 是一个用来 "包装" 数据的容器. 在本章我们将探讨这些容器是如何在应用程序中进行传输的, 以及如何处理它们 "包装" 的数据.
 
@@ -842,6 +851,7 @@ Interface Channel 定义了一组和 ChannelInboundHandler API 密切相关的�
 | exceptionCaught  | 当处理过程中在 ChannelPipeline 中有错误产生时被调用 |
 
 Netty 定义了下面两个重要的 ChannelHandler 子接口:
+
 * ChannelInboundHandler -- 处理入站数据以及各种状态变化;
 * ChannelOutboundHandler -- 处理出站数据并且允许拦截所有的操作.
 
@@ -1352,7 +1362,6 @@ Bootstrap 类负责为客户端和使用无连接协议的应用程序创建 Cha
 decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) | 这是你必须实现的唯一抽象方法. decode() 方法被调用时将会传入一个包含了传入数据的 ByteBuf, 以及一个用来添加解码消息的 List. 对这个方法的调用将会重复进行, 直到确定没有新的元素被添加到该 List, 或者该 ByteBuf 中没有更多可读取的字节时为止. 然后, 如果该 List 不为空, 那么它的内容将会被传递给 ChannelPipeline 中的下一个 ChannelInboundHandler.
 decodeLast(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) | Netty提供的这个默认实现只是简单地调用了 decode() 方法. 当 Channel 的状态变为非活动时, 这个方法将会被调用一次. 可以重写该方法以提供特殊的处理.
 
-
 ![ToIntegerDecoder](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_10.1_ToIntegerDecoder.png)
 
 > **编解码器中的引用计数**
@@ -1380,7 +1389,6 @@ ReplayingDecoder 扩展了 ByteToMessageDecoder类, 使得我们在解码数据�
 ### 10.2.3 抽象类 MessageToMessageDecoder
 
 ![IntegerToStringDecoder](https://raw.githubusercontent.com/21moons/memo/master/res/img/netty/Figure_10.2_IntegerToStringDecoder.png)
-
 
 ### 10.2.4 TooLongFrameException 类
 
@@ -1912,73 +1920,4 @@ Java Thrift 的初始版本使用了 OIO 套接字, 并且服务器为每个活�
 
 2. 多路复用
 随着我们的基础设施的增长, 我们开始看到在我们的服务器上建立起来了大量的连接. 多路复用(为所有来自于同一 Thrift 客户端的连接共享传输层通道)可以帮助减轻这种状况. 但是在需要按序响应的客户端连接上进行多路复用会导致问题, 解决方案是在发送每个消息时都捎带一个序列标识符, 客户端 Channel 维护一个从序列 ID 到响应处理器的一个映射.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
