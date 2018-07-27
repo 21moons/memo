@@ -1,0 +1,2 @@
+Ctrl + N                 快速查看类
+Ctrl + Shift + N         快速查看文件
