@@ -35,6 +35,7 @@
 * HSI         Horizontal Situation Indicator
 * HUD         Heads Up Display
 * ICP         Integrated Control Panel
+* LARA        Low Altitude Radar Altimeter
 * LG          Landing Gear
 * LPI         Low Probability of Intercept
 * HAD         HARM Attack Display
