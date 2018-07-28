@@ -33,8 +33,10 @@
 * HMCS        Helmet Mounted Cueing System
 * HSD         Horizontal Situation Display
 * HSI         Horizontal Situation Indicator
+* HTS         HARM Targeting Systems
 * HUD         Heads Up Display
 * ICP         Integrated Control Panel
+* LANTIRN     Low Altitude Navigation Targeting Infrared for Night
 * LARA        Low Altitude Radar Altimeter
 * LG          Landing Gear
 * LPI         Low Probability of Intercept
@@ -404,18 +406,97 @@ TFR 功能包括地形跟踪, 障碍物警告和有限制的恶劣天气飞行. 
 
 ![TFR_MFD](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/TFR_MFD.png)
 
+TER 按钮位于 MFD 菜单的 OSB #18 按钮.
+
+TFR 使能的条件是机头下方的挂载点(chin hardpoints)上电且雷达高度计可操作.
+
+TFR 包含七种操作模式 OFF - BIT - STBY - NORM - LPI - WX - VLC.
+
+* OFF: TFR 未通电.
+* BIT: 从 MFD TEST 页面进入.
+* STBY: 吊舱处于待机模式且无法操作.
+* NORM: 正常操作模式, 可通过 OSB #20 访问. 它有 3 个子模式:
+
+  + MAN TF: 飞行员通过 HUD 上显示的 FPM 提示(MAN TF框)来保持选定的高度. 该模式下飞行员需要自行操作驾驶杆, 不过如果 MANUAL TF FLYUP 开关处于启用状态, TFR 也可以提供自动爬升保护服务. 此时MISC 面板上的 ADV 指示灯未亮起.
+  + AUTO TF: 飞行控制计算机使用 LANTIRN 吊舱中生成的垂直加速度指令来操纵飞机维持所选 SCP(Set Clearance Plane 设定间隙平面)的高度. 在 AUTO TF 模式下, MISC 面板上的 ADV 指示灯点亮顶部指示灯(top indicator), 并在 HUD 上的 FPM 附近显示水平线. 飞行员可以通过按下操纵杆上的 paddle switch 来旁路 TFR(就像自动驾驶仪一样). 在按下 paddle switch 时，MISC 面板上的 STBY(ADV 底部)灯亮起.
+  + Blended TF: 自动驾驶仪用于保持特定的气压高度. 如果 LANTIRN 吊舱检测到飞机高度低于了所选的最小 AGL, 则系统将自动操纵飞机以保持最小 AGL, 直到远离起伏不平的地形. A/P PITCH 开关处于 ALT 或 ATT HOLD 位置. STBY ADV 指示灯亮起. 水平线可见.
+
+* LPI: 低拦截概率. 此时 RF 开关置于 QUIET 位置, TFR 在保证功能的情况下尽可能减少辐射. 该模式通过按下 OSB #19 激活, 或者在 RF 开关置于 QUIET 时自动激活.(RF 开关置于 SILENT 会自动将 TFR 置于 STBY 模式)
+* WX: 用于恶劣天气(下雨), 以最大限度地减少由于雨或雾中的雷达回波冲突导致的非指令飞行. 它可以通过 MFD TFR 页面 OSB #17 或 ICP 上的 WX 按钮激活.
+* VLC: 非常低的间隙(100 英尺的 SCP), 从 OSB #10 进入. 此模式仅适用于相对平坦的地形或水面.
+
+The TFR E-scope display will start displaying a visual representation of the terrain ahead. The pilot can then decide if he wants MAN TF or AUTO TF. AUTO TF is engaged by depressing the ADV indicator/pushbutton on the MISC panel. Automatic fly-up protection is provided in AUTO TF; in MAN TF you must have the MANUAL TF FLYUP switch in ENABLE.
+
+TFR 有 3 种骑行选项(Ride options): 通过 OSB #2 在 HARD - SOFT - SMTH(平滑) 模式中切换. 通过将 TFR 置于 NORM 模式来激活 TFR 并选择所需的 SCP. 两个选项都 TFR 页面上高亮显示. DED 中的 A-LOW 应设置为 SCP 的 90%. 此时 TFR 电子示波器显示将开始显示前方地形的直观表示. 然后飞行员可以决定他是否需要使能 MAN TF 或 AUTO TF. 通过按下 MISC 面板上的 ADV 指示灯/按钮启用 AUTO TF. AUTO TF 提供自动爬升保护; 而在 MAN TF 中, 您必须将 MANUAL TF FLYUP 开关置于 ENABLE 来使能自动爬升.
+
 ## DTE page
+
+通过按下 OSB#8 从 MFD 菜单页面访问 DTE 页面.
+
+它用于将任务规划期间准备的数据盒(Data Cartridge)加载到飞行器计算机中. 通过按下 OSB #3 完成加载(通常在冷启动完成后或在 CNI 切换到 UFC 之前).
+
+每个显示系统(FCR, DLINK 等)在加载过程中将按加载顺序高亮显示, DTC 更改应在 DED 中可见(VHF 和 UHF 等的预设).
 
 ## FLCS page
 
+通过按下 OSB #10 从 MFD 菜单页面访问 FLCS 页面.
+
+FLCS 页面提供与 FLCS 相关的所有内容的概述. 该页面通过显示最多 5 个 FLCS 故障或告警为 FLCS 故障提供备份显示. 与 PFL 一样, 警告显示在 "> <" 中间. 当故障超过 5 个时, 可以通过按标记为 MORE 的 OSB #20 来查看.
+
+这在 UFC 故障的情况下非常有用, 这种情况下 DED 和 PFL 都会变为空白, 飞行员感知不到任何故障, 而通过 FLCS 页面, 至少还可以查看与 FLCS 相关的故障.
+在配备数字 FLCS 的飞机上, FLCS 页面内容可以通过切换到 DBU 模式然后返回来重置, FLCS 页面还将报告 FLCS BIT 的状态和 DBU(数字备份)的状态.
+FLCS RESET 开关也可以清除 FLCS 页面.
+
+BUS FAIL 会导致 FLCS 页面显示 OFF, 不能查看 FLCS 故障.
+如果飞机配备数字 FLCS, 当飞机在地面时, 维护功能和 addresses 显示在 MFD 的中部和底部. 在飞行中维护功能会被删除, FLCS 页面通常是空白的, 除非存在 FLCS 故障.
+
 ## Forward Looking Infra-Red (FLIR) page
 
+FLIR 页面仅在兼容的 F-16(Block 25/30/32/40 EAF / 42/52 +, KF-16 和 F-16I)的机头挂架上挂载 LANTIRN 吊舱时可用.
+
+FLIR 是一款用于夜间低空导航的前视红外摄像机. FLIR 位于 LANTIRN 吊舱的导航模块中, 与 TFR 模块比邻. 在 FLIR 正常工作前必须给机头下方挂载吊舱的挂锁点通电.
+
+FLIR 需要在 8 到 15 分钟的冷却后才能使用, 因此如果任务需要 FLIR, 请在冷车启动期间尽快启动. 一旦 NOT TIMED OUT 消息从 MFD 上消失, 意味着 FLIR 已经准备好运行.
+
+OSB #18 将 FLIR 置于待机状态. OSB #20 将 FLIR 置于操作模式(OPER). 一旦进入操作模式, FLIR 页面将显示 pod 前面的红外视图. 通过向上旋转 BRT ICP 轮, 可以在 HUD 上显示红外图像. 可以使用 ICP 上面的上下 FLIR 箭头更改 FLIR 级别. 当前增益和电平值显示在 FLIR MFD 的左上角.
+
+OSB #10是视轴选项(boresight option). 在地面上, FLIR 摄像机对准 HUD 顶部. 它可能会导致视差错误. 视轴用于更好地匹配 HUD 中的图像与 FLIR 相机在特定范围内的成像. 按下 OSB #10 按钮, 对应的 BSGT 助记符将高亮. 然后可以使用光标旋转 HUD FLIR 图像. 不要将视轴设置在近物上, 建议在飞行中对准大型物体, 例如山的边缘或远方的道路. 一旦两个图像正确叠加, 再次按下 OSB #10 关闭 BSGT. 一旦 FLIR 图像显示在 HUD 上, MFD FLIR 页面就不需要处于活动状态, 但建议选择一个 DA 按钮放置以便于进行视轴操作.
+
+HUD 提供 LOOK-INTO-TURN(LIT) 和 SNAPLOOK 功能.
+LIT: 当倾斜角度高于 5° 时, 按住 DMS UP 可以将 FLIR 视图稍微偏移至转向处以观察障碍物. 当释放 DMS UP 时, FLIR 图像恢复为前视.
+SNAPLOOK: 通过按住 DMS UP 并沿任何方向移动光标来进行大范围观察, 即使在转弯时也可以操作. 当释放 DMS UP 时, 视图将恢复为前视.
+当 LIT 或 SNAPLOOK 处于活动状态时, HUD 上的 FPM 标记会变为虚线.
 
 ## WPN page
 
+通过按下 OSB #18 从 MFD 菜单页面访问 WPN 页面. 它使飞行员能够访问机载武器传感器.
+
+诸如 AGM-65 小牛 和 AGM-88 哈姆等一些武器自带可用于获取和锁定目标的传感器. 由于传感器在导弹上, 所以一旦导弹发射, MFD 就无法再显示传感器图像.
+
+哈姆(HARM)
+选择 HARM 并准备就绪后, POS EOM 将显示在 WPN 页面上. 详情请参阅武器特定文档.
+
+小牛(Mavericks)
+一旦红外线导引头被解锁(并且移除了任何球罩), 来自导弹头的红外图像将显示在 WPN MFD 页面中. 详情请参阅武器特定文档.
+
+* OSB #1: 报告状态
+* OSB #2: 切换 PRE-VIS-BORE 模式
+* OSB #3: 设置视野
+* OSB #5: 访问 "控制" 页面
+* OSB #6: 显示当前所选武器的类型
+* OSB #7: 切换极性(polarity)
+* 底行具有通常的DCLT，直接访问和SWAP按钮
+* OSB #20: 选择 SLAVE 选项
+
 ## TGP page
 
+通过选择 MFD 菜单页面中的 OSB #19 进入 TGP 页面.
+
+当机头下方挂架上挂载 LANTIRN 或 SNIPER 吊舱并通电时, TGP 处于激活状态. 上电通过 SNSR PWR 面板的 RIGHT HDPT 开关完成, 上电后 TGP 需要冷却, TGP 页面将一直显示 NOT TIMED OUT 直至 pod 准备就绪.
+
 ## HAD page
+
+通过选择 MFD 菜单页面中的 OSB #2 进入 "HARM 攻击显示" 页面. (如果你已经安装了 HTS 吊舱并且左侧挂载点已上电).
 
 ## BLANK page
 
