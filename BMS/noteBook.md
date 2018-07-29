@@ -576,7 +576,23 @@ OSB #18 是方位角设置, 在 60°(A6), 30°(A3) 和 10°(A1) 的锥形之间�
 
 ![A-A_FCR_PAGE](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/A-A_FCR_PAGE.png)
 
-
 ### FCR in A-G modes
+
+进 入A-G 主模式后, FCR 将自动切换到 A-G FCR. 如果需要将 FCR 设置为其他模式, 可以使用菜单页面选择任何子模式. Ground 子模式包括:
+
+GM: Ground Map
+GMT: Ground Moving Target
+SEA: for naval targets
+BCN: Beacon (not implemented in BMS)
+
+对于所有不同的 A-G 子模式, A-G FCR 的工作机制是相同的, 只有对不同目标的灵敏性差异. 我们将使用 Ground Map(GM) 模式来说明 A-G FCR.
+
+初次进入 GM 模式时, FCR 向前扫描并指向当前的 SPI. 到达 SPI 所需的时间显示在 FCR 的右下角, 在图中是 33 秒. 该计时器也可用于其他场景, 例如拉起提示和 LGB 炸弹的命中时间. 这取决于主模式, SOI 和 SMS.
+
+与 A-A FCR 一样, 根据被选择模式的Bullseye，光标的靶心位置或轴承以及当前转向点的范围显示在OSB＃17附近。 在这种情况下，显示轴承和范围（189 00），因为没有选择模式。 如果在DED（LIST 0 8 BULL页面）中选择了Bullseye模式，则自己的靶心位置将显示在MFD的左下角。 在右图中，Bullseye未选择模式，因此MFD显示飞机参考符号（W）和方位角转向条。 在4.33中，这可能会根据块而有所不同，即使选择了BULLSEYE模式，较新的块也始终显示飞行指引符号。
+
+A-G雷达能够以不同的颜色深度绘制地形。 触点返回显示为亮白点。 可以使用节气门RNG旋钮或使用GAIN摇臂开关（左上角）设置A-G FCR增益。 增益会改变地形的强度，并通过MFD左上角显示的增益标记来指示。 下面的两张图片说明了A-G FCR增益设置为最大值（左图 - 注意增益计设置为最高点）并设置为最小值（右图 - 注意增益计一直到刻度底部）。 请注意，增益计显示在A-A和A-G FCR模式下。
+
+OSB #1 是当前的子模式。 如果按下，FCR将显示上面STBY页面中的其他子模式。
 
 # HUD(HEAD UP DISPLAY)
