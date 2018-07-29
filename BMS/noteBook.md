@@ -1,5 +1,6 @@
 # Communication
 
+* ACM         Air Combat Maneuvering
 * ADI         Attitude Direction Indicator
 * BATR        Bullets at Target Range
 * BIT         Built-In Tests
@@ -27,6 +28,8 @@
 * FLIR        Forward Looking Infra-Red(需要 LANTIRN 吊舱)
 * FOV         Field Of View
 * FPM         Flight Path Marker
+* GM          Ground Mapping
+* GMT         Ground Moving Target
 * GS          Ground Speed
 * HADB        High Altitude Dive Bombing
 * HDG         Heading
@@ -40,6 +43,7 @@
 * LARA        Low Altitude Radar Altimeter
 * LG          Landing Gear
 * LPI         Low Probability of Intercept
+* LRS         Long Range Scan
 * HAD         HARM Attack Display
 * INS         Inertial Navigation System
 * MFD         Multi Function Displays
@@ -57,6 +61,7 @@
 * PUP         Pull Up Point
 * QNH         Query: Nautical Height(修正海平面气压)
 * RWR         Radar Warning Receiver
+* RWS         Range While Search
 * SCP         Set Clearance Plane
 * SOI         Sensor of Interest
 * SPI         Steerpoint of Interest/System Point of Interest
@@ -65,11 +70,13 @@
 * TMS         Target Management
 * TOS         Time Over Steerpoint
 * TWS         Threat Warning System
+* TWS         Track While Scan
 * SMS         Stores Management Set
 * UFC         Up Front Controller
 * VIP         Visual Initial Point
 * VLC         Very Low Clearance
 * VRP         Visual Reference Point
+* VS          Velocity Search
 * VMS         Voice Message Service
 * VVI         Vertical Velocity Indicator
 * WEZ         Weapon Engagement Zone
@@ -541,15 +548,35 @@ FCR 本身应该用一份单独的文件来描述, 这里只是一个简短的�
 
 ### FCR in A-A modes
 
+FCR 通过 SNSR 面板上的 FCR 开关开启供电, 一旦通电将首先进入可能持续几分钟的 BIT(内置测试). 如果 FCR 在飞行中关闭超过 4 秒, 重新开启后需要再次进行 BIT. BIT 完成后,FCR 变为可用, 通常默认为 A-A CRM(混合雷达模式)模式.
+
+OSB #1 表示 FCR 的当前模式, 如果按下会显示一个页面, 页面列举了可以选择的所有其他模式: 左侧是 CRM 和 ACM(空战机动), 右侧是 GM(地面映射), GMT(地面移动目标), SEA(反舰)和 STBY(待机). 按下任何对应的 OSB 按钮将进入该模式. 请注意: BCN(Beacon) 模式当前未实现.
+
+OSB #2 选择相应的子模式. 如果 FCR 在 CRM 中, 则子模式是 RWS(边测距边扫描), ULS(= LRS 远距扫描), VSR(= VS 敏捷搜索), TWS(边跟踪边扫描), 如果 FCR 处于 ACM 模式, 则子模式为 20(HUD), 摆动(Slew), 凝视(Bore), 60(垂直).
+
+OSB #3 是 FOV, 并非在所有模式下都可用. 它仅在当前模式支持时显示, 在 NORM 和 EXP 之间切换. 也可以通过你的操作杆上的小指开关(S3)来进行切换. 切换到 EXP 时, 光标周围的区域会展开, 并由 MFD 上的蓝色方块表示. EXP 标签也会闪烁.
+
+OSB #4 将 FCR 置于待机模式, 该模式会从 MFD 中删除所有符号, 并高亮显示 OVRD.再次按下 OSB #4 将恢复为可操作模式.
+
+OSB #5 进入 FCR 控制页面. 按下后 MFD 左右两边的 OSB 将显示不同的选项, 但其中大部分尚未实现. 例外情况是目标历史记录(TGT HIS), 它设置接敌后发现的其他敌人的数量. A-A 和 A-G FCR 模式下的控制页面相同, 本章后面的 A-G FCR 部分对此进行了详细说明.
+
+OSB #6 是 IDM 模式. 它默认为 ASGN(分配), 但可以切换为 CONT(连续)或 DMD(按需).
+
+OSB #7, #8, #9 和 #10 标记为 1, 2, 3 和 4, 对应于您的团队成员. 用于选择 IDM 数据的发送对象.
+
+MFD 底部是常见的直接访问按钮, OSB #11 上的 DCLT 和 OSB #15 上的 SWAP.
+
+OSB #17 是条形扫描(bar scan), 可以从 1 bar 切换到 4 bar. FCR 通过移动天线来对前方进行扫描. 天线发射的波束在垂直方向上的扫描角度通常不超过 4.9°. 因此, 如果将 bar 设置为 1, 雷达将仅扫描一个 4.9° 的空域切片. 设置为 2 雷达将扫描 2 个 4.9° 的空域, 设置为 4 它将扫描 4 个. 扫描 1 bar 需要 2.5 秒, 另外需要花 0.5 秒将天线移动到下一个 bar, 因此完整的 4 bar 扫描需要 12 秒, 而 1 bar 扫描只需 2.5 秒. 显然减少 bar 的数量会加快扫描速度, 但同时也会缩小搜索范围. 无论 bar 如何设置, 雷达都可以通过节流阀上的 ANTENNA 俯仰控制来上下倾斜.
+
+![bar_scan](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/bar_scan.png)
+
+OSB #18 是方位角设置, 在 60°(A6), 30°(A3) 和 10°(A1) 的锥形之间切换. 在 FCR 上使用蓝色垂直线以说明缩小的搜索区域, 并且 HSD 上也用类似的图标显示. 显而易见的是, 搜索区域越小, 扫描速度越快. 缺点则是会错过扫描区域以外可能的敌机. 当方位角小于 60° 时, 搜索区域可以使用光标移动.
+
+在模式允许时, OSB #19 和 20 用于设置 FCR 扫描范围, 按下 OSB #19 会降低范围, 按下 OSB #20 会增加范围. 设置范围的另一种方法是将光标移动到 MFD 的顶部或底部边缘(此时 FCR 为 SOI).
+
+![A-A_FCR_PAGE](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/A-A_FCR_PAGE.png)
 
 
-
-
-
-
-
-
-
-
+### FCR in A-G modes
 
 # HUD(HEAD UP DISPLAY)
