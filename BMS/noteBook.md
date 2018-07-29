@@ -36,7 +36,7 @@
 * HTS         HARM Targeting Systems
 * HUD         Heads Up Display
 * ICP         Integrated Control Panel
-* LANTIRN     Low Altitude Navigation Targeting Infrared for Night
+* LANTIRN     Low Altitude Navigation & Targeting Infrared for Night
 * LARA        Low Altitude Radar Altimeter
 * LG          Landing Gear
 * LPI         Low Probability of Intercept
@@ -72,6 +72,7 @@
 * VRP         Visual Reference Point
 * VMS         Voice Message Service
 * VVI         Vertical Velocity Indicator
+* WEZ         Weapon Engagement Zone
 * WDP         Weapon Delivery Planner
 
 # ICP(Integrated Control Panel)
@@ -467,7 +468,7 @@ BUS FAIL 会导致 FLCS 页面显示 OFF, 不能查看 FLCS 故障.
 
 FLIR 页面仅在兼容的 F-16(Block 25/30/32/40 EAF / 42/52 +, KF-16 和 F-16I)的机头挂架上挂载 LANTIRN 吊舱时可用.
 
-FLIR 是一款用于夜间低空导航的前视红外摄像机. FLIR 位于 LANTIRN 吊舱的导航模块中, 与 TFR 模块比邻. 在 FLIR 正常工作前必须给机头下方挂载吊舱的挂锁点通电.
+FLIR 是一款用于夜间低空导航的前视红外摄像机. FLIR 是 LANTIRN 系统中的导航吊舱, 与 TFR 吊舱比邻. 在 FLIR 正常工作前必须给机头下方的吊舱挂锁点通电.
 
 FLIR 需要在 8 到 15 分钟的冷却后才能使用, 因此如果任务需要 FLIR, 请在冷车启动期间尽快启动. 一旦 NOT TIMED OUT 消息从 MFD 上消失, 意味着 FLIR 已经准备好运行.
 
@@ -511,13 +512,34 @@ SNAPLOOK: 通过按住 DMS UP 并沿任何方向移动光标来进行大范围�
 
 通过选择 MFD 菜单页面中的 OSB #2 进入 "HARM 攻击显示" 页面. (如果你已经安装了 HTS 吊舱并且左侧挂载点已上电).
 
+任何主模式中都可以选择 HAD, 并且 HAD 与 HSD 共享许多常见的显示特性. HAD 光标移动功能和 FOV 扩展功能(OSB #3 或小指开关)类似于 HSD. 飞行员可以设置 HAD 范围(HAD 被设置为 SOI), 方法是将光标上下调整到 MFD 显示范围之外或按 OSB #19 和 #20.
+
+HAD 不是发射 AGM-88 的唯一方式. 只要战机挂载了 HARM, 还可以通过 WPN 页面下的 POS 和 HAS 模式(此时 HAD 不能设置为 SOI)来进行发射. HARM WEZ 标记基于 AGM-88 的最大攻击范围, 并根据战机的速度和高度增加或减小. 如果 HARM WEZ 大于所选择的显示范围, 那么将用虚线表示.
+
+检测到的辐射源用以下颜色标记:
+绿色 = 辐射源未激活
+黄色 = 辐射源激活
+红色 = 辐射源正在跟踪
+闪烁红色 = 辐射源正在制导
+
 ## BLANK page
+
+通过选择 MFD 菜单页面中的 OSB #1 显示空白页面.
 
 ## RCCE page
 
+RCCE 页面(菜单页面中的 OSB #4)用于与侦察吊舱连接, BMS 中未实现.
+
 ## RESET MENU page
 
+通过菜单页面中的 OSB #5 访问 RESET 页面, 该页面但在 BMS 中没有任何用途.
+
 ## FCR page
+
+通过菜单页面中的 OSB #20 访问 Fire Control Radar 页面.
+FCR 本身应该用一份单独的文件来描述, 这里只是一个简短的介绍, 希望能够满足你的需求. 显而易见的是, 这个页面显示的是雷达看到的内容. 基于当前的主模式, 它可以设置为 A-A 雷达(包括其子模式)或 A-G 雷达.
+
+### FCR in A-A modes
 
 
 
