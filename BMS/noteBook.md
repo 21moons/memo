@@ -11,9 +11,10 @@
 * CMS         Countermeasures Management
 * CNI         Communication, Navigation & Identification
 * CRS         Course
+* DBS         Doppler Beam Sharpening
+* DBU         Digital Backup
 * DCS         Data Command Switch(ICP 上的一个四向拨动开关)
 * DED         Data Entry Display
-* DBU         Digital Backup
 * DMS         Display Management Switch(HOTAS 上的按钮)
 * DTC         Data Transfer Cartridge
 * DTOS        DTOS is a visual CCRP
@@ -585,14 +586,38 @@ GMT: Ground Moving Target
 SEA: for naval targets
 BCN: Beacon (not implemented in BMS)
 
-对于所有不同的 A-G 子模式, A-G FCR 的工作机制是相同的, 只有对不同目标的灵敏性差异. 我们将使用 Ground Map(GM) 模式来说明 A-G FCR.
+对于所有的 A-G 子模式, A-G FCR 的工作机制是相同的, 只有存在针对不同目标的灵敏度差异. 本章中我们将使用 Ground Map(GM) 模式来说明 A-G FCR.
 
-初次进入 GM 模式时, FCR 向前扫描并指向当前的 SPI. 到达 SPI 所需的时间显示在 FCR 的右下角, 在图中是 33 秒. 该计时器也可用于其他场景, 例如拉起提示和 LGB 炸弹的命中时间. 这取决于主模式, SOI 和 SMS.
+初次进入 GM 模式时, FCR 扫描前方并指向当前的 SPI. 到达 SPI 所需的时间显示在 FCR 的右下角, 在图中是 33 秒. 该计时器也可用于其他场景, 例如拉起提示和 LGB 炸弹的命中计时. 这取决于当前主模式, SOI 和 SMS.
 
-与 A-A FCR 一样, 根据被选择模式的Bullseye，光标的靶心位置或轴承以及当前转向点的范围显示在OSB＃17附近。 在这种情况下，显示轴承和范围（189 00），因为没有选择模式。 如果在DED（LIST 0 8 BULL页面）中选择了Bullseye模式，则自己的靶心位置将显示在MFD的左下角。 在右图中，Bullseye未选择模式，因此MFD显示飞机参考符号（W）和方位角转向条。 在4.33中，这可能会根据块而有所不同，即使选择了BULLSEYE模式，较新的块也始终显示飞行指引符号。
+就像 A-A FCR 一样, 依据 Bullseye 的使能情况, OSB #17 附近要么显示到 Bullseye 的方位和距离(Bullseye 使能), 要么显示到当前航向点的方位和距离(Bullseye 不使能). 下图显示的方位和距离为 189 00, Bullseye 未使能. 如果在 DED(LIST 0 8 BULL 页面)中选择了 Bullseye 模式, 则自建 Bullseye 的相对位置将显示在 MFD 的左下角. 下图中 Bullseye 未使能, 因此 MFD 左下角显示的是飞机参考符号(W)及方位角转向线(竖直的线段). 在 BMS 4.33 中, 这可能会根据分段而有所不同, 即使选择了 BULLSEYE 模式, 较新的分段也始终显示飞行操作符号(flight director symbol).
 
-A-G雷达能够以不同的颜色深度绘制地形。 触点返回显示为亮白点。 可以使用节气门RNG旋钮或使用GAIN摇臂开关（左上角）设置A-G FCR增益。 增益会改变地形的强度，并通过MFD左上角显示的增益标记来指示。 下面的两张图片说明了A-G FCR增益设置为最大值（左图 - 注意增益计设置为最高点）并设置为最小值（右图 - 注意增益计一直到刻度底部）。 请注意，增益计显示在A-A和A-G FCR模式下。
+A-G 雷达能够使用不同的颜色深度来绘制地形, 目标雷达回波返回显示为白色亮点. 可以使用节流阀上的 RNG 旋钮或机舱左上角的 GAIN 摇臂开关来设置 A-G FCR 增益. 增益会改变地形图像的对比度, 并显示在 MFD 左上角的增益标记. 下面的两张图片说明了 A-G FCR 增益设置为最大值(左图 - 注意增益计设置为最高点)与设置为最小值(右图 - 注意增益计一直到刻度底部). 请注意, 增益刻度在 A-A 和 A-G FCR 模式都显示.
 
-OSB #1 是当前的子模式。 如果按下，FCR将显示上面STBY页面中的其他子模式。
+OSB #1 显示当前的子模式. 按下后 FCR 将显示所有子模式.
+
+OSB #2 设置 AUTO 范围切换或 MANUAL 范围切换. 这种切换可用于 GM, EXP, DBS1, DBS2, GMT 和 SEA. 如果设置为 MANUAL, 必须使用 OSB #19 和 20手 动更改范围. 在 AUTO 中, 当光标位置进入 FCR 的下一个可用范围设置时, 范围会自动切换. 它默认为 AUTO.
+
+OSB #3 是视场(FOV)设置, 具有 4 个级别: NORM, EXP, DBS1 和 DBS2(多普勒波束锐化). 当A-G FCR 设为当前 SOI 时, 操纵杆上的小指开关可以切换可用的 FOV 设置. EXP 模式扩展了光标周围的雷达显示, 并将其置中显示. DBS1 改进了 EXP 模式, 供了更多细节但不再放大. DBS2 是最高放大倍数. EXP 可用于 GM, GMT 和 SEA. DBS1 和 2 仅适用于 GM. 它们不适用于 GMT 和 SEA.
+
+OSB #4 是暂停模式. 按下后雷达进入待机状态, FCR MFD 变为空白. OVRD 高亮显示. 要恢复雷达到可操作必须再次按下 OVRD 按钮.
+
+OSB #5 进入控制页面. 请注意在 A-G 和 A-A FCR 模式下 FCR CNTL 页面是相同的. 按下后 MFD 显示内容保持(并继续更新), 但 OSB 按钮变为 CNTL 选项. 目前, BMS 没有为 A-G FCR 启用这些控制选项. 可以点击这些选项, 但代码中没有对应的实现. 在真实的飞机中, OSB #6(未实现)改变雷达信道以避免来自其他飞机的干扰, OSB #7 是标记强度按钮, 范围从 1 到 4. 这允许范围标记(range markers)的强度不同于通过 SYM 摇杆(未实现)设置的全局符号强度(overall symbol intensity). OSB #8 按照从窄到宽的顺序切换带宽(未实现). OSB #9 用来设置信标延迟, 设置区间为 0.00 到 99.9 (未实现). OSB #10 是电源管理, 在 PM ON 和 PM OFF 间切换(未实现). OSB #17 在 ECCM 1 级和 2 级间切换(未实现). OSB #18 设置了目标历史记录, 这是 A-A FCR 控制页面中唯一可用的选择. 历史记录可以设置为 1 到 4, 为 A-A 中的雷达目标提供踪迹. OSB #19 是 Altitude Liner 消隐器选项, ON 或 OFF(未实现). OSB #20 是 A-G&A-A 雷达上的水平衰减选项, 过滤掉低于某些径向速度的目标(未实现).
+
+OSB #6 是 BAROMETRIC(未实现).
+
+OSB #7 FZ 就是 Freeze. 按下时, A-G FCR 图像被冻结, 地面稳定点的坐标显示在 MFD 的右上部分. 方位角和距离显示在 MFD 的左下部分. 只要 FREEZE 模式处于激活状态, FZ 助记符就会保持高亮显示. 如果要放大并精确锁定特定目标, 该模式特别有用. 解冻请再次按下 OSB #7, 更改 FOV 也可以取消冻结模式.
+
+OSB #9 是 CZ(Cursor ZERO), 也就是光标零点. 在 BMS 4.33 中, 移动地面光标位置(设置为 SPI 才能移动)将给所有转向点添加系统增量, 当然也包括当前的转向点. CZ 将清零或擦除任何先前创建的系统增量, 因此所有 STPT 将返回到其原始位置, 并自然地将 SPI 设置为当前 STPT 位置. 如果存在系统增量, 则在具有 Nav EGI 升级的飞机中将高亮显示 CZ 助记符.
+
+飞行员应使用以下例程将系统解决方案恢复为原始导航解决方案: TMS down - Cursor Zero - Wide Field of View(OSB #3). 这种习惯应该确保在每个光标转换后实施, 并且如果已经进行光标转换, 则应在每个 IP(Initial Point?) 处实施.
+
+OSB #10 是瞄准点旋转(sighting point rotary). 它是 NAV 主模式下的 STP, A-G 主模式下的 TGT(target), 如果可用的 SPI 数据已经输入则是 OA1 或 OA2, VRP 模式下的 RP, VIP 模式下的 IP. 请注意: TMS 右键也可以改变瞄准点旋转选择.
+
+像往常一样, 底部的 OSB #11 - 15 是直接访问按钮, DCLT 和 SWAP 分别位于 OSB #11 和 OSB #15.
+
+OSB #17 允许方位角设置为 120°, 60° 和 20°. 6,3 和 1 分别代表纵向参考线两侧的 60°, 30° 和 10°, 选择 A6 时总扫描为 120°, 选择 A3 时为60°, 选择 A1 时为20°. 与 A-A 模式一样, 方位角设置越小, 雷达扫描越快.
+
+OSB #19 和 20 用于设置 FCR 范围. OSB #19 降低范围, OSB #20 增加范围. 在 A-G 模式下, 范围从 10 到 80 Nm 不等. 通常在 20 Nm 以下会获得最佳功效.
 
 # HUD(HEAD UP DISPLAY)
