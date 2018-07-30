@@ -15,6 +15,7 @@
 * DBU         Digital Backup
 * DCS         Data Command Switch(ICP 上的一个四向拨动开关)
 * DED         Data Entry Display
+* DEEC        Digital Electronic Engine Control
 * DMS         Display Management Switch(HOTAS 上的按钮)
 * DTC         Data Transfer Cartridge
 * DTOS        DTOS is a visual CCRP
