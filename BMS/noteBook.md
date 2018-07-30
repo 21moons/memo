@@ -621,3 +621,16 @@ OSB #17 允许方位角设置为 120°, 60° 和 20°. 6,3 和 1 分别代表纵
 OSB #19 和 20 用于设置 FCR 范围. OSB #19 降低范围, OSB #20 增加范围. 在 A-G 模式下, 范围从 10 到 80 Nm 不等. 通常在 20 Nm 以下会获得最佳功效.
 
 # HUD(HEAD UP DISPLAY)
+
+在所有主模式中, 速度或空速始终显示在左侧, 海拔高度显示在右侧, 航向位于顶部或底部(VAH).
+
+空速可以显示为CAS(校准空速), TAS(真空速) 或 GND SPD(地速).
+FPM 和俯仰标度线可以移除.
+DED 或 PFL 可以显示在 HUD 的底部.
+亮度可以自动调整适应 "白天/夜晚" 环境.
+可以显示垂直速度指示器.
+高度可以显示 BAROmetric(气压高度), RADAR(雷达高度) 或 AUTO 高度.
+
+![HUD_SYMBOLS](https://raw.githubusercontent.com/21moons/memo/master/res/img/BMS/HUD_SYMBOLS.png)
+
+
