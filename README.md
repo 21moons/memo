@@ -216,6 +216,11 @@ public final class Class<T> extends Object implements Serializable, GenericDecla
 - 默认的 Docker volume （driver = ‘loclal’）不管是哪种形式, 本质上都是将容器所在的主机上的一个目录 mount 到容器内的一个目录, 因此, 它不具备可移植性.
 
 ---
+## 英文缩写:
+* TOE(TCP Offload Engine)
+TOE 技术, 即利用网卡上的专用处理器完成数据包的处理任务. 将用户数据直接拷贝到数据链路层, 通过 TOE 网卡驱动处理, 减少了传输层与网络层的数据拷贝, 降低了 CPU 负载, 在加快网络传输速度和网络响应的同时提高设备性能.
+
+---
 
 ## [Is there a difference between fibers, coroutines and green threads](https://softwareengineering.stackexchange.com/questions/254140/is-there-a-difference-between-fibers-coroutines-and-green-threads-and-if-that-i) 
 
