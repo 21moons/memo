@@ -431,8 +431,32 @@ object FallWinterSpringSummer extends App {
 
 ## Chapter 5 Basic Types and Operations
 
+### 5.1 SOME BASIC TYPES
 
+* Byte    8-bit signed two's complement integer (-27 to 27 - 1, inclusive)
+* Short   16-bit signed two's complement integer (-215 to 215 - 1, inclusive)
+* Int     32-bit signed two's complement integer (-231 to 231 - 1, inclusive)
+* Long    64-bit signed two's complement integer (-263 to 263 - 1, inclusive)
+* Char    16-bit unsigned Unicode character (0 to 216 - 1, inclusive)
+* String  a sequence of Chars
+* Float   32-bit IEEE 754 single-precision float
+* Double  64-bit IEEE 754 double-precision float
+* Boolean true or false
 
+除了 string 类型在 java.lang 包中定义, 其他类型都是在 scala 中定义. scala 包和java.lang 包的所有成员都自动导入到每个 Scala 源文件中, 您可以在任何地方使用简称(即 Boolean, Char 或 String 等名称).
 
+scala> val tower = 35L
+tower: Long = 35
 
+scala> val of = 31l
+of: Long = 31
+
+scala> val little = 1.2345F
+little: Float = 1.2345
+
+scala> val bigger = 1.2345e1
+bigger: Double = 12.345
+
+scala> val a = 'A'
+a: Char = A
 
