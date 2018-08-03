@@ -262,7 +262,8 @@ println(treasureMap(2))
 ```
 
 ### LEARN TO RECOGNIZE THE FUNCTIONAL STYLE
-正如第1章所提到的, Scala 允许程序员以命令式的风格进行编程, 但是也鼓励你采用更偏向于函数式的风格. 如果你是 Java 程序员, 那么在学习 Scala 时可能会面临的主要挑战之一是如何进行函数式编程.
+
+正如第1章所提到的, Scala 允许程序员以命令式的风格进行编程, 但是也鼓励你采用函数式的风格. 如果你是 Java 程序员, 那么在学习 Scala 时可能会面临的主要挑战之一是如何进行函数式编程.
 
 首先是识别两种编程风格之间的区别. 如果代码包含任何变量, 它可能是命令式编程. 如果代码根本不包含变量, 比如说只包含 vals, 那么则可能是功能性风格. 走向函数式编程的一种方式就是在编程时不使用变量.
 
@@ -299,10 +300,16 @@ def formatArgs(args: Array[String]) = args.mkString("\n")
 
 
 ## Chapter 4 Classes and Objects
+
 ### 4.1 CLASSES, FIELDS, AND METHODS
-* private fields can only be accessed by methods defined in the same class, all the code that can update the state will be localized to the class.
-* Public is Scala's default access level.
-* 在 Scala 中, 方法的参数都是 vals, 而不是 vars, 如果你尝试在方法内部修改参数, 将会导致编译失败.
+
+类是对象的蓝图. 定义类后, 可以使用关键字 new 从蓝图创建对象.
+
+在类定义中会放置字段和方法, 这些字段和方法统称为 members.Fields. 那些使用 val 或 var 修饰的字段用来引用对象. 而使用 def 定义的方法包含可执行代码. 变量保存对象的状态或数据, 而方法使用该数据来执行对象的计算工作. 当你实例化某个类时, 运行环境分配一些内存来保存对象的状态(即变量).
+
+* 追求对象健壮性的一个重要方法是确保对象的状态在其整个生命周期内保持可用, 解决方法是将字段设为 private, 使其只能被同一个类中定义的方法访问, 所有可以更新状态的代码都将在字段所属的类中.
+* Public 是 Scala 的默认访问级别.
+* Scala 中方法参数的一个重要特征是它们是 vals, 而不是 vars, 如果你尝试在方法内部修改参数, 将会导致编译失败.(呃, 函数式)
 * 如果方法中没有显式的返回语句, 那么将默认返回最后出现的变量. scala 建议编码时不要显式的指定返回值.
 * 如果方法只有一行表达式, 那么可以将方法的大括号省略.
 * 方法的 side effect 主要指改变了方法外部变量的状态或做了 I/O 操作.
