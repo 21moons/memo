@@ -460,3 +460,83 @@ bigger: Double = 12.345
 scala> val a = 'A'
 a: Char = A
 
+scala> val f = '\u0044'
+f: Char = D
+
+scala> val hello = "hello"
+hello: String = hello
+
+scala> val bool = true
+bool: Boolean = true
+
+转义符号:
+
+* \n   line feed (\u000A)
+* \b   backspace (\u0008)
+* \t   tab (\u0009)
+* \f   form feed (\u000C)
+* \r   carriage return (\u000D)
+* \"   double quote (\u0022)
+* \'   single quote (\u0027)
+* \\   backslash (\u005C)
+
+你使用连续三个双引号(""")开始和结束一个 raw string. raw string  的内部可能包含任何字符, 包括换行符, 引号和特殊字符.
+
+``` scala
+println("""Welcome to Ultamix 3000.
+          Type "HELP" for help.""")
+```
+
+上面的语句返回的结果是:
+
+Welcome to Ultamix 3000.
+        Type "HELP" for help.
+
+现在的问题是第二行之前的前导空格也包含在了字符串中! 要帮助解决这种问题, 可以在字符串上调用 stripMargin. 要使用此方法, 请在每行的前面放置一个管道符(|), 然后在整个字符串上调用 stripMargin:
+
+``` scala
+println("""|Welcome to Ultamix 3000.
+           |Type "HELP" for help.""".stripMargin)
+```
+
+上面的语句返回的结果是:
+
+Welcome to Ultamix 3000.
+Type "HELP" for help.
+
+symbol 在字面上写作 'ident, 其中 ident 可以是任何字母数字标识符. 此类文字映射到预定义类 scala.Symbol 的实例. 具体来说, literal'cymbal 将由编译器扩展为工厂方法调用: Symbol("cymbal"). symbol 通常在动态类型语言用作标识符. 例如, 您可能希望定义更新数据库中记录的方法:
+
+scala> def updateRecordByName(r: Symbol, value: Any) = {
+// code goes here
+}
+updateRecordByName: (Symbol,Any)Unit
+
+该方法将指示记录字段名称的 symbol 和用于更新记录中字段的值作为参数. 在动态类型语言中，您可以将未声明的字段标识符传递给方法, 但在 Scala 中, 这将无法通过编译:
+
+scala> updateRecordByName(favoriteAlbum, "OK Computer")
+<console>:6: error: not found: value favoriteAlbum
+updateRecordByName(favoriteAlbum, "OK Computer")
+
+相反, 几乎同样简洁, 您可以传递 symbol:
+
+scala> updateRecordByName('favoriteAlbum, "OK Computer")
+
+除了找出它的名字之外, 用符号做的事情并不多:
+
+scala> val s = 'aSymbol
+s: Symbol = 'aSymbol
+
+scala> val nm = s.name
+nm: String = aSymbol
+
+另一件值得注意的事情是如果两次写入相同的 Symbol, 则两个表达式都将引用完全相同的 Symbol 对象.
+
+<font color=#fd0209 size=6 >symbol 这东西不过是为了规避函数参数必须为 val 的限制</font>
+
+### 5.3 STRING INTERPOLATION
+
+
+
+
+
+
