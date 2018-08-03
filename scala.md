@@ -11,6 +11,7 @@ Programming in Scala Third Edition Martin Odersky, Lex Spoon, Bill Vennerss
 * scala 支持类型推断
 
 * 语法糖
+
 val 声明的变量是不可变的
 var 声明的变量是可变的
 scala 的所有类都是从 any 类派生而来的
@@ -221,6 +222,7 @@ println(pair._2)
 <font size=2>Figure 3.2 - Class hierarchy for Scala sets.</font>
 
 * immutable sets
+
 ``` scala
 var jetSet = Set("Boeing", "Airbus")
 jetSet += "Lear"
@@ -351,6 +353,7 @@ scala 会将上面的代码解析为一行语句.
 import scala.collection.mutable
 
 object ChecksumAccumulator {
+  // 对象引用不变, 而不是对象不变
   private val cache = mutable.Map.empty[String, Int]
 
   def calculate(s: String): Int =
@@ -369,6 +372,64 @@ object ChecksumAccumulator {
 }
 ```
 
+单例对象不仅仅是静态方法的持有者, 它还是头等对象(irst-class object). 因此, 您可以将单例对象的名称视为附加到对象的 "名称标记".
+
+定义单例对象并不是定义类型(Scala 抽象级别). 仅给出 ChecksumAccumulator object 的定义, 并不能创建 ChecksumAccumulator 类型的变量. 相反, 名为 ChecksumAccumulator 的类型由 singleton object 的伴随类定义. 但是, 单例对象扩展了超类, 并且可以混合 traits(通过 extends 关键字). 每个单例对象都是其超类和混入的 traits 的实例，你可以通过这些类型调用其方法, 从这些类型的变量引用它, 并将其传递给期望这些类型的方法. 我们将在 13 章中展示一些继承自类(classes)和特征(traits)的单例对象的例子.
+
+类和单例对象之间的一个区别是单例对象不能接受参数, 而类可以. 因为你无法使用 new 关键字实例化单例对象, 所以无法将参数传递给它. 每个单例对象都实现为从静态变量引用的合成类(synthetic class 合成类的名称是对象名称加上美元符号)的实例, 因此它们具有与 Java 中 static 相同的初始化语义. 特别是, 单例对象在第一次访问时才初始化.
+
+与伴随类不共享相同名称的单例对象称为 "独立对象"(standalone object). 独立对象有很多用途, 包括作为通用方法的集合或定义 Scala 应用程序的入口点.
+
+### 4.4 A SCALA APPLICATION
+
+要运行 Scala 程序, 必须提供一个独立对象的名称, 该独立对象存在 main 方法的，并且 main 方法接受一个参数 Array [String], 返回类型为 Unit. 任何一个拥有 main 方法的独立对象都可以用作应用程序的入口点.
+
+``` scala
+// In file Summer.scala
+import ChecksumAccumulator.calculate
+
+object Summer {
+  def main(args: Array[String]) = {
+    for (arg <- args)
+      println(arg + ": " + calculate(arg))
+  }
+}
+```
+
+Scala 隐式地将 java.lang 包和 scala 包的成员, 以及名为 Predef 的单例对象的成员导入到每个 Scala 源文件中. Predef 驻留在 scala 包中, 包含许多有用的方法. 例如, 当你在 Scala 源文件中说 println 时, 实际上是在 Predef 上调用 println. (Predef.println 转身调用Console.println, 它完成真正的工作). 当你说 assert 时, 你正在调用 Predef.assert.
+
+Scala 和 Java之间的一个区别是, Java 要求你将类放在以类命名的文件中 - 例如, 你将类 SpeedRacer 放在文件 SpeedRacer.java 中, 然而在 scala 中你可以将 .scala 源码文件命名为任何你想要的东西, 无论你在文件中放入了什么 Scala 类或代码. 但是, 通常在非脚本(non-scripts)的情况下, 建议使用 java 的样式命名源文件, 这样程序员可以通过查看文件名来更轻松地找到类.
+
+ChecksumAccumulator.scala 和 Summer.scala 都不是脚本, 因为它们以定义结尾. 与之形成对比的是, 脚本必须以结果表达式结束. 因此, 如果您尝试将 Summer.scala 作为脚本运行, Scala 解释器会抱怨 Summer.scala 没有以结果表达式结束. 所以, 您需要使用 Scala 编译器编译这些文件, 然后运行生成的类文件. 一种方法是使用 scalac, 它是基本的 Scala 编译器, 如下所示:
+
+$ scalac ChecksumAccumulator.scala Summer.scala
+
+这会编译您的源文件, 但在编译完成可能要花一点时间. 原因是每次编译器启动时, 它都会花时间扫描 jar 文件的内容并进行其他初始工作. 出于这个原因, Scala 发行版还包括一个名为 fsc 的 Scala compilerdaemon(用于快速 Scala 编译器). 你这样使用它:
+
+$ fsc ChecksumAccumulator.scala Summer.scala
+
+第一次运行 fsc 时, 它将在本地创建一个连接到计算机端口的服务器守护进程. 然后它通过端口将要编译的文件发送到守护程序, 由守护程序来进行编译. 下次运行 fsc 时, 守护程序仍然在运行, 因此 fsc 只用将文件列表发送到守护程序, 守护程序立即开始编译文件. 使用 fsc, 您只需要在 Java 运行环境第一次启动时等待. 任何时候你想停止 fsc 守护程序, 都可以使用 fsc-shutdown 来执行此操作.
+
+运行 scalac 或 fsc 命令将生成 Java 类文件, 然后可以通过 scala 命令运行这些文件, 这与您在前面示例中用于调用解释器的命令相同. 但是, 这次并不是给它一个带有 .scala 扩展名的文件来解释, 在这种情况下, 你会给它一个包含正确方法的独立对象的名称. 因此, 您可以通过键入以下命令来运行 Summer 应用程序:
+
+$ scala Summer of love
+
+### 4.5 THE APP TRAIT
+
+Scala 提供了一个 trait, scala.App, 可以节省一些输入时间. 
+
+``` scala
+import ChecksumAccumulator.calculate
+
+object FallWinterSpringSummer extends App {
+  for (season <- List("fall", "winter", "spring"))
+    println(season + ": " + calculate(season))
+}
+```
+
+要使用 trait, 首先要在单例对象的名称后面加上 "extends App". 然后, 不用编写 main 方法, 而是将你打算在 main 方法中放入的代码直接放在单例对象的花括号之间. 您可以通过名为 args 的字符串数组访问命令行参数, 这样就够了, 你可以编译和运行它.
+
+## Chapter 5 Basic Types and Operations
 
 
 
