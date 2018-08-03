@@ -310,30 +310,68 @@ def formatArgs(args: Array[String]) = args.mkString("\n")
 * 追求对象健壮性的一个重要方法是确保对象的状态在其整个生命周期内保持可用, 解决方法是将字段设为 private, 使其只能被同一个类中定义的方法访问, 所有可以更新状态的代码都将在字段所属的类中.
 * Public 是 Scala 的默认访问级别.
 * Scala 中方法参数的一个重要特征是它们是 vals, 而不是 vars, 如果你尝试在方法内部修改参数, 将会导致编译失败.(呃, 函数式)
-* 如果方法中没有显式的返回语句, 那么将默认返回最后出现的变量. scala 建议编码时不要显式的指定返回值.
-* 如果方法只有一行表达式, 那么可以将方法的大括号省略.
-* 方法的 side effect 主要指改变了方法外部变量的状态或做了 I/O 操作.
-A side effect is generally defined as mutating state somewhere external to the method or
-performing an I/O action.
-* 一个仅为了其 side effect 而存在的方法称为过程(procedure).
+* 如果方法中没有显式的返回语句, 那么 scala 方法将返回该方法计算的最后一个值. scala 建议编码时不要显式的指定返回值, 相反, 将每个方法视为一个表达式, 该表达式返回一个值. 这种理念将鼓励您将方法设计得非常小.
+* 如果方法只有一行表达式, 那么可以将方法的大括号省略. 如果表达式很短, 它甚至可以与 def 放在同一行. 为了将简洁做到极致, 您甚至可以省略函数返回类型, Scala 会自行推断(不建议, 容易出错).
+* 方法的 side effect 主要指改变了外部变量的状态或做了 I/O 操作. (A side effect is generally defined as mutating state somewhere external to the method or performing an I/O action.)
+* 一个返回值为 Unit 的仅为了其 side effect (通常指改变外部变量状态)而存在, 我们将这种方法称为过程(procedure).
 * ";" 号用来分隔语句, 如果一行只有一个语句, 则可以省略 ";" 号.
-* 如果你链接多行包含类似 "+" 符合的语句，通常会将操作符放在行尾而不行首.
+* 如果你链接多行包含类似 "+" 符合的语句, 通常会将操作符放在行尾而不是行首.
+
+偶尔 Scala 会违背你的意愿将声明分为两部分:(所以省略 ";" 号这功能没啥用)
 
 ``` scala
 x
 + y
 ```
-scala 会将上面的代码解析为两行语句
+
+scala 会将上面的代码解析为两行语句, 而不是你预期的 x + y, 因此, 无论何时链接诸如 + 的中缀操作, 常见的Scala样式是将操作符放在行的末尾而不是开头：
 
 ``` scala
 x +
 y +
 z
 ```
-scala 会将上面的代码解析为一行语句
+
+scala 会将上面的代码解析为一行语句.
+
+关于语句分离的准确规则很简单. 简而言之, 除非满足下列条件之一, 否则将行结尾视为语句的结束:
+
+1. 行尾的符号作为语句的结尾来说不合法, 例如句号或中缀运算符.
+2. 下一行作为一个语句的开头来说无法解析.
+3. 该行在括号 (...) 或括号 [...] 内结束.(因为 (...) 或 [...] 无论如何都不能包含多个语句)
 
 ### 4.3 SINGLETON OBJECTS
-* scala 中的类不能含有静态成员, 单例(singleton)对象则是一个替换方案.
 
-* 当一个单例对象与类同名时, 我们就把它称为类的伴生对象, 而这个类被称为单例对象的伴生类, 类和它的伴生对象必须在同一个文件中定义.
-类和伴生对象的私有成员对于对方来说都是可见的(C++ 中的友元, 还是一个对象拆成了两个部分).没有同名伴生类的单例对象称为孤立对象(standalone object).
+* scala 中的类不能含有静态成员(声称比 java 更面向对象), 单例(singleton)对象则是一个替换方案. 单例对象用 object 定义.
+
+* 当一个单例对象与类同名时, 我们就把它称为类的 "伴生对象"(companion object), 而这个类被称为单例对象的 "伴生类"(companion class), **类和它的伴生对象必须在同一个文件中定义**. 类和伴生对象的私有成员对于对方来说都是可见的(类似于 C++ 中的友元, 还是一个对象拆成了两个部分).没有同名伴生类的单例对象称为孤立对象(standalone object).
+
+``` scala
+// In file ChecksumAccumulator.scala
+import scala.collection.mutable
+
+object ChecksumAccumulator {
+  private val cache = mutable.Map.empty[String, Int]
+
+  def calculate(s: String): Int =
+    if (cache.contains(s))
+      cache(s)
+    else {
+      val acc = new ChecksumAccumulator
+
+      for (c <- s)
+        acc.add(c.toByte)
+
+      val cs = acc.checksum()
+      cache += (s -> cs)
+      cs
+  }
+}
+```
+
+
+
+
+
+
+
