@@ -117,7 +117,61 @@ scoped_array 相当于 C++ 11 标准中管理数组对象用法的 unique_ptr.
 
 unique_ptr 是 C++ 11 标准中定义的新的智能指针, 用来取代 C++ 98 中的 std::auto_ptr. unique_ptr 不仅能够代理 new 创建的单个对象, 也能够代理 new[] 创建的数组对象, 也就是说它结合了 scoped_ptr 和 scoped_array 两者的能力. unique_ptr 比 scoped_ptr 有更多的功能, 可以像原始指针一样进行比较, 可以像 shared_ptr 一样定制 **删除器**, 也可以安全地放入标准容器.
 
+scoped_array 的缺点是功能有限, 不能动态增长, 没有边界检查, 也没有迭代器支持, 不能搭配 STL 算法, 仅有一个纯粹的"裸"数组接口. 在需要动态数组的情况下我们应该使用 std::vector.
+
 * shared_ptr
+
+shared_ptr 实现的是引用计数型的智能指针, 可以自由的拷贝和赋值, 当没有代码使用(引用计数为 0)时它才删除被包装的动态分配对象, 已被收入 C++ 11 标准.
+
+```cpp
+template <typename T>
+class shared_ptr
+{
+public:
+    typedef T element_type;
+
+    shared_ptr();
+
+    template<class Y> explicit shared_ptr(Y * p);
+    template<class Y, class D> explicit shared_ptr(Y * p, D d);
+
+    ~shared_ptr();
+
+    shared_ptr(shared_ptr const & r);
+
+    shared_ptr & operator=(shared_ptr const & r);
+    template<class Y> shared_ptr & operator=(shared_ptr<Y> const & r);
+
+    void reset();
+    template<class Y> void reset(Y * p);
+    template<class Y, class D> void reset(Y * p, D d);
+
+    T & operator*() const;
+    T * operator->() const;
+    T * get() const;
+
+    bool unique() const;
+    long use_count() const;
+
+    explicit operator bool() const;
+    void swap(shared_ptr & b);
+}
+```
+
+shared_ptr 有多种类型的构造函数:
+
+* 无参的 shared_ptr() 创建一个持有空指针的 shared_ptr.
+* shared_ptr(Y * p) 获得指向类型 T 的指针 p 的管理权, 同时引用计数置为 1. 这个构造函数要求 Y 类型必须能够转换为 T 类型.
+* shared_ptr(shared_ptr const & r) 从另外一个 shared_ptr 获得指针的管理权, 同时引用计数加 1, 结果是两个 shared_ptr 共享一个指针的管理权.
+* operator= 赋值操作符可以从另外一个 shared_ptr 获得指针的管理权, 其行为同构造函数.
+* shared_ptr(Y * p, D d) 行为类似 shared_ptr(Y * p), 但使用参数 d 指定了析构时的定制删除器, 而不是简单的 delete.
+* 别名构造函数(aliasing), 不增加引用计数的特殊用法.
+
+shared_ptr 的 reset() 函数的行为与 scoped_ptr 也不尽相同, 它的作用是将引用计数减 1, 停止对指针的共享, 除非引用计数为 0, 否则不会发生删除操作.
+
+shared_ptr 可以被用于标准关联容器(set 和 map).
+
+
 
 * shared_array
 
