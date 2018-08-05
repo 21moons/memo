@@ -1,3 +1,5 @@
+# 关键字
+
 ## const
 
 * 若一个变量声明为 const 类型, 则试图修改该变量的值的操作都被视编译错误
@@ -18,7 +20,7 @@
 class String {
     String ( const char* p ); // 用C风格的字符串p作为初始化值
 }
-String s1 = “hello”; //OK 隐式转换，等价于String s1 = String(“hello”);
+String s1 = "hello"; //OK 隐式转换，等价于String s1 = String(“hello”);
 ```
 
 但是有的时候可能会不需要这种隐式转换, 如下:
@@ -52,13 +54,13 @@ s4 和 s5 分别把一个 int 型和 char 型, 隐式转换成了分配若干字
 
 ## boost
 
-*  在 C++ 里, 拷贝有等号拷贝和构造拷贝之分, 类的等号拷贝和构造拷贝都是可以重载的, 如果不重载，默认的拷贝模式是对每个类成员依次执行拷贝. boost::noncopyable 主要用于单例的情况, C++ 11 中为不可拷贝类提供了更简单的实现方法, 使用 delete 关键字即可
+* 在 C++ 里, 拷贝有等号拷贝和构造拷贝之分, 类的等号拷贝和构造拷贝都是可以重载的, 如果不重载，默认的拷贝模式是对每个类成员依次执行拷贝. boost::noncopyable 主要用于单例的情况, C++ 11 中为不可拷贝类提供了更简单的实现方法, 使用 delete 关键字即可
 
-## RAII 机制(Resource Acquisition Is Initialization 资源获取即初始化)
+### RAII 机制(Resource Acquisition Is Initialization 资源获取即初始化)
 
 在类的构造函数中申请所需的资源, 然后使用, 最终在析构函数中释放资源.
 
-## 智能指针(smart pointer)
+### 智能指针(smart pointer)
 
 如果对象是用声明的方式在栈上创建的(局部变量), 那么 RAII 机制会工作正常, 当离开作用域时对象会自动销毁从而调用析构函数释放资源. 但如果对象是用 new 操作符在堆上创建的, 那么它的析构函数不会自动调用, 程序员必须明确地应用对应的 delete 操作符销毁它才能释放资源.
 
@@ -101,7 +103,19 @@ template<class T> inline bool operator==(scoped_ptr<T> const & p, boost::detail:
 
 scoped_ptr 同时把拷贝构造函数和赋值操作符都声明为私有的, 禁止对智能指针的拷贝操作, 保证了被它管理的指针不能被转让所有权.
 
+scoped_ptr 提供了一个可以在 bool 语境中自动转换成 bool 值的功能(如 if 的条件表达式)的功能, 用来测试 scoped_ptr 是否持有一个有效的指针(非空). 它可以代替与空指针的比较操作, 而且写法更简单.
+
+scoped_ptr 是一个行为类似指针的对象, 而不是指针, 所以对 scoped_ptr 执行 delete 会得到一个编译错误.
+
+一个持有 scoped_ptr 成员的类, 是不可拷贝和赋值的.
+
 * scoped_array
+
+scoped_array 很像 scoped_ptr, 它包装了 new[] 操作符(不是单纯的 new)在堆上分配的动态数组, 为动态数组提供了一个代理, 保证可以正确的释放内存.
+
+scoped_array 相当于 C++ 11 标准中管理数组对象用法的 unique_ptr.
+
+unique_ptr 是 C++ 11 标准中定义的新的智能指针, 用来取代 C++ 98 中的 std::auto_ptr. unique_ptr 不仅能够代理 new 创建的单个对象, 也能够代理 new[] 创建的数组对象, 也就是说它结合了 scoped_ptr 和 scoped_array 两者的能力. unique_ptr 比 scoped_ptr 有更多的功能, 可以像原始指针一样进行比较, 可以像 shared_ptr 一样定制 **删除器**, 也可以安全地放入标准容器.
 
 * shared_ptr
 
