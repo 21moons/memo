@@ -235,121 +235,25 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 #### Average trade
 
-优秀交易系统的一个重要指标是 **平均交易(the average trade)**, 即净利润除以交易数量. 平均交易告诉我们每笔交易赚取或者亏损多少钱. 从绝对意义上来讲, 平均交易应该在弥补滑点和佣金后, 仍能为交易者留下一些利润. 按百分比计算, 平均交易在整个测试期间应保持一致. 交易者通常将绝对平均交易(the absolute average trade)与特定交易的入场价格进行比较, 以便以百分比表示. 其他交易者将名义平均交易价值(the
-nominal average trade value)与给定时期内合约的名义价值(the nominal value)进行比较. 我们推荐绘制交易的历史平均百分比值, 以便清楚地了解多年来系统的盈利趋势.
+如何评判一个交易系统是否优秀, 关于这个问题有一个重要指标 -- **平均交易(the average trade)**, 即净利润除以交易数量. 平均交易告诉我们每笔交易赚取或者亏损多少钱. 从绝对意义上来讲, 平均交易在弥补滑点和佣金后, 应该仍能为交易者留下一些利润. 按百分比计算, 平均交易在整个测试期间应保持一致. 通常情况下, 交易者将绝对平均交易(the absolute average trade)与特定交易的入场价格进行比较, 并以百分比的形式表示. 其他交易者将名义平均交易值(the nominal average trade value)与给定时期内合约的名义价值(the nominal value)进行比较. 我们推荐绘制交易的历史平均百分比值, 以便清楚地了解多年来系统的盈利趋势.
 
-#### Percentage of profitable trades
+#### Percentage of profitable trades(盈利交易百分比)
 
-Usually the logic is that if you win a lot of times
-the average winning trade/average losing trade ratio will be low, while if conversely your
-percentage of profitable trades is low then the ratio will be high (inverse relationship). A
-50% percent profitable trades number is a healthy one. If it grows significantly over 50%
-(for example to 60% or 70%) be watchful because something could be wrong: to
-counterbalance such a high percentage the average winning trade/average losing trade 
-ratio should be particularly low, often even under the alarm level of 1. If you are using
-target exit (let’s assume you exit 50% of the position at a price limit over the entry) it is
-normal for the percentage of profitable trades to go over 60% and the average winning
-trade/average losing trade to go under 2.
+盈利交易百分比表示盈利交易数量与总交易数量的比值. 它本身并不重要(一个趋势跟随交易系统的盈利交易百分比可能会比较低, 如 35%, 但它仍然是一个可行的系统), 重要的是它可以用来衡量系统如何平衡, 而系统平衡与 "平均交易赢利/平均交易亏损"的比值相关. 通常情况下, 如果你赢了很多次, "平均交易赢利/平均交易亏损" 比值会很低(盈利平均分布在每笔交易上, 导致每笔交易的盈利变少), 相反, 如果你的盈利交易百分比很低, 那么比值就会较高(两者之间是反比关系). 50% 的盈利交易百分比是健康的. 但是如果它大大超过 50%(例如 60% 或 70%), 请务必小心, 因为这意味着某些地方出了问题: 为了抗衡如此高的百分比, "平均交易赢利/平均交易亏损"比值应该特别低, 甚至常常低于 1(警戒水平). 如果您使用目标点位退出(让我们假设你以止盈价格退出 50% 的头寸), 那么盈利交易百分比超过 60% 是一件很正常的事情, 同时 "平均交易赢利/平均交易亏损" 比值会低于 2.
 
-盈利交易百分比表示盈利交易数量与总交易数量的比值. 重要的不是它本身(一个趋势跟随系统的盈利交易百分比可能会比较低, 如 35%, 但它仍然是一个可行的系统), 只是因为它可以用来衡量系统如何平衡, 系统平衡与 "平均赢利交易/平均亏损交易"的比值相关. 通常的逻辑是, 如果你赢了很多次, "平均赢利交易/平均亏损交易" 比值会很低, 而如果相反, 你的盈利交易百分比很低, 那么比值就会较高(两者之间是反比关系). 50% 盈利交易百分比是健康的. 如果它显著超过 50%(例如 60% 或 70%), 请小心, 因为可能是某些地方出了问题: 为了抵消如此高的"平均赢利交易/平均亏损交易"比值, 平均获胜交易/平均亏损交易比率应该特别低，通常甚至在警报下如果您使用目标退出（让我们假设您以超过该条目的价格限制退出 50% 的头寸), 那么盈利交易的百分比超过 60% 且平均获胜交易/平均亏损是正常的交易低于2.
+盈利交易百分比对于计算交易系统的数学期望也很重要. 盈利交易的百分比乘以平均交易赢利应该高于亏损交易的百分比乘以平均交易亏损. 换句话说, 数学期望应该是正数, 并且越高越好. 您可以使用这种数学期望度量来对系统进行排名, 然后选出最好的系统.
 
-The percentage of profitable trades number is also important for calculating the
-mathematical expectancy of a trading system. The percentage of profitable trades
-multiplied by the average winning trade should be higher than the percentage of losing
-trades multiplied by the average losing trade. Mathematical expectancy, in other words,
-should be positive and the higher the better. You can use this measure of mathematical
-expectancy to rank systems and pick up the best.
+就盈利交易的百分比而言, 必须谨慎注意一个警告: 50% 的盈利交易比绝不意味着亏损之后就是盈利, 反之亦然. 如果一个交易序列声称两次盈利/亏损的交易之间有着特定的排列, 这其实进入了一个存在争议的领域. 即使这个话题很吸引人, 谨慎的交易也应该始终与最坏的交易作斗争, 并期待最好的交易, 就我们的经验来说, 相信"交易之间存在依赖"特别危险, 因为这个假设非常强大. 实际上你是假设在交易序列中存在重复的排列; 也就是说, 过去的概率表明, 在连续三场胜利后, 更有可能有两场失利, 而不是第四场胜利.
 
-有利可图的交易数量的百分比对计算也很重要
-交易系统的数学期望. 有利可图的交易比例
-乘以平均获胜交易应高于失败的百分比
-交易乘以平均亏损交易. 数学期望,换句话说,
-应该是积极的,越高越好. 你可以使用这种数学方法
-期望排名系统,并拿起最好的.
+轮盘赌玩家真的相信, 如果你这次得到了一个黑色的数字, 那么在下一轮中获得红色数字的机会就会增加. 更糟糕的是, 他们认为如果随后出现了一排黑色数字, 那么获得红色数字的机会会变得越来越大, 例如连续 7 次或 10 次. 然而, 从逻辑思维和统计理论来看, 赌场中轮盘赌的每一轮都是完全独立的. 上一轮是否有红色数字, 黑色数字或绿色数字, 其实是没有任何意义的, 既不意味着好也不预示着坏. 每次出现的数字都完全独立于其他数字. 因此, 在下一轮中投注, 正确的概率总是相同的：18/37 = 48.6%(因为有 18 个黑色和 18 个红色数字加上一个绿色 0).
 
-As far as the percentage of profitable trades is concerned there is a caveat that must be
-regarded with careful attention: a 50% profitable trades ratio does not mean that a loss is
-followed by a win or vice versa. It is a controversial area if a trade sequence suggests it
-is possible to claim that a win follows a win or vice versa in some order. Even if the topic
-is fascinating, a prudent trade should always fight against the worst and hope for the best
-so that in our experience to trust on trade dependency is particularly risky since the
-assumption is quite strong. Indeed you are assuming that there is a recurring order in the
-trade sequence; that is, probabilities in the past show that after three wins in a row it was
-more likely to have two losses instead of a fourth win.
+虽然金融市场, 特别是对初学者来说, 有时看起来特别像赌场, 但它们实际上是非常不同的, 且金融市场会更复杂. 在许多情况下, 他们表现得很意外, 指数上蹿下跳并且没人知道原因. 然而, 人类的贪婪和恐惧心理会产生一些特殊情况, 这些情况与市场的偶然行为不同. 正是在这些走势中, 特殊情况下的特殊交易系统, 可能会发生交易依赖. 但这是一个超出本书范围的复杂主题. 无论如何, 我们建议读者以极其谨慎的态度对待这一主题.
 
-就盈利交易的百分比而言, 必须有一个警告
-认真对待: 50% 的盈利交易比例并不意味着亏损
-其次是赢, 反之亦然. 如果贸易顺序表明这是一个有争议的领域
-有可能声称赢得胜利, 反之亦然. 即使这个话题
-令人着迷的是, 谨慎的交易应该始终与最坏的和最好的希望作斗争
-因此,从我们的经验来看,对贸易依存度的信任是特别危险的
-假设很强. 事实上, 你认为中国经常出现一个订单
-交易顺序; 也就是说, 过去的概率表明, 在连续三次获胜后
-更有可能出现两次失利, 而不是第四次胜利.
+#### Profit factor(利润系数)
 
-There are roulette players which really believe that the chance of getting a red number in
-the next run increases if you just had a black one. And even worse, they believe that the
-chance of getting a red number becomes bigger and bigger if a row of subsequent black
-numbers occurs, for example 7 or 10 times in a row. From logical thinking and statistical
-theory, however, you know that each run of the roulette in the casino is completely
-independent from another. So it has no meaning, neither good nor bad, if in the run just
-before there was a red number, a black one or the green one. Each occurrence of a number
-is completely independent from the other ones. So betting on a colour in the next run
-your chance is always the same: 18/37 = 48.6% (since there are 18 black and 18 red
-numbers plus one green 0).
+利润系数是一个完美指标, 用来比较不同交易系统或不同市场上的相同交易系统. 当然, 该指标是一个比率, 因此它不会受其他绝对值比率缺点的影响. 利润系数是毛利润除以毛损, 基本上揭示了毛利与毛损相关的规模. 当然是越高越好. 通常, 健康的交易系统的利润系数为 2, 平均交易盈利/平均交易亏损的比率为 2, 盈利交易数量的百分比等于 50%. 但也有一些利润系数介于 1.5 和 3 之间的良好系统. 考虑一下, 当你的利润系数超过 3 时, 你将如何优化系统, 以及如何进行交易系统的设计和开发.
 
-有轮盘球员真的相信有机会获得红色数字
-如果你只有一个黑色, 下一次运行会增加. 更糟糕的是, 他们认为
-如果随后一排黑色, 获得红色号码的机会变得越来越大
-数字发生, 例如连续7次或10次. 从逻辑思维和统计
-理论, 但是, 你知道赌场里的每一轮轮盘赌都是完全的
-独立于另一个. 所以它没有意义, 不管好坏, 只要在运行中
-之前有一个红色的数字, 一个黑色的或绿色的. 每次出现一个数字
-与其他人完全独立. 所以在下一轮投注颜色
-你的机会总是一样的：18/37 = 48.6%(因为有18黑和18红
-数字加一个绿色0).
-
-Although the financial markets, especially for beginners, sometimes look like a casino,
-they are very different and more complex. In many cases they behave accidentally, with
-many movements happening up and down and nobody knows why. There are however
-some special situations which are created by human psychology of greed and fear when
-the market behaves differently to accident. It is these movements where, in special trading 
-systems in special situations, trade dependencies can occur [5]. But this is a sophisticated
-topic that goes beyond of the scope of this book. In any case we recommend readers
-approach this topic with extreme prudence.
-
-虽然金融市场,特别是初学者,有时看起来像赌场,
-他们非常不同,也更复杂. 在许多情况下,他们的行为意外,与
-许多运动发生在上下,没有人知道为什么. 然而,有
-一些特殊情况是由人类的心理创造的贪婪和恐惧时
-市场表现与事故不同. 正是这些运动,在特殊交易中
-在特殊情况下的系统,贸易依赖可能发生[5]. 但这是一个复杂的
-这个主题超出了本书的范围. 无论如何,我们都建议读者
-极端谨慎地处理这个话题.
-
-#### Profit factor
-
-Profit factor is a perfect indicator for comparing different systems or the same system
-plotted over different markets. Of course this indicator is a ratio so it does not suffer from
-the usual drawback of the other absolute number ratios. Profit factor is gross profit divided
-by gross loss and basically reveals the size of gross profit in relation to gross loss. The
-higher the better. Usually a healthy trading system has a profit factor of 2, an average
-winning trade/average losing trade ratio of 2 and a percentage of profitable trades number
-equal to 50%. But there are also good systems with a profit factor of between 1.5 and 3.
-Think again about what you did during optmisation and your system’s design and
-development when your profit factor goes over 3.
-
-利润因素是比较不同系统或相同系统的完美指标
-绘制在不同的市场上. 当然,这个指标是一个不受其影响的比率
-其他绝对数字比率的通常缺点. 利润因素是毛利分配
-以毛损计算,并基本揭示毛利的大小与毛损的关系.该
-越高越好. 通常一个健康的交易系统的平均利润因子是2
-获胜的交易/平均失败交易比率为2和一定比例的盈利交易数量
-等于50%. 但也有好的系统,利润因子在1.5到3之间.
-再想一想在你的系统设计和系统设计中你做了什么
-当你的利润因素超过3时发展.
-
-#### Drawdown
+#### Drawdown(亏损)
 
 A broad definition of drawdown could be the largest loss or the largest losing streak of a
 trading system, whichever is the biggest [4]. In a more graphical way we can depict
@@ -360,14 +264,7 @@ drawdown has more subtle meanings according to whether we consider only open
 positions or closed out positions. In fact it is important to distinguish between three
 different types of drawdown:
 
-缩小的广义定义可能是a的最大损失或最大连续亏损
-交易系统,以最大者为准[4]. 我们可以用更加图形化的方式描述
-作为在最高点和连续点之间的净值线下跌
-创下新高之前的低点. 换句话说, "总股本缩减"是
-开放的交易盈利和亏损以及您账户中已经结清的权益. 但
-根据我们是否只考虑公开, 缩编有更微妙的含义
-职位或封闭职位. 事实上, 区分三者很重要
-不同类型的缩编:
+亏损的广义定义可能是交易系统中最大的损失或最大的连跌, 无论哪个最大[4]. 以更加图解的方式，我们可以将亏损描述为在创出新高之前最高点和连续低点之间的权益线下跌。 换句话说，“总权益提取”是开放式贸易的利润和损失加上您帐户中已经结清的权益。 但根据我们是仅考虑未平仓头寸还是平仓头寸，缩编具有更微妙的含义。 事实上，区分三种不同类型的缩减非常重要：
 
 1. An end trade drawdown tells us how much of the open profit we had to give back
 before we were allowed to exit a specific trade
@@ -376,13 +273,15 @@ without taking into consideration what is going on within the trade
 3. A start trade drawdown measures how much the trade went against us after the entry
 and before it started to go our way [6].
 
+1.结束交易缩减告诉我们在允许退出特定交易之前我们必须回馈多少未平仓合约
+2.关闭贸易缩减是进入和退出价格之间的差异，而不考虑交易中的情况
+3.开始交易缩减衡量交易在进入之后和开始之前对我们的影响程度[6]。
+
 For sake of simplicity we will use the close trade drawdown definition since it is the most
 significant. But it is important to remember that while trading real money we can endure an
 open trade drawdown much bigger than the theoretically calculated closed trade drawdown.
 
-为了简单起见,我们将使用近距离交易缩减定义,因为它是最多的
-重大. 但重要的是要记住,在交易真钱时我们可以忍受
-开放的交易缩减比理论上计算的封闭式交易缩减大得多.
+为简单起见，我们将使用紧密的交易缩减定义，因为它是最重要的。 但重要的是要记住，在交易真实货币时，我们可以忍受比理论上计算的封闭贸易缩减规模大得多的开放贸易缩减。
 
 It is undeniable that the absolute value of a drawdown has a deep psychological impact
 on the trader because he will be forced to deal with it and this could be painful. But with
@@ -395,16 +294,7 @@ changed dramatically, we still have a percentage point reference value in order 
 what is the real expected drawdown at current values: just plot the highest underwater
 equity line percentage at the current market value.
 
-不可否认,缩编的绝对价值有着深刻的心理影响
-对交易者而言,因为他将被迫应付,这可能是痛苦的. 但是与
-如同利润指标一样,我们需要小心使用这一措施
-比较方式. 为此目的, "水下权益线"的概念是有用的; 那
-是,绝对亏损值除以股票系列之前的最高价值.
-这表示相对于股权的百分比下降. 所以即使
-我们正在测试一个长达40年的合约价值系列
-我们仍然有一个百分点的参考值,以便发现
-目前的真实预期缩水量是多少：只绘制最高的水下
-以当前市场价值计算的股权百分比.
+不可否认的是，缩编的绝对价值对交易者产生了深刻的心理影响，因为他将被迫处理它，这可能是痛苦的。 但随着盈利指标的缩减，我们需要谨慎地以比较的方式使用这一措施。 为此目的，“水下权益线”的概念是有用的; 也就是说，绝对亏损值除以权益线的先前最高值。 这表示相对于权益线的缩减百分比。 因此，即使我们在40年期价格系列中测试系统，其中合约价值发生了显着变化，我们仍然有一个百分点参考值，以便发现当前值的实际预期下降：只是绘图 在当前市场价值下最高的水下股权比例。
 
 Many analysts try to fight against drawdown by optimising the exits and the initial stops
 while it would be more appropriate to further understand the reason why drawdown is
