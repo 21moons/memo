@@ -204,83 +204,32 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 <p align="center"><font size=2>Figure 2.2: In the middle of the chart as the variable varies the net profit stays almost at the same level.</font></p>
 
-我们寻找的是理想情况下尽可能接近水平线的线, 在这条线上净利润不依赖于输入值. 当然, 实际情况与理论有很大不同, 所以我们应该满足于这样一条线, 它轻柔地上升, 在顶点维持一段时间然后下降. 顶部的水平区域正是我们想要的, 在这个区域中, 即使改变输入, 净利润几乎保持不变. 这是输入值表现出鲁棒性的区域. 与利润尖峰截然不同, 它是净利润相对较高的一个点, 但在它的周围净利润陡然下降. 换句话说, 我们需要找到一个甚至在改变输入值后净利润仍然能够保持稳定的区域.
+我们寻找的是理想情况下尽可能接近水平线的线, 在这条线上净利润不依赖于输入值. 当然, 实际情况与理论有很大不同, 所以我们应该满足于这样一条线, 它轻柔地上升, 在顶点维持一段时间然后下降. 顶部的水平区域正是我们想要的, 在这个区域中, 即使改变输入, 净利润几乎保持不变. 这是输入值表现出 **鲁棒性** 的区域. 与利润尖峰截然不同, 它是净利润相对较高的一个点, 但在它的周围净利润陡然下降. 换句话说, 我们需要找到一个甚至在改变输入值后净利润仍然能够保持稳定的区域.
 
 ![profit_spike](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_2.3.png)
 
 <p align="center"><font size=2>Figure 2.3: As much as the variable changes the net profit shows deep and wide swings: there is no area where at the variable’s changing net profit stays more or less stable.</font></p>
 
-<p align="center"><font size=2>鲁棒性是指控制系统在一定(结构, 大小)的参数摄动下, 维持其它某些性能的特性.</font></p>
+<p align="left"><font size=2>鲁棒性是指控制系统在一定(结构, 大小)的参数摄动下, 维持其它某些性能的特性.</font></p>
 
 总而言之, 我们可以得出以下结论: 输入和结果间应该有一条逻辑路径, 会产生一些与输入批次相关的东西. 当输入和净利润不存在线性关系时, 或者不存在回退关系, 或者不存在任何作为优化主要规则的约束, 整套结果必须是存疑的.
 
 ### 2.4 交易系统的评估
 
-Evaluating a trading system can look easier than it is in reality. In the end what a prudent
-trader must do is something which is counterintuitive: at first glance we indeed would
-say that the higher the net profit the better the system. Unfortunately nothing is further
-from reality than this impression. We will put forward some general methodological
-criteria not based on net profit and absolute numbers in order to weed out this deceptive
-approach. Then we will introduce the indicator RINA index, which was elaborated by
-TradeStation. RINA index is more and more common among system traders and we
-believe that it comes closer to a good analysis than any other tool.
-
-评估交易系统看起来比实际更容易. 最后，谨慎的交易者必须做的事情是违反直觉的：乍一看，我们确实会说净利润越高，系统越好。 不幸的是，除了这种印象之外，没有什 我们将提出一些不基于净利润和绝对数字的一般方法标准，以便淘汰这种欺骗性的方法。 然后我们将介绍指标RINA指数，该指数由TradeStation详细说明。 RINA索引在系统交易者中越来越常见，我们认为它比任何其他工具更接近于良好的分析。
-
-评估一个交易系统看起来比现实要容易. 到底什么是审慎
-交易者必须做的是违反直觉的东西: 乍一看我们确实会这样做
-说净利越高系统越好. 不幸的是没有进一步的
-来自现实比这个印象. 我们将提出一些一般的方法论
-标准不是基于净利润和绝对数量来消除这种欺骗性
-做法. 接下来我们将介绍 RINA 指标, 该指标已经被详细阐述
-TradeStation. RINA 指数在系统交易者和我们之间越来越普遍
-相信它比任何其他工具都更接近良好的分析.
+评估交易系统看起来很容易. 谨慎的交易者最后必须做的事情是违反直觉的: 乍一看, 我们确实会说净利润越高系统越好. 不幸的是, 这种感觉与事实毫无关系. 我们将提出一些不基于净利润和纯数字的通用方法标准, 以便淘汰这种具有欺骗性的方法. 然后我们将介绍指标 RINA 指数, 该指数由 TradeStation 详细说明. RINA 指数在系统交易者中越来越常见, 我们认为它的分析比任何其他工具都要好.
 
 #### What to look for in an indicator
 
-Net profit is how much money the system brought home during the testing period. Even
-if the absolute number can lure the reader, it fundamentally says nothing about real
-performances of the system and moreover it says nothing about risk. Talking about profit
-without quantifying risk is a fatal error in system analysis. Furthermore, if you add proper
-commissions and slippage the equity line shape could change up to the point it becomes
-downward sloping or indeed negative.
+净利润是系统在测试期间带回家的钱. 即使绝对数量可以取悦读者, 它并没有从根本说明系统的真实性能, 而且它也没有说明风险. 在没有量化风险的情况下谈论利润是系统分析中的致命错误. 此外, 如果您添加适当的佣金和 **滑点**, 权益线形状可能会发生变化, 直至向下倾斜或变为负数(暗指亏损).
 
-净利润是系统在测试期间带回家的金额. 甚至
-如果绝对数量可以吸引读者, 它基本上没有提到真实
-系统的表现, 而且它没有提到风险. 谈论利润
-没有量化风险是系统分析中的致命错误. 此外, 如果你添加适当的佣金和滑点股票形态可能会改变向下倾斜或者甚至是负面的.
+<p align="left"><font size=2>滑点是交易的预期价格与交易执行价格之间的差异</font></p>
 
-So the two starting general considerations are the following:
-1. A versatile return indicator should be normalised so that it can be easily comparable
-among multiple asset classes or multiple trading systems
-2. A prudent indicator always compares return to risk
-Net profit has neither of these features.
+因此我们得到两个初始的一般考虑因素, 如下:
 
-Moreover an indicator should always convey the idea of how much the measure he is
-trying to catch is  "consistent". What is consistency? A synonym of consistency could be
- "stability": consistency measures how stable an indicator is. Let’s take the example of
-the net profit: net profit in itself says nothing about  "when" the profit was reaped. It could
-be that profit varied a lot from year to year or even that it was made just in a single year
-and all the other years the system lost money. Would you place more trust in a system
-that makes money year after year or simply a system that made money 10 years ago and
-then lost money every year since? In the end this later system made money because the
-profit was so huge 10 years ago and the following losses were acceptable; but who would
- be able to follow this system in the future? Nobody will trade such a system because it
-is apparent that the windfall 10 years ago could likely be an outlier, an abnormal
-occurrence that will never be repeated.
+1. 应对多功能回报指标进行标准化, 以便在多个资产类别或多个交易系统之间轻松进行比较.
+2. 谨慎的指标总是将回报与风险进行比较, 而净利润指标两者都不包含.
 
-此外,一个指标应该总是传达他是多少措施的想法
-试图抓住是 "一致的".什么是一致性？一致性的同义词可能是
- "稳定性"：一致性衡量指标的稳定性.我们来举个例子吧
-净利润：净利润本身并没有提到 "何时"获利.它可以
-因为每年的利润差异很大,甚至仅仅在一年内就可以完成
-并且所有其他年份系统都损失了资金.你会更信任系统吗？
-年复一年赚钱,或者只是一个10年前赚钱的系统
-那么每年都会亏钱？最终这个后来的系统赚钱,因为
-10年前利润非常巨大,以下损失是可以接受的;但谁会
- 未来能够遵循这个系统吗？没有人会交易这样的系统,因为它
-很明显,10年前的这笔意外可能是一个异常,一个异常
-将不会重复的事件.
+此外, **一个指标应该始终传达的观念是他希望度量的是什么, 对于交易系统来说这就是"一致".** 什么是一致性? 一致性的同义词可以是 "稳定性": **一致性衡量指标的稳定程度.** 让我们以净利润为例: 净利润本身并未说明什么时候获利. 年与年之间利润可能变化很大, 甚至是仅在某一年内产生利润, 在其他年份都是亏损. 您会信任哪一个系统, 一个年复一年赚钱的系统, 或是一个 10 年前赚钱然后每年都亏钱的系统? 最后的结论是后面的系统更好, 因为 10 年前赚取的利润如此巨大, 后面的损失相比之下是可以接受的; 但是谁会遵循这个系统继续交易呢? 没有人会采用这样一个交易系统, 因为很明显 10 年前的意外收获可能是一个异常值, 一个永远不会重复的异常事件.
 
 So we can conclude that a consistent trading system has an even distribution not only of
 profits and losses but also of the series of consecutive winning and losing trades. If you
