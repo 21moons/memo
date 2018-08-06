@@ -196,58 +196,23 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 因此, 输入, 条件和变量的数量必须可控并尽量减少至最小. 但多少个输入, 条件和变量算太多? 这是一个存在争议的领域, 其中唯一的标志是必须始终遵守我们在前一段中描述的数值条件的自由度数. 在考虑输入之前, 如果输入变化或者在优化下结果没有任何变化, 则快速粗略地检查是非常重要的. 如果不是, 请保持不变以增加自由度.
 
-Another point to be considered is what scan range to choose for each input.An example
-will give a clearer picture of this problem: if you want to test a moving average crossover
-system with a short-term moving average and a long-term moving average on daily data,
-you cannot test the short moving average from 1 to 20 (this is what is considered the
-short term with daily data) and the long moving average from 20 to 200 (the latter is the
-interval that is usually considered long term with daily data).Indeed a step from 1 to 2 is
-a 100% change and a step from 19 to 20 is a 5% change.But a step change from 199 to
-200 is just a 0.5 % change.You need to put the step scan range in an almost parallel
-relationship so that the scan from 1 to 20 will be performed with a step of 2 and the scan
-from 20 to 200 will be performed with a step of 20.
-
-要考虑的另一点是每个输入的扫描范围. 举个例子将更清楚地说明这个问题: 如果要测试一个基于每日数据的移动平均线交叉系统, 它包括短期移动平均线和长期移动平均线, 你无法测试从 1 到 20 的短期移动平均线(这被认为是每日数据的短期移动平均线)和 20 到 200 的长期移动平均线(后者是通常被认为是长期的 每日数据). 从 1 到 2 的步骤是 100% 的变化, 而从 19 到 20 的步骤是 5% 的变化. 但从 199 变为 200 的步骤只是 0.5% 的变化. 你需要把步骤 以几乎平行的关系扫描范围, 以便步骤 2 执行从 1 到 20 的扫描, 并且以 20 的步长执行从 20 到 200 的扫描.
+要考虑的另一点是每个输入(在时间序列上)的扫描范围. 举个例子将更清楚地说明这个问题: 如果要测试一个基于每日数据的移动平均线交叉系统, 它包括短期移动平均线和长期移动平均线, 你不能在下面两条均线上进行测试 -- 从 1 到 20 (这里指日线中的短期)的短期移动平均线和 20 到 200 (通常被认为是长期移动平均线对应的日线间隔)的长期移动平均线. 对于短期均线(20 日均线)来说, 扫描窗口从第 1 项数据移动到第 2 项数据的变化是 100%, 而从第 19 项数据移动到第 20 项数据的变化是 5%. 而对于长期均线(200 日均线)来说, 扫描窗口边界从第 199 项数据移动到第 200 项数据只有 0.5% 的变化. 你需要在两个区间上进行等幅扫描, 即以 2 的步长执行从 1 到 20 的扫描, 同时以 20 的步长执行从 20 到 200 的扫描.
 
 优化完成后, 应该做出关键的决定: 我们应该选择哪些输入批次? 首先我们需要做的是创建一个函数图表, 显示变量输入扫描范围与净利润的关系(或者选择其他标准进行优化).
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_2.2.png)
-<p align="center"><font size=2>Figure 2.2: In the middle of the chart as the variable varies the net profit stays almost at thevsame level.</font></p>
+![same_level](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_2.2.png)
 
-What we are looking for is a line that ideally would be as close as possible to a horizontal
-line, so that the net profit is not dependent on the input values.Reality is much different
-from theory so that we should be content with a line that grows lightly, then tops for a
-while and then decreases.The topping level is what we are looking for, that is an area
-where, even when changing the inputs, the net profits stay almost constant.This is the
-area where the robust input values are.This is diametrically opposite to a profit spike,
-that is a point in the line where net profit is high but it decreases deeply in the surrounding
-values.In other words we need to find an area where even after changing the input values
-net profit stays stable.
+<p align="center"><font size=2>Figure 2.2: In the middle of the chart as the variable varies the net profit stays almost at the same level.</font></p>
 
-我们正在寻找的是理想情况下尽可能接近水平线的线，因此净利润不依赖于输入值。实际与理论有很大不同，所以我们应该满足于一条线 轻轻地增长，然后上升一段时间然后减少。顶部水平是我们正在寻找的，这是一个区域，即使在改变输入时，净利润几乎保持不变。这是强大的输入值的区域 这与利润飙升截然相反，这是净利润高的一个点，但它在周围的价值中有很大的下降。换句话说，我们需要找到一个甚至在改变输入值后净利润的区域。 保持稳定。
+我们寻找的是理想情况下尽可能接近水平线的线, 在这条线上净利润不依赖于输入值. 当然, 实际情况与理论有很大不同, 所以我们应该满足于这样一条线, 它轻柔地上升, 在顶点维持一段时间然后下降. 顶部的水平区域正是我们想要的, 在这个区域中, 即使改变输入, 净利润几乎保持不变. 这是输入值表现出鲁棒性的区域. 与利润尖峰截然不同, 它是净利润相对较高的一个点, 但在它的周围净利润陡然下降. 换句话说, 我们需要找到一个甚至在改变输入值后净利润仍然能够保持稳定的区域.
 
-我们正在寻找的是理想情况下尽可能接近水平的线
-因此, 净利润不依赖于投入价值. 现实情况差别很大
-从理论上讲, 我们应该满足于一条轻微增长的路线, 然后才能达到一条
-然后降低. 顶级水平是我们正在寻找的, 这是一个领域
-即使在改变投入时, 净利润也几乎保持不变. 这是
-输入值强大的区域. 这与利润上涨截然相反, 
-这是净利润高的行中的一个点, 但在周围深度下降
-换句话说, 我们需要在改变输入值之后找到一个区域
-净利润保持稳定.
+![profit_spike](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_2.3.png)
 
-In summary we can state that there should be a logical path into the inputs’ results so that
-something coherent in terms of inputs’ batch should arise.When there is not a linear
-relationship with inputs and net profits, or drawdown, or whichever constraint you are
-putting as a primary rule of the optimisation, the whole set of results must be regarded as
-suspicious.
+<p align="center"><font size=2>Figure 2.3: As much as the variable changes the net profit shows deep and wide swings: there is no area where at the variable’s changing net profit stays more or less stable.</font></p>
 
-总之, 我们可以说, 应该有一个逻辑的路径来输入结果
-在输入批次方面应该出现一致性. 当不存在线性时
-与投入和净利润之间的关系, 或者缩减, 或者无论你是什么限制
-作为优化的主要规则, 整套结果必须被视为可疑.
+<p align="center"><font size=2>鲁棒性是指控制系统在一定(结构, 大小)的参数摄动下, 维持其它某些性能的特性.</font></p>
 
-总之，我们可以说输入结果应该有一条逻辑路径，以便在输入的批量方面产生一些连贯的东西。当与输入和净利润，或者缩减或任何约束没有线性关系时 作为优化的主要规则，整套结果必须被视为可疑。
+总而言之, 我们可以得出以下结论: 输入和结果间应该有一条逻辑路径, 会产生一些与输入批次相关的东西. 当输入和净利润不存在线性关系时, 或者不存在回退关系, 或者不存在任何作为优化主要规则的约束, 整套结果必须是存疑的.
 
 ### 2.4 交易系统的评估
 
@@ -260,7 +225,7 @@ approach. Then we will introduce the indicator RINA index, which was elaborated 
 TradeStation. RINA index is more and more common among system traders and we
 believe that it comes closer to a good analysis than any other tool.
 
-评估交易系统看起来比实际更容易。 最后，谨慎的交易者必须做的事情是违反直觉的：乍一看，我们确实会说净利润越高，系统越好。 不幸的是，除了这种印象之外，没有什 我们将提出一些不基于净利润和绝对数字的一般方法标准，以便淘汰这种欺骗性的方法。 然后我们将介绍指标RINA指数，该指数由TradeStation详细说明。 RINA索引在系统交易者中越来越常见，我们认为它比任何其他工具更接近于良好的分析。
+评估交易系统看起来比实际更容易. 最后，谨慎的交易者必须做的事情是违反直觉的：乍一看，我们确实会说净利润越高，系统越好。 不幸的是，除了这种印象之外，没有什 我们将提出一些不基于净利润和绝对数字的一般方法标准，以便淘汰这种欺骗性的方法。 然后我们将介绍指标RINA指数，该指数由TradeStation详细说明。 RINA索引在系统交易者中越来越常见，我们认为它比任何其他工具更接近于良好的分析。
 
 评估一个交易系统看起来比现实要容易. 到底什么是审慎
 交易者必须做的是违反直觉的东西: 乍一看我们确实会这样做
