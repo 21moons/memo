@@ -17,11 +17,11 @@ portfolio optimisation
 ### 1.1 简易交易系统示例
 
 * 入场规则
-买入2份最近20天内价格创最高的合约;
-卖空2份最近20天内价格创新低的合约;
+  买入2份最近20天内价格创最高的合约;
+  卖空2份最近20天内价格创新低的合约;
 * 离场规则
-如果 marketposition = 1, 那么在最接近 avgtruerange(14) 的价位卖出平仓;
-如果 marketposition = -1, 那么在最接近 avgtruerange(14) 的价位买入平仓.
+  如果 marketposition = 1, 那么在最接近 avgtruerange(14) 的价位卖出平仓;
+  如果 marketposition = -1, 那么在最接近 avgtruerange(14) 的价位买入平仓.
 
 quantitative traders 量化交易者
 

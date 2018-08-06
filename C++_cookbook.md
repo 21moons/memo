@@ -169,9 +169,11 @@ shared_ptr 有多种类型的构造函数:
 
 shared_ptr 的 reset() 函数的行为与 scoped_ptr 也不尽相同, 它的作用是将引用计数减 1, 停止对指针的共享, 除非引用计数为 0, 否则不会发生删除操作.
 
-shared_ptr 可以被用于标准关联容器(set 和 map).
+shared_ptr 有两个专门的函数来检查引用计数. unique() 在 shared_ptr 是指针的唯一所有者时返回 true, use_count() 返回当前指针的引用计数. 要小心, use_count() 应该仅仅用于测试或者调试, 它不提供高效率的操作, 而且有的时候可能是不可用的. 而 unique() 则是可靠的, 任何时候都可用, 而且比 use_count()==1 速度更快.
 
+shared_ptr 还支持比较运算, 可以测试两个 shared_ptr 的相等或不相等, 比较基于内部保存的指针, 相当于 a.get()==b.get(). shared_ptr 还可以使用 operator< 比较大小, 同样基于内部保存的指针, 但不提供 operator< 以外的比较操作符, 这使得 shared_ptr 可以被用于标准关联容器(set 和 map).
 
+shared_ptr 还支持流输出操作符 operator<<, 输出内部的指针值, 方便调试.
 
 * shared_array
 
