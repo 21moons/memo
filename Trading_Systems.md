@@ -231,51 +231,16 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 此外, **一个指标应该始终传达的观念是他希望度量的是什么, 对于交易系统来说这就是"一致".** 什么是一致性? 一致性的同义词可以是 "稳定性": **一致性衡量指标的稳定程度.** 让我们以净利润为例: 净利润本身并未说明什么时候获利. 年与年之间利润可能变化很大, 甚至是仅在某一年内产生利润, 在其他年份都是亏损. 您会信任哪一个系统, 一个年复一年赚钱的系统, 或是一个 10 年前赚钱然后每年都亏钱的系统? 最后的结论是后面的系统更好, 因为 10 年前赚取的利润如此巨大, 后面的损失相比之下是可以接受的; 但是谁会遵循这个系统继续交易呢? 没有人会采用这样一个交易系统, 因为很明显 10 年前的意外收获可能是一个异常值, 一个永远不会重复的异常事件.
 
-So we can conclude that a consistent trading system has an even distribution not only of
-profits and losses but also of the series of consecutive winning and losing trades. If you
-cut the statistics of a consistent trading system year by year you will find all the indicators
-will be almost the same. If substantial differences arise from year to year or from month
-to month the trading system is not consistent. An intraday system could also be gauged
-by weekly performances.
-
-所以我们可以得出结论：一致的交易系统不仅具有均匀分布
-盈利和亏损,而且还包括一系列连续的赢输行业. 如果你
-逐年削减统一的交易系统的统计数据,你会发现所有的指标
-将几乎相同. 如果每年或每月出现重大差异
-到月份交易系统并不一致. 一个盘中系统也可以被测量
-每周演出.
+因此我们可以得出结论: 一个一致的交易系统不仅包括利润和亏损的均匀分布, 而且还包括连续且均匀分布的输赢交易序列. 如果您逐年查看一致交易系统的统计数据, 您会发现所有指标几乎相同. 如果逐年或逐月都出现显著差异, 则交易系统是不一致的. 盘中系统也可以采用类似的方式, 通过每周表现来衡量.
 
 #### Average trade
 
-An important indicator of the goodness of a trading system is the average trade, that is
-the net profit divided by the number of trades. Average trade tells us how much money
-we make or lose per trade. In absolute terms the average trade should be capable of
-covering slippage and commissions and then still leave some profit for the trader. In
-percentage terms the average trade should be consistent throughout the whole testing
-period. Usually traders compare the absolute average trade with the entry price of that
-particular trade so that it is expressed in percentage terms. Other traders compare the
-nominal average trade value with the nominal value of the contract in a given period.
-What we can recommend is to plot the historical average percentage value of the trades
-in order to have a clear picture of the profitability trend of the system over the years.
-
-交易系统良好性的一个重要指标是平均交易量,也就是说
-净利润除以交易次数. 平均交易告诉我们多少钱
-我们每次交易都会失败或失败. 从绝对数量来看,平均交易应该能够
-涵盖滑点和佣金,然后为交易者留下一些利润. 在
-在整个测试中,平均交易应该保持一致
-期. 通常交易者将绝对平均交易与入场价进行比较
-特定交易,以百分比表示. 其他交易者比较
-名义平均交易价值与一定时期内的合约名义价值.
-我们可以推荐的是绘制交易的历史平均百分比值
-以便清楚地了解多年来该系统的盈利趋势.
+优秀交易系统的一个重要指标是 **平均交易(the average trade)**, 即净利润除以交易数量. 平均交易告诉我们每笔交易赚取或者亏损多少钱. 从绝对意义上来讲, 平均交易应该在弥补滑点和佣金后, 仍能为交易者留下一些利润. 按百分比计算, 平均交易在整个测试期间应保持一致. 交易者通常将绝对平均交易(the absolute average trade)与特定交易的入场价格进行比较, 以便以百分比表示. 其他交易者将名义平均交易价值(the
+nominal average trade value)与给定时期内合约的名义价值(the nominal value)进行比较. 我们推荐绘制交易的历史平均百分比值, 以便清楚地了解多年来系统的盈利趋势.
 
 #### Percentage of profitable trades
 
-The percent profitable trades number expresses the number of winning trades out of the
-number of the total trades. It is important not by itself (a trend following system can have
-a low percent profitable trades number such as 35% and still be a viable system) but
-because it can be used to gauge how the system is balanced in relation to the average
-winning trade/average losing trade ratio. Usually the logic is that if you win a lot of times
+Usually the logic is that if you win a lot of times
 the average winning trade/average losing trade ratio will be low, while if conversely your
 percentage of profitable trades is low then the ratio will be high (inverse relationship). A
 50% percent profitable trades number is a healthy one. If it grows significantly over 50%
@@ -286,20 +251,7 @@ target exit (let’s assume you exit 50% of the position at a price limit over t
 normal for the percentage of profitable trades to go over 60% and the average winning
 trade/average losing trade to go under 2.
 
-盈利交易百分比表示赢利交易的数量
-交易总数.它本身并不重要(系统可能具有的趋势
-低利润率的交易数量如35%, 仍然是一个可用的系统)
-因为它可以用来衡量系统相对于平均值的平衡程度
-赢得的交易/平均失败的交易比率. 通常的逻辑是, 如果你赢了很多次
-平均获胜交易/平均失败交易比率将会很低, 而如果相反, 你的
-有利可图的交易比例很低, 那么这个比例会很高(反比关系). 一个
-50%的盈利交易数量是健康的. 如果它显着增长超过 50%
-(例如达到 60% 或 70%)需要注意,因为可能是错误的：要
-平衡如此高百分比的平均赢得交易/平均亏损交易
-比率应该特别低,通常甚至在1的警报级别下.如果您正在使用
-目标退出(让我们假设你以超过入场限制的价格退出头寸的50%)
-正常的赢利交易的比例超过60%,平均获胜
-交易/平均亏损交易低于2.
+盈利交易百分比表示盈利交易数量与总交易数量的比值. 重要的不是它本身(一个趋势跟随系统的盈利交易百分比可能会比较低, 如 35%, 但它仍然是一个可行的系统), 只是因为它可以用来衡量系统如何平衡, 系统平衡与 "平均赢利交易/平均亏损交易"的比值相关. 通常的逻辑是, 如果你赢了很多次, "平均赢利交易/平均亏损交易" 比值会很低, 而如果相反, 你的盈利交易百分比很低, 那么比值就会较高(两者之间是反比关系). 50% 盈利交易百分比是健康的. 如果它显著超过 50%(例如 60% 或 70%), 请小心, 因为可能是某些地方出了问题: 为了抵消如此高的"平均赢利交易/平均亏损交易"比值, 平均获胜交易/平均亏损交易比率应该特别低，通常甚至在警报下如果您使用目标退出（让我们假设您以超过该条目的价格限制退出 50% 的头寸), 那么盈利交易的百分比超过 60% 且平均获胜交易/平均亏损是正常的交易低于2.
 
 The percentage of profitable trades number is also important for calculating the
 mathematical expectancy of a trading system. The percentage of profitable trades
