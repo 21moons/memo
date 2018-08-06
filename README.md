@@ -60,6 +60,8 @@
 
 - [Foundations of C++](http://www.stroustrup.com/ETAPS-corrected-draft.pdf)
 - [cppreference.com](http://en.cppreference.com)
+- [C++模板的偏特化与全特化](https://harttle.land/2015/10/03/cpp-template.html)
+- [C++模板元编程](https://www.cnblogs.com/liangliangh/p/4219879.html)
 
 ---
 

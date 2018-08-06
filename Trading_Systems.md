@@ -109,58 +109,36 @@ TradeStation 论坛
 
 测试系统时最重要的是测试窗口大小的选择; 也就是说, 我们需要将系统应用到什么样的价格序列.这个决定并不遵循明确的时间表或经验法则, 而是需要遵守两个统计要求：价格系列必须足够长才能囊括不同的市场走势, 并随之产生大量的交易信号.
 
-变量的数量和它们消耗的数据, 一般被认为也和整个数据样本相关, 这种相关关系我们称之为 "自由度"  - 也就是说, 变量和条件的数量和他们使用的数据不应超过整个数据样本的 10%. 避免一件事情是至关重要的, 那就是在我们拥有 500 个交易日数据的情况下, 为交易系统选取 500 个不同的条件.可能每个条件都不同于其余的499个, 而且只适合于那个特定的交易日, 这样每一天都有一个能赚到最多的钱的最优条件, 但是却对未来的市场没有任何预测能力(详见第5章).
+变量的数量和它们消耗的数据, 一般被认为也和整个数据样本相关, 这种相关关系我们称之为 **自由度** -- 也就是说, 变量和条件的数量和他们使用的数据不应超过整个数据样本的 10%. 避免一件事情是至关重要的, 那就是在我们拥有 500 个交易日数据的情况下, 为交易系统选取 500 个不同的条件.可能每个条件都不同于其余的499个, 而且只适合于那个特定的交易日, 这样每一天都有一个能赚到最多的钱的最优条件, 但是却对未来的市场没有任何预测能力(详见第5章).
 
 对于那些没有数学思维的人, 规则的复杂性和自由度是一个难题.即使很多数学家也不能说清楚什么是自由度.在解释自由度时(通常表示为df), 也许最恰当和容易理解的解释就是那个关于已婚男人的笑话: "我只有一个妻子, 我的自由度是零.我应该通过观察其他女性来增加我的"样本量"."
 
 严格来讲, 从统计到数学, 几何, 物理, 和力学, 自由度这个概念有很多定义. 在互联网上有一篇免费的论文尝试简单解释这个概念, 当然这是个困难的任务. 自由度的第一个定义(Larry Toothaker, 1986)可能是 "独立组件的数量减去估计参数的数量(the number of independent components minus the number of estimated parameters)". 这个定义源于Walker(1940)的定义："观察的次数减去这些观察之间必要关系的数量(The number of observations minus the number of necessary relations among these observations)". 但是如果从实践出发, 最好的解释是 Robert Schulle 博士(俄克拉荷马大学)的一个说法:
 
+**在只有一个数据点的散点图(scatter plot)中, 你不可能对回归线(regression line)做任何估计. 这条线可以走向任何方向...此时你没有自由度(n-1 = 0, 其中 n = 1)用于估计(这可能会让你想起那个关于已婚男人的笑话). 为了绘制回归线, 你必须至少有两个数据点(一个妻子和一个情妇). 在这种情况下, 你有一个自由度用于估计 (n-1 = 1, 其中 n = 2). 换句话说, 自由度告诉你用于估计的有效数据数量. 但是, 如果只有两个数据点, 则可以将它们连成一条直线回归线, 并得到完美的相关性 (确定指数 = 1.00). 因此自由度越低, 评估效果越差.**
 
-在只有一个数据点的散点图(scatter plot)中, 你不可能对回归线(regression line)做任何估计. 这条线可以走向任何方向...此时你没有自由度(n-1 = 0, 其中 n = 1)用于估计(这可能会让你想起那个关于已婚男人的笑话). 为了绘制回归线, 你必须至少有两个数据点(一个妻子和一个情妇). 在这种情况下, 你有一个自由度用于估计 (n-1 = 1, 其中 n = 2). 换句话说, 自由度告诉你用于估计的有效数据数量. 但是, 如果只有两个数据点, 则可以将它们连成一条直线回归线, 并得到完美的相关性 (确定指数 = 1.00). 因此自由度越低, 评估效果越差.
+所以我们从直觉上就能得出结论, **样本规模越大, 使用的变量数量越少, 评估效果越好**. 罗伯特·帕尔多是当前唯一能在文献中把这事讲清楚的作者, 他在自己的书中给出了精辟的描述：
 
-所以我们从直觉上就能得出结论, 样本规模越大, 变量的数量越少, 评估效果越好. 罗伯特·帕尔多是当前唯一能在文献中把这事讲清楚的作者, 他在自己的书中给出了精辟的描述：
-
-自由度的计算 = 整个数据样本 - 规则和条件 - 规则和条件消耗的数据
+**自由度的计算 = 整个数据样本 - 规则和条件 - 规则和条件消耗的数据**
 
 一般来说, 剩余自由度少于 90% 都被认为是太少了. 除了帕尔多的公式, 从实践的角度来看, 如果要在一个有 20 个变量的系统上进行适当的优化, 不能在仅有 6 个月日线数据的数据集上进行, 这一点非常重要. 变量的数量以及交易系统的条件集合, 与测试周期的长度密切相关. 换句话说, 一些度量需要更多的信息. 度量所需自由度的值, 是基于数据集中信息独立片段的数量. 信息越多, 度量越准确, 自由度越高.
 
-至少剩下 90% 自由度的理念, 也可以反过来应用, 这就是表示用于系统计算的数据与测试窗口长度之间关系的 10 倍法则. 如果你使用 30 天移动平均收盘价格, 测试时至少需要 300天 (30 x 10) 的数据.
+至少剩下 90% 自由度的理念, 也可以反过来应用, 这就是表示用于系统计算的数据与测试窗口长度之间关系的 10 倍法则. 如果你使用 30 天移动平均收盘价格进行拟合, 测试时至少需要 300天 (30 x 10) 的数据.
 
-让我们举个例子：我们现在有一个数据集, 包括三年内每个交易日的最高价格, 最低价格, 开盘价格和收盘价格, 这样共有(每年260个交易日)260 x 3 x 4 = 3120 个数据点. 我们假设有一个交易策略使用基于最高价格的 20 日平均线和基于最低价格的 60 日平均线.第一个均线使用 21 个自由度：20 个最高价格加上另外 1 个作为一条规则, 第二个均线使用 61 个自由度：60 个最低价格加上 1 个作为一条规则. 合起来总共是 82 个自由度. 以百分比计, 结果是82/3120 = 2.6%, 剩下97.4% 的自由度.
+让我们举个例子：我们现在有一个数据集, 包括三年内每个交易日的最高价格, 最低价格, 开盘价格和收盘价格, 这样共有(每年260个交易日)260 x 3 x 4 = 3120 个数据点. 我们假设有一个交易策略使用基于最高价格的 20 日平均线和基于最低价格的 60 日平均线.第一个均线使用 21 个自由度：20 个最高价格加上另外 1 个作为一条规则, 第二个均线使用 61 个自由度：60 个最低价格加上 1 个作为一条规则. 合起来总共是 82 个自由度. 以百分比计, 结果是 82/3120 = 2.6%, 剩下 97.4% 的自由度.
 
-Data points used twice in calculations are counted once so that if you are using a 5-day
-moving average of the closes and a 10-day moving average of the closes you will have
-for the latter condition 10 data + 1 rule while for the first condition you will have just 1
-rule.The total is 12 data consumed.It is obvious that since the 5-day moving average is
-included into the longer one only the latter will be relevant for the degrees of freedom
-calculations.
-
-在计算中使用两次的数据点仅被计为一次, 如果你同时使用收盘价 5 日均线和 10 日均线, 对于后一个条件来说你将有 11 个自由度(10数据 + 1规则), 而对于第一个条件, 你将只有 1 个自由度(1规则). 总共消耗了 12 个数据. 很显然, 因为 5 日均线包括在 10 日均线中, 只有后者才会参与自由度的度量.
-
-A test is significant if it produces a number of trades that will
-allow the risk of being wrong to be kept at the lowest level.The test window’s length
-should take care of this.Let’s say that the obvious standard error should be added to or
-subtracted from all the trading system’s report parameters according to the trade sample.
-Standard error is:
-Standard Error = square root of n + 1
-Where n = number of the trades
+在计算中使用两次的数据点仅被计为一次, 如果你同时使用 5 日收盘价均线和 10 日收盘价均线, 对于后一个条件来说你将有 11 个自由度(10 数据 + 1 规则), 而对于第一个条件, 你将只有 1 个自由度(1规则). 总共消耗了 12 个数据. 很明显, 因为 5 日均线包含在 10 日均线中, 只有后者才与自由度的度量有关.
 
 衡量系统是否可信需要的交易数量也与测试窗口的长度有关. 如果一个测试在产生多笔交易的过程中, 始终让错误的风险保持在最低水平, 这样的测试结果对于评估系统是否可信是非常重要的. 测试窗口的长度应该考虑到这个因素. 标准错误应该依据交易样本从交易系统的报告范围中添加或减去.
-标准误差是：
-标准误差 = n + 1 的平方根
-其中 n = 交易的数量
+标准差的定义是:
+标准差 = n + 1 的平方根
+其中 n 是交易的数量
 
-The higher the number of trades, the lower the possible error in the trading system’s
-metrics.In other words if we have few trades, the risk that these trades are profitable by
-accident is high.If you shoot once and you hit the bull’s-eye it is possible either that you
-are a good marksman or simply that you are lucky.Conversely if you shoot 100 times
-and you hit the mark every time the probabilities that you are a good marksman are higher.
-
-交易笔数越多, 交易系统度量时可能出现的错误就越低. 换句话说, 如果我们很少交易, 那些看上去交易有利可图的交易带来的风险越高. 如果你一次就射中了靶心, 要么你是一个神射手, 要么说你纯粹就是运气好. 相反, 如果你 100 次都射中靶心, 你就有很大概率是一名神射手.
+交易次数越多, 交易系统指标的可能误差就越小. 换句话说, 如果我们很少交易, 那么这些交易只是意外盈利的风险很高. 如果你一枪就射中了靶心, 要么你是一个神射手, 要么说你纯粹就是运气好. 相反, 如果你 100 次都射中靶心, 你就有很大概率是一名神射手.
 
 一个系统要被认为是值得信赖的, 至少需要交易 100 笔, 这样其标准误差将是 100 + 1 的平方根, +10.04% 或者 -10.04% .
 
-所有的交易系统指标都会在 +10% 和 -10% 的范围内变化.也就是说, 如果净利润是100美元, 那么实际净利润可能分布在从 90 美元到 110 美元的区间内.
+所有的交易系统指标都会在 +10% 和 -10% 的范围内变化.也就是说, 如果净利润是 100 美元, 那么实际净利润可能分布在从 90 美元到 110 美元的区间内.
 
 ### 2.3 交易系统的预测能力
 
@@ -187,6 +165,7 @@ and you hit the mark every time the probabilities that you are a good marksman a
 **到目前为止, 我们讨论的关于交易系统的想法, 在任何流通的书籍中都可以找到. 但是这些关于优化的观点都过时了, 它们来自那些计算机没有被广泛使用的年代. 今天的优化已经发展成为一种更有效和更适当的测试方法, 可以让一个系统与长期价格序列匹配. 这个方法以 "前向分析(walk forward analysis)" 或 "前向测试(walk forward testing)" 的名义不断发展.**
 
 前向测试是一种多轮的, 连续的样本外数据测试, 它不停的用样本外数据测试同一个数据序列. 让我们举个例子: 先用数据集中前两年的数据对系统进行优化, 然后用随后6个月的数据进行验证. 此时再将优化窗口前移6个月, 对系统进行新的优化, 再用未来6个月的数据进行验证, 就这样继续下去. 这种优化是一种 "滚动" 的前向分析, 因为每次我们重新优化时, 优化窗口总是前移6个月. 如果开始时间不变, 随着时间的推移增加优化窗口长度, 这种方式称为 "锚定" 前向分析. "滚动" 前向分析更适合于盘中交易系统, 因为盘中交易系统面对的是不断变化的市场条件.
+
 <p align="left"><font color=#fd0209 size=4 ><b>注: 因为短期趋势不断变化, 不可捉摸, 所以减小分析的时间跨度, 保持对趋势的跟踪, 提升灵敏度.</b></font></p>
 
 ```
@@ -200,6 +179,7 @@ Run #1 |--------------In-sample 80% --------------- | OOS 20% |
 Run #2 |----------------------------- In-sample 80% ---------------| OOS 20% |
 Run #3 |-------------------------------------------- In-sample 80% --------------- | OOS 20% |
 ```
+
 <p align="center"><font size=2>Figure 2.1: A graphical description of a  "rolling" and  "anchored" walk forward analysis</font></p>
 
 前向测试中产生的净值线是交易系统开发过程中最接近真实的地方, 因为这就是真正的交易将带给我们的. 显而易见的是, 同基于整个价值序列测试或优化交易系统生成的净值线相比, 这种前向分析生成的净值线将完全不同. <font color=#fd0209 size=4 ><b>注: 一个关注长期趋势, 一个追踪短期波动</b></font> 所以交易员在决定是否放弃一个交易系统时往往会欺骗自己, 依赖交易系统在整个价格序列上生成的净值线, 实际上这样的净值线压根就没有反映经过定期重优化后的真实交易情况<font color=#fd0209 size=4 ><b>注: 定期重优化拟合的是最近的波动, 对于全周期未必是适用的</b></font>.
@@ -212,34 +192,9 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 #### 健壮性
 
-This joke
-suggests that, at very least, the average of the results should be profitable if we want to
-trust the most performing inputs.If just 1 to 5% of the results are profitable this could
-have happened by accident: if the system’s variables are given wide enough input ranges
-eventually the system will make a fortune over the past data.
-A robust system will show
-post-optimisation positive performances not only in 5% of all the tests but on the average
-of the tests.
-In other words, if the average results are positive then we can assume that
-the trading system is a robust one.If you are more statistically inclined you can also
-subtract the standard deviation (or a multiple of it) from the average net profit and check
-if the average net profit remains positive in this case.
+我们是否能从后优化窗口 (post-optimisation window) 中推断出, 系统是健壮的, 抑或是过度优化的产物? 我们不需要迷信最优执行输入 (the best performing inputs), 将其视为必胜的条件. 如果足够的飞镖投掷在板上, 必然会有高分组, 或者换句话说, 如果把一只猴子放在钢琴前, 只要有足够的时间, 最终它能弹出一首奏鸣曲. 这个笑话表明, 如果我们相信性能最好的输入 (the most performing inputs) 的存在, 至少结果的平均值应该是盈利的. 如果仅有 1% 到 5% 的结果是有利可图的, 这可能是偶然的: 如果系统的变量有足够大的输入区间, 这个系统最终能依靠历史数据发财. 一个稳健的系统不仅仅在 5% 的测试中表现良好, 而是在所有测试的平均值. 换句话说, 如果平均结果是盈利的, 那么我们可以假设交易系统是稳健的. 如果你更倾向于统计结果, 你也可以从平均净利润和支票中减去标准偏差(或其倍数), 然后检查在这种情况下平均净利润是否仍为正数.
 
-我们是否能从后优化窗口 (post-optimisation window) 中推断出, 系统是健壮的, 抑或是过度优化的产物? 我们不需要迷信最优执行输入 (the best performing inputs), 将其视为必胜的条件. 如果足够的飞镖投掷在板上, 必然会有高分组, 或者换句话说, 如果把一只猴子放在钢琴前, 只要有足够的时间, 最终它能弹出一首奏鸣曲. 这个笑话表明, 如果我们相信性能最好的输入 (the most performing inputs) 的存在, 至少结果的平均值应该是盈利的. 如果仅有 1% 到 5% 的结果是有利可图的, 这可能是偶然的: 如果系统的变量有足够大的输入区间, 这个系统最终能依靠历史数据发财. 一个稳健的系统不仅在所有测试的 5% 的中表现良好, 而是在所有测试的平均值. 换句话说, 如果平均结果是盈利的, 那么我们可以假设交易系统是稳健的. 如果你更倾向统计, 如果在这种情况下平均净利润保持正值, 你也可以从平均净利润和支票中减去标准偏差(或其倍数).
-
-So the number of inputs, conditions and variables must be kept under control and reduced
-to its minimum term.But how many inputs, conditions and variables are too many? This
-is a controversial area where the unique hallmark is the number of degrees of freedom
-that must always respect the numerical condition we depicted in the previous paragraph.
-Before taking an input into consideration it is obviously important to check with a rapid
-and cursory optimisation if the input varies or if it does not have any change under
-optimisation.If not, keep it constant in order to increase the degrees of freedom.
-
-因此, 输入, 条件和变量的数量必须可控并减少至最小期限. 但多少个输入, 条件和变量才算太多? 这是一个有争议的领域, 其中独特的标志是自由度的数量
-必须始终尊重我们在前面段落中描述的数字条件.
-在考虑意见之前, 快速检查显然很重要 0
-粗略优化如果输入变化或者它没有任何改变
-优化. 如果不是, 保持它不变以增加自由度.
+因此, 输入, 条件和变量的数量必须可控并尽量减少至最小. 但多少个输入, 条件和变量算太多? 这是一个存在争议的领域, 其中唯一的标志是必须始终遵守我们在前一段中描述的数值条件的自由度数. 在考虑输入之前, 如果输入变化或者在优化下结果没有任何变化, 则快速粗略地检查是非常重要的. 如果不是, 请保持不变以增加自由度.
 
 Another point to be considered is what scan range to choose for each input.An example
 will give a clearer picture of this problem: if you want to test a moving average crossover
@@ -252,27 +207,12 @@ a 100% change and a step from 19 to 20 is a 5% change.But a step change from 199
 relationship so that the scan from 1 to 20 will be performed with a step of 2 and the scan
 from 20 to 200 will be performed with a step of 20.
 
-要考虑的另一点是每个输入的扫描范围. 举个例子来描述这个问题: 如果你想测试移动平均交叉
-系统在日常数据上具有短期移动平均线和长期移动平均线, 
-你不能测试从 1 到 20 的短移动平均线(这就是所认为的
-短期与日常数据)和长期均线从 20 至 200(后者是
-间隔通常被认为是长时间的日常数据). 从 1 到 2 的步骤是
-一个 100% 的变化, 从 19 到 20 的步骤是 5% 的变化, 但从 199 步骤变为 200 只是 0.5% 的变化. 您需要将步进扫描范围几乎平行放置
-关系, 从 1 到 20 的扫描将以 2 步和扫描进行
-从 20 到 200 将以 20 的步长执行.
+要考虑的另一点是每个输入的扫描范围. 举个例子将更清楚地说明这个问题: 如果要测试一个基于每日数据的移动平均线交叉系统, 它包括短期移动平均线和长期移动平均线, 你无法测试从 1 到 20 的短期移动平均线(这被认为是每日数据的短期移动平均线)和 20 到 200 的长期移动平均线(后者是通常被认为是长期的 每日数据). 从 1 到 2 的步骤是 100% 的变化, 而从 19 到 20 的步骤是 5% 的变化. 但从 199 变为 200 的步骤只是 0.5% 的变化. 你需要把步骤 以几乎平行的关系扫描范围, 以便步骤 2 执行从 1 到 20 的扫描, 并且以 20 的步长执行从 20 到 200 的扫描.
 
-After optimisation is done a critical decision should be taken: which inputs’ batch should
-we choose? First of all what we need to do is create a function chart that puts the variable’s
-inputs scan range in relation to the net profits (or whichever else criteria was chosen for
-optimisation).
+优化完成后, 应该做出关键的决定: 我们应该选择哪些输入批次? 首先我们需要做的是创建一个函数图表, 显示变量输入扫描范围与净利润的关系(或者选择其他标准进行优化).
 
-优化完成后, 应该做出关键的决定: 批次应该输入哪些输入
-我们选择? 首先我们需要做的是创建一个放置变量的函数图表
-输入与净利润相关的扫描范围(或其他选择的标准)优化).
-
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/hadoop)
-<p align="center"><font size=2>Figure 2.2: In the middle of the chart as the variable varies the net profit stays almost at the
-same level.</font></p>
+![](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_2.2.png)
+<p align="center"><font size=2>Figure 2.2: In the middle of the chart as the variable varies the net profit stays almost at thevsame level.</font></p>
 
 What we are looking for is a line that ideally would be as close as possible to a horizontal
 line, so that the net profit is not dependent on the input values.Reality is much different
@@ -283,6 +223,8 @@ area where the robust input values are.This is diametrically opposite to a profi
 that is a point in the line where net profit is high but it decreases deeply in the surrounding
 values.In other words we need to find an area where even after changing the input values
 net profit stays stable.
+
+我们正在寻找的是理想情况下尽可能接近水平线的线，因此净利润不依赖于输入值。实际与理论有很大不同，所以我们应该满足于一条线 轻轻地增长，然后上升一段时间然后减少。顶部水平是我们正在寻找的，这是一个区域，即使在改变输入时，净利润几乎保持不变。这是强大的输入值的区域 这与利润飙升截然相反，这是净利润高的一个点，但它在周围的价值中有很大的下降。换句话说，我们需要找到一个甚至在改变输入值后净利润的区域。 保持稳定。
 
 我们正在寻找的是理想情况下尽可能接近水平的线
 因此, 净利润不依赖于投入价值. 现实情况差别很大
@@ -305,6 +247,8 @@ suspicious.
 与投入和净利润之间的关系, 或者缩减, 或者无论你是什么限制
 作为优化的主要规则, 整套结果必须被视为可疑.
 
+总之，我们可以说输入结果应该有一条逻辑路径，以便在输入的批量方面产生一些连贯的东西。当与输入和净利润，或者缩减或任何约束没有线性关系时 作为优化的主要规则，整套结果必须被视为可疑。
+
 ### 2.4 交易系统的评估
 
 Evaluating a trading system can look easier than it is in reality. In the end what a prudent
@@ -315,6 +259,8 @@ criteria not based on net profit and absolute numbers in order to weed out this 
 approach. Then we will introduce the indicator RINA index, which was elaborated by
 TradeStation. RINA index is more and more common among system traders and we
 believe that it comes closer to a good analysis than any other tool.
+
+评估交易系统看起来比实际更容易。 最后，谨慎的交易者必须做的事情是违反直觉的：乍一看，我们确实会说净利润越高，系统越好。 不幸的是，除了这种印象之外，没有什 我们将提出一些不基于净利润和绝对数字的一般方法标准，以便淘汰这种欺骗性的方法。 然后我们将介绍指标RINA指数，该指数由TradeStation详细说明。 RINA索引在系统交易者中越来越常见，我们认为它比任何其他工具更接近于良好的分析。
 
 评估一个交易系统看起来比现实要容易. 到底什么是审慎
 交易者必须做的是违反直觉的东西: 乍一看我们确实会这样做
