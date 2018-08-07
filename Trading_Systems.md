@@ -410,9 +410,72 @@ Easy Language 代码可以分为不同部分:
 
 #### The entry logic
 
+Now let’s explain what this code means for the construction of the entries (Figure 3.1).
+The entry is based on a usual moving average system and works as following: you enter
+the market long on the bar where a fast moving average crosses above a slow moving
+average and in the same way you go short if the fast moving average crosses below the
+slower moving average.
+
+
+Trend following methods like these are well known to be able to capture huge profits
+during long steady trends. The LUXOR entry logic takes this basic idea of such trend-
+following methods by just using two simple moving averages as an entry signal generator.
+However it is modified in the following way: an entry after the average crossover is only
+allowed after a confirmation of the price itself occurs. The crossing of the moving average
+alone is not enough to initiate a market position. In case of a long entry you want the
+current price to exceed a recent high to enter a trade (Figure 3.1). Analogously the price
+must go below a recent low to trigger a short entry. Please note that we only explain here
+the long side in the system code since the short entries are built symmetrically.
+
+<p align="center"><font size=2>Figure 3.1: Entry Logic. The entry is not triggered by the crossing of the two moving averages. Instead, at the crossover bar the high is kept and used as a long entry level. Short entries are taken symmetrically. Chart example was taken from British pound/US dollar, 30 min, FOREX from 26 Dec 2007. Chart and datafeed from TradeStation 8.</font></p>
+
+![Entry Logic](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.1.png)
+
+The system has the following two input parameters which can be varied and optimised:
+Inputs: FastLength (3), SlowLength (30);
+
+These two input parameters “FastLength” and “SlowLength” are used for the fast and
+slow moving average:
+
+Fast = Moving Average (Close, FastLength);
+Slow = Moving Average (Close, SlowLength);
+
+Now the important breakout filter is added. At the bar when the fast moving average
+crosses above the slow moving average the trade is not directly initiated. We take the
+high of this bar (“crossover bar”, marked in red colour in Figure 3.1) and keep it as the
+entry stop point as long as the fast moving average stays above the slow moving average:
+
+If Fast crosses above Slow Then EntryLevel = High;
+If Fast > Slow then Buy (“Long”) next bar at BuyStop Stop;
+
+This simple but effective condition improves the probability of the simple trend following
+system capturing the most profitable breakouts and not just any moving average crossover
+which occurs. It is different to common moving average crossover systems where every
+trade is taken, since the additional filter has to confirm the moving averages and in this
+way prevents trading some false breakouts.
+
 ### 3.2 First evaluation of the trading system
 
+----------
+
 #### Calculation without slippage and commissions
+
+The strategy is now applied to 30 minute FOREX data from 21/10/2002 to 4/7/2008. All
+the following calculations in this chapter are based on a one contract basis. Keeping the
+beginning simple we calculate the trading system’s results without any slippage and
+commissions. These will be added in the next section where we will examine their impact
+on system performance. Furthermore please note that at first we check the system just
+with entries and trade reversals, leaving out exits.
+
+As first input parameters for the trading system’s entries we choose 10 bars for the fast
+and 30 bars for the slow moving average. With 30 minute bars this means the fast moving
+average is calculated from the last 5 trading hours whereas the slow moving average
+relies on the last 15 hours. Figure 3.2 shows the resulting equity curve in a detailed form.
+With “detailed form” we mean that this curve shows all run-ups and drawdowns of the
+trades which happen during their lifetime. Like this the equity line is more informative
+compared to a form where just end-of-day or even end-of-month results are shown.
+
+<p align="center"><font size=2>Figure 3.2: Detailed Equity Curve of the trading system LUXOR on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Input parameters: SLOW=30, FAST=10. System without exits, always in the market. Back-test without any slippage and commissions. Chart from TradeStation 8.</font></p>
 
 #### Calculation after adding slippage and commissions
 
