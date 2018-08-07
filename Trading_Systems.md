@@ -309,128 +309,104 @@ RINA 指数是由 RINA Systems 创建并包含在 TradeStation 交易系统报�
 
 * **Introduction**
 
-The currency markets are attractive to all types of traders including individual day traders,
-trading companies, financial and non-financial companies, banks and governments. They
-trade 24 hours a day from Monday morning in New Zealand until Friday night in
-America. Markets with strong movements like the British pound offer you all the
-possibilities to develop any type of trading system from any different idea on any time
-scale.
+货币市场对所有类型的交易者都很有吸引力, 包括个人日间交易者, 交易公司, 金融和非金融公司, 银行和政府. 从新西兰的周一早上到美国的周五晚上, 他们每天24小时交易. 像英镑这样流动性充沛的市场, 为交易者提供了在任何时间尺度上, 实现任何不同想法, 开发任何类型的交易系统的可能性.
 
-外汇市场对所有类型的交易者都很有吸引力, 包括个人日间交易者,
-贸易公司, 金融和非金融公司, 银行和政府. 他们
-从新西兰的星期一早晨到星期五晚上的一天 24 小时交易
-美国. 像英镑一样强劲的市场会为您提供所有的支持
-在任何时间从任何不同的想法开发任何类型的交易系统的可能性规模.
+在本章中, 我们不会介绍最好的交易系统, 它承诺最高的利润. 相反, 我们的目标是向您展示一个交易系统, 该系统基于一个合理的想法并且经过改进以获得高稳健性. 为了帮助理解我们的交易系统开发概念, 您将在以下章节中逐步了解如何开发一个全新的交易系统并测试其稳定性.
 
-In this chapter we will not present the very best trading system, which promises the
-highest profits. Instead our goal is to show you a trading system which is based on a
-sound idea and improved for a high robustness. As an aid to understanding our concept
-of trading system development you will find in the following pages a step-by-step
-explanation of how a new trading system is developed and tested for stability.
+我们选择具有突破组件(breakout component)的趋势跟随系统作为例子. 我们采用这个系统, 并展示如何通过下面的步骤改进它, 以使其成为一个有利可图的交易系统.
 
-在本章中, 我们不会介绍最好的交易系统,它承诺
-最高的利润. 相反, 我们的目标是向您展示一个基于的交易系统
-完善的想法和改进的高鲁棒性. 作为理解我们概念的帮助
-交易系统开发的一部分,您将在后面的页面中逐步找到
-解释如何开发新的交易系统并进行稳定性测试.
+3.1 输入逻辑和代码. 如何利用突破过滤器(breakout filter)改进一个常见的移动平均线交叉系统.
 
-As an example we choose a trend-following system with a breakout component. We take
-this system and show how you can improve it up to become a profitable trading system
-in the following steps.
+3.2 评估没有参数优化和退出(exits)的交易系统 - 佣金和滑点的重要性.
 
-作为一个例子,我们选择一个具有突破组件的趋势跟踪系统. 我们采取
-这个系统,并展示如何改进它成为一个有利可图的交易系统
-在以下步骤中.
+3.3 输入参数的变化: 优化和稳定性图.
 
-3.1 The entry logic and code. How to improve a normal moving average crossover
-system with a breakout filter.
+3.4 插入日内时间过滤器: 短期交易中时间重要性.
 
-3.1 输入逻辑和代码. 如何改善正常移动平均交叉
-带突破过滤器的系统.
-
-3.2 Evaluation of the trading system without parameter optimisation and exits – the
-importance of commissions and slippage.
-
-3.2 没有参数优化和退出的交易系统评估 - 
-佣金和滑点的重要性.
-
-3.3 Variation of the input parameters: Optimisation and stability graphs.
-
-3.3 输入参数的变化：优化和稳定性图.
-
-3.4 Inserting an intraday time filter: the importance of time for short-term trading.
-
-3.4 插入盘中时间过滤器：短期交易时间的重要性.
-
-3.5 Determination of appropriate exits for your system by checking the development of
-all the system’s trades. How John Sweeney’s Maximum Adverse and Maximum
-
-3.5 通过检查你的系统的开发确定你的系统的适当出口
-所有系统的交易. 约翰斯威尼的最大不利和最大值
-
-Favourable Excursion can support you.
-
-有利的游览可以支持你.
-
-Let’s start with the description of the logic of the system.
+3.5 通过检查所有系统交易的演化来决定系统的适当出口. John Sweeney 的最大不利和最大有利游览将如何为您提供支持.
 
 我们首先描述系统的逻辑.
 
 ### 3.1 The birth of a trading system
 
-As mentioned in the introduction there are lots of sources for developing your own pool
-of trading systems. One of them is certainly the Strategy Trading and Development Club
-(in short  "STAD") of Omega Research (TradeStation). As a starting point we take the
-following entry logic, as explained in STAD, volume 13:
+正如在介绍中提到的, 有很多来源可以用来开发自己的交易系统池. 其中之一必须是欧米茄研究(TradeStation)的战略交易和发展俱乐部(简称 "STAD"). 作为起点, 我们采用以下入口逻辑, 如 STAD 第 13 卷中所述:
 
-正如引言中所提到的, 开发自己的游泳池有很多来源
-的交易系统. 其中之一肯定是战略交易和发展俱乐部
-(简称"STAD") 的 Omega Research (TradeStation). 作为一个起点, 我们采取这一做法
-按照 STAD 中的解释, 第 13 卷:
+卢克索系统通过两条移动平均线 - 快速平均线和慢速平均线的相交来触发交易. 当然, 有许多类型的移动平均线; 卢克索是 STAD 俱乐部中第一个使用三角形移动平均线的策略. 三角形移动平均线(TMA)的目的是增加价格数据平滑度,同时避免增加价格到指标之间的滞后时间. TMA 首先简单计算价格的算术平均值(通常使用收盘价). 然后, TMA 指标基于刚刚计算出的平均值再次计算算术平均值.
 
-The Luxor system identifies set-ups for new trades by the crossing of two moving averages
-– a fast one and a slow one. Of course, there are many types of moving averages; Luxor is
-the first strategy in STAD Club to use triangular moving averages. The purpose of the
-triangular moving average (TMA) is to increase the smoothing of the price data without
-also increasing the lag time between prices and the indicator. TMAs begin with the
-calculation of a simple arithmetic average of prices (the close is the price field most
-commonly averaged). Then, the TMA indicator calculates a simple arithmetic average of
-the first average.
+所以描述中的关键点是移动平均线的特殊类型. 然而, 当我们测试交易系统时, 我们发现移动平均线的类型并不重要, 最好的结果是用简单的移动平均线而不是更复杂的三角形移动平均线产生的! 因此, 您可以忘记这个三角形, 复杂的移动平均线并没有比普通移动平均线表现更好. 这证实了我们在开发交易系统时的一个观点, 最简单的也是最有效的.
 
-卢克索系统通过穿越两条移动平均线来确定新交易的设置
-- 一个快一个,一个慢一个. 当然,有多种移动平均线; 卢克索是
-STAD俱乐部的第一个策略是使用三角形移动平均线. 的目的
-三角移动平均线(TMA)是增加没有价格数据的平滑
-也增加了价格和指标之间的滞后时间. TMA开始于
-计算简单的算术平均价格(最接近的是价格领域
-通常平均). 然后, TMA 指标计算一个简单的算术平均值
-第一个平均水平.
-
-So the key point in the description is the special type of moving average. When we tested
-the trading system we found, however, that the type of moving average did not matter
-and the best results were produced with a simple moving average instead of the more
-complex triangular moving average! So you can forget how this triangular, complex
-moving average works and stay with the normal ones. This confirms our observation
-when developing trading systems that often the simplest things work best.
-
-所以描述中的关键点是移动平均线的特殊类型. 当我们测试
-我们发现的交易系统, 移动平均线的类型并不重要
-最好的结果是用一个简单的移动平均数来产生的, 而不是更多
-复杂的三角均线! 所以你可以忘记这个三角形, 复杂的
-移动平均线运行并与正常线路保持一致. 这证实了我们的观察
-在开发往往最简单的工作最好的交易系统时.
-
-The main steps in system development are the following: to get ideas which fit the
-personality of the traded market, to test them and to adapt them to your own needs. We
-do this here for the LUXOR system. We only take the main idea of how to use the moving
-averages and make some minor changes.
-
-系统开发的主要步骤如下：获取适合自己的想法
-交易市场的个性, 测试它们并使其适应您自己的需求. 我们
-在这里为LUXOR系统做这个. 我们只考虑如何使用移动的主要想法
-平均值和做一些小的改变.
+系统开发的主要步骤如下: 获得符合交易市场个性的想法, 测试它们并使其符合您自己的需求. 我们在这里为 LUXOR 系统做这件事. 我们只讨论如何使用移动平均线并进行一些小改动.
 
 #### The free LUXOR system code
+
+想要实现这种逻辑的程序员可以在下面 TradeStation 的 Easy Language 中找到交易系统的代码. 我们在代码中添加了一些注释, 以便您了解所做的工作, 同时也便于您根据需要轻松修改代码.
+
+<p align="center"><font size=2>Text 3.1: Easy Language Code of the LUXOR trading system. Bold letters: Code for the entries. Normal letters: added time filter. In comment brackets: possible simple exits.</font></p>
+
+>{Copyright 2000. OMEGA RESEARCH, INC. MIAMI, FLORIDA.
+>Strategy Trading and Development Club STAD, Volume 13,
+>
+>Modified 18 June 2006 and 15 July 2008 by Urban Jaekle
+>Modified 1 January 2007 by Russell Stagg}
+>
+>{1. Definition of necessary inputs and variables}
+>Inputs:
+>FastLength( 3 ),  {The input parameters of the two moving averages… }
+>SlowLength( 30 ),
+>tset(1600),       {…start time for the intraday time window filter…}
+>WindowDist(100);  {…window distance for the intraday time window filter…}
+>                  {…can be changed – this makes optimisation possible}
+>Variables:        {Definition of needed variables}
+>    MP(0), Fast(0), Slow(0), GoLong(False), GoShort(False), BuyStop(0),
+>SellStop(0), BuyLimit(0), SellLimit(0), tEnd(1700);
+>
+>MP = MarketPosition;
+>
+>{2. Time window filter; see below: 3.4, “Inserting an intraday time filter”}
+>tend = tset + WindowDist;         {time window of 1 hour}
+>if time > tset - 5 and time < tend then begin
+>
+>{3. Definition of moving averages and entry conditions}
+>Fast = Average(Close, FastLength);
+>Slow = Average(Close, SlowLength);
+>
+>GoLong = Fast > Slow;
+>GoShort = Fast < Slow;
+>
+>{4. Entry Setup}
+>If Fast crosses above Slow then begin
+>    BuyStop = High + 1 point;
+>    BuyLimit = High + 5 points;
+>end;
+>
+>If Fast crosses below Slow then begin
+>    SellStop = Low - 1 point;
+>    SellLimit= Low - 5 points;
+>end;
+>
+>If GoLong and C < BuyLimit then
+>    Buy (“Long”) next bar at BuyStop Stop;
+>If GoShort and C > SellLimit then
+>    Sell Short (“Short”) next bar at SellStop Stop;
+>
+>{5. Exits: Derived from the slow moving average. These exits are not used here since
+>we take different standard exits! Feel free to change the exits according to your needs}
+>
+>{If MP = 1 then Begin
+>    Sell next bar at Slow - 1 point Stop;
+>End;
+>If MP = -1 then Begin
+>    Buy to Cover next bar at Slow + 1 point Stop;
+>End;}
+>end;
+
+Easy Language 代码可以分为不同部分:
+
+1. 定义输入和变量.
+2. 时间过滤器(在 3.4 中讨论).
+3. 入场和出场设置.
+
+由于本章的第一部分侧重于入场逻辑, 我们将交易系统的退出部分放在括号中的 Easy Language 代码中. 这意味着首先我们忽略出场并仅从该系统中生成交易. 在本章的后面, 我们将基于这些生成的交易应用出场逻辑.
 
 #### The entry logic
 
