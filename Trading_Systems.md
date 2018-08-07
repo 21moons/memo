@@ -281,7 +281,7 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 <p align="left" style="color:red;"><font size=5><b>注: 这是是说不同周期的叠加, 导致累积权益线频繁出现上升下降, 无法保持水平.</b></font></p>
 
-交易系统通过长期交易和短期交易产生的利润和风险应该是平衡的. TradeStation 分拆了长期交易和短期交易的系统报告, 除非在特殊情况下, 并且当您可以找到合理的原因, 否则长期交易产生的利润应该始终能跟上短期交易产生的利润. 长期和短期不平衡的交易系统必须得到质疑.
+无论是做多还是做空, 交易系统都必须确保利润和风险是平衡的(不能高风险低收益). TradeStation 分别列出了做多交易和做空交易的系统报告, 在特殊情况下除非您可以找到合理的原因, 否则做多交易产生的利润应该始终能跟上做空交易产生的利润. 做多和做空利润不平衡的交易系统必须得到质疑.
 
 #### RINA Index
 
@@ -410,14 +410,9 @@ Easy Language 代码可以分为不同部分:
 
 #### The entry logic
 
-Now let’s explain what this code means for the construction of the entries (Figure 3.1).
-The entry is based on a usual moving average system and works as following: you enter
-the market long on the bar where a fast moving average crosses above a slow moving
-average and in the same way you go short if the fast moving average crosses below the
-slower moving average.
+现在让我们解释代码创建如何入场点(图 3.1). 入场点基于常见的移动平均线系统, 其工作原理如下: 在快速移动平均线上穿慢速移动平均线时, 你进入市场并买入, 如果快速移动平均线下穿慢速移动平均线时, 则以同样的方式入场做空.
 
-现在让我们解释这个代码对于构造条目的意义(图 3.1). 该条目基于常见的移动平均系统, 其工作原理如下: 您在快速移动平均线超过慢速的条形区域进入市场 移动平均线, 如果快速移动平均线低于移动平均线, 则以同样的方式做空.
-
+<p align="left" style="color:red;"><font size=5><b>注: long(买入) short(卖出)</b></font></p>
 
 Trend following methods like these are well known to be able to capture huge profits
 during long steady trends. The LUXOR entry logic takes this basic idea of such trend-
@@ -429,7 +424,7 @@ current price to exceed a recent high to enter a trade (Figure 3.1). Analogously
 must go below a recent low to trigger a short entry. Please note that we only explain here
 the long side in the system code since the short entries are built symmetrically.
 
-众所周知，遵循这些方法的趋势能够在长期稳定趋势中获取巨额利润。 LUXOR入口逻辑通过仅使用两个简单的移动平均值作为入口信号发生器来采用这种趋势跟踪方法的基本思想。 但是，它按以下方式进行修改：只有在确认价格本身发生后才允许平均交叉后的条目。 仅仅移动平均线并不足以启动市场地位。 如果是长期进场，您希望当前价格超过近期高点进入交易（图3.1）。 类似地，价格必须低于近期低点才能触发短线。 请注意，我们只在这里解释系统代码中的长边，因为短条目是对称构建的。
+众所周知, 在长期稳定趋势中, 这类趋势跟踪方法能够获取巨额利润. LUXOR入口逻辑通过仅使用两个简单的移动平均值作为入口信号发生器来采用这种趋势跟踪方法的基本思想。 但是，它按以下方式进行修改：只有在确认价格本身发生后才允许平均交叉后的条目。 仅仅移动平均线并不足以启动市场地位。 如果是长期进场，您希望当前价格超过近期高点进入交易（图3.1）。 类似地，价格必须低于近期低点才能触发短线。 请注意，我们只在这里解释系统代码中的长边，因为短条目是对称构建的。
 
 <p align="center"><font size=2>Figure 3.1: Entry Logic. The entry is not triggered by the crossing of the two moving averages. Instead, at the crossover bar the high is kept and used as a long entry level. Short entries are taken symmetrically. Chart example was taken from British pound/US dollar, 30 min, FOREX from 26 Dec 2007. Chart and datafeed from TradeStation 8.</font></p>
 
