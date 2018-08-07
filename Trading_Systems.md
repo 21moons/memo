@@ -362,7 +362,7 @@ RINA 指数是由 RINA Systems 创建并包含在 TradeStation 交易系统报�
 >
 >MP = MarketPosition;
 >
->{2. Time window filter; see below: 3.4, “Inserting an intraday time filter”}
+>{2. Time window filter; see below: 3.4, "Inserting an intraday time filter"}
 >tend = tset + WindowDist;         {time window of 1 hour}
 >if time > tset - 5 and time < tend then begin
 >
@@ -381,13 +381,13 @@ RINA 指数是由 RINA Systems 创建并包含在 TradeStation 交易系统报�
 >
 >If Fast crosses below Slow then begin
 >    SellStop = Low - 1 point;
->    SellLimit= Low - 5 points;
+>    SellLimit = Low - 5 points;
 >end;
 >
 >If GoLong and C < BuyLimit then
->    Buy (“Long”) next bar at BuyStop Stop;
+>    Buy ("Long") next bar at BuyStop Stop;
 >If GoShort and C > SellLimit then
->    Sell Short (“Short”) next bar at SellStop Stop;
+>    Sell Short ("Short") next bar at SellStop Stop;
 >
 >{5. Exits: Derived from the slow moving average. These exits are not used here since
 >we take different standard exits! Feel free to change the exits according to your needs}
@@ -416,6 +416,8 @@ the market long on the bar where a fast moving average crosses above a slow movi
 average and in the same way you go short if the fast moving average crosses below the
 slower moving average.
 
+现在让我们解释这个代码对于构造条目的意义(图 3.1). 该条目基于常见的移动平均系统, 其工作原理如下: 您在快速移动平均线超过慢速的条形区域进入市场 移动平均线, 如果快速移动平均线低于移动平均线, 则以同样的方式做空.
+
 
 Trend following methods like these are well known to be able to capture huge profits
 during long steady trends. The LUXOR entry logic takes this basic idea of such trend-
@@ -426,6 +428,8 @@ alone is not enough to initiate a market position. In case of a long entry you w
 current price to exceed a recent high to enter a trade (Figure 3.1). Analogously the price
 must go below a recent low to trigger a short entry. Please note that we only explain here
 the long side in the system code since the short entries are built symmetrically.
+
+众所周知，遵循这些方法的趋势能够在长期稳定趋势中获取巨额利润。 LUXOR入口逻辑通过仅使用两个简单的移动平均值作为入口信号发生器来采用这种趋势跟踪方法的基本思想。 但是，它按以下方式进行修改：只有在确认价格本身发生后才允许平均交叉后的条目。 仅仅移动平均线并不足以启动市场地位。 如果是长期进场，您希望当前价格超过近期高点进入交易（图3.1）。 类似地，价格必须低于近期低点才能触发短线。 请注意，我们只在这里解释系统代码中的长边，因为短条目是对称构建的。
 
 <p align="center"><font size=2>Figure 3.1: Entry Logic. The entry is not triggered by the crossing of the two moving averages. Instead, at the crossover bar the high is kept and used as a long entry level. Short entries are taken symmetrically. Chart example was taken from British pound/US dollar, 30 min, FOREX from 26 Dec 2007. Chart and datafeed from TradeStation 8.</font></p>
 
