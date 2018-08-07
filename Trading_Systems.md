@@ -477,6 +477,70 @@ compared to a form where just end-of-day or even end-of-month results are shown.
 
 <p align="center"><font size=2>Figure 3.2: Detailed Equity Curve of the trading system LUXOR on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Input parameters: SLOW=30, FAST=10. System without exits, always in the market. Back-test without any slippage and commissions. Chart from TradeStation 8.</font></p>
 
+![Detailed Equity Curve](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.2.png)
+
+The equity line looks like a good starting point for a viable trading system. Although
+some drawdowns occur the system always recovers quickly and achieves new highs, so
+that you get a relatively steady growth of the initial capital. The profitability of the trading
+system is also revealed by the trading figures (Table 3.1). Here you see that LUXOR
+gains a total net profit of $66,000 with only one traded contract within the testing period
+from October 2002 until July 2008. The biggest drawdown within this period was
+$16,000. If you assume a starting capital of $30,000 then this would mean that your total
+profit is more than 200% in the last six years, with a maximum drawdown of about 50%.
+
+<p align="center"><font size=2>Table 3.1: Main system figures of the LUXOR system. British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Input parameters: SLOW=30, FAST=10. System without exits, always in the market. Back-test calculation without any slippage and commission.</font></p>
+
+![Main system figures](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_3.1.png)
+
+The considered system shows the main properties of trend following trading strategies:
+• The percentage of profitable trades is low (36.5%). From the 1913 performed trades,
+only 698 are profitable whereas the majority (1215) end with a loss.
+• The overall gains of the system result from the high ratio of average win/average
+losing trade. The average winning trade is with US$846, which is bigger than the
+average losing trade (US$435) by a factor of two.
+• The average time in winning trades is about three times longer than the average time
+which the system stays in losing trades (62 bars versus 24 bars).
+
+This shows that the system logic follows perhaps the most important rule in trading which
+everybody knows but which is yet difficult to follow: cut the losses short and let the
+profits run. This trading rule is psychologically hard to adhere to since you often suffer
+directly from your losses and on the other hand you have to wait a long time until you
+can earn your rare but hefty gains.
+
+It is worth mentioning that the long side of the trading system is much more profitable
+than its short side ($56,900 vs. $9,400 net profit). This observation will be examined in
+Chapter 5.3 again when we discuss the so called “market bias”. The “market bias” means
+the tendency of a market to favour special features or parts of a trading system, like in
+this case the better profitability of the trend-following system’s long side in an overall
+upward trend of the tested market. The good point for our trading system here is that
+although there is such a market bias with an up-trend, the short side of our trading system
+is still in the profitable range. This underlines the stability of this symmetrically built
+system.
+
+Furthermore, you of course get nearly the same number of short trades (956) as long
+trades (957) because the trading system only reverses positions. Since we have not added
+any exits the system stays in the market 100% of the time, holding either a long or a short
+position.
+
+Finally we want to underline a fact which should never be underestimated when
+developing trading systems: the statistical significance of your performed tests. If you
+develop a new system and in testing you have only 100 signals, or even less, the
+probability of achieving profitable results just by accident is very high. With nearly 2000
+trades in our back-test the statistical probability is high that this strategy will perform in
+a similar way in the (near) future.
+
+So what have you gained so far? Statistics show that the entry logic is sound and has a
+certain probability of maintaining its behaviour in the future. If you however take a closer
+look at the trading figures you will see that the system produces only an average profit
+of US$35; this level of average profit per trade without any trading costs is very low! So
+what you have so far is just a trading rule which detects a tiny profitable bias in prices.
+
+Therefore we are now at a point when the trading system development work has just
+started. There are lots of steps to perform until you can work out a complete trading
+system. The profitability of this system must be increased and exits must be added. Before
+we do this we take trading costs into consideration to make the whole approach more
+realistic.
+
 #### Calculation after adding slippage and commissions
 
 ### 3.3 Variation of the input parameters: optimisation and stability diagrams
