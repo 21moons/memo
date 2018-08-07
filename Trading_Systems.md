@@ -166,7 +166,7 @@ TradeStation 论坛
 
 前向测试是一种多轮的, 连续的样本外数据测试, 它不停的用样本外数据测试同一个数据序列. 让我们举个例子: 先用数据集中前两年的数据对系统进行优化, 然后用随后6个月的数据进行验证. 此时再将优化窗口前移6个月, 对系统进行新的优化, 再用未来6个月的数据进行验证, 就这样继续下去. 这种优化是一种 "滚动" 的前向分析, 因为每次我们重新优化时, 优化窗口总是前移6个月. 如果开始时间不变, 随着时间的推移增加优化窗口长度, 这种方式称为 "锚定" 前向分析. "滚动" 前向分析更适合于盘中交易系统, 因为盘中交易系统面对的是不断变化的市场条件.
 
-<p align="left"><font color=#fd0209 size=4 ><b>注: 因为短期趋势不断变化, 不可捉摸, 所以减小分析的时间跨度, 保持对趋势的跟踪, 提升灵敏度.</b></font></p>
+<p align="left" style="color:red;"><font size=5><b>注: 因为短期趋势不断变化, 不可捉摸, 所以减小分析的时间跨度, 保持对趋势的跟踪, 提升灵敏度.</b></font></p>
 
 ```
 Rolling walk forward: out-of-sample (OOS) = 20%:
@@ -182,13 +182,13 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 <p align="center"><font size=2>Figure 2.1: A graphical description of a  "rolling" and  "anchored" walk forward analysis</font></p>
 
-前向测试中产生的净值线是交易系统开发过程中最接近真实的地方, 因为这就是真正的交易将带给我们的. 显而易见的是, 同基于整个价值序列测试或优化交易系统生成的净值线相比, 这种前向分析生成的净值线将完全不同. <font color=#fd0209 size=4 ><b>注: 一个关注长期趋势, 一个追踪短期波动</b></font> 所以交易员在决定是否放弃一个交易系统时往往会欺骗自己, 依赖交易系统在整个价格序列上生成的净值线, 实际上这样的净值线压根就没有反映经过定期重优化后的真实交易情况<font color=#fd0209 size=4 ><b>注: 定期重优化拟合的是最近的波动, 对于全周期未必是适用的</b></font>.
+前向测试中产生的净值线是交易系统开发过程中最接近真实的地方, 因为这就是真正的交易将带给我们的. 显而易见的是, 同基于整个价值序列测试或优化交易系统生成的净值线相比, 这种前向分析生成的净值线将完全不同. <font color=#fd0209 size=5><b>注: 一个关注长期趋势, 一个追踪短期波动</b></font> 所以交易员在决定是否放弃一个交易系统时往往会欺骗自己, 依赖交易系统在整个价格序列上生成的净值线, 实际上这样的净值线压根就没有反映经过定期重优化后的真实交易情况<font color=#fd0209 size=5 ><b>注: 定期重优化拟合的是最近的波动, 对于全周期未必是适用的</b></font>.
 
 一种被广泛接受的衡量系统预测能力及其一致性的方法, 是计算前向测试年化净利润与优化期间年化净利润的比率. 这就是前向有效率(walk forward efficiency ratio). 如果该比率高于 100%, 那么系统是高效的, 在实际交易中保持预测能力的可能性也比较高. 如果交易者决定使用前向有效率为 50% 的系统进行交易(许多交易者认为这个水平已经是最低了), 他们应该期望该系统的实际表现至少是优化测试结果的一半. 统计学证据还指出, 一些优化的不够好的系统, 也可能在前向测试的一两步中幸运的有良好表现. 为了规避这个陷阱, 应该执行尽可能多的执行前向测试, 或者至少让测试窗口(即我们在优化后的交易系统上应用的数据窗口)前进 10 步, 并且测试窗口涉及的数据至少占整个优化价格序列的 10% 至 20%.
 
 讨论 "静态的基于数据集中部分数据的 '样本外' 测试" 或 "如何优化交易系统" 都已经过时, 因为大多数专业交易系统开发软件都集成了前向分析功能. 这并不意味着交易者不用熟悉常见的测试和优化过程. 我们建议在使用 WFA 之前, 你应该做关于优化的作业, 从而获得系统及其性能的完整视图. 要运行完整的前向分析耗时巨大, 为了提升速度, 我们可以通过先进行一轮测试, 再进行一轮优化来检查系统的稳健性. 无论如何, 为了简单起见, 我们将总结一些好的优化提示.
 
-如果我们有许多输入需要优化, 最好的方法是每轮测试一到两个输入, 与此同时其他输入都保持不变.<font color=#fd0209 size=4 ><b>注: 数学思维</b></font> 这样能将过度优化的风险降到最低, 因为当所有的输入不在同一轮优化时, 不可能简单的找到一组输入能让我们给方程的约束最大化.(since it is impossible to find the batch of inputs that will maximise the constraint we gave to the equation simply because the inputs will not be optimised together in the same run.)
+如果我们有许多输入需要优化, 最好的方法是每轮测试一到两个输入, 与此同时其他输入都保持不变.<font color=#fd0209 size=5><b>注: 数学思维</b></font> 这样能将过度优化的风险降到最低, 因为当所有的输入不在同一轮优化时, 不可能简单的找到一组输入能让我们给方程的约束最大化.(since it is impossible to find the batch of inputs that will maximise the constraint we gave to the equation simply because the inputs will not be optimised together in the same run.)
 
 #### 健壮性
 
@@ -210,7 +210,7 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 <p align="center"><font size=2>Figure 2.3: As much as the variable changes the net profit shows deep and wide swings: there is no area where at the variable’s changing net profit stays more or less stable.</font></p>
 
-<p align="left"><font size=2>鲁棒性是指控制系统在一定(结构, 大小)的参数摄动下, 维持其它某些性能的特性.</font></p>
+<p align="left" style="color:red;"><font size=5><b>注: 鲁棒性是指控制系统在一定(结构, 大小)的参数摄动下, 维持其它某些性能的特性.</b></font></p>
 
 总而言之, 我们可以得出以下结论: 输入和结果间应该有一条逻辑路径, 会产生一些与输入批次相关的东西. 当输入和净利润不存在线性关系时, 或者不存在回退关系, 或者不存在任何作为优化主要规则的约束, 整套结果必须是存疑的.
 
@@ -222,7 +222,7 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 净利润是系统在测试期间带回家的钱. 即使绝对数量可以取悦读者, 它并没有从根本说明系统的真实性能, 而且它也没有说明风险. 在没有量化风险的情况下谈论利润是系统分析中的致命错误. 此外, 如果您添加适当的佣金和 **滑点**, 权益线形状可能会发生变化, 直至向下倾斜或变为负数(暗指亏损).
 
-<p align="left"><font size=2>滑点是交易的预期价格与交易执行价格之间的差异</font></p>
+<p align="left" style="color:red;"><font size=5><b>注: 滑点是交易的预期价格与交易执行价格之间的差异</b></font></p>
 
 因此我们得到两个初始的一般考虑因素, 如下:
 
@@ -235,7 +235,7 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 #### Average trade
 
-如何评判一个交易系统是否优秀, 关于这个问题有一个重要指标 -- **平均交易(the average trade)**, 即净利润除以交易数量. 平均交易告诉我们每笔交易赚取或者亏损多少钱. 从绝对意义上来讲, 平均交易在弥补滑点和佣金后, 应该仍能为交易者留下一些利润. 按百分比计算, 平均交易在整个测试期间应保持一致. 通常情况下, 交易者将绝对平均交易(the absolute average trade)与特定交易的入场价格进行比较, 并以百分比的形式表示. 其他交易者将名义平均交易值(the nominal average trade value)与给定时期内合约的名义价值(the nominal value)进行比较. 我们推荐绘制交易的历史平均百分比值, 以便清楚地了解多年来系统的盈利趋势.
+如何评判一个交易系统是否优秀, 关于这个问题有一个重要指标 -- **平均交易收益(the average trade)**, 即净利润除以交易数量. 平均交易告诉我们每笔交易赚取或者亏损多少钱. 从绝对意义上来讲, 平均交易在弥补滑点和佣金后, 应该仍能为交易者留下一些利润. 按百分比计算, 平均交易在整个测试期间应保持一致. 通常情况下, 交易者将绝对平均交易(the absolute average trade)与特定交易的入场价格进行比较, 并以百分比的形式表示. 其他交易者将名义平均交易值(the nominal average trade value)与给定时期内合约的名义价值(the nominal value)进行比较. 我们推荐绘制交易的历史平均百分比值, 以便清楚地了解多年来系统的盈利趋势.
 
 #### Percentage of profitable trades(盈利交易百分比)
 
@@ -255,232 +255,53 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 #### Drawdown(亏损)
 
-A broad definition of drawdown could be the largest loss or the largest losing streak of a
-trading system, whichever is the biggest [4]. In a more graphical way we can depict
-drawdown as the dip in the equity line between a highest high point and the successive
-lower point before a new high is made. In other words  "total equity drawdown" is the
-open trade profits and losses plus the already closed out equity on your account. But
-drawdown has more subtle meanings according to whether we consider only open
-positions or closed out positions. In fact it is important to distinguish between three
-different types of drawdown:
+亏损的广义定义是在交易系统中最大损失和最大的连跌中, 选取最大的那个. 从图形上来看, 我们可以将亏损描述为在权益线创出新高之前, 权益线最高点和连续低点之间的下跌. 换句话说, "总权益亏损" 是指您账户中的未平仓合约的损益加上已经平仓的权益. 只考虑未平仓头寸还是只考虑平仓头寸, 这两种条件下亏损具有更微妙的含义. 事实上, 区分三种不同类型的亏损非常重要:
 
-亏损的广义定义可能是交易系统中最大的损失或最大的连跌, 无论哪个最大[4]. 以更加图解的方式，我们可以将亏损描述为在创出新高之前最高点和连续低点之间的权益线下跌。 换句话说，“总权益提取”是开放式贸易的利润和损失加上您帐户中已经结清的权益。 但根据我们是仅考虑未平仓头寸还是平仓头寸，缩编具有更微妙的含义。 事实上，区分三种不同类型的缩减非常重要：
+1. 终止交易亏损(end trade drawdown)告诉我们在允许退出指定交易之前, 我们允许回撤多少浮盈(账面盈利).
+2. 关闭交易亏损(close trade drawdown)是进场和出场价格之间的差异, 而不考虑交易中的情况.
+3. 初始交易亏损(start trade drawdown)度量的是在入场后和开始出现浮盈之间, 逆向走势导致的亏损.
 
-1. An end trade drawdown tells us how much of the open profit we had to give back
-before we were allowed to exit a specific trade
-2. A close trade drawdown is the difference between the entry and the exit price
-without taking into consideration what is going on within the trade
-3. A start trade drawdown measures how much the trade went against us after the entry
-and before it started to go our way [6].
+为简单起见, 我们将使用 "关闭交易亏损" 定义, 因为它是最重要的. 同时有一点也很重要, 在用真金白银交易时, 我们可以忍受比依据理论计算出的 "关闭交易亏损" 规模大得多的浮亏(open trade drawdown).
 
-1.结束交易缩减告诉我们在允许退出特定交易之前我们必须回馈多少未平仓合约
-2.关闭贸易缩减是进入和退出价格之间的差异，而不考虑交易中的情况
-3.开始交易缩减衡量交易在进入之后和开始之前对我们的影响程度[6]。
+不可否认的是, 亏损的绝对值对交易者产生了深刻的心理影响, 因为他将被迫处理它, 这可能是让人痛心的. 但是亏损就像盈利指标一样, 我们需要谨慎地以比较的方式使用这一度量. 为了达到这个目的, "水下权益线" (underwater equity line)的概念出现了; **水下权益线即亏损绝对值除以权益线的前最高值.**  这表示相对于权益线的缩减百分比. 因此, 即使我们基于 40 年的长期价格序列中测试系统, 这期间合约价值发生了巨大变化, 我们仍然能够有一个百分点参考值, 能够发现基于当前价格的实际预期亏损: 只需要基于当前市场价值绘制出最高的 "水下权益线" 百分比.
 
-For sake of simplicity we will use the close trade drawdown definition since it is the most
-significant. But it is important to remember that while trading real money we can endure an
-open trade drawdown much bigger than the theoretically calculated closed trade drawdown.
+许多分析师正试图通过优化退出规则和初始止损来对抗亏损, 实际上进一步了解亏损发生的原因会更合适. 如果市场上出现历史性的怪异事件, 那么显然会出现异常亏损. 如果没有什么特别的事情发生, 那么才会怀疑系统的逻辑出现了问题.
 
-为简单起见，我们将使用紧密的交易缩减定义，因为它是最重要的。 但重要的是要记住，在交易真实货币时，我们可以忍受比理论上计算的封闭贸易缩减规模大得多的开放贸易缩减。
+为了评估我们必须担心哪种亏损, 以及哪种亏损是正常的, 计算平均亏损及其标准偏差是至关重要的. 如果最大亏损介于平均值的一到两个标准差之间, 那么我们预计未来的亏损将与我们过去的水平接近. 如果平均亏损超过平均值的两个标准差, 那么我们需要重新思考系统的逻辑, 前提是确认过去没有发生任何导致异常亏损的特殊情况.
 
-It is undeniable that the absolute value of a drawdown has a deep psychological impact
-on the trader because he will be forced to deal with it and this could be painful. But with
-drawdown, as with profit indicators, we need to be careful to use this measure in a
-comparative way. For this purpose the concept of  "underwater equity line" is useful; that
-is, the absolute drawdown value divided by the equity line’s previous highest high value.
-This expresses the drawdown relative to the equity line in percentage terms. So even if
-we are testing a system on a 40-year long price series in which the value of the contract
-changed dramatically, we still have a percentage point reference value in order to spot
-what is the real expected drawdown at current values: just plot the highest underwater
-equity line percentage at the current market value.
+<p align="left" style="color:red;"><font size=5><b>注: 统计学思维</b></font></p>
 
-不可否认的是，缩编的绝对价值对交易者产生了深刻的心理影响，因为他将被迫处理它，这可能是痛苦的。 但随着盈利指标的缩减，我们需要谨慎地以比较的方式使用这一措施。 为此目的，“水下权益线”的概念是有用的; 也就是说，绝对亏损值除以权益线的先前最高值。 这表示相对于权益线的缩减百分比。 因此，即使我们在40年期价格系列中测试系统，其中合约价值发生了显着变化，我们仍然有一个百分点参考值，以便发现当前值的实际预期下降：只是绘图 在当前市场价值下最高的水下股权比例。
+大多数专业交易员和基金经理的能够忍受的亏损是 20% 至 30%. 10% 的亏损可以算是一个精彩的成就, 但是 30% 的亏损则让人痛苦和令人担忧. 对于大多数市场参与者来说, 40% 到 50% 的亏损是无法忍受的.
 
-Many analysts try to fight against drawdown by optimising the exits and the initial stops
-while it would be more appropriate to further understand the reason why drawdown is
-taking place. If there was a freak occurrence in historical terms on the markets then it is
-obvious that an abnormal drawdown occurred. If nothing special occurred then there is
-something wrong in the logic of the system.
+<p align="left" style="color:red;"><font size=5><b>注: 这是暗示交易中的浮亏无法避免?</b></font></p>
 
-许多分析师试图通过优化出口和初始止损来对抗缩编
-而进一步理解缩编的原因则更为恰当
-发生. 如果市场上出现历史上的怪事,那么它就是
-很明显,发生了异常缩水. 如果没有什么特别的事情发生,
-系统的逻辑中有些问题.
+#### Time averages(平均时间)
 
-In order to evaluate which kind of drawdown we have to worry about, and which kind of
-drawdown is normal, it is paramount to calculate the average drawdown and its standard
-deviation. If the largest drawdown lies between one and two standard deviations from
-the average than we should expect a future drawdown quite close to what we had in the
-past. If the average drawdown is beyond two standard deviations from the mean than we
-need to rethink the logic of the system, provided that nothing special happened in the
-past that could justify the freak drawdown.
+其他重要指标包括时间平均值. 根据 TradeStation 术语, 交易的平均时间显示在策略的指定期间内完成的所有交易花费的平均时间(年, 日, 分钟). 其他交易平台也有类似指标. 平均交易时间对于投资组合构建至关重要, 因为利用权益线之间的负相关性(套利), 您的系统需要同时进入市场或者至少具有相同的 "平均交易时间". 如果你使用两个系统组成投资组合, 其中一个较少交易但是需要长时间保持在线, 而另一个交易频繁, 但是每笔交易交易时间较短(快进快出), 那么您的累积权益线永远不会平稳.
 
-为了评估我们不得不担心哪种类型的缩编以及哪种缩编
-缩编是正常的,计算平均缩减及其标准是最重要的
-偏差. 如果最大的跌幅在1至2个标准差之间
-平均数比我们预计未来的降幅非常接近我们目前的水平
-过去. 如果平均跌幅超过平均值两个标准偏差,那么我们就是这样
-需要重新思考系统的逻辑,只要没有什么特别的事情发生
-过去那可以证明这个怪胎缩水.
+<p align="left" style="color:red;"><font size=5><b>注: 这是是说不同周期的叠加, 导致累积权益线频繁出现上升下降, 无法保持水平.</b></font></p>
 
-The average tolerance of a drawdown for most professional traders and money managers
-ranges from 20% up to 30%. Let’s say that a drawdown of 10% is a wonderful
-accomplishment while a drawdown of 30% is much more painful and worrisome. A
-drawdown of 40 to 50% would be unbearable for most market players.
-
-大多数专业交易员和基金经理的平均容许跌幅
-范围从 20% 到 30%. 假设 10% 的缩减是一个很好的例子
-而30%的降幅更加痛苦和令人担忧. 一个
-对于大多数市场参与者来说, 缩减 40% 到 50% 是无法忍受的.
-
-#### Time averages
-
-Other important indicators include the time averages. Average time in trades, according
-to the TradeStation terminology, displays the average time (years, days, minutes) spent
-in all completed trades, during the specified period for the strategy. Other trading
-platforms have similar indicators. Average time in trades is vital for portfolio construction
-since to exploit negative correlation among equity lines your systems need to be in the 
-market at the same time or at least to have the same  "average time in trades". If you make
-up a portfolio with a system that trades seldom and stays in the market for long periods
-of time, and another that trades often but with short individual trades, you will never level
-off the cumulative equity line.
-
-其他重要指标包括时间平均值. 根据行业平均交易时间
-到TradeStation术语,显示花费的平均时间(年,日,分)
-在所有完成的交易中,在该策略的特定时期内. 其他交易
-平台有类似的指标. 交易平均时间对投资组合建设至关重要
-因为要利用您的系统所需的股票系列之间的负相关性
-市场同时或至少具有相同的 "平均交易时间". 如果你做
-建立一个投资组合体系,该体系很少进行交易并长期在市场上停留
-的时间,而另一种经常交易但短暂的个人交易,你永远不会水平
-关闭累积的权益线.
-
-A trading system should be balanced between the profit and risk it produces on the long
-side and on the short side. TradeStation split the system report between long and short
-trades and except in particular cases, when you can find a logical reason for it, longs
-should always keep pace with short in profit generation. A trading system which is not
-balanced in between long and short must always be regarded with suspicion.
-
-一个交易系统应该长期平衡它产生的利润和风险
-侧面和短边. TradeStation 将系统报告分成多份和多份
-交易,除特殊情况外,当你可以找到合理的理由时,多头头寸
-应该始终跟上盈利的步伐. 一个不是的交易系统
-总之,平衡在多空之间总是被怀疑.
+交易系统通过长期交易和短期交易产生的利润和风险应该是平衡的. TradeStation 分拆了长期交易和短期交易的系统报告, 除非在特殊情况下, 并且当您可以找到合理的原因, 否则长期交易产生的利润应该始终能跟上短期交易产生的利润. 长期和短期不平衡的交易系统必须得到质疑.
 
 #### RINA Index
 
-A powerful indicator created by RINA Systems and included in the TradeStation trading
-system report is the RINA Index, which represents the reward-risk ratio per one unit of
-time and it compares the  "select net profit" (net profit minus the positive and negative
-outlier trades, that is minus the abnormal trades that overcome the three standard deviation
-limit away from the average) divided by the average drawdown and again divided by the
-percentage of time in the market indicator (the latter is always taken from the TradeStation
-system report). This indicator should always be over 30 and the higher the better.
+RINA 指数是由 RINA Systems 创建并包含在 TradeStation 交易系统报告中的强大指标, 它代表单位时间内的回报风险比率, 这个指标实际上比较的是: "选择净利润(select net profit)" (净利润减去正负外部交易, 即减去超出平均值的三个标准差限制的异常交易) 除以平均亏损并再次除以市场指标中的时间百分比(the percentage of time, 总是取自 TradeStation 系统报告). 该指标应始终超过 30, 并且越高越好.
 
-RINA系统创建的强大指标,包含在TradeStation交易中
-系统报告是RINA指数,它代表每单位的奖励 - 风险比率
-时间和它比较 "选择净利润"(净利润减去正面和负面
-异常交易,即减去克服三个标准偏差的异常交易
-远离平均水平)除以平均跌幅,再除以平均跌幅
-市场指标中的时间百分比(后者始终取自TradeStation
-系统报告). 这个指标应该总是在30以上,越高越好.
+为了衡量结果的一致性, TradeStation 系统报告会针对平均交易收益(the average trade)和几乎所有指标自动计算三个标准差异正负极限. 这可以了解指标在这些边界之间自然振荡的程度. 通常, 变异系数(the coefficient of variation, 标准差除以平均值)不应高于 250%.
 
-In order to measure consistency in results the TradeStation system report automatically
-calculates the three standard variations positive and negative limit for the average trade
-and for almost all the indicators. This gives an idea of how much the indicators could
-naturally oscillate between these boundaries. Usually the coefficient of variation (standard
-deviation divided by average) should never be higher than 250%.
-
-为了衡量结果的一致性,TradeStation系统会自动报告
-计算平均交易的三种标准差异正负限制
-几乎所有的指标. 这给出了这些指标可以达到多少的想法
-自然在这些边界之间摇摆. 通常变异系数(标准
-偏差除以平均值)不应高于250%.
-
-In this paragraph we have tried to figure out some practical guidelines for a system
-developer without delving into much theory or philosophical considerations. Without
-fretting about being considered sloppy system traders we dare to openly recognise that
-after 20-years’ experience we can understand at the first glance whether a trading system
-deserves to be considered with attention or not. The first aspect we check is the equity
-line, which needs to be growing smoothly and without many deep drawdowns. Personally
-we also appreciate many  "flat times", that is parts of the equity line that are horizontal:
-it means that no trading was done in that period since a filter took the system out of the
-market. We believe that there is no need to trade continuously and a good system should
-know when there is some edge to be exploited over the markets and conversely when it 
-is more appropriate to sit on the sidelines. Then, after the equity line, we immediately
-check average trade, profit factor, percent profitable, average win/average loss and how
-the monthly returns were distributed throughout the years. Just from these indicators a
-proper judgment about the trading system can be drawn without much worry about being
-on the wrong side.
-
-在这一段中, 我们试图找出系统的一些实用指南
-没有深入研究许多理论或哲学考量.没有
-对于我们敢于公开承认的被认为是猖獗的系统交易者感到担忧
-经过20年的经验, 我们可以乍一看地了解交易系统
-值得注意与否. 我们检查的第一个方面是股权
-线需要平稳增长并且没有太多深刻的消耗. 亲自
-我们也欣赏许多 "平稳时代",这是水平股权的一部分：
-这意味着在此期间没有进行交易,因为过滤器将该系统带出该系统
-市场.我们认为,没有必要持续交易和建立一个良好的体系
-知道什么时候在市场上有一定的优势,反之亦然
-更偏向于观望.然后,在股权之后,我们立即
-检查平均交易,利润因素,盈利百分比,平均赢/平均损失和如何
-每年的回报是多年来分配的.只是从这些指标a
-对于交易系统的正确判断可以不必担心
-在错误的一面.
+在本段中, 我们试图在不需要深入研究太多理论或哲学的前提下, 为系统开发人员整理出一些实用指南. 拥有 20 年经验的我们敢于公开承认, 我们可以一眼就看出交易系统是否值得被关注, 并且不担心任何人的质疑. 我们检查的第一个方面是权益线, 它需要平稳增长, 并且没有多少深度回撤. 就个人而言, **我们也很欣赏许多 "平静的时段", 即权益线的一部分是水平的: 这意味着由于过滤器让系统退出市场, 因此在此期间没有进行任何交易.** 我们认为没有必要不断进行交易, 当一些可以被利用的优势出现时, 一个好的系统应该能够及时感知, 反之则更适合待在场外. 然后, 除了权益线, 我们立即检查平均交易, 利润系数, 盈利百分比, "平均赢利/平均损失"比值以及多年来每月回报的分布方式. 仅从这些指标中可以得出关于交易系统的正确判断, 而不必担心掉入错误的陷阱.
 
 ### 2.5 结论
 
-So far we have covered the most important theoretical aspects of the trading systems’
-optimisation and performance evaluation. It was a quick overview of the universe of
-notions that this topic embraces, but we hope that this brevity will lead to a much more
-powerful understanding.
+到目前为止, 我们已经涵盖了交易系统优化和性能评估中最重要的理论方面. 它简要概述了本主题所包含的概念, 但我们希望这份简洁将引导你进入更深刻的理解.
 
-到目前为止,我们已经涵盖了交易系统最重要的理论方面,
-优化和性能评估. 这是一个关于宇宙的简要概述
-这个主题所包含的概念,但我们希望这个简洁会带来更多
-有力的理解.
+我们可以断言, 交易系统是一种科学的交易方法, 不需要任何人为介入. 显然, 这不是一个稳定的业务, 但它是一个应对概率的业务, 允许交易者利用统计优势入场搏杀.
 
-We can assert in conclusion that trading systems are a scientific approach to trading where
-nothing is left to discretion. It is not a certain business, obviously, but it is a business that
-deals with probability and that allows the trader to trade the markets exploiting a statistical
-edge.
+通过阅读本书末尾参考书目中的文本, 您将会扩展这些知识, 深入研究交易系统评估和优化的细微差别.
 
-我们可以断言,交易系统是一种科学的交易方式
-没有任何事情可以自由裁量. 显然,这不是一项特定的业务,但它是一项业务
-处理概率,并允许交易者利用统计数据交易市场
-边缘.
+不幸的是, 如果不处理交易系统的实际应用, 就不可能完全掌握这个主题. 交易系统的发展不是理论的挑战, 而是一种实用的市场实验方法. 编写代码, 测试它们然后优化它们是一个过程, 它允许交易者认识实际市场, 这有时比理论更重要. 知道如何遵循这个过程将节省大量的工作, 同时这个过程将有助于解决普通交易者无法接触到的情况.
 
-You will be able to expand this knowledge, delving into the nuances of trading systems
-evaluation and optimisation, by reading the texts we included in the bibliography at the
-end of the book.
-
-您将能够扩展这些知识,深入研究交易系统的细微差别
-评估和优化,通过阅读我们包含在参考书目中的文本
-这本书的结尾.
-
-Unfortunately it is impossible to have a full grasp of the subject without dealing with the
-practical application of trading systems. Trading systems’ development is not a theoretical
-intellectual challenge, but a practical experimental approach to markets. Writing codes,
-testing them and then optimising them is a process that allows the trader to acquire a
-practical view of the markets that is sometimes much more important than theory.
-Knowing how to follow this process will save much demanding work and it will help to
-solve situations that otherwise will be out of reach for the average trader.
-
-不幸的是,如果不处理这个问题, 就不可能全面掌握这个主题
-交易系统的实际应用. 交易系统的发展不是一个理论
-智力挑战, 而是一种对市场的实用实验方法. 编写代码, 测试它们然后优化它们是一个允许交易者获得一个交易的过程
-市场的实际观点有时比理论更重要.
-知道如何遵循这个过程将节省很多艰巨的工作, 这将有助于
-解决平均交易者无法实现的情况.
-
-In the following chapters you will have a practical view of what a systematic trader does
-when they develop, evaluate and optimise a trading system. We believe that this is the
-most important part of our work.
-
-在接下来的章节中, 您将对系统交易员的实际操作有所了解
-当他们开发, 评估和优化交易系统. 我们相信这是我们工作中最重要的部分.
+在接下来的章节中, 您将对系统交易者在开发, 评估和优化交易系统时所做的工作有一个切实的看法. 我们相信这是我们工作中最重要的部分.
 
 # Part II: 交易系统开发&演进真实案例
 
