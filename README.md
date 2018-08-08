@@ -160,13 +160,6 @@
 
 ## java
 
-- 在 Java 中, 构造方法无法被继承, 无法设置默认值(如果不实现构造方法, 会添加默认构造方法, 如果实现了构造方法则不添加).
-- Jboss 同时是 Web 容器和 EJB 容器. Tomcat 只是Web容器.
-- HashMap 几乎可以等价于 Hashtable, 除了 HashMap 是非 synchronized 的, 并可以接受null(HashMap可以接受为null的键值(key)和值(value), 而Hashtable则不行).
-- HashMap 是非 synchronized, 而 Hashtable 是 synchronized, 这意味着 Hashtable 是线程安全的, 多个线程可以共享一个 Hashtable; 而如果没有正确的同步的话, 多个线程是不能共享 HashMap 的.
-- 对于 volatile 变量, 写的时候会将线程本地内存的数据刷新到主内存上, 读的时候会将主内存的数据加载到本地内存里.
-- [AtomicIntegerFieldUpdater使用](http://www.cnblogs.com/hithlb/p/4516078.html)
-
 ### 关于final的知识点
 
 - final 关键字可以用于成员变量, 本地变量, 方法以及类.
@@ -231,8 +224,46 @@ loans = new Vector();  //not valid
 
 ### Java 编码注意事项
 
+- Java 在构造子类的时候, 会先构造父类.
+- 在 Java 中, 构造方法无法被继承, 但是可以被重载, 同时类无法设置默认构造方法(如果不实现类的构造方法, 会添加默认构造方法, 如果实现了则不添加).
+- Jboss 同时是 Web 容器和 EJB 容器. Tomcat 只是Web容器.
+- HashMap 几乎可以等价于 Hashtable, 除了 HashMap 是非 synchronized 的, 并可以接受null(HashMap 可以接受为null的键值(key)和值(value), 而 Hashtable 则不行).
+- HashMap 是非 synchronized, 而 Hashtable 是 synchronized, 这意味着 Hashtable 是线程安全的, 多个线程可以共享一个 Hashtable; 而如果没有正确的同步机制的话, 多个线程是不能共享 HashMap 的.
+- 对于 volatile 变量, 写此类变量的时候会强制把将线程本地内存的数据刷新到主内存上, 读取的时候会将主内存的数据加载到本地内存里, 在线程间保证状态的一致性.
+- [AtomicIntegerFieldUpdater使用](http://www.cnblogs.com/hithlb/p/4516078.html)
 - 容器中 entry 的删除要使用迭代器.
-- 一个类不想要外界创建其对象时, 就可以将其构造函数私有化, 本类中提供返回对象的方法, 并且多数情况下提供的对象是唯一的,单例设计模式就是一个很好的例子,而当我们开发中需要保证对象唯一性的时候, 往往就采取这种做法.
+- 一个类不想要外界创建其对象时, 可以将父类的构造函数私有化, 本类中提供返回对象的方法, 并且多数情况下提供的对象是唯一的,单例设计模式就是一个很好的例子,而当我们开发中需要保证对象唯一性的时候, 往往就采取这种做法.
+- 未初始化的 int 类型类变量默认值为 0
+- 为了避免父类的构造函数调用子类的多态方法, 一般可以将父类的同名函数声明为 private, 这样在父类构造函数中调用的就是自己的方法.
+
+```java
+public class Test1 {
+    public static void main(String[] args) {
+        A b = new B();
+        b.print();
+    }
+}
+
+class A {
+    public A(){
+        print();
+    }
+
+    public void print(){
+        System.out.println("A");
+    }
+}
+class B extends A{
+    int i = 1;
+    public B(){
+        print();
+    }
+
+    public void print(){
+        System.out.println("B" + i);
+    }
+}
+```
 
 ---
 
