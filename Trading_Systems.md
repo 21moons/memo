@@ -208,7 +208,7 @@ Run #3 |-------------------------------------------- In-sample 80% -------------
 
 ![profit_spike](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_2.3.png)
 
-<p align="center"><font size=2>Figure 2.3: As much as the variable changes the net profit shows deep and wide swings: there is no area where at the variable’s changing net profit stays more or less stable.</font></p>
+<p align="left"><font size=2>Figure 2.3: As much as the variable changes the net profit shows deep and wide swings: there is no area where at the variable’s changing net profit stays more or less stable.</font></p>
 
 <p align="left" style="color:red;"><font size=5><b>注: 鲁棒性是指控制系统在一定(结构, 大小)的参数摄动下, 维持其它某些性能的特性.</b></font></p>
 
@@ -289,7 +289,7 @@ RINA 指数是由 RINA Systems 创建并包含在 TradeStation 交易系统报�
 
 为了衡量结果的一致性, TradeStation 系统报告会针对平均交易收益(the average trade)和几乎所有指标自动计算三个标准差异正负极限. 这可以了解指标在这些边界之间自然振荡的程度. 通常, 变异系数(the coefficient of variation, 标准差除以平均值)不应高于 250%.
 
-在本段中, 我们试图在不需要深入研究太多理论或哲学的前提下, 为系统开发人员整理出一些实用指南. 拥有 20 年经验的我们敢于公开承认, 我们可以一眼就看出交易系统是否值得被关注, 并且不担心任何人的质疑. 我们检查的第一个方面是权益线, 它需要平稳增长, 并且没有多少深度回撤. 就个人而言, **我们也很欣赏许多 "平静的时段", 即权益线的一部分是水平的: 这意味着由于过滤器让系统退出市场, 因此在此期间没有进行任何交易.** 我们认为没有必要不断进行交易, 当一些可以被利用的优势出现时, 一个好的系统应该能够及时感知, 反之则更适合待在场外. 然后, 除了权益线, 我们立即检查平均交易, 利润系数, 盈利百分比, "平均赢利/平均损失"比值以及多年来每月回报的分布方式. 仅从这些指标中可以得出关于交易系统的正确判断, 而不必担心掉入错误的陷阱.
+在本段中, 我们试图在不需要深入研究太多理论或哲学的前提下, 为系统开发人员整理出一些实用指南. 拥有 20 年经验的我们敢于公开承认, 我们可以一眼就看出交易系统是否值得被关注, 并且不担心任何人的质疑. 我们检查的第一个方面是权益线, 它需要平稳增长, 并且没有多少深度回撤. 就个人而言, **我们也很欣赏许多 "平静的时段", 即权益线的一部分是水平的: 这意味着过滤器让系统退出了市场(停止交易), 因此在此期间没有进行任何交易.** 我们认为没有必要不断进行交易, 当一些可以被利用的优势出现时, 一个好的系统应该能够及时感知, 反之则更适合待在场外. 然后, 除了权益线, 我们立即检查平均交易, 利润系数, 盈利百分比, "平均赢利/平均损失"比值以及多年来每月回报的分布方式. 仅从这些指标中可以得出关于交易系统的正确判断, 而不必担心掉入错误的陷阱.
 
 ### 2.5 结论
 
@@ -414,44 +414,27 @@ Easy Language 代码可以分为不同部分:
 
 <p align="left" style="color:red;"><font size=5><b>注: long(买入) short(卖出)</b></font></p>
 
-Trend following methods like these are well known to be able to capture huge profits
-during long steady trends. The LUXOR entry logic takes this basic idea of such trend-
-following methods by just using two simple moving averages as an entry signal generator.
-However it is modified in the following way: an entry after the average crossover is only
-allowed after a confirmation of the price itself occurs. The crossing of the moving average
-alone is not enough to initiate a market position. In case of a long entry you want the
-current price to exceed a recent high to enter a trade (Figure 3.1). Analogously the price
-must go below a recent low to trigger a short entry. Please note that we only explain here
-the long side in the system code since the short entries are built symmetrically.
+众所周知, 在长期稳定趋势中, 这类趋势跟踪方法能够获取巨额利润. LUXOR 的入场逻辑使用了趋势跟踪的基本思想, 仅仅通过两条简单的移动平均值作为入场信号发生器. 但是它也按以下方式进行了修改: 均线交叉后还必须经过价格确认才能入场. 仅仅移动平均线并不足以启动交易. 如果是买入, 您希望当前价格超过近期高点后再入场交易(图 3.1). 类似地, 价格必须低于近期低点才能触发卖空. 请注意, 我们在这里只解释了系统代码中的做多逻辑, 而做空逻辑是对称构建的.
 
-众所周知, 在长期稳定趋势中, 这类趋势跟踪方法能够获取巨额利润. LUXOR入口逻辑通过仅使用两个简单的移动平均值作为入口信号发生器来采用这种趋势跟踪方法的基本思想。 但是，它按以下方式进行修改：只有在确认价格本身发生后才允许平均交叉后的条目。 仅仅移动平均线并不足以启动市场地位。 如果是长期进场，您希望当前价格超过近期高点进入交易（图3.1）。 类似地，价格必须低于近期低点才能触发短线。 请注意，我们只在这里解释系统代码中的长边，因为短条目是对称构建的。
-
-<p align="center"><font size=2>Figure 3.1: Entry Logic. The entry is not triggered by the crossing of the two moving averages. Instead, at the crossover bar the high is kept and used as a long entry level. Short entries are taken symmetrically. Chart example was taken from British pound/US dollar, 30 min, FOREX from 26 Dec 2007. Chart and datafeed from TradeStation 8.</font></p>
+<p align="left"><font size=2>Figure 3.1: Entry Logic. The entry is not triggered by the crossing of the two moving averages. Instead, at the crossover bar the high is kept and used as a long entry level. Short entries are taken symmetrically. Chart example was taken from British pound/US dollar, 30 min, FOREX from 26 Dec 2007. Chart and datafeed from TradeStation 8.</font></p>
 
 ![Entry Logic](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.1.png)
 
-The system has the following two input parameters which can be varied and optimised:
+系统具有以下两个输入参数, 可以进行改变和优化:
+
 Inputs: FastLength (3), SlowLength (30);
 
-These two input parameters “FastLength” and “SlowLength” are used for the fast and
-slow moving average:
+这两个输入参数 "FastLength" 和 "SlowLength" 分别用于快速和慢速移动平均值:
 
 Fast = Moving Average (Close, FastLength);
 Slow = Moving Average (Close, SlowLength);
 
-Now the important breakout filter is added. At the bar when the fast moving average
-crosses above the slow moving average the trade is not directly initiated. We take the
-high of this bar (“crossover bar”, marked in red colour in Figure 3.1) and keep it as the
-entry stop point as long as the fast moving average stays above the slow moving average:
+现在我们添加重要的突破过滤器. 在快速移动平均线向上穿过慢速移动平均线时, 交易不会在穿过的那一刻直接触发. 只要快速移动平均值始终保持在慢速移动平均线之上, 我们取这个柱的高点("交叉柱", 图 3.1 中用红色标记)并将其作为入场止损点(entry stop point):
 
 If Fast crosses above Slow Then EntryLevel = High;
-If Fast > Slow then Buy (“Long”) next bar at BuyStop Stop;
+If Fast > Slow then Buy ("Long") next bar at BuyStop Stop;
 
-This simple but effective condition improves the probability of the simple trend following
-system capturing the most profitable breakouts and not just any moving average crossover
-which occurs. It is different to common moving average crossover systems where every
-trade is taken, since the additional filter has to confirm the moving averages and in this
-way prevents trading some false breakouts.
+这种条件判断虽然简单但是有效, 它提高了简单的趋势跟随系统捕获最有利可图的突破的概率, 而不是在任意均线交叉点都触发. 与常用的普通移动平均线交叉系统不同的是, 因为添加的过滤器必须确认移动平均线交叉有效, 这种方法能够过滤掉一些假突破.
 
 ### 3.2 First evaluation of the trading system
 
@@ -459,35 +442,21 @@ way prevents trading some false breakouts.
 
 #### Calculation without slippage and commissions
 
-The strategy is now applied to 30 minute FOREX data from 21/10/2002 to 4/7/2008. All
-the following calculations in this chapter are based on a one contract basis. Keeping the
-beginning simple we calculate the trading system’s results without any slippage and
-commissions. These will be added in the next section where we will examine their impact
-on system performance. Furthermore please note that at first we check the system just
-with entries and trade reversals, leaving out exits.
+现在我们将该策略应用到从 2002 年 10 月 21 日至 2008 年 4 月 7 日的 30 分钟 FOREX 数据. 本章中所有的后续计算均基于单个合约. 为了便于入门, 我们在计算交易系统结果时不考虑任何滑点和佣金. 这些会在下一节中提及, 我们将会在那里检查它们对系统性能的影响. 此外请注意, 我们只通过入场和交易逆转来审视系统, 忽略交易退出.
 
-As first input parameters for the trading system’s entries we choose 10 bars for the fast
-and 30 bars for the slow moving average. With 30 minute bars this means the fast moving
-average is calculated from the last 5 trading hours whereas the slow moving average
-relies on the last 15 hours. Figure 3.2 shows the resulting equity curve in a detailed form.
-With “detailed form” we mean that this curve shows all run-ups and drawdowns of the
-trades which happen during their lifetime. Like this the equity line is more informative
-compared to a form where just end-of-day or even end-of-month results are shown.
+<p align="left" style="color:red;"><font size=5><b>注: 逆转(trade reversals)指的是价格趋势方向的变化</b></font></p>
 
-<p align="center"><font size=2>Figure 3.2: Detailed Equity Curve of the trading system LUXOR on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Input parameters: SLOW=30, FAST=10. System without exits, always in the market. Back-test without any slippage and commissions. Chart from TradeStation 8.</font></p>
+作为交易系统众多输入的第一个输入参数, 我们选择 10 个柱用于快速平均线, 30 个柱用于慢速移动平均线. 如果柱状图中的每个柱都是 30 分钟, 意味着快速移动平均线是从最近 5 个小时的交易数据中计算出来的, 同时也意味着慢速移动平均线依赖于过去的 15 个小时. 图 3.2 以详细形式显示了交易系统生成的权益曲线. "详细形式" 是指该曲线显示在其生命周期内发生的所有交易导致的权益上升和下降. 与那些只显示日末甚至月末权益的权益线相比, 这样的权益线包含了更多信息量.
+
+<p align="left" style="color:red;"><font size=5><b>注: 这是的输入(entries)包括变量和均线</b></font></p>
+
+<p align="left"><font size=2>Figure 3.2: Detailed Equity Curve of the trading system LUXOR on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Input parameters: SLOW=30, FAST=10. System without exits, always in the market. Back-test without any slippage and commissions. Chart from TradeStation 8.</font></p>
 
 ![Detailed Equity Curve](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.2.png)
 
-The equity line looks like a good starting point for a viable trading system. Although
-some drawdowns occur the system always recovers quickly and achieves new highs, so
-that you get a relatively steady growth of the initial capital. The profitability of the trading
-system is also revealed by the trading figures (Table 3.1). Here you see that LUXOR
-gains a total net profit of $66,000 with only one traded contract within the testing period
-from October 2002 until July 2008. The biggest drawdown within this period was
-$16,000. If you assume a starting capital of $30,000 then this would mean that your total
-profit is more than 200% in the last six years, with a maximum drawdown of about 50%.
+从权益线上来看, 对于一个可行的交易系统来说这是一个良好的起点. 尽管出现了一些下滑, 但系统总是能够快速恢复并达到新高, 从而使初始资本得到相对稳定的增长. 交易数据也显示了交易系统的盈利能力(表 3.1). 在表中您可以看到 LUXOR 在 2002 年 10 月至 2008 年 7 月的测试期间内仅交易了一份合约, 然后赢得了 66,000 美元的净利润. 此期间的最大亏损为 16,000 美元. 如果假设起始资本为 30,000 美元, 那么这意味着您的总利润在过去六年中超过 200%, 同时最大亏损约为 50%.
 
-<p align="center"><font size=2>Table 3.1: Main system figures of the LUXOR system. British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Input parameters: SLOW=30, FAST=10. System without exits, always in the market. Back-test calculation without any slippage and commission.</font></p>
+<p align="left"><font size=2>Table 3.1: Main system figures of the LUXOR system. British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Input parameters: SLOW=30, FAST=10. System without exits, always in the market. Back-test calculation without any slippage and commission.</font></p>
 
 ![Main system figures](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_3.1.png)
 
@@ -500,11 +469,19 @@ average losing trade (US$435) by a factor of two.
 • The average time in winning trades is about three times longer than the average time
 which the system stays in losing trades (62 bars versus 24 bars).
 
+所考虑的系统显示了趋势跟随交易策略的主要属性:
+
+* 盈利交易的百分比较低(36.5%). 从 1913 年的交易中, 只有 698 个是有利可图的, 而大多数(1215)以亏损结束.
+* 系统的整体收益来自平均赢利/平均亏损交易的高比率. 平均获胜交易价格为 846 美元, 比平均亏损交易(435 美元)高出两倍.
+* 中奖交易的平均时间约为系统亏损交易的平均时间的三倍(62 个柱对 24 个柱).
+
 This shows that the system logic follows perhaps the most important rule in trading which
 everybody knows but which is yet difficult to follow: cut the losses short and let the
 profits run. This trading rule is psychologically hard to adhere to since you often suffer
 directly from your losses and on the other hand you have to wait a long time until you
 can earn your rare but hefty gains.
+
+这表明系统逻辑可能遵循交易中最重要的规则, 每个人都知道但仍然难以遵循: 减少损失并让利润奔跑. 这种交易规则在心理上很难坚持, 因为你经常直接遭受损失, 另一方面你需要等待很长时间, 直到你能获得罕见而巨额的收益.
 
 It is worth mentioning that the long side of the trading system is much more profitable
 than its short side ($56,900 vs. $9,400 net profit). This observation will be examined in
@@ -516,10 +493,14 @@ although there is such a market bias with an up-trend, the short side of our tra
 is still in the profitable range. This underlines the stability of this symmetrically built
 system.
 
+值得一提的是, 交易系统的长边比短边更有利可图(56,900 美元对净利润 9,400 美元). 当我们讨论所谓的 "市场偏见" 时, 将再次在第 5.3 章中讨论这一观察结果. "市场偏见" 意味着市场倾向于支持交易系统的特殊功能或部分, 例如在这种情况下, 趋势跟踪系统的长边在测试市场的总体上升趋势中具有更好的盈利能力. 我们的交易系统的优点在于, 虽然存在上升趋势的市场偏见, 但我们交易系统的空头仍处于盈利范围内. 这突出了这种对称构建系统的稳定性.
+
 Furthermore, you of course get nearly the same number of short trades (956) as long
 trades (957) because the trading system only reverses positions. Since we have not added
 any exits the system stays in the market 100% of the time, holding either a long or a short
 position.
+
+此外, 您当然获得与长期交易(957)几乎相同数量的空头交易(956), 因为交易系统仅反转头寸. 由于我们没有添加任何退出系统, 系统在 100% 的时间内保持市场, 持有多头或空头头寸.
 
 Finally we want to underline a fact which should never be underestimated when
 developing trading systems: the statistical significance of your performed tests. If you
@@ -528,17 +509,23 @@ probability of achieving profitable results just by accident is very high. With 
 trades in our back-test the statistical probability is high that this strategy will perform in
 a similar way in the (near) future.
 
+最后, 我们想强调一个在开发交易系统时永远不应低估的事实: 执行测试的统计意义. 如果您开发一个新系统并且在测试中您只有 100 个信号, 甚至更少, 那么偶然获得可盈利结果的可能性非常高. 在我们的反向测试中有近 2000 笔交易, 该策略在(近)未来以类似方式执行的统计概率很高.
+
 So what have you gained so far? Statistics show that the entry logic is sound and has a
 certain probability of maintaining its behaviour in the future. If you however take a closer
 look at the trading figures you will see that the system produces only an average profit
 of US$35; this level of average profit per trade without any trading costs is very low! So
 what you have so far is just a trading rule which detects a tiny profitable bias in prices.
 
+那么到目前为止你获得了什么? 统计数据表明, 进入逻辑是合理的, 并且具有一定的维持其未来行为的可能性. 但是, 如果您仔细查看交易数据, 您会发现该系统仅产生35美元的平均利润; 这种没有任何交易成本的每笔交易平均利润水平非常低! 所以你到目前为止所拥有的只是一个交易规则, 可以检测出价格中微小的利润偏差.
+
 Therefore we are now at a point when the trading system development work has just
 started. There are lots of steps to perform until you can work out a complete trading
 system. The profitability of this system must be increased and exits must be added. Before
 we do this we take trading costs into consideration to make the whole approach more
 realistic.
+
+因此, 我们现在处于交易系统开发工作刚刚开始的时候. 在您完成一个完整的交易系统之前, 需要执行许多步骤. 必须增加该系统的盈利能力, 并且必须增加退出. 在我们这样做之前, 我们考虑交易成本, 使整个方法更加现实.
 
 #### Calculation after adding slippage and commissions
 
