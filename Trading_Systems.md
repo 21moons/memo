@@ -482,21 +482,254 @@ If Fast > Slow then Buy ("Long") next bar at BuyStop Stop;
 
 #### Calculation after adding slippage and commissions
 
+When subtracting $5 of commission and $25 of slippage (which is three pips in total) per
+round turn from the above mentioned average per trade profit of $35 only a $5 average
+profit per trade is left. The detailed equity curve and the drawdown graph show the result
+of this more realistic calculation (Figure 3.3). Whereas the equity curve is now moving
+sideways with lots of oscillations, the underwater equity curve reveals big drawdowns
+(up to 15%) and long phases which the trading system needs to recover from these
+drawdowns.
+
+当从上面提到的35美元的每笔交易平均利润中扣除5美元的佣金和25美元的滑点（总共三个点数）时，每笔交易的平均利润仅为5美元。 详细的权益曲线和下降图显示了这种更现实的计算结果（图3.3）。 虽然股权曲线正在横向移动并出现大量波动，但水下股票曲线显示出大幅下降（高达15％）和交易系统需要从这些下降中恢复的长期阶段。
+
+<p align="left"><font size=2>Figure 3.3: Result of the trading system LUXOR with added $30 slippage and commission per round turn. A: Detailed equity curve; B: Underwater equity curve. British pound/US dollar(FOREX), 30 minute bars, 21/10/2002-4/7/2008. Input parameters: SLOW=30, FAST=10. System without exits, always in the market. Chart from TradeStation 8.</font></p>
+
+![Detailed Equity Curve With Slippage & Commissions](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.3.png)
+
+The situation for the LUXOR-trading system seems to be hopeless. With this system you
+are far away from gaining any profits on the pound/dollar FOREX pair. Keep in mind
+however that we have just chosen two arbitrary input parameters. They could be suitable
+or not. The key question which has to be answered now is: is this trading system useless 
+overall, or is it a trading system that has its strengths but is suffering from the
+inappropriate choice of input parameters?
+
+LUXOR交易系统的情况似乎毫无希望。 使用这个系统，你远远没有获得英镑/美元外汇对的任何利润。 但请记住，我们刚刚选择了两个任意输入参数。 它们可能适合与否。 现在必须回答的关键问题是：这个交易系统总体上是无用的，还是一个有其优势但却遭受输入参数选择不当的交易系统？
+
+To answer this question more system tests like the one shown above will be necessary
+for multiple different input parameters. In order to prepare these tests we first want to
+explain what we are looking for when we perform such optimisations since there are
+some pitfalls to avoid.
+
+要回答这个问题，对于多个不同的输入参数，需要更多像上面所示的系统测试。 为了准备这些测试，我们首先要解释当我们执行这样的优化时我们正在寻找什么，因为要避免一些陷阱。
+
 ### 3.3 Variation of the input parameters: optimisation and stability diagrams
+
+----------
 
 #### What does stability of a system’s input parameter mean? A short theoretical excursion
 
+Optimisation can be your best friend but also your worst enemy when you develop a
+trading system. The important point is that you always know what you are doing when
+you vary some of the system’s input parameters. Keep in mind that every trading system
+is in some form an optimisation. When you select a system you compare it with others
+and choose it because it has shown a special behaviour in the past which convinces you
+that this special behaviour will hold in the future. Even if you do not adjust any of its
+input parameters, in rejecting other, maybe similar, trading systems you have essentially
+done this by optimising the input parameters “afterwards” with your computer.
+
+优化可以成为您最好的朋友，也可以是您开发交易系统时最大的敌人。 重要的一点是，当您改变某些系统的输入参数时，您总是知道自己在做什么。 请记住，每个交易系统都以某种形式进行优化。 当您选择一个系统时，您将其与其他系统进行比较并选择它，因为它在过去显示了一种特殊行为，这使您确信此特殊行为将来会成立。 即使您没有调整任何输入参数，在拒绝其他可能类似的交易系统时，您基本上通过使用计算机“事后”优化输入参数来完成此操作。
+
+The open question remains: at which point does the development and selection phase of
+a system end and the optimisation of your system start? Since it can never be completely
+separated, it is better to accept that every trading system is in some way an adaptation of
+the past and therefore is optimised. So the key question for you as a system developer is
+always: which parameter do you choose from your back-tests? Which settings are likely
+to continue to produce profits in the future in real trading? The answer to this question is
+different for each trading system but one rule holds true for all: the neighbourhood of
+your chosen system parameters must be nearly as profitable as your chosen system
+parameter and the bigger this profitable parameter range is the better. Murray Ruggiero,
+an experienced professional trading systems developer, writes about this topic [7]:
+
+悬而未决的问题仍然存在：系统的开发和选择阶段何时结束以及系统的优化开始了？ 由于它永远不会完全分离，因此最好接受每个交易系统都以某种方式适应过去，因此进行了优化。 因此，作为系统开发人员的关键问题始终是：您从反向测试中选择哪个参数？ 在实际交易中，哪些设置可能继续在未来产生利润？ 这个问题的答案对于每个交易系统都是不同的，但是一条规则适用于所有人：所选系统参数的邻域必须几乎与您选择的系统参数一样有利可图，并且这个有利可图的参数范围越大越好。 Murray Ruggiero是一位经验丰富的专业交易系统开发人员，他撰写了有关此主题的文章[7]：
+
+‘If you don’t like the neighbouring numbers, you’ve got a problem, because odds
+are, you will wind up with the results of the neighbouring set of parameters.’
+
+>“如果你不喜欢相邻的数字，你就会遇到问题，因为可能性很大，你会得到相邻参数集的结果。”
+
+Let’s have a look at an example (Figure 3.4) where we examine the hypothetical results
+of an imaginary system in order to select stable input parameters. On the right axis you
+find one input parameter of this hypothetic system which can be anything, a moving
+average, a distance of a stop or a profit target, a delay time etc. As a function of this
+system parameter you find on the vertical axis the net profit in arbitrary units.
+
+让我们看一个例子（图3.4），我们在其中检查假想系统的假设结果，以便选择稳定的输入参数。 在右轴上，您可以找到此假设系统的一个输入参数，可以是任何值，移动平均值，停止或利润目标的距离，延迟时间等。作为此系统参数的函数，您可以在垂直轴上找到 任意单位的净利润。
+
+The best input parameter of this artificial trading system in terms of net profit would be
+17. With this parameter the system gained 80,000 units. But look at its neighbourhood.
+In the next neighbourhood, with parameter 16, the system’s profit is very poor (5000
+units) or with parameter 18 there is even a loss (-10,000 units). If your traded market
+only slightly changes in the future you will never be able to repeat this good profit which
+showed with parameter 17 in your back-test. So although in this hypothetical system 17
+was the best parameter in the past, it is certainly not your best choice for the future.
+
+就净利润而言，该人工交易系统的最佳输入参数为17.使用此参数，系统获得80,000单位。 但看看它的邻居。 在下一个邻域，参数16，系统的利润非常差（5000单位）或参数18，甚至有损失（-10,000单位）。 如果您的交易市场在未来稍有变化，您将永远无法重复在您的反向测试中使用参数17显示的良好利润。 因此，尽管在这个假设系统中17是过去最好的参数，但它肯定不是您未来的最佳选择。
+
+If you, however, choose a parameter in the region between 4 and 10, e.g. 8, you are in
+safer territory. In that area your past net profit was not as high as your best fit parameter,
+but the parameters in the neighbourhood have similar profits to your chosen parameter.
+All gained profits are around 60,000 units. If the market changes in the future it is very
+likely that your trading system will still generate similar profits to those which it showed
+in the back-test with parameter 8 or with any other parameter between 4 and 10. So it is
+these broad plateaus of good (not necessarily the best!) parameters which you have to find.
+
+但是，如果您在4到10之间的区域中选择一个参数，例如 8，你处于更安全的领域。 在该区域，您的过去净利润不如您的最佳拟合参数高，但邻域中的参数与您选择的参数具有相似的利润。 所有获利的利润约为60,000单位。 如果未来市场发生变化，您的交易系统很可能仍会产生与其在参数8的反向测试或4到10之间的任何其他参数中显示的相似的利润。因此，正是这些广泛的平台 你必须找到的好（不一定是最好的！）参数。
+
+<p align="left"><font size=2>Figure 3.4: Choosing stable parameters for your trading system: Net profit as a function of one system input parameter in arbitrary units. Artificially generated result of a hypothetical trading system.</font></p>
+
+![Choosing stable parameters for your trading system](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.4.png)
+
 #### Dependency of main system figures on the two moving averages
+
+From theory back to reality. Let’s check how our trading system LUXOR behaves when
+changing its two input parameters, including trading costs of $30 slippage and
+commissions per round turn. We want to see how the results of our trend-following system
+change when the lengths of the fast and slow moving averages are varied. We change the
+two averages in a wide range, the fast moving average length from 1 bar to 20 bars in
+steps of 1, the slow moving average length from 21 bars to 80 bars, also in steps of 1. A
+fast PC computes the necessary 1200 system tests in about three minutes.
+
+从理论回归现实。 让我们来看看我们的交易系统LUXOR在改变其两个输入参数时的表现，包括每轮30美元的滑点和佣金的交易成本。 我们希望看到当快速和慢速移动平均线的长度变化时，趋势跟踪系统的结果如何变化。 我们在很宽的范围内改变两个平均值，快速移动平均长度从1巴到20巴，步长为1，慢速移动平均长度从21巴到80巴，也是步长为1.快速PC计算必要的 大约三分钟内完成1200次系统测试。
+
+From these tests you can plot the total net profit as a function of the two varied input
+parameters. You can do this for each input parameter separately (as shown in Figure 3.4)
+but you can even do this for two system parameters in the same three-dimensional area
+graph (Figure 3.5). Like this you get a surface in three dimensions which show you how
+the input parameters affect the result of your system. With special software you can even
+turn this graph in every direction and look at it from different sides. Figures 3.5A and
+3.5B are showing the same facts from different views. Figure 3.5A is showing the total
+net profit as a function of the two moving average lengths from the side, and Figure 3.5B
+shows the same optimisation result from above. From these two figures you see that the
+trading system has been profitable in a wide range of input parameter settings (dark blue
+areas) but has also produced losses or only small profits in other ranges of parameter
+settings (yellow, green and light blue areas).
+
+从这些测试中，您可以绘制总净利润作为两个不同输入参数的函数。您可以分别为每个输入参数执行此操作（如图3.4所示），但您甚至可以在同一个三维区域图中为两个系统参数执行此操作（图3.5）。像这样，您可以获得三维表面，向您展示输入参数如何影响系统结果。使用特殊软件，您甚至可以在每个方向上转动此图表，并从不同侧面查看。图3.5A和3.5B显示了来自不同视图的相同事实。图3.5A显示了总净利润与侧面两个移动平均长度的函数关系，图3.5B显示了与上述相同的优化结果。从这两个数字可以看出，交易系统在各种输入参数设置（深蓝色区域）中都有利可图，但在其他参数设置范围内（黄色，绿色和浅蓝色区域）也产生了损失或只有微薄的利润。
+
+<p align="left"><font size=2>Figure 3.5: Three-dimensional area diagrams for all trades of the system LUXOR. a) side view, b) top view. Net profit in US dollars as a function of the two input parameters: fast and slow moving average. Tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, incl. $30 S+C per RT. Diagrams generated with RINA 3D Smart View.</font></p>
+
+![Three-dimensional area diagrams](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.5.png)
+
+Of course we are looking for input parameters which produced a high net profit in the
+past. But as shown above in Figure 3.4 it is even more important for those system
+parameters that they have enough peer parameters in their near neighbourhood which
+were nearly as profitable as the chosen “best” ones. In our trading system which we have
+developed, so far the whole area in the lower right part (Figure 3.5B) seems at a first
+glance to fulfil this requirement. We’ll now take this shorter area and have a closer look
+on it (Figures 3.6A-D). From these graphs you can see that the system stays very stable
+against parameter variation in the chosen area. Although the total net profit varies in a
+relatively big range (between $20,000 and $100,000) it stays clearly positive for all
+selected input parameters. The best profits of nearly $100,000 are achieved in the region
+when the fast moving average is very small (< 3) and the slow moving average is between
+30-50. This is also the area with the smallest maximum intraday drawdowns of about
+$15,000. Over all parameters the maximum intraday drawdown does vary quite a lot but
+never becomes excessive – it always stays below about $35,000.
+
+当然，我们正在寻找过去产生高净利润的输入参数。但是如图3.4所示，对于那些系统参数来说，他们在附近有足够的对等参数，这几乎与所选的“最佳”参数一样有利可图。在我们开发的交易系统中，到目前为止，右下方的整个区域（图3.5B）乍一看似乎满足了这一要求。我们现在将采用这个较短的区域并对其进行仔细研究（图3.6A-D）。从这些图表中可以看出，系统对所选区域中的参数变化保持非常稳定。尽管总净利润在相对较大的范围内变化（在20,000美元到100,000美元之间），但对于所有选定的输入参数，它仍然明显为正。当快速移动平均线非常小（<3）且慢速移动平均线在30-50之间时，该地区实现了近100,000美元的最佳利润。这也是盘中最大跌幅约为15,000美元的区域。在所有参数中，最大盘中跌幅确实变化很大但从未变得过度 - 它总是低于约35,000美元。
+
+Like the total net profit and the maximum intraday drawdown you can plot further
+important statistical figures as a function of the two input parameters (Figures 3.6C and
+D). If you do so you get further valuable insight into your trading system. If you watch,
+for example, the total number of trades of the system (Figure 3.6D) you can see a fact
+which holds true for many trend following systems: the slower you make them to react
+(in our case the longer the look-back periods of the two moving averages are) the less
+trades you get. By changing the input parameters of the system you have the possibility
+of affecting some key attributes which allows you to adapt a system better to your trading
+style or to the requirements of a money management scheme in a bigger portfolio. Let’s
+say you have many fast-reacting systems in your portfolio and need more slow-reacting
+components – you may achieve this by choosing longer look-back periods for the moving
+averages. If you need a faster-reacting system you make the input parameters smaller.
+We’ll come back to this observation in our portfolio building section when correlations
+between different trading systems and their different time scales become important.
+
+与总净利润和最大日内缩幅一样，您可以将更重要的统计数据绘制为两个输入参数的函数（图3.6C和D）。如果您这样做，您可以进一步了解您的交易系统。例如，如果您观察系统的交易总数（图3.6D），您可以看到一个事实，这对于许多趋势跟踪系统都是正确的：您做出反应的速度越慢（在我们的情况下，看起来越长 - 两个移动平均线的后期是你获得的交易越少。通过更改系统的输入参数，您可以影响某些关键属性，从而使您可以更好地根据您的交易方式或更大的投资组合中的资金管理方案的要求调整系统。假设您的投资组合中有许多快速反应系统，需要更多反应迟缓的组件 - 您可以通过为移动平均线选择更长的回溯周期来实现这一点。如果您需要更快速的反应系统，则可以使输入参数更小。当不同交易系统之间的相关性及其不同的时间尺度变得重要时，我们将在我们的投资组合构建部分回到这一观察。
+
+Interestingly, in our trading system, while the number of trades changes a lot with the
+system’s input parameters, another trading figure, the average profit per trade, stays relatively
+stable (Figure 3.6C). It varies between $10 and $50 but mostly stays between $30 and $40,
+especially for all fast moving averages between 1 and 9 and the slower averages between
+30 and 50.
+
+有趣的是，在我们的交易系统中，虽然交易数量随系统的输入参数而变化很大，但另一个交易数字（每笔交易的平均利润）保持相对稳定（图3.6C）。 它介于10美元到50美元之间，但大多数介于30美元到40美元之间，特别是对于1到9之间的所有快速移动平均线以及30到50之间的较慢平均值。
+
+From these results you can conclude that “good” system parameters will be an
+instantaneously reacting fast moving average (< 3) and a slow moving average between 
+30 and 50. Let’s take the value “1” as input value for the fast moving average. It is clear
+that a one period moving average is not a real moving average, even if for the sake of
+simplicity we keep calling it a moving average. In fact the fast moving average becomes
+the closing price itself. For the slower average you can take any value between 30 and
+50. We choose here 44 as an input value since it produces the highest total net profit and
+has a wide neighbourhood of profitable parameters.
+
+根据这些结果，您可以得出结论，“好的”系统参数将是瞬时反应的快速移动平均值（<3）和30到50之间的慢速移动平均值。让我们将值“1”作为快速移动平均值的输入值。 很明显，单周期移动平均线不是真正的移动平均线，即使为了简单起见，我们仍然将其称为移动平均线。 事实上，快速移动平均线本身就是收盘价。 对于较慢的平均值，您可以选择30到50之间的任何值。我们在此选择44作为输入值，因为它产生最高的总净利润并且具有广泛的有利可图参数。
+
+Of course you should always observe the behaviour of your system in the following
+months and if it turns out after a longer period of screening that the chosen parameters
+(1/44) are not the most stable choice then you must change them, for example to 3/30 (if
+these parameters proved to be more stable than your initial choice of 1/44). Such a
+parameter change is an example of a reoptimisation. You will find a more systematic
+approach to the topic of periodic reoptimisation and walk forward optimisation in Chapter
+6. For the moment we stay with the parameters of 1 (fast moving average) and 44 (slow
+moving average) and we will take a closer look at the trading system’s performance.
+
+当然，您应该始终在接下来的几个月内观察系统的行为，如果经过较长时间的筛选后发现所选参数（1/44）不是最稳定的选择，那么您必须更改它们，例如 3/30（如果这些参数证明比最初选择的1/44更稳定）。 这种参数变化是重新优化的一个例子。 您将在第6章中找到关于周期性重新优化和前进优化主题的更系统的方法。目前我们保持参数1（快速移动平均值）和44（慢速移动平均值），我们将仔细研究 在交易系统的表现。
+
+<p align="left"><font size=2>Figure 3.6: Three-dimensional area diagrams for all trades of the trading system LUXOR. Main system figures as a function of the two input parameters: fast and slow moving average. Tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, including $30 S+C per RT. A: net profit B: maximum intraday drawdown C: average trade net profit D: number of total trades generated. Diagrams generated with RINA 3D Smart View.</font></p>
+
+![Three-dimensional area diagrams A](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.6_A.png)
+![Three-dimensional area diagrams B](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.6_B.png)
+![Three-dimensional area diagrams C](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.6_C.png)
+![Three-dimensional area diagrams D](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.6_D.png)
 
 #### Result with optimised input values
 
+With the fast moving average set to 1 bar (=closing price itself) and the slow moving
+average set to 44 bars you get a steadily growing equity curve (Figure 3.7A). This result
+is confirmed with the underwater-equity curve which always quickly recovers after every
+drawdown (Figure 3.7B). The biggest drawdown happened in November 2003. It was,
+with 8%, only half as big as the drawdown of more than 15% which we got with the non-
+optimised input parameters (10/30).
+
+随着快速移动平均线设置为1 bar（=收盘价本身）而缓慢移动平均线设置为44柱，您将获得稳定增长的股票曲线（图3.7A）。 这一结果通过水下权益曲线得到证实，该曲线在每次下降后总是迅速恢复（图3.7B）。 最大的缩编发生在2003年11月。只有8％，只有我们通过未优化的输入参数（10/30）获得的超过15％的下降幅度的一半。
+
+<p align="left"><font size=2>Figure 3.7: Trading system LUXOR, tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Optimised input parameters in terms of net profit: SLOW=44, FAST=1. System without exits, always in the market, long or short. Back-test includes $30 slippage and commission. Chart from TradeStation 8. A: Detailed equity curve; B: Weekly underwater equity curve.</font></p>
+
+![Optimised input parameters in terms of net profit](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.7.png)
+
+<p align="left"><font size=2>Table 3.2: Main system figures of the trading system LUXOR. British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Input parameters: SLOW=44, FAST=1. System without exits, always in the market. Back-test includes $30 slippage and commission per round turn.</font></p>
+
+![Table 3.2](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_3.2.png)
+
+Although the overall return/drawdown ratio of the LUXOR system is acceptable a closer
+look at the system figures reveals that the system we have developed to this point cannot
+be traded yet (Table 3.2). Although the system obviously shows a bias in the prices and
+the trading system is robust the average trade, with $33, is still not very profitable.
+
+尽管LUXOR系统的总体返回/缩减比率是可以接受的，但仔细观察系统数据可以发现，我们迄今为止开发的系统尚无法进行交易（表3.2）。 尽管该系统显然存在价格偏差且交易系统稳健，但平均交易价格为33美元仍然不是很有利可图。
+
+Furthermore, the system stays in the market 100% of the time because the exits are still
+missing. As a consequence the system is not useable in this state since the risks would be
+too high compared with the prospective returns. Therefore in the next two chapters we
+will further extend our trading system.
+
+此外，系统在100％的时间内保持市场，因为退出仍然缺失。 因此，该系统在这种状态下是不可用的，因为与预期收益相比风险太高。 因此，在接下来的两章中，我们将进一步扩展我们的交易系统。
+
+First we will look for useful intraday time filters in order to increase the system’s
+profitability. The final section of this chapter will deal with adding the necessary exits.
+
+首先，我们将寻找有用的日内时间过滤器，以提高系统的盈利能力。 本章的最后一节将讨论添加必要的出口。
+
 ### 3.4 Inserting an intraday time filter
+
+----------
 
 #### Finding the best entry time
 
 #### Result with added time filter
 
 ### 3.5 Determination of appropriate exits – risk management
+
+----------
 
 #### The concept of Maximum Adverse Excursion (MAE)
 
@@ -512,25 +745,194 @@ If Fast > Slow then Buy ("Long") next bar at BuyStop Stop;
 
 ### 3.6 Summary: Step-by-step development of a trading system
 
+----------
+
 ## Chapter 4: Two methods for evaluating the system’s predictive power
+
+### 4.1 Timescale analysis
+
+----------
+
+#### Changing the compression of the price data
+
+#### LUXOR tested on different bar compressions
+
+#### Net profit and maximum drawdown dependent on the traded bar length
+
+#### Explanation for the time dependency of the system
+
+### 4.2 Monte Carlo analysis
+
+----------
+
+#### The principle of Monte Carlo analysis
+
+#### Exchanging the order of the performed trades
+
+#### Probabilities and confidence levels
+
+#### Performing a Monte Carlo analysis with the LUXOR trading system
+
+#### Limitations of the Monte Carlo method
 
 ## Chapter 5: The factors around your system
 
+### 5.1 The market’s long/short bias
+
+----------
+
+#### The trend is your friend?
+
+#### Consequences for system development
+
+### 5.2 Out-of-sample deterioration
+
+----------
+
+#### A Bollinger Band system with logic and code
+
+#### Optimising the Bollinger Band system
+
+#### Out-of-sample result
+
+#### Reasons for the out-of-sample deterioration
+
+### 5.3 The market data bias
+
+----------
+
+#### Expanding the training period
+
+#### Conclusion: How to choose your training data
+
+### 5.4 Optimisation and over-fitting
+
+----------
+
+#### Step-by-step optimisation of the LUXOR system
+
+#### Results depending on the number of optimised parameters
+
+#### The meaning of the trading system’s complexity
+
+### 5.5 Rule complexity explained with polynomial curve fitting
+
+----------
+
+#### Interpolating data points with polynomial functions
+
+#### Predictive power of the different polynomials
+
+#### Conclusions for trading system development
+
 ## Chapter 6: Periodic re-optimisation and walk forward analysis
+
+### 6.1 Short repetition: “normal”, static optimisation
+
+----------
+
+### 6.2 Anchored vs. rolling walk forward analysis (WFA)
+
+----------
+
+### 6.3 Rolling WFA on the LUXOR system
+
+----------
+
+#### Periodic optimisation of the two main system parameters
+
+#### Out-of-sample test result
+
+#### Conclusion
+
+### 6.4 The meaning of sample size and market structure
+
+----------
 
 ## Chapter 7: Position sizing example, using the LUXOR system
 
-# Part II: Systematic Portfolio Trading
+### 7.1 Definitions: money management vs. risk management
+
+----------
+
+#### Risk management (RM)
+
+#### Money management (MM)
+
+### 7.2 Application of different MM schemes
+
+----------
+
+#### Reference: The system traded with one lot
+
+#### Maximum drawdown MM
+
+#### Fixed fractional MM
+
+#### Fixed ratio MM
+
+### 7.3 Monte Carlo analysis of the position sized system
+
+----------
+
+### 7.4 Conclusion
+
+----------
+
+# Part III: Systematic Portfolio Trading
 
 ## Chapter 8: Dynamic portfolio construction
 
 ### 8.1 Introduction to portfolio construction
 
+----------
+
+#### A list of the main available software
+
+#### The role of correlations
+
+#### Publications and theoretical tools
+
+#### Portfolio trading in practice
+
+#### Total vs. partial equity contribution
+
 ### 8.2 Correlation among equity lines
+
+----------
 
 ### 8.3 A dynamic approach: equity line crossover
 
+----------
+
 ### 8.4 Dynamic portfolio composition: the walk forward analysis activator
+
+----------
 
 ### 8.5 Largest losing trade/largest losing streak/largest drawdown
 
+----------
+
+### Conclusion
+
+#### Rule complexity
+
+#### Testing
+
+#### Optimisation
+
+#### Monte Carlo analysis
+
+#### Portfolio building
+
+#### Dynamic risk management
+
+#### Money management
+
+## Appendices (Systems and ideas)
+
+### Appendix 1: Bollinger Band system
+
+### Appendix 2: The triangle system
+
+### Appendix 3: Portfolios with the LUXOR trading system
