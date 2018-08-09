@@ -460,72 +460,25 @@ If Fast > Slow then Buy ("Long") next bar at BuyStop Stop;
 
 ![Main system figures](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_3.1.png)
 
-The considered system shows the main properties of trend following trading strategies:
-• The percentage of profitable trades is low (36.5%). From the 1913 performed trades,
-only 698 are profitable whereas the majority (1215) end with a loss.
-• The overall gains of the system result from the high ratio of average win/average
-losing trade. The average winning trade is with US$846, which is bigger than the
-average losing trade (US$435) by a factor of two.
-• The average time in winning trades is about three times longer than the average time
-which the system stays in losing trades (62 bars versus 24 bars).
+上文中的交易系统显示了趋势跟随交易策略的主要属性:
 
-所考虑的系统显示了趋势跟随交易策略的主要属性:
+* 盈利交易百分比较低(36.5%). 在 1913 笔交易中, 只有 698 笔是盈利的, 大部分(1215)以亏损结束.
+* 系统的整体收益来自于较高的 "平均盈利/平均亏损" 比值. 交易平均盈利为 846 美元, 比平均亏损(435 美元)高出两倍.
+* 盈利交易的平均时间(所有盈利花费的时间/盈利交易的数量)约为亏损交易平均时间的三倍(62 个柱比上 24 个柱).
 
-* 盈利交易的百分比较低(36.5%). 从 1913 年的交易中, 只有 698 个是有利可图的, 而大多数(1215)以亏损结束.
-* 系统的整体收益来自平均赢利/平均亏损交易的高比率. 平均获胜交易价格为 846 美元, 比平均亏损交易(435 美元)高出两倍.
-* 中奖交易的平均时间约为系统亏损交易的平均时间的三倍(62 个柱对 24 个柱).
+这些属性表明系统逻辑可能遵循了交易中最重要的规则, 每个人都知道但仍然难以遵守, 那就是 "减少亏损并让利润奔跑". 这种交易规则在心理上很难坚持, 因为你经常会直接遭受损失(减少损失意味着砍仓止损), 另一方面在你能够获得罕见而巨额的收益前, 你不得不等待很长时间.
 
-This shows that the system logic follows perhaps the most important rule in trading which
-everybody knows but which is yet difficult to follow: cut the losses short and let the
-profits run. This trading rule is psychologically hard to adhere to since you often suffer
-directly from your losses and on the other hand you have to wait a long time until you
-can earn your rare but hefty gains.
+值得一提的是, 系统做多比做空赚取的利润更多(56,900 美元对比 9,400 美元). 当我们在 讨论所谓的 5.3 章讨论 "**市场偏见(market bias)**" 时, 将继续讨论这一观察结果. "市场偏见" 意味着市场动向倾向于支持交易系统的指定功能或部分, 例如在这种情况下, 在被测市场处于总体上升趋势时, 趋势跟踪系统的做多机制会有更好的盈利能力. 我们的交易系统的优点在于, 虽然存在上升趋势的市场偏见, 但是交易系统的做空交易仍是盈利的. 这凸显了这种对称构建系统的稳定性.
 
-这表明系统逻辑可能遵循交易中最重要的规则, 每个人都知道但仍然难以遵循: 减少损失并让利润奔跑. 这种交易规则在心理上很难坚持, 因为你经常直接遭受损失, 另一方面你需要等待很长时间, 直到你能获得罕见而巨额的收益.
+此外, 因为交易系统仅反转头寸, 做多交易(957)与做空交易(956)的数量必然相同. 由于我们没有添加任何退出机制, 系统始终待在市场中, 持有多头或空头头寸.
 
-It is worth mentioning that the long side of the trading system is much more profitable
-than its short side ($56,900 vs. $9,400 net profit). This observation will be examined in
-Chapter 5.3 again when we discuss the so called “market bias”. The “market bias” means
-the tendency of a market to favour special features or parts of a trading system, like in
-this case the better profitability of the trend-following system’s long side in an overall
-upward trend of the tested market. The good point for our trading system here is that
-although there is such a market bias with an up-trend, the short side of our trading system
-is still in the profitable range. This underlines the stability of this symmetrically built
-system.
+<p align="left" style="color:red;"><font size=5><b>注: 反转意味着用做空交易直接代替做多, 反过来也一样, 同时将反转视为前一笔做空/做多交易的平仓.</b></font></p>
 
-值得一提的是, 交易系统的长边比短边更有利可图(56,900 美元对净利润 9,400 美元). 当我们讨论所谓的 "市场偏见" 时, 将再次在第 5.3 章中讨论这一观察结果. "市场偏见" 意味着市场倾向于支持交易系统的特殊功能或部分, 例如在这种情况下, 趋势跟踪系统的长边在测试市场的总体上升趋势中具有更好的盈利能力. 我们的交易系统的优点在于, 虽然存在上升趋势的市场偏见, 但我们交易系统的空头仍处于盈利范围内. 这突出了这种对称构建系统的稳定性.
+最后, 我们想强调一个在开发交易系统时永远不应低估的事实: 执行测试的统计意义. 如果您开发一个新系统并且在测试中您只有 100 个信号(交易信号, 可以理解为 100 笔交易), 甚至更少, 那么有很大可能这些盈利仅仅是偶然的. 在我们的回测中有近 2000 笔交易, 意味着该策略在未来(较近时段)稳定发挥的统计概率很高.
 
-Furthermore, you of course get nearly the same number of short trades (956) as long
-trades (957) because the trading system only reverses positions. Since we have not added
-any exits the system stays in the market 100% of the time, holding either a long or a short
-position.
+那么到目前为止你获得了什么? 统计数据表明, 入场逻辑是合理的, 并且具有较大可能在未来保持其行为一致. 但是, 如果您仔细查看交易数据, 您会发现该系统仅产生 35 美元的平均利润; 在不计任何交易成本前提下, 这样的 "每笔交易平均利润" 水平非常低! 所以到目前为止, 你拥有的只是一个能够检测出价格间微小利润的交易规则.
 
-此外, 您当然获得与长期交易(957)几乎相同数量的空头交易(956), 因为交易系统仅反转头寸. 由于我们没有添加任何退出系统, 系统在 100% 的时间内保持市场, 持有多头或空头头寸.
-
-Finally we want to underline a fact which should never be underestimated when
-developing trading systems: the statistical significance of your performed tests. If you
-develop a new system and in testing you have only 100 signals, or even less, the
-probability of achieving profitable results just by accident is very high. With nearly 2000
-trades in our back-test the statistical probability is high that this strategy will perform in
-a similar way in the (near) future.
-
-最后, 我们想强调一个在开发交易系统时永远不应低估的事实: 执行测试的统计意义. 如果您开发一个新系统并且在测试中您只有 100 个信号, 甚至更少, 那么偶然获得可盈利结果的可能性非常高. 在我们的反向测试中有近 2000 笔交易, 该策略在(近)未来以类似方式执行的统计概率很高.
-
-So what have you gained so far? Statistics show that the entry logic is sound and has a
-certain probability of maintaining its behaviour in the future. If you however take a closer
-look at the trading figures you will see that the system produces only an average profit
-of US$35; this level of average profit per trade without any trading costs is very low! So
-what you have so far is just a trading rule which detects a tiny profitable bias in prices.
-
-那么到目前为止你获得了什么? 统计数据表明, 进入逻辑是合理的, 并且具有一定的维持其未来行为的可能性. 但是, 如果您仔细查看交易数据, 您会发现该系统仅产生35美元的平均利润; 这种没有任何交易成本的每笔交易平均利润水平非常低! 所以你到目前为止所拥有的只是一个交易规则, 可以检测出价格中微小的利润偏差.
-
-Therefore we are now at a point when the trading system development work has just
-started. There are lots of steps to perform until you can work out a complete trading
-system. The profitability of this system must be increased and exits must be added. Before
-we do this we take trading costs into consideration to make the whole approach more
-realistic.
-
-因此, 我们现在处于交易系统开发工作刚刚开始的时候. 在您完成一个完整的交易系统之前, 需要执行许多步骤. 必须增加该系统的盈利能力, 并且必须增加退出. 在我们这样做之前, 我们考虑交易成本, 使整个方法更加现实.
+因此, 我们现在处于交易系统开发工作的起步阶段 在您完成一个完整的交易系统之前, 还需要执行许多步骤. 必须增加该系统的盈利能力, 并且必须增加退出机制. 在我们这样做之前, 我们先考虑交易成本, 使整个实现更加接近现实中的情况.
 
 #### Calculation after adding slippage and commissions
 
