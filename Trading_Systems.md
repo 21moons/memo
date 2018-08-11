@@ -547,7 +547,7 @@ LUXOR 交易系统现在看起来似乎毫无希望. 使用这个系统, 你与�
 
 随着将快速均线设置为 1 个柱(等于收盘价)而慢速均线设置为 44 个柱, 您将获得稳定增长的收益曲线(图 3.7 A). 这一结果通过水下权益曲线得到证实, 该曲线在每次下降后总是迅速恢复(图 3.7 B). 最大的回撤发生在 2003 年 11 月, 值为 8%, 只有我们通过未优化的输入参数(10/30)获得的超过 15% 的最大回撤的一半.
 
-<p align="left"><font size=2>Figure 3.7: Trading system LUXOR, tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Optimised input parameters in terms of net profit: SLOW=44, FAST=1. System without exits, always in the market, long or short. Back-test includes $30 slippage and commission. Chart from TradeStation 8. A: Detailed equity curve; B: Weekly underwater equity curve.</font></p>
+<p align="left"><font size=2>Figure 3.7: Trading system LUXOR, tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Optimised input parameters in terms of net profit: SLOW=44, FAST=1. System without exits, always in the arket, long or short. Back-test includes $30 slippage and commission. Chart from TradeStation 8. A: Detailed equity curve; B: Weekly underwater equity curve.</font></p>
 
 ![Optimised input parameters in terms of net profit](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.7.png)
 
@@ -563,85 +563,27 @@ LUXOR 交易系统现在看起来似乎毫无希望. 使用这个系统, 你与�
 
 ### 3.4 Inserting an intraday time filter
 
-In the past we have come across many master traders and profitable trading systems which
-exploit the different behaviours of financial markets during different phases within the
-trading day. There are traders and systems which are just successful in the afternoon with
-short-term breakout strategies and there are others which need their slow trend-following
-strategies running the whole night in order to make profits. The reason for the importance
-of the factor “time” in your trading strategies is simply that markets are controlled by
-people and people are constricted by their daily time schedule. Since the currency markets
-are trading 24 hours, the time of the day has a special importance for their behaviour.
-There will be differences if the big US traders are active or not, if it is night or day in
-Europe, in the US or in Asia. The daily FOREX volume clearly shows that the market
-activity changes a lot within each trading day. There are market phases of more activity
-and higher probability for profits and there are quiet market phases when nothing happens
-except accidental sideways movements with high market noise. As a consequence it is
-always worth examining how different time filters change the outcome of your trading
-system, especially when dealing with currency markets like the pound and dollar.
-
-在过去，我们遇到了许多主交易者和有利可图的交易系统，它们在交易日的不同阶段利用金融市场的不同行为。有些交易员和系统在下午刚刚成功实施短期突破策略，还有一些交易者和系统需要他们缓慢的趋势跟踪策略运行一整夜才能获利。 “时间”因素在您的交易策略中的重要性的原因很简单，即市场由人控制，人们受到日常时间表的限制。由于货币市场24小时交易，当天的时间对他们的行为特别重要。如果大型美国交易员活跃与否，如果是欧洲，美国或亚洲的夜晚或白天，将会有所不同。每日外汇交易量明确显示市场活动在每个交易日内发生了很大变化。市场阶段有更多的活动和更高的利润可能性，除了市场噪音高的意外横向移动之外没有任何其他事情发生时，市场处于平静阶段。因此，总是值得研究不同的时间过滤器如何改变您的交易系统的结果，特别是在处理英镑和美元等货币市场时。
+历史上, 我们遇到过很多交易大师和赚钱的交易系统, 它们在交易日的不同阶段利用了金融市场的不同行为. 有些交易员和系统仅仅在下午使用短期突破策略盈利, 还有一些交易者和系统需要他们那缓慢的趋势跟踪策略运行一整夜后才能获利. "时间" 因素在您的交易策略中非常重要, 原因很简单, 即市场由人控制, 而人们则受到日常时间表的制约. 由于货币市场 24 小时交易, 当天的时间对于市场的行为而言特别重要. 大型美国做市商活跃与否, 是欧洲, 美国或亚洲的夜晚或白天, 都会使得市场表现有所不同. 每日外汇交易量清晰的显示了市场活动在每个交易日内发生了很大变化. 一些时段市场表现的很活跃, 因而有可能获得更高的利润, 另外一些时段市场风平浪静, 除了一些意外横向移动导致的市场噪音. 因此, 研究不同的时间过滤器如何改变交易系统的结果是很有价值的, 特别是在面对英镑和美元等货币市场时.
 
 ----------
 
 #### Finding the best entry time
 
-We now perform system tests in the following way. We take our LUXOR entry but we
-restrict the entry times to a short 4-hour time window every day. We will shift the starting
-time of the window in steps of 30 minutes throughout the day in order to find the best
-window. (For the Easy Language Programmers: you have to add some lines into the
-LUXOR-code as shown above, Text 3.1, point 2, Time Window Filter.)
+我们现在以下列方式执行系统测试. 我们采用已有的 LUXOR 入场点, 但我们将每天的入场时间限制为一个 4 小时的时间窗口. 我们将在一天中以 30 分钟为单位调整窗口的开始时间, 以便找到最佳窗口. (对于 Easy Language 程序员来说: 您必须在 LUXOR 代码中添加一些行, 如上所示, Text 3.1, point 2, Time Window Filter.)
 
-我们现在以下列方式执行系统测试。 我们采用LUXOR条目，但我们每天将进入时间限制为一个短的4小时时间窗口。 我们将在一天中以30分钟为单位调整窗口的开始时间，以便找到最佳窗口。 （对于Easy Language Programmers：您必须在LUXOR代码中添加一些行，如上所示，文本3.1，第2点，时间窗口过滤器。）
-
-Figure 3.8 shows the total net profit of the trading system as a function of the starting
-time of the 4-hour time window. And the result is really significant! You see that the profit
-of our trading system highly depends on the chosen time window. When you start trading
-from 5pm until 3am Greenwich Mean Time (GMT) the trading system loses money,
-whereas it is able to gain high profits during GMT day time, especially in the morning
-between 8am and 12am.
-
-图3.8显示了交易系统的总净利润与4小时时间窗口的开始时间的函数关系。 结果非常重要！ 您看到我们交易系统的利润很大程度上取决于所选择的时间窗口。 当您从格林威治标准时间（格林威治标准时间）下午5点开始交易时，交易系统会亏钱，而在GMT日期间，尤其是早上8点到12点之间，它可以获得高额利润。
+图 3.8 显示了交易系统的总净利润与 4 小时时间窗口开始时间的函数关系. 结果非常重要! 您看到我们交易系统的利润很大程度上取决于所选择的时间窗口. 当您从格林威治标准时间(GMT)下午 5 点开始交易时, 交易系统会亏钱, 而在 GMT 白天时段, 尤其是早上 8 点到 12 点之间, 它可以获得高额利润.
 
 <p align="left"><font size=2>Figure 3.8: Total Net Profit as a function of the entry time of a 4-hour time window. LUXOR system, tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. SLOW=44, FAST=1. Calculation incl. $30 S+C per RT. No exits are in place.</font></p>
 
 ![Total Net Profit](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.8.png)
 
-The highest net profit is earned when you take 7.30am as the starting point for your time
-window, and this means that you only allow entries and reversals from 7:30am until
-11.30am. From our above discussion about stability and robustness of input parameters
-you know, however, that it is important that your chosen system parameter has a good
-and broad neighborhood. With this neighbourhood the trading system has the highest
-reliability of conforming to its back-test results in real trading. Therefore we take the
-starting time of the window right in the middle of the profitable parameter region at
-9.30am, instead of the most profitable value at 7.30am. The chosen time filter means that
-we allow entries only between 9.30am and 1.30pm GMT. This is the time when the big
-volume from the US in the afternoon (GMT time) is still to come. It seems to be good
-for our trading system to enter a trend in the beginning of the day which later can be
-amplified by increasing volume from the US.
-
-当您以7.30am作为您的时间窗口的起点时，获得最高的净利润，这意味着您只允许从早上7:30到上午11:30的输入和撤销。 从我们上面关于输入参数的稳定性和稳健性的讨论中，您知道，所选系统参数具有良好且广泛的邻域非常重要。 通过这个社区，交易系统具有最高的可靠性，符合其在实际交易中的反向测试结果。 因此，我们将窗口的开始时间在上午9:30的盈利参数区域中间，而不是在早上7:30的最有利可图的值。 选择的时间过滤器意味着我们只允许在GMT上午9:30到下午1:30之间输入。 这是下午（格林尼治标准时间）来自美国的大量产品仍未到来的时候。 我们的交易系统似乎有利于在一天开始时进入趋势，之后可以通过增加美国的交易量来放大。
+当您以 7.30 am 作为时间窗口的起点时, 交易系统获得了最高的净利润, 这意味着您只允许在早上 7:30 到上午 11:30 间入场和反手. 在上文关于输入参数的稳定性和稳健性的讨论中, 您已经知道, 所选系统参数具有表现良好且广泛的邻域非常重要. 这个邻域表明交易系统具有最高的可靠性, 实际交易中的表现奖符合其在反向测试中的结果. 因此, 我们将窗口的开始时间设置为上午 9:30 - 盈利参数区域的中间, 而不是在早上 7:30 的最有利可图的位置. 选择的时间过滤器意味着我们只允许在 GMT 上午 9:30 到下午 1:30 之间交易. 这是下午(格林尼治标准时间)来自美国的大量交易尚未到来的时候. 在一天开始的时候进入趋势, 之后通过美国的交易量来放大, 我们的交易系统看起来非常不错.
 
 #### Result with added time filter
 
-The detailed equity curve of our trading system seems not to have changed a lot because
-of the added time filter (Figure 3.9A). Instead, a look at the underwater equity curve
-reveals that the drawdowns within the 5 years of trading have increased from 8% before
-to 10% with the daytime filter. Furthermore, it now takes longer for our modified trading
-system to recover from these drawdowns. So what have we gained from our filter? You
-can evaluate the time filter impact with a closer look at the trading figures. If you look at
-the number of trades you see that they have been reduced dramatically by the inserted
-filter to 902, compared with nearly 3000 trades which the system generated before.
-Together with the fact that the total net profit slightly increased to $115,000, compared
-with $100,000 without the time filter, this leads to a very important point for you when
-using this system:
+增加了时间过滤器后, 我们交易系统的详细权益曲线似乎没有太大变化(图 3.9 A). 相反, 看一下水下权益曲线就可以发现, 5 年交易中的回撤幅度从没加过滤器时的 8% 增加到了 10%. 此外, 我们修改后的交易系统现在需要更长时间才能从这些回撤中恢复. 那么我们从过滤器中获得了什么? 您可以仔细查看交易数据来评估时间过滤器的影响. 如果你看一下交易的数量, 你看到它们已经大幅减少到 902, 而系统之前生成了近 3000 笔交易. 比没有时间过滤器的 100,000 美元, 总净利润略微增加到 115,000 美元, 这些推导出了一个结论, 对于使用系统来说非常重要:
 
-由于增加了时间过滤器，我们交易系统的详细权益曲线似乎没有太大变化（图3.9A）。 相反，看一下水下权益曲线可以看出，5年交易中的下降幅度从白天过滤器的8％增加到10％。 此外，我们修改后的交易系统现在需要更长时间才能从这些下降中恢复。 那么我们从过滤器中获得了什么？ 您可以仔细查看交易数据来评估时间过滤器的影响。 如果你看一下交易的数量，你看到它们已被插入的过滤器大幅减少到902，而系统之前生成的近3000笔交易。 再加上总净利润略微增加到115,000美元，相比之下没有时间过滤器的100,000美元，这对您来说在使用这个系统时非常重要：
-
-The average profit per trade is now $128 (including $30 slippage and commissions)
-compared with the poor $33 which the system had gained before when trading was
-allowed around the clock. This is an improvement by a factor of four!
-
-现在每笔交易的平均利润为128美元（包括30美元的滑点和佣金），相比之下，系统在全天候交易之前获得的差价为33美元。 这是一个四倍的改进！
+现在每笔交易的平均利润为 128 美元(包括 30 美元的滑点和佣金), 相比之前在全天候交易时获得的少得可怜的 33 美元利润, 这是一个四倍的改进!
 
 <p align="left"><font size=2>Figure 3.9: LUXOR system results with added time filter. Entries only allowed in the 4-hour time window from 9.30am–1.30pm GMT. A: detailed equity curve. B: weekly underwater equity curve. British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Optimised input parameters in terms of net profit: SLOW=44, FAST=1. Test without exits. Back-test includes $30 slippage and commission. Charts from TradeStation 8.</font></p>
 
@@ -651,26 +593,9 @@ allowed around the clock. This is an improvement by a factor of four!
 
 ![Table 3.3](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_3.3.png)
 
-But in spite of these promising trade figures the system still has some major weak points.
+但是, 尽管有这些令人振奋的交易数据, 该系统仍有一些明显的弱点.
 
-但是，尽管有这些有希望的贸易数据，该系统仍然存在一些主要的弱点。
-
-As we already mentioned the drawdowns have become slightly bigger – $18,900
-maximum drawdown compared with $13,400 before. But this drawback and the fact that
-the trading system equity is not as steady as before are not the worst features. The weak
-point of the trading system in its current state is simply that it is really dangerous since
-trade reversals are only allowed in the four-hour window between 9.30am and 1.30pm
-GMT. If you get a reversal signal outside of this window, e.g. in the night at 1am GMT,
-since the market is closed the system cannot exit or reverse its position. Outside of your
-trading window you have to stay in the market for the other 20 hours, regardless of what
-happens. Of course the system is not tradeable like this since the limitations and the risks
-of the system would be too high if you are forced to stay in the market for 20 hours
-irrespective of any developments during that time. We have to urgently change this
-situation and extend our trading system by adding exits. By adding exits we want to create
-not only a profitable trading system, but also one which can be controlled in terms of
-risk.
-
-正如我们已经提到的那样，下降幅度略大 - 最高减少18,900美元，而之前为13,400美元。但是这个缺点以及交易系统资产不像以前那样稳定的事实并不是最糟糕的特征。目前状态下交易系统的弱点仅仅在于它真的很危险，因为交易逆转只能在格林尼治标准时间上午9:30到下午1:30之间的4小时窗口内进行。如果在此窗口之外得到反转信号，例如在格林威治标准时间凌晨1点的夜晚，由于市场关闭，系统无法退出或扭转其位置。在您的交易窗口之外，无论发生什么，您都必须在市场上停留20个小时。当然，系统不可交易，因为如果您被迫在市场上停留20小时，无论在此期间有何发展，系统的限制和风险都会过高。我们必须通过添加退出来紧急改变这种情况并扩展我们的交易系统。通过添加退出，我们不仅要创建一个有利可图的交易系统，还要创建一个可以控制风险的交易系统。
+正如我们已经提到的那样, 回撤幅度轻微增大大 - 最大回撤为 18,900 美元, 而之前为 13,400 美元. 但是回撤增大以及交易系统权益不像以前那样稳定的事实并不是新系统最糟糕的特征. 当前状态下交易系统的弱点在于它真的很危险, 因为交易只能在格林尼治标准时间上午 9:30 到下午 1:30 之间的 4 小时窗口内进行. 如果在此窗口之外得到反转信号, 例如在格林威治标准时间凌晨 1 点, 由于不允许交易，系统无法退出或反手持有的仓位. 在您的交易窗口之外, 无论发生什么, 您都必须在市场上停留 20 个小时. 因为窗口的限制, 系统肯定不可能像以前一样一直交易, 但是考虑到无论窗口期外行情有何发展, 您都不得不在市场上发呆 20 个小时, 系统在这种情况下会有过高风险. 我们不得不紧急添加退出来改变这种情况. 通过添加退出, 我们不仅要创建一个能够盈利的交易系统, 还要创建一个风险可控的交易系统.
 
 ### 3.5 Determination of appropriate exits – risk management
 
