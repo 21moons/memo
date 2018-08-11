@@ -526,52 +526,15 @@ LUXOR 交易系统现在看起来似乎毫无希望. 使用这个系统, 你与�
 
 当然, 我们正在寻找的是能够在过去产生高净利润的输入参数. 但是如图 3.4 所示, 对于系统参数来说更重要的是, 在它们附近有足够的同等参数, 使得交易系统的盈利几乎与采用 "最佳" 参数时一样. 在我们开发的交易系统中, 到目前为止, 右下方的整个区域(图 3.5 B)乍一看似乎满足了这一要求. 我们现在将放大镜对准这个较短的区域并对其进行仔细研究(图 3.6 A-D). 从这些图表中可以看出, 系统对所选区域中的参数变化并不敏感, 始终保持了较稳定的收益. 尽管总净利润在相对较大的范围内变化剧烈(在 20,000 美元到 100,000 美元之间), 但对于所有选定区域中的输入参数, 它毫无疑问的保持了盈利. 当快速移动平均线非常小(小于 3)且慢速移动平均线在 30-50 之间时, 选定区域实现了近 100,000 美元的最佳利润. 该区域也对应了最小的 "盘中最大跌幅"(见图 3.6 B), 约为 15,000 美元. 在所有参数中, 最大盘中跌幅确实变化很大, 但从未越限 - 它总是低于约 35,000 美元.
 
-Like the total net profit and the maximum intraday drawdown you can plot further
-important statistical figures as a function of the two input parameters (Figures 3.6C and
-D). If you do so you get further valuable insight into your trading system. If you watch,
-for example, the total number of trades of the system (Figure 3.6D) you can see a fact
-which holds true for many trend following systems: the slower you make them to react
-(in our case the longer the look-back periods of the two moving averages are) the less
-trades you get. By changing the input parameters of the system you have the possibility
-of affecting some key attributes which allows you to adapt a system better to your trading
-style or to the requirements of a money management scheme in a bigger portfolio. Let’s
-say you have many fast-reacting systems in your portfolio and need more slow-reacting
-components – you may achieve this by choosing longer look-back periods for the moving
-averages. If you need a faster-reacting system you make the input parameters smaller.
-We’ll come back to this observation in our portfolio building section when correlations
-between different trading systems and their different time scales become important.
+<p align="left" style="color:red;"><font size=5><b>注: 同等参数指能够让交易系统与所选参数产生类似净利润的参数.</b></font></p>
 
-与总净利润和最大日内缩幅一样，您可以将更重要的统计数据绘制为两个输入参数的函数（图3.6C和D）。如果您这样做，您可以进一步了解您的交易系统。例如，如果您观察系统的交易总数（图3.6D），您可以看到一个事实，这对于许多趋势跟踪系统都是正确的：您做出反应的速度越慢（在我们的情况下，看起来越长 - 两个移动平均线的后期是你获得的交易越少。通过更改系统的输入参数，您可以影响某些关键属性，从而使您可以更好地根据您的交易方式或更大的投资组合中的资金管理方案的要求调整系统。假设您的投资组合中有许多快速反应系统，需要更多反应迟缓的组件 - 您可以通过为移动平均线选择更长的回溯周期来实现这一点。如果您需要更快速的反应系统，则可以使输入参数更小。当不同交易系统之间的相关性及其不同的时间尺度变得重要时，我们将在我们的投资组合构建部分回到这一观察。
+与 "总净利润" 和 "最大日内亏损" 一样, 您可以将更重要的统计数据绘制为两个输入参数的函数(图 3.6 C 和 D). 如果您这样做, 您可以进一步了解您的交易系统. 例如, 如果您观察 "系统的交易总数"(图 3.6 D), 您会一个存在于许多趋势跟踪系统中的事实, 那就是: 您响应的速度越慢(在我们的例子中, 这意味着两条移动平均线的周期越长), 系统的交易量越少. 通过改变系统的输入参数, 您可以影响某些关键属性, 从而使系统可以更好地匹配您的交易方式或大型投资组合中资金管理方案的要求. 假设您的投资组合中有许多快速反应系统, 需要一些反应迟缓的组件 - 您可以通过为移动平均线设置更长的回溯周期来实现这一点. 如果您需要更快速的反应系统, 则可以将输入参数更小. 当不同交易系统及其不同的时间尺度之间的相关性变得重要时, 我们将在我们的投资组合构建部分回顾这一结论.
 
-Interestingly, in our trading system, while the number of trades changes a lot with the
-system’s input parameters, another trading figure, the average profit per trade, stays relatively
-stable (Figure 3.6C). It varies between $10 and $50 but mostly stays between $30 and $40,
-especially for all fast moving averages between 1 and 9 and the slower averages between
-30 and 50.
+有趣的是, 在我们的交易系统中, 虽然交易数量随着系统的输入参数变化巨大, 但另一个交易数据 "每笔交易的平均利润" 却保持了相对稳定(图 3.6 C). 它在 10 美元到 50 美元之间变化, 但大多数时间位于 30 美元到 40 美元之间, 特别是对于 1 到 9 之间的所有快速移动平均线与 30 到 50 之间的慢速移动平均线构成的系统.
 
-有趣的是，在我们的交易系统中，虽然交易数量随系统的输入参数而变化很大，但另一个交易数字（每笔交易的平均利润）保持相对稳定（图3.6C）。 它介于10美元到50美元之间，但大多数介于30美元到40美元之间，特别是对于1到9之间的所有快速移动平均线以及30到50之间的较慢平均值。
+根据这些结果, 您可以得出结论, "好的" 系统参数将是包括瞬时反应的快速移动平均值(小于 3)和 30 到 50 之间的慢速移动平均线. 让我们将值 "1" 作为快速移动平均值的输入值. 很明显, 单周期移动平均线不是真正的移动平均线, 但为了简单起见, 我们仍然将其称为移动平均线. 事实上, 快速移动平均线本身就是收盘价. 对于较慢的均线, 您可以选择 30 到 50 之间的任何值. 我们在此选择 44 作为输入值, 因为它产生最高的总净利润并且具有广阔的同等参数邻域。
 
-From these results you can conclude that “good” system parameters will be an
-instantaneously reacting fast moving average (< 3) and a slow moving average between 
-30 and 50. Let’s take the value “1” as input value for the fast moving average. It is clear
-that a one period moving average is not a real moving average, even if for the sake of
-simplicity we keep calling it a moving average. In fact the fast moving average becomes
-the closing price itself. For the slower average you can take any value between 30 and
-50. We choose here 44 as an input value since it produces the highest total net profit and
-has a wide neighbourhood of profitable parameters.
-
-根据这些结果，您可以得出结论，“好的”系统参数将是瞬时反应的快速移动平均值（<3）和30到50之间的慢速移动平均值。让我们将值“1”作为快速移动平均值的输入值。 很明显，单周期移动平均线不是真正的移动平均线，即使为了简单起见，我们仍然将其称为移动平均线。 事实上，快速移动平均线本身就是收盘价。 对于较慢的平均值，您可以选择30到50之间的任何值。我们在此选择44作为输入值，因为它产生最高的总净利润并且具有广泛的有利可图参数。
-
-Of course you should always observe the behaviour of your system in the following
-months and if it turns out after a longer period of screening that the chosen parameters
-(1/44) are not the most stable choice then you must change them, for example to 3/30 (if
-these parameters proved to be more stable than your initial choice of 1/44). Such a
-parameter change is an example of a reoptimisation. You will find a more systematic
-approach to the topic of periodic reoptimisation and walk forward optimisation in Chapter
-6. For the moment we stay with the parameters of 1 (fast moving average) and 44 (slow
-moving average) and we will take a closer look at the trading system’s performance.
-
-当然，您应该始终在接下来的几个月内观察系统的行为，如果经过较长时间的筛选后发现所选参数（1/44）不是最稳定的选择，那么您必须更改它们，例如 3/30（如果这些参数证明比最初选择的1/44更稳定）。 这种参数变化是重新优化的一个例子。 您将在第6章中找到关于周期性重新优化和前进优化主题的更系统的方法。目前我们保持参数1（快速移动平均值）和44（慢速移动平均值），我们将仔细研究 在交易系统的表现。
+当然, 您应该在接下来的几个月内密切观察系统的行为, 如果经过较长时间的筛选后发现所选参数(1/44)不是最稳定的选择, 那么您必须更改它们, 例如 3/30(如果这些参数证明比最初选择的 1/44 更稳定). 这种参数变化是重新优化的一个例子. 您将在第 6 章中找到关于 "周期重新优化" 和 "前向优化"(walk forward optimisation)的更系统的方法.  目前我们保持参数 1(快速均线) 和 44(慢速均线), 我们将仔细研究交易系统的表现.
 
 <p align="left"><font size=2>Figure 3.6: Three-dimensional area diagrams for all trades of the trading system LUXOR. Main system figures as a function of the two input parameters: fast and slow moving average. Tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, including $30 S+C per RT. A: net profit B: maximum intraday drawdown C: average trade net profit D: number of total trades generated. Diagrams generated with RINA 3D Smart View.</font></p>
 
@@ -582,14 +545,7 @@ moving average) and we will take a closer look at the trading system’s perform
 
 #### Result with optimised input values
 
-With the fast moving average set to 1 bar (=closing price itself) and the slow moving
-average set to 44 bars you get a steadily growing equity curve (Figure 3.7A). This result
-is confirmed with the underwater-equity curve which always quickly recovers after every
-drawdown (Figure 3.7B). The biggest drawdown happened in November 2003. It was,
-with 8%, only half as big as the drawdown of more than 15% which we got with the non-
-optimised input parameters (10/30).
-
-随着快速移动平均线设置为 1 个柱（=收盘价本身）而缓慢移动平均线设置为 44 个柱，您将获得稳定增长的股票曲线（图3.7A）。 这一结果通过水下权益曲线得到证实，该曲线在每次下降后总是迅速恢复（图3.7B）。 最大的缩编发生在2003年11月。只有8％，只有我们通过未优化的输入参数（10/30）获得的超过15％的下降幅度的一半。
+随着将快速均线设置为 1 个柱(等于收盘价)而慢速均线设置为 44 个柱, 您将获得稳定增长的收益曲线(图 3.7 A). 这一结果通过水下权益曲线得到证实, 该曲线在每次下降后总是迅速恢复(图 3.7 B). 最大的回撤发生在 2003 年 11 月, 值为 8%, 只有我们通过未优化的输入参数(10/30)获得的超过 15% 的最大回撤的一半.
 
 <p align="left"><font size=2>Figure 3.7: Trading system LUXOR, tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Optimised input parameters in terms of net profit: SLOW=44, FAST=1. System without exits, always in the market, long or short. Back-test includes $30 slippage and commission. Chart from TradeStation 8. A: Detailed equity curve; B: Weekly underwater equity curve.</font></p>
 
@@ -599,40 +555,332 @@ optimised input parameters (10/30).
 
 ![Table 3.2](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_3.2.png)
 
-Although the overall return/drawdown ratio of the LUXOR system is acceptable a closer
-look at the system figures reveals that the system we have developed to this point cannot
-be traded yet (Table 3.2). Although the system obviously shows a bias in the prices and
-the trading system is robust the average trade, with $33, is still not very profitable.
+尽管 LUXOR 系统的总体 "回报/亏损" 比率是可以接受的, 但仔细观察系统数据可以发现, 我们迄今为止开发的系统尚无法进行交易(表3.2). 尽管该系统显然是盈利的且交易系统表现稳健, 但 33 美元的平均交易利润仍然不算是有利可图.
 
-尽管LUXOR系统的总体返回/缩减比率是可以接受的，但仔细观察系统数据可以发现，我们迄今为止开发的系统尚无法进行交易（表3.2）。 尽管该系统显然存在价格偏差且交易系统稳健，但平均交易价格为33美元仍然不是很有利可图。
+此外, 因为平仓机制(exits)缺失, 系统不得不始终保持在场内. 因此, 这种状态下系统是不可用的, 因为与预期收益相比风险太高. 因此, 在接下来的两章中, 我们将进一步扩展我们的交易系统.
 
-Furthermore, the system stays in the market 100% of the time because the exits are still
-missing. As a consequence the system is not useable in this state since the risks would be
-too high compared with the prospective returns. Therefore in the next two chapters we
-will further extend our trading system.
-
-此外，系统在100％的时间内保持市场，因为退出仍然缺失。 因此，该系统在这种状态下是不可用的，因为与预期收益相比风险太高。 因此，在接下来的两章中，我们将进一步扩展我们的交易系统。
-
-First we will look for useful intraday time filters in order to increase the system’s
-profitability. The final section of this chapter will deal with adding the necessary exits.
-
-首先，我们将寻找有用的日内时间过滤器，以提高系统的盈利能力。 本章的最后一节将讨论添加必要的出口。
+首先, 我们将寻找有用的日内时间过滤器, 以提高系统的盈利能力. 本章的最后一节将讨论添加必要的出口(exits).
 
 ### 3.4 Inserting an intraday time filter
+
+In the past we have come across many master traders and profitable trading systems which
+exploit the different behaviours of financial markets during different phases within the
+trading day. There are traders and systems which are just successful in the afternoon with
+short-term breakout strategies and there are others which need their slow trend-following
+strategies running the whole night in order to make profits. The reason for the importance
+of the factor “time” in your trading strategies is simply that markets are controlled by
+people and people are constricted by their daily time schedule. Since the currency markets
+are trading 24 hours, the time of the day has a special importance for their behaviour.
+There will be differences if the big US traders are active or not, if it is night or day in
+Europe, in the US or in Asia. The daily FOREX volume clearly shows that the market
+activity changes a lot within each trading day. There are market phases of more activity
+and higher probability for profits and there are quiet market phases when nothing happens
+except accidental sideways movements with high market noise. As a consequence it is
+always worth examining how different time filters change the outcome of your trading
+system, especially when dealing with currency markets like the pound and dollar.
+
+在过去，我们遇到了许多主交易者和有利可图的交易系统，它们在交易日的不同阶段利用金融市场的不同行为。有些交易员和系统在下午刚刚成功实施短期突破策略，还有一些交易者和系统需要他们缓慢的趋势跟踪策略运行一整夜才能获利。 “时间”因素在您的交易策略中的重要性的原因很简单，即市场由人控制，人们受到日常时间表的限制。由于货币市场24小时交易，当天的时间对他们的行为特别重要。如果大型美国交易员活跃与否，如果是欧洲，美国或亚洲的夜晚或白天，将会有所不同。每日外汇交易量明确显示市场活动在每个交易日内发生了很大变化。市场阶段有更多的活动和更高的利润可能性，除了市场噪音高的意外横向移动之外没有任何其他事情发生时，市场处于平静阶段。因此，总是值得研究不同的时间过滤器如何改变您的交易系统的结果，特别是在处理英镑和美元等货币市场时。
 
 ----------
 
 #### Finding the best entry time
 
+We now perform system tests in the following way. We take our LUXOR entry but we
+restrict the entry times to a short 4-hour time window every day. We will shift the starting
+time of the window in steps of 30 minutes throughout the day in order to find the best
+window. (For the Easy Language Programmers: you have to add some lines into the
+LUXOR-code as shown above, Text 3.1, point 2, Time Window Filter.)
+
+我们现在以下列方式执行系统测试。 我们采用LUXOR条目，但我们每天将进入时间限制为一个短的4小时时间窗口。 我们将在一天中以30分钟为单位调整窗口的开始时间，以便找到最佳窗口。 （对于Easy Language Programmers：您必须在LUXOR代码中添加一些行，如上所示，文本3.1，第2点，时间窗口过滤器。）
+
+Figure 3.8 shows the total net profit of the trading system as a function of the starting
+time of the 4-hour time window. And the result is really significant! You see that the profit
+of our trading system highly depends on the chosen time window. When you start trading
+from 5pm until 3am Greenwich Mean Time (GMT) the trading system loses money,
+whereas it is able to gain high profits during GMT day time, especially in the morning
+between 8am and 12am.
+
+图3.8显示了交易系统的总净利润与4小时时间窗口的开始时间的函数关系。 结果非常重要！ 您看到我们交易系统的利润很大程度上取决于所选择的时间窗口。 当您从格林威治标准时间（格林威治标准时间）下午5点开始交易时，交易系统会亏钱，而在GMT日期间，尤其是早上8点到12点之间，它可以获得高额利润。
+
+<p align="left"><font size=2>Figure 3.8: Total Net Profit as a function of the entry time of a 4-hour time window. LUXOR system, tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. SLOW=44, FAST=1. Calculation incl. $30 S+C per RT. No exits are in place.</font></p>
+
+![Total Net Profit](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.8.png)
+
+The highest net profit is earned when you take 7.30am as the starting point for your time
+window, and this means that you only allow entries and reversals from 7:30am until
+11.30am. From our above discussion about stability and robustness of input parameters
+you know, however, that it is important that your chosen system parameter has a good
+and broad neighborhood. With this neighbourhood the trading system has the highest
+reliability of conforming to its back-test results in real trading. Therefore we take the
+starting time of the window right in the middle of the profitable parameter region at
+9.30am, instead of the most profitable value at 7.30am. The chosen time filter means that
+we allow entries only between 9.30am and 1.30pm GMT. This is the time when the big
+volume from the US in the afternoon (GMT time) is still to come. It seems to be good
+for our trading system to enter a trend in the beginning of the day which later can be
+amplified by increasing volume from the US.
+
+当您以7.30am作为您的时间窗口的起点时，获得最高的净利润，这意味着您只允许从早上7:30到上午11:30的输入和撤销。 从我们上面关于输入参数的稳定性和稳健性的讨论中，您知道，所选系统参数具有良好且广泛的邻域非常重要。 通过这个社区，交易系统具有最高的可靠性，符合其在实际交易中的反向测试结果。 因此，我们将窗口的开始时间在上午9:30的盈利参数区域中间，而不是在早上7:30的最有利可图的值。 选择的时间过滤器意味着我们只允许在GMT上午9:30到下午1:30之间输入。 这是下午（格林尼治标准时间）来自美国的大量产品仍未到来的时候。 我们的交易系统似乎有利于在一天开始时进入趋势，之后可以通过增加美国的交易量来放大。
+
 #### Result with added time filter
+
+The detailed equity curve of our trading system seems not to have changed a lot because
+of the added time filter (Figure 3.9A). Instead, a look at the underwater equity curve
+reveals that the drawdowns within the 5 years of trading have increased from 8% before
+to 10% with the daytime filter. Furthermore, it now takes longer for our modified trading
+system to recover from these drawdowns. So what have we gained from our filter? You
+can evaluate the time filter impact with a closer look at the trading figures. If you look at
+the number of trades you see that they have been reduced dramatically by the inserted
+filter to 902, compared with nearly 3000 trades which the system generated before.
+Together with the fact that the total net profit slightly increased to $115,000, compared
+with $100,000 without the time filter, this leads to a very important point for you when
+using this system:
+
+由于增加了时间过滤器，我们交易系统的详细权益曲线似乎没有太大变化（图3.9A）。 相反，看一下水下权益曲线可以看出，5年交易中的下降幅度从白天过滤器的8％增加到10％。 此外，我们修改后的交易系统现在需要更长时间才能从这些下降中恢复。 那么我们从过滤器中获得了什么？ 您可以仔细查看交易数据来评估时间过滤器的影响。 如果你看一下交易的数量，你看到它们已被插入的过滤器大幅减少到902，而系统之前生成的近3000笔交易。 再加上总净利润略微增加到115,000美元，相比之下没有时间过滤器的100,000美元，这对您来说在使用这个系统时非常重要：
+
+The average profit per trade is now $128 (including $30 slippage and commissions)
+compared with the poor $33 which the system had gained before when trading was
+allowed around the clock. This is an improvement by a factor of four!
+
+现在每笔交易的平均利润为128美元（包括30美元的滑点和佣金），相比之下，系统在全天候交易之前获得的差价为33美元。 这是一个四倍的改进！
+
+<p align="left"><font size=2>Figure 3.9: LUXOR system results with added time filter. Entries only allowed in the 4-hour time window from 9.30am–1.30pm GMT. A: detailed equity curve. B: weekly underwater equity curve. British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Optimised input parameters in terms of net profit: SLOW=44, FAST=1. Test without exits. Back-test includes $30 slippage and commission. Charts from TradeStation 8.</font></p>
+
+![LUXOR system results with added time filter](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.9.png)
+
+<p align="left"><font size=2>Table 3.3: Main system figures of the LUXOR system with added time filter: Entries only allowed in the 4-hour time window from 9.30am– 1.30pm GMT. British pound/US dollar(FOREX), 30 minute bars, 21/10/2002-4/7/2008. Optimised input parameters: SLOW=44, FAST=1. System without exits, always in the market, long or short. Back-test includes $30 slippage and commission.</font></p>
+
+![Table 3.3](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_3.3.png)
+
+But in spite of these promising trade figures the system still has some major weak points.
+
+但是，尽管有这些有希望的贸易数据，该系统仍然存在一些主要的弱点。
+
+As we already mentioned the drawdowns have become slightly bigger – $18,900
+maximum drawdown compared with $13,400 before. But this drawback and the fact that
+the trading system equity is not as steady as before are not the worst features. The weak
+point of the trading system in its current state is simply that it is really dangerous since
+trade reversals are only allowed in the four-hour window between 9.30am and 1.30pm
+GMT. If you get a reversal signal outside of this window, e.g. in the night at 1am GMT,
+since the market is closed the system cannot exit or reverse its position. Outside of your
+trading window you have to stay in the market for the other 20 hours, regardless of what
+happens. Of course the system is not tradeable like this since the limitations and the risks
+of the system would be too high if you are forced to stay in the market for 20 hours
+irrespective of any developments during that time. We have to urgently change this
+situation and extend our trading system by adding exits. By adding exits we want to create
+not only a profitable trading system, but also one which can be controlled in terms of
+risk.
+
+正如我们已经提到的那样，下降幅度略大 - 最高减少18,900美元，而之前为13,400美元。但是这个缺点以及交易系统资产不像以前那样稳定的事实并不是最糟糕的特征。目前状态下交易系统的弱点仅仅在于它真的很危险，因为交易逆转只能在格林尼治标准时间上午9:30到下午1:30之间的4小时窗口内进行。如果在此窗口之外得到反转信号，例如在格林威治标准时间凌晨1点的夜晚，由于市场关闭，系统无法退出或扭转其位置。在您的交易窗口之外，无论发生什么，您都必须在市场上停留20个小时。当然，系统不可交易，因为如果您被迫在市场上停留20小时，无论在此期间有何发展，系统的限制和风险都会过高。我们必须通过添加退出来紧急改变这种情况并扩展我们的交易系统。通过添加退出，我们不仅要创建一个有利可图的交易系统，还要创建一个可以控制风险的交易系统。
 
 ### 3.5 Determination of appropriate exits – risk management
 
 ----------
 
+Look at it this way: whether your trading system resembles a gunslinger shooting
+from the hip or a well-aimed sniper lying in ambush, knowing where your trades
+are heading could mean the difference between riding into the sunset or lying fa-
+tally wounded on a dusty street at high-noon. To stay alive you must know when to
+draw and when to run.
+Thomas Stridsman 
+
+> 以这种方式看待它：你的交易系统是否类似于从臀部射击的枪手或者埋伏在目击地的瞄准者，知道你的行业前进的地方可能意味
+> 骑在日落之间或在尘土飞扬的街道上躺着致命受伤的区别 在中午。 为了活着，你必须知道什么时候画画，什么时候跑。
+> Thomas Stridsman
+
+Everybody knows that stops are necessary but nobody really likes them. Often you get
+the feeling that the stop has just thrown you out of the market before it turned in your
+direction and you missed the big move.
+
+每个人都知道停止是必要的，但没有人真正喜欢它们。 通常你会感觉到停止只是在你转向你的方向之前就把你赶出了市场并且你错过了重大举措。
+
+In this section we use statistical research to investigate exits quantitatively. In the course
+of all of our past statistical investigations it has become obvious that an exit can never be
+considered independently from the relative entry. It’s important to be aware that the
+dynamics of the entry have a substantial influence on the dynamics of a useful exit or a
+reversal of your position. Imagine an entry into a quiet, not volatile market with low
+trading volume and compare it with an entry which was triggered during a phase of high
+activity, e.g. a “news-breakout” (Figure 3.10). In the first case it could be best to take
+profits at a close profit target as the market moves sideways without any direction. In the
+second case a wide stop and no profit target could be much better since these two exits 
+give the trade enough room to develop. Every profit target or stop which is placed too
+close would throw you out of the profitable trade too early. The “best” exit in this case
+would be the end-of-day exit when the big trading volume has diminished and the
+breakout has obviously finished.
+
+在本节中，我们使用统计研究来定量调查出口。在我们过去的所有统计调查过程中，很明显，退出永远不能独立于相对条目。重要的是要注意条目的动态对有用退出的动态或你的位置的逆转有重大影响。想象一下，进入一个低交易量的安静，不波动的市场，并将其与在高活动阶段触发的一个条目进行比较，例如： “新闻突破”（图3.10）。在第一种情况下，当市场横向移动而没有任何指示时，最好以近期利润目标获利。在第二种情况下，由于这两个出口为交易提供了足够的发展空间，因此可以更好地停止并且没有利润目标。过于接近的每个利润目标或止损都会让您过早地退出有利可图的交易。在这种情况下，“最佳”退出将是当大交易量减少且突破已经明显结束时的日终退出。
+
+For this reason we don’t recommend testing exits with artificially generated entries, e.g.
+with random entries or with entries taken at the opening of every trading day. We found
+that working with such random entries leads the statistical results into a wrong direction.
+The outcome is dominated by market situations which occur most of the time but which
+are not the typical ones applicable to your own, special market strategy.
+
+出于这个原因，我们不建议使用人工生成的条目测试出口，例如： 随机记录或在每个交易日开盘时记录的条目。 我们发现使用这些随机条目会导致统计结果出错。 结果主要是市场情况，这种情况大部分时间都会出现，但不是适用于您自己的特殊市场策略的典型情况。
+
+<p align="left"><font size=2>Figure 3.10: The Dynamic of Exits. In the phase of low volume and low volatility different exits are needed than in the phase of increasing volume with the short breakout. Chart example was taken from Light Crude Oil, 5 minute, NYMEX from 22 August 2008. Chart and datafeed from TradeStation 8.</font></p>
+
+![The Dynamic of Exits](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.10.png)
+
+There are no universal optimal exits! If you are working with a different type of system
+or on another time scale you cannot transfer your existing exits to a different entry logic.
+Of course you can take such exits as a rough guide but you must spend time developing
+suitable exits for the different entry or time scale.
+
+没有通用的最佳出口！ 如果您使用的是其他类型的系统或在其他时间范围内，则无法将现有出口转移到其他入口逻辑。 当然，您可以将这些出口作为粗略指南，但您必须花时间为不同的入口或时间尺度开发合适的出口。
+
+To find appropriate exits for the strategy developed above we take a small excursion into
+the field of statistics. We analyse the course of the single trades in order to determine
+useful stop-levels and profit targets. This analysis looks a little bit exotic at the beginning.
+As soon as you are familiar with it, however, you’ll be rewarded with a good
+understanding of your trading system and its appropriate exits.
+
+为了找到上述策略的适当出口，我们将对统计领域进行一次小规模的游览。 我们分析单笔交易的过程，以确定有用的止损水平和利润目标。 这个分析在开始时看起来有点异国情调。 但是，只要您熟悉它，您就会对您的交易系统及其适当的出口有一个很好的理解。
+
 #### The concept of Maximum Adverse Excursion (MAE)
 
+In order to find proper stop points for your system you should take a deeper look into the
+distribution of trades and examine each trade individually. When you do so, you will
+discover that there are similarities between them, but that every trade also has its own set
+of characteristics. These characteristics can be examined by using the Maximum Adverse
+Excursion (MAE) technique developed by John Sweeney less than ten years ago [9].
+MAE is defined as the most intraday price movement against your position. In other
+words it’s the lowest open equity during the lifespan of a trade. The MAE concept allows
+you to evaluate your systems’ individual trades to determine at what dollar or percentage
+amount to place your protective stop.
+
+为了找到适合您系统的停止点，您应该深入了解交易的分布并分别检查每笔交易。 当你这样做时，你会发现它们之间有相似之处，但每个交易也都有自己的一套特征。 这些特征可以通过使用John Sweeney在不到十年前开发的最大逆向偏移（MAE）技术来检验[9]。 MAE被定义为对您的头寸的最大日内价格变动。 换句话说，它是交易生命周期中最低的开放资产。 MAE概念允许您评估系统的个别交易，以确定放置保护性止损的美元或百分比金额。
+
+Let’s take a look at the MAE graphic of our trading system (Figure 3.11). This graph
+shows all 902 trades that are produced within the tested period. For each trade you can
+see the amount of drawdown that occurred in relation to the realised profit or loss. The
+winning trades are shown as green up arrows and the losing trades are represented as red
+down arrows. On the vertical y-axis of the MAE diagram you see the final profit whereas
+the horizontal x-axis shows the intraday drawdown of each trade.
+
+让我们来看看我们交易系统的MAE图形（图3.11）。 该图显示了在测试期内产生的所有902笔交易。 对于每笔交易，您都可以
+查看与已实现的损益相关的减少金额。 获胜交易显示为绿色向上箭头，亏损交易显示为红色向下箭头。 在MAE图的垂直y轴上，您可以看到最终的利润，而水平的x轴则显示每笔交易的日内缩减。
+
+Since we are using this graphic to determine where to place our stops we have put all the
+winning and losing trades on the same cluster graph. This means that although trades A
+and B in Figure 3.11 appear to be similar they are in reality quite different. Trade A had
+a drawdown of $2400 and closed at a final loss of $1000. Trade B, on the other hand,
+suffered an even bigger drawdown of $2500 but recovered and managed to end with a
+gain of $1000. Whether the dollar amount indicated along the y-axis is a profit or loss is
+determined by the colour and the direction of the small triangles. Keeping the trades
+clustered on the same graph makes it easier to figure out how much unrealised loss must
+be incurred by a trade before it typically does not recover. In this way the MAE graphic
+tells you when to cut your loss because the risks associated with the trade are no longer
+justified. This gives you a valuable indication of where to place your protective stop.
+
+由于我们使用此图形来确定止损位置，因此我们将所有获胜和亏损交易放在同一个集群图上。 这意味着虽然交易A
+和图3.11中的B看似相似，它们实际上完全不同。 A股下跌2400美元，最终亏损1000美元。 另一方面，贸易B遭受了更大幅度的2500美元的缩减，但恢复并设法以1000美元的收益结束。 沿y轴指示的美元金额是利润还是损失取决于小三角形的颜色和方向。 保持交易聚集在同一图表上可以更容易地确定交易在通常无法恢复之前必须产生多少未实现的损失。 通过这种方式，MAE图形可以告诉您何时减少损失，因为与交易相关的风险不再合理。 这为您提供了保护性停止位置的有价值的指示。
+
+<p align="left"><font size=2>Figure 3.11: The MAE graph of LUXOR system. Green: winning trades, red: losing trades. System tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. Input parameters SLOW=44, FAST=1. Without exits, always in the market, including $30 S+C per RT. Diagram created with TradeStation 8.</font></p>
+
+![The MAE graph of LUXOR system](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.11.png)
+
+In order to decide where to put this stop we show the same MAE graph in percentage
+terms (Figure 3.12A). We switch to percentage terms since the percentage display gives
+a better adaptation to changing market conditions than fixed dollar values. Especially on
+markets with big point value changes the advantages of the percentage based calculation
+become obvious. In such conditions it is better to work with exits that are adapting to the
+current market value instead of staying fixed and inflexible.
+
+为了确定这个停止的位置，我们以百分比表示相同的MAE图（图3.12A）。 我们切换到百分比条款，因为显示百分比可以更好地适应不断变化的市场条件而非固定美元价值。 特别是在具有大点值变化的市场上，基于百分比的计算的优势变得显而易见。 在这种情况下，最好使用适应当前市场价值的出口，而不是保持固定和不灵活。
+
+<p align="left"><font size=2>Figure 3.12A: MAE graph in percentage terms. Green up arrows = winning trades, red down arrows = losing trades. Trend-following system British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. Input parameters SLOW=44, FAST=1. Without exits, always in the market, including $30 S+C per RT. Diagram created with TradeStation 8.</font></p>
+
+![MAE graph in percentage terms](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.12_A.png)
+
+<p align="left"><font size=2>Figure 3.12B: Maximum Adverse Excursion graph in percentage terms after inserting a 0.3% stop loss into the system. LUXOR system tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. Input parameters SLOW=44, FAST=1. Diagram created with TradeStation 8.</font></p>
+
+![Maximum Adverse Excursion graph in percentage terms](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.12_B.png)
+
+Let us briefly explain some trades from the MAE diagram in order to become more
+familiar with it. First you see that the relative positions of trade A and B explained above
+have changed. Trade A is now on a higher position in y-direction since the two trades
+took place in different times when the market was trading at a different level. Because
+the calculation is now based on percentage of the underlying market, the same dollar
+values usually mean different percentage values.
+
+让我们简单解释MAE图中的一些交易，以便更熟悉它。 首先你看到上面解释的交易A和B的相对位置发生了变化。 由于两个交易发生在市场交易处于不同水平的不同时期，因此交易A现在处于y方向的较高位置。 由于计算现在基于相关市场的百分比，因此相同的美元值通常意味着不同的百分比值。
+
+When watching all these 902 trades in the MAE diagram you can see some characteristics
+of the trading system. The first point is that on the left side of the diagram you find more
+winning than losing trades. This is clear since winning trades usually don’t suffer such
+big drawdowns as losing trades. The “best” trades for you are obviously the ones which
+behave like trade C – trades that are profitable from the beginning without suffering any
+negative open equity in their lifetime and are placed on the very left side close to the y-
+axis of the diagram (profit/loss axis).
+
+在MAE图中观察所有这902笔交易时，您可以看到交易系统的一些特征。 第一点是，在图表的左侧，您会发现比亏损交易更多的胜利。 这很明显，因为赢利交易通常不会像亏损交易那样遭受如此大的亏损。 对你而言，“最佳”交易显然是那些表现为交易C的交易 - 从一开始就有利可图而不会在其生命周期中遭受任何负面开放资产并且位于靠近图表y轴的最左侧 （盈利/亏损轴）。
+
+Another interesting area of trades is what we call the “loss diagonal”. On this
+characteristic line you can find a lot of losing trades. Like trade D all these trades ended
+with a loss which represents their biggest drawdowns. On the other hand, trades like E
+also exist. This trade suffered a big drawdown of over 3.5% from the entry-point but
+recovered from this position to a final loss of only about 0.5%.
+
+另一个有趣的交易领域是我们所谓的“亏损对角线”。 在这个特征线上你可以找到很多亏损的交易。 与交易D一样，所有这些交易都以亏损结束，这代表了他们最大的亏损。 另一方面，像E这样的交易也存在。 该交易从入场点大幅下跌超过3.5％，但从这一位置恢复到最终损失仅约0.5％。
+
+Now we want to place a protective stop loss at a certain distance (percentage of market
+value) away from the entry point in order to limit the risk of the trade. How does the
+MAE diagram help you to determine a good distance for this added stop?
+
+现在，我们希望在远离入口点的特定距离（市场价值百分比）处设置保护性止损，以限制交易风险。 MAE图如何帮助您确定这个增加的停留的良好距离？
+
+Let us look how the MAE diagram helps to understand what an inserted stop loss does
+in your trading system.
+
+让我们看看MAE图如何帮助理解插入止损在您的交易系统中的作用。
+
+The stop loss in the MAE diagram can be drawn as a vertical line. Such a stop loss
+theoretically cuts all trades that suffer a bigger loss from their entry than this set stop loss
+(Figure 3.12B). In the MAE diagram this means that the stop loss prohibits all the trades
+on the right of the 0.3% line and moves them to this line. This sounds good for all the
+losses (red points) that are made smaller by this stop. But think about all the winning
+trades. They are turned into a red spot, a loss of 0.3%, as soon as they reach the stop loss
+and never get the chance to become a winning trade.
+
+MAE图中的止损可以绘制为垂直线。 从理论上讲，这种止损会削减所有从进入中遭受更大损失的交易（图3.12B）。 在MAE图中，这意味着止损禁止0.3％线右侧的所有交易并将其移至此线。 对于因此停止而变小的所有损失（红点）而言，这听起来不错。 但想想所有获胜的交易。 一旦他们达到止损并且永远不会有机会成为赢利交易，他们就会变成红点，损失0.3％。
+
+We try to place a stop in an area that captures the majority of winning trades while
+simultaneously limiting the strategy’s exposure to profit erosion. Obviously it is good to
+set a stop loss so as to cut as many trades which end on the loss diagonal as possible 
+without affecting trades that end as winners, or at least those trades that recover from
+their lowest points.
+
+我们试图在一个捕获大多数获胜交易的区域停留，同时限制策略的利润侵蚀风险。 显然，设置止损以减少尽可能多的以亏损对角线结束的交易而不影响以获胜者结束的交易，或者至少那些从最低点恢复的交易是好的。
+
+So the question is what happens if you make the stop loss smaller than 0.6%, going to
+0.4%, 0.3% or even 0.1%? Obviously you will then cut more and more trades that are
+ending on the loss diagonal and for which the stop loss does a good job in cutting them
+early enough. But the more you move your stop loss to the left side, the more trades you
+also cut which recovered from their biggest drawdowns or which even ended as winning
+trades.
+
+所以问题是如果你使止损小于0.6％，达到0.4％，0.3％甚至0.1％会发生什么？ 显然，你会越来越多地进行以亏损对角线结束的交易，并且止损在早期削减它们方面做得很好。 但是你将止损移动到左侧的次数越多，你所削减的交易就越多，这些交易从最大的亏损中恢复，或者甚至以赢得的交易结束。
+
 #### Inserting a risk stop loss
+
+In the MAE diagram you can see how all trades behaved and if there are any special
+points to consider when looking for a good place to set a proper risk stop loss. The MAE
+diagram can give you a hint that the “optimal” stop value is somewhere between 0.2%
+and 1%. However MAE does not tell you directly what the optimal value is to set this
+stop. For this reason we now look at the task from a different side by performing system
+tests in the following way. We add a risk stop loss into our trading system and vary its
+distance in reference to the trade’s entry point in a wide range from 0.01% up to 1% in
+steps of 0.01%. At the time of writing the British pound was trading near US$2.00 and
+at this rate a 1% stop distance corresponds to 2 cents. Two cents are in other words 200
+pips and mean $2000 in your pocket. Therefore the fine 0.01% step means 0.02 cents or
+2 pips ($20 in your pocket) in these market conditions.
+
+在MAE图中，您可以看到所有交易的表现，以及在寻找合适的风险止损的好地方时是否有任何特殊要点需要考虑。 MAE图可以提示“最佳”停止值介于0.2％和1％之间。 但是，MAE不直接告诉您设置此停止的最佳值。 出于这个原因，我们现在通过以下方式执行系统测试来从另一侧查看任务。 我们在我们的交易系统中添加风险止损，并在0.01％至0.01％的范围内以0.01％至1％的宽范围改变其与交易入口点的距离。 在撰写本文时，英镑的交易价格接近2.00美元，按照这个速度，1％的止损距离相当于2美分。 换句话说，两美分是200点，口袋里的价值是2000美元。 因此，在这些市场条件下，0.01％的精细步骤意味着0.02美分或2个点（口袋里20美元）。
+
+<p align="left"><font size=2>Figure 3.13: Ratio of total net profit/maximum intraday drawdown as a function of the stop loss distance in per cent. LUXOR system tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT.</font></p>
+
+![Ratio of total net profit](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.13.png)
+
 
 #### Adding a trailing stop
 
