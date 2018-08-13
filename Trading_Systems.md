@@ -664,12 +664,12 @@ Now we want to place a protective stop loss at a certain distance (percentage of
 value) away from the entry point in order to limit the risk of the trade. How does the
 MAE diagram help you to determine a good distance for this added stop?
 
-现在，我们希望在远离入口点的特定距离（市场价值百分比）处设置保护性止损，以限制交易风险。 MAE图如何帮助您确定这个增加的停留的良好距离？
+现在, 我们希望在远离入口点的特定距离(市场价值百分比)处设置保护性止损, 以限制交易风险. MAE 图如何帮助您确定这个增加的停留的良好距离?
 
 Let us look how the MAE diagram helps to understand what an inserted stop loss does
 in your trading system.
 
-让我们看看MAE图如何帮助理解插入止损在您的交易系统中的作用。
+让我们看看 MAE 图如何帮助理解插入止损在您的交易系统中的作用.
 
 The stop loss in the MAE diagram can be drawn as a vertical line. Such a stop loss
 theoretically cuts all trades that suffer a bigger loss from their entry than this set stop loss
@@ -679,7 +679,7 @@ losses (red points) that are made smaller by this stop. But think about all the 
 trades. They are turned into a red spot, a loss of 0.3%, as soon as they reach the stop loss
 and never get the chance to become a winning trade.
 
-MAE 图中的止损可以绘制为垂直线。 从理论上讲，这种止损会削减所有从进入中遭受更大损失的交易(图 3.12 B). 在 MAE 图中，这意味着止损禁止0.3％线右侧的所有交易并将其移至此线。 对于因此停止而变小的所有损失（红点）而言，这听起来不错。 但想想所有获胜的交易。 一旦他们达到止损并且永远不会有机会成为赢利交易，他们就会变成红点，损失0.3％。
+MAE 图中的止损可以绘制为垂直线. 从理论上讲, 这种止损会削减所有从进入中遭受更大损失的交易(图 3.12 B). 在 MAE 图中，这意味着止损禁止 0.3% 线右侧的所有交易并将其移至此线. 对于因此停止而变小的所有损失(红点)而言, 这听起来不错. 但想想所有获胜的交易. 一旦他们达到止损并且永远不会有机会成为赢利交易, 他们就会变成红点, 损失 0.3%.
 
 We try to place a stop in an area that captures the majority of winning trades while
 simultaneously limiting the strategy’s exposure to profit erosion. Obviously it is good to
@@ -687,7 +687,7 @@ set a stop loss so as to cut as many trades which end on the loss diagonal as po
 without affecting trades that end as winners, or at least those trades that recover from
 their lowest points.
 
-我们试图在一个捕获大多数获胜交易的区域停留，同时限制策略的利润侵蚀风险。 显然，设置止损以减少尽可能多的以亏损对角线结束的交易而不影响以获胜者结束的交易，或者至少那些从最低点恢复的交易是好的。
+我们试图在一个捕获大多数获胜交易的区域停留, 同时限制策略的利润侵蚀风险. 显然, 设置止损以减少尽可能多的以亏损对角线结束的交易而不影响以获胜者结束的交易, 或者至少那些从最低点恢复的交易是好的.
 
 So the question is what happens if you make the stop loss smaller than 0.6%, going to
 0.4%, 0.3% or even 0.1%? Obviously you will then cut more and more trades that are
@@ -712,14 +712,141 @@ at this rate a 1% stop distance corresponds to 2 cents. Two cents are in other w
 pips and mean $2000 in your pocket. Therefore the fine 0.01% step means 0.02 cents or
 2 pips ($20 in your pocket) in these market conditions.
 
-在MAE图中，您可以看到所有交易的表现，以及在寻找合适的风险止损的好地方时是否有任何特殊要点需要考虑。 MAE图可以提示“最佳”停止值介于0.2％和1％之间。 但是，MAE不直接告诉您设置此停止的最佳值。 出于这个原因，我们现在通过以下方式执行系统测试来从另一侧查看任务。 我们在我们的交易系统中添加风险止损，并在0.01％至0.01％的范围内以0.01％至1％的宽范围改变其与交易入口点的距离。 在撰写本文时，英镑的交易价格接近2.00美元，按照这个速度，1％的止损距离相当于2美分。 换句话说，两美分是200点，口袋里的价值是2000美元。 因此，在这些市场条件下，0.01％的精细步骤意味着0.02美分或2个点（口袋里20美元）。
+在 MAE 图中, 您可以看到所有交易的表现, 以及在寻找合适的风险止损的好地方时是否有任何特殊要点需要考虑. MAE 图可以提示 "最佳" 停止值介于 0.2% 和 1% 之间. 但是, MAE 不直接告诉您设置此停止的最佳值. 出于这个原因, 我们现在通过以下方式执行系统测试来从另一侧查看任务. 我们在我们的交易系统中添加风险止损, 并在 0.01% 至 0.01% 的范围内以 0.01% 至 1% 的宽范围改变其与交易入口点的距离. 在撰写本文时, 英镑的交易价格接近 2.00 美元, 按照这个速度, 1% 的止损距离相当于 2 美分. 换句话说, 两美分是 200 点, 口袋里的价值是 2000 美元. 因此, 在这些市场条件下, 0.01% 的精细步骤意味着 0.02 美分或 2 个点(口袋里 20 美元).
 
 <p align="left"><font size=2>Figure 3.13: Ratio of total net profit/maximum intraday drawdown as a function of the stop loss distance in per cent. LUXOR system tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT.</font></p>
 
 ![Ratio of total net profit](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.13.png)
 
+The tests give you important statistical figures for each stop level: net profit, maximum
+drawdown, biggest losing trade etc. You can draw diagrams of these figures dependent
+on the set stop loss distance. We do this here for the ratio of total net profit/maximum
+drawdown (NP/DD), see Figure 3.13. We do not take the total net profit alone because it
+does not tell you much about the system’s risk, whereas the ratio NP/DD gives a
+meaningful estimate. Let’s look at this ratio for all performed trades as a function of the
+stop distance. This graph tells you that stop loss points positioned too closely reduce the
+NP/DD ratio drastically. Obviously many trades are stopped out just at the beginning and
+the slippage and commissions do not allow gains with so little risk.
+
+测试给出了每个止损水平的重要统计数据：净利润，最大亏损，最大亏损交易等。您可以根据设定的止损距离绘制这些数据的图表。 我们在这里这样做的总净利润/最大亏损（NP / DD）的比率，见图3.13。 我们不单独考虑总净利润，因为它没有告诉您有关系统风险的更多信息，而NP / DD比率给出了有意义的估算。 让我们看一下所有执行交易的这个比率作为停止距离的函数。 该图表告诉您，定位过于靠近的止损点会大幅降低NP / DD比率。 很明显，许多交易在开始时就已经停止，滑点和佣金不会让风险增加。
+
+When increasing the distance more and more the system becomes profitable, but for all
+stop distances below 0.15% the NP/DD ratio is still decreased and stays below the ratio
+of the breakout-system without stop loss. However, if you set the stop futher away from
+the entry point and allow the trades more room to develop you get a nice improvement
+of the NP/DD. Any added stop in a broad range of values between 0.2-0.5% range
+increases the base system’s return/risk ratio. Thus we can select a stop loss of 0.3% as a 
+useful distance – this value is placed in the middle of this stable parameters region. The
+0.3% corresponds to 60 pips or 600 US dollars with the British pound trading at US$2.
+It is important to mention that you cannot find a stop loss level that improves the overall
+net profit for every trading system or market. Usually profits are reduced by the
+boundaries which are imposed by the stop losses, especially in more choppy markets (e.g.
+in stock index futures like S&P 500 or FTSE 100).
+
+当越来越多地增加距离时系统变得有利可图，但是对于低于0.15％的所有停止距离，NP / DD比仍然降低并且保持低于突破系统的比率而没有停止损失。但是，如果您将停靠点设置为远离入口点并允许交易更多的空间来开发，您将获得NP / DD的良好改进。在0.2-0.5％范围内的广泛范围内任何增加的止损都会增加基本系统的回报/风险比。因此，我们可以选择0.3％的止损作为有用距离 - 该值位于此稳定参数区域的中间。 0.3％相当于60点或600美元，英镑兑美元汇率为2美元。值得一提的是，您无法找到提高每个交易系统或市场整体净利润的止损水平。通常，利润会受到止损所带来的界限的影响，特别是在波动较大的市场中（例如标准普尔500指数或富时100指数等股指期货）。
+
+Let’s have a short look how the 0.3% risk stop loss affects the performance graphs of our
+trading system (Figures 3.14A and B). The detailed equity curve seemed not to have
+changed very much. The nearly unchanged profitability of the trading system is confirmed
+by the system figures (Table 3.4, left two columns). The total net profit is improved with
+the stop loss only slightly by less than 1% from $115,000 to $116,000, whereas the
+average trade net profit decreased a bit from $128 to $113.
+
+让我们简要了解0.3％风险止损如何影响我们交易系统的表现图（图3.14A和B）。 详细的股权曲线似乎没有太大变化。 系统数据证实了交易系统的盈利能力几乎没有变化（表3.4，左栏两栏）。 总净利润得到改善，止损仅从115,000美元小幅上涨不到1％至116,000美元，而平均贸易净利润则从128美元下降至113美元。
+
+So, the profitability of the trading system stays nearly unchanged with the inserted stop
+loss. But let’s check if the risks of the system are now under better control.
+
+因此，交易系统的盈利能力随插入的止损几乎保持不变。 但是，让我们检查系统的风险是否现在受到更好的控制。
+
+<p align="left"><font size=2>Figure 3.14A: Detailed equity curve, B: underwater equity curve with 0.3% risk stop loss in place. LUXOR system tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including 30 $ S+C per RT. Charts from TradeStation 8.</font></p>
+
+![Detailed equity curve](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.14_A.png)
+
+![underwater equity curve](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.14_B.png)
+
+From the underwater equity curves you see that the maximum drawdown of the trading
+system is now reduced from 10% to 5% (compare Figure 3.14B with 3.9B). A look at the
+trading figures confirms this observation (Table 3.4, page 82).
+
+从水下权益曲线可以看出，交易系统的最大亏损现在从10％降至5％（比较图3.14B和3.9B）。 查看交易数据证实了这一观察结果（表3.4，第82页）。
+
+After inserting the risk stop loss the maximum intraday peak-to-valley drawdown is much
+reduced from $18,894 to $11,266. Even more importantly, the largest losing trade is now
+reduced to only $810 from over $2500 when using the system without the stop loss in
+place. This significant reduction by nearly a factor of three helps you to control your
+risks, especially when trading the system with more than one lot in a bigger portfolio.
+You may ask why the biggest loss was not reduced to about $600, which corresponds to
+the 0.3% in today’s market value, set by our stop loss. The reason was a gap which
+inhibited an execution of a trade at the exact stop price but at a US$250 worse price.
+Although such bad executions usually happen less than 10 times within 1000 trades,
+which is insignificant and well covered with the $30 slippage and commissions
+calculation, you have to keep in mind that this is always possible in general with every
+trade. Finally, we want to point out that the system’s market exposure with the inserted
+stop was reduced for the first time. Whereas without any exit in place the system was in
+the market 100% of the time, this risk exposure is now reduced to 73%. The remaining
+27% of the time while the system is not active can be used to invest the money somewhere
+else or to earn interest gains.
+
+在插入风险止损后，最大日内峰谷减少幅度从18,894美元大幅减少至11,266美元。更重要的是，当使用没有止损的系统时，最大的亏损交易现在从超过2500美元减少到810美元。这种显着减少几乎三倍可以帮助您控制风险，特别是在更大的投资组合中交易多个批次的系统时。您可能会问为什么最大损失没有减少到大约600美元，这相当于我们的止损设定的当前市场价值的0.3％。原因是差距导致以确切的止损价格执行交易，但价格低于250美元。虽然这种不良执行通常在1000次交易中发生的次数少于10次，这是微不足道的，并且在30美元的滑点和佣金计算中得到很好的覆盖，但您必须记住，每次交易总是可行的。最后，我们想指出系统首次插入停止的市场曝光率。虽然没有任何退出，系统100％的时间都在市场上，但这种风险暴露现在降低到73％。系统未处于活动状态时剩余的27％的时间可用于将资金投入其他地方或赚取利息。
 
 #### Adding a trailing stop
+
+A trailing stop is a stop order which adapts to the current market price. In the case of a
+new long position it is initially set at a fixed percentage below the entry price. If the
+market price rises, the trailing stop price rises proportionately, but if the price falls, the
+trailing stop price doesn’t change (Figure 3.15A).
+
+追踪止损是止损订单，适应当前市场价格。 在新的多头头寸的情况下，它最初设定在低于入场价格的固定百分比。 如果市场价格上涨，追踪止损价格按比例上涨，但如果价格下跌，追踪止损价格不会改变（图3.15A）。
+
+<p align="left"><font size=2>Figure 3.15A: The principle of a trailing stop. Chart example from British pound/US dollar (FOREX), 30 minute bars, September 2008. Chart from TradeStation 8</font></p>
+
+![The principle of a trailing stop](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.15_A.png)
+
+The trailing stop for short positions works analogously. This technique allows you to set
+a limit on the maximum possible loss without setting a limit on the maximum possible
+gain. Next we add such a trailing stop to our existing trading system. While looking for
+an appropriate trailing stop distance, we keep our initial risk stop loss of 0.3% in place.
+Whereas this initial risk stop is responsible for keeping the biggest losses under control,
+as outlined in the previous section, the now added trailing stop aims at keeping some
+more profit without losing it again.
+
+短仓的追踪止损类似。 此技术允许您设置最大可能损耗的限制，而不对最大可能增益设置限制。 接下来，我们在现有的交易系统中添加这样的追踪止损。 在寻找合适的追踪止损距离时，我们保持0.3％的初始风险止损。 尽管如上一节所述，最初的风险止损是控制最大损失的原因，但现在增加的追踪止损旨在保持更多利润而不会再次失去它。
+
+If you add such a trailing stop and vary its distance from 0.01% up to 1.5% in steps of
+0.01% you can plot the ratio of NP/DD as a function of the trailing stop distance (Figure
+3.15B). Similar to the risk stop loss, tiny trailing stops cut the profits too much, since
+they don’t give the trades enough room to develop. In particular, all trailing stop values 
+below 0.2% lead to a disaster. However from 0.2 to 0.5% the results increase steadily
+and between 0.5% and 1% you find a broad region of trailing stops which increase the
+system’s NP/DD ratio. If you set the trailing stops even wider then the ratio converges to
+the NP/DD ratio of the trading system without an added trailing stop. The stop distance
+becomes so big that fewer and fewer trades are affected by it.
+
+如果添加这样的追踪止损并以0.01％的步长将其距离从0.01％变化到1.5％，则可以绘制NP / DD的比率作为追踪止损距离的函数（图3.15B）。 与风险止损类似，微小的追踪止损削减了利润太多，因为它们没有给交易足够的发展空间。 特别是，所有追踪止损值低于0.2％都会导致灾难。 然而，从0.2％到0.5％，结果稳定地增加，在0.5％和1％之间，你会发现一个广泛的追踪止损区域，这会增加系统的NP / DD比率。 如果您将追踪止损设置得更宽，那么该比率会收敛到交易系统的NP / DD比率，而不会增加追踪止损。 止损距离变得如此之大，以至于交易的影响越来越少。
+
+<p align="left"><font size=2>Figure 3.15B: Ratio of total net profit/maximum intraday drawdown as a function of the distance of an added trailing stop. Risk stop loss of 0.3% kept in place. LUXOR system tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT.</font></p>
+
+![Ratio of total net profit/maximum intraday drawdown](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.15_B.png)
+
+It is worth mentioning that the NP/DD ratio (Figure 3.15B) is quite steady. Between 0.5%
+and 1% you find a broad region of values which lead to similar results. This increases
+the probability that the performed tests have a high predictive power for real trading. The
+trading figures (Table 3.4, on page 82, third column) reveal that a trailing stop of 0.8%
+(in the middle of the profitable area) leads to improvements, especially regarding
+profitability. The total net profit can be increased by the inserted trailing stop from
+$116,209 to $126,772 by nearly 10%. The average profit per trade increases by about the
+same percentage from $113 to $122. The risk figures are also slightly improved by the
+added trailing stop. The maximum drawdown of the trading system is further reduced
+from $11,266 to $10,292 and the percentage of time in the market is also now slightly
+lower (69.98%, compared to 73.56% before).
+
+值得一提的是，NP / DD比率（图3.15B）非常稳定。 在0.5％和1％之间，您会发现一个广泛的价值区域，从而产生类似的结果。 这增加了执行的测试对实际交易具有高预测能力的可能性。 交易数据（表格，第82页，第三栏）显示，0.8％的追踪止损（在盈利区域中间）导致改善，特别是在盈利能力方面。 通过插入的追踪止损，总净利润可以从116,209美元增加到126,772美元，增幅接近10％。 每笔交易的平均利润从113美元增加到122美元，增幅大致相同。 增加的追踪止损也略微改善了风险数据。 交易系统的最大亏损额从11,266美元进一步下降至10,292美元，市场上的时间百分比现在也略低（69.98％，而此前为73.56％）。
+
+With the two types of stops in place we will now check if inserting profit targets will
+further improve the trading system.
+
+有了两种类型的止损，我们现在将检查插入利润目标是否会进一步改善交易系统。
 
 #### Looking for profit targets: Maximum Favourable Excursion(MFE)
 
