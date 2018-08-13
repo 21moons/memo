@@ -710,13 +710,7 @@ MAE 图中的止损可以绘制为垂直线. 从理论上讲, 这条垂直线会
 
 ![The principle of a trailing stop](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.15_A.png)
 
- Next we add such a trailing stop to our existing trading system. While looking for
-an appropriate trailing stop distance, we keep our initial risk stop loss of 0.3% in place.
-Whereas this initial risk stop is responsible for keeping the biggest losses under control,
-as outlined in the previous section, the now added trailing stop aims at keeping some
-more profit without losing it again.
-
-空头头寸的移动止损类似. 此技术允许您在设置最大可能亏损限制的同时, 不对最大可能盈利造成影响. 接下来, 我们在现有的交易系统中添加这样的移动止损. 在寻找合适的追踪止损距离时，我们保持0.3％的初始风险止损。 尽管如上一节所述，最初的风险止损是控制最大损失的原因，但现在增加的追踪止损旨在保持更多利润而不会再次失去它。
+空头头寸的移动止损类似. 此技术允许您在设置最大可能亏损限制的同时, 不对最大可能盈利造成影响. 接下来, 我们在现有的交易系统中添加移动止损. 在寻找合适的移动止损距离时, 我们保持 0.3% 的初始风险止损(initial risk stop). 如上一节所述, 初始风险止损的职责是控制最大亏损, 新增的移动止损旨在尽可能的保留利润而不是失去它.
 
 If you add such a trailing stop and vary its distance from 0.01% up to 1.5% in steps of
 0.01% you can plot the ratio of NP/DD as a function of the trailing stop distance (Figure
@@ -728,7 +722,7 @@ system’s NP/DD ratio. If you set the trailing stops even wider then the ratio 
 the NP/DD ratio of the trading system without an added trailing stop. The stop distance
 becomes so big that fewer and fewer trades are affected by it.
 
-如果添加这样的追踪止损并以0.01％的步长将其距离从0.01％变化到1.5％，则可以绘制NP / DD的比率作为追踪止损距离的函数（图3.15B）。 与风险止损类似，微小的追踪止损削减了利润太多，因为它们没有给交易足够的发展空间。 特别是，所有追踪止损值低于0.2％都会导致灾难。 然而，从0.2％到0.5％，结果稳定地增加，在0.5％和1％之间，你会发现一个广泛的追踪止损区域，这会增加系统的NP / DD比率。 如果您将追踪止损设置得更宽，那么该比率会收敛到交易系统的NP / DD比率，而不会增加追踪止损。 止损距离变得如此之大，以至于交易的影响越来越少。
+如果添加移动止损并以 0.01% 的步长将其距离从0.01％变化到1.5％，则可以绘制NP / DD的比率作为追踪止损距离的函数（图3.15B）。 与风险止损类似，微小的追踪止损削减了利润太多，因为它们没有给交易足够的发展空间。 特别是，所有追踪止损值低于0.2％都会导致灾难。 然而，从0.2％到0.5％，结果稳定地增加，在0.5％和1％之间，你会发现一个广泛的追踪止损区域，这会增加系统的NP / DD比率。 如果您将追踪止损设置得更宽，那么该比率会收敛到交易系统的NP / DD比率，而不会增加追踪止损。 止损距离变得如此之大，以至于交易的影响越来越少。
 
 <p align="left"><font size=2>Figure 3.15B: Ratio of total net profit/maximum intraday drawdown as a function of the distance of an added trailing stop. Risk stop loss of 0.3% kept in place. LUXOR system tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT.</font></p>
 
