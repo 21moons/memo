@@ -613,71 +613,23 @@ LUXOR 交易系统现在看起来似乎毫无希望. 使用这个系统, 你与�
 
 <p align="left" style="color:red;"><font size=5><b>注: "入场的动态对于有效出场的动态, 甚至是仓位的反转都有着重大的影响", 这里的意思应该是不能仅仅看点位, 入场点位与入场时的市场走向应该放在一起看, 将在后面决定在何种走势下的哪个点位出场.</b></font></p>
 
-For this reason we don’t recommend testing exits with artificially generated entries, e.g.
-with random entries or with entries taken at the opening of every trading day. We found
-that working with such random entries leads the statistical results into a wrong direction.
-The outcome is dominated by market situations which occur most of the time but which
-are not the typical ones applicable to your own, special market strategy.
-
-出于这个原因，我们不建议使用人工生成的合约测试出口，例如： 随机记录或在每个交易日开盘时记录的条目。 我们发现使用这些随机条目会导致统计结果出错。 结果主要是市场情况，这种情况大部分时间都会出现，但不是适用于您自己的特殊市场策略的典型情况。
+出于这个原因, 我们不建议使用人工生成的合约测试出口, 例如: 随机入场或在每个交易日开盘时入场. 我们发现使用这些随机入场点会将统计结果导向歧途. 测试结果(最优出口)总是被常见的市场走势把持(出口更多的是与市场走势相关), 并没有与你指定的市场策略相匹配.
 
 <p align="left"><font size=2>Figure 3.10: The Dynamic of Exits. In the phase of low volume and low volatility different exits are needed than in the phase of increasing volume with the short breakout. Chart example was taken from Light Crude Oil, 5 minute, NYMEX from 22 August 2008. Chart and datafeed from TradeStation 8.</font></p>
 
 ![The Dynamic of Exits](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.10.png)
 
-There are no universal optimal exits! If you are working with a different type of system
-or on another time scale you cannot transfer your existing exits to a different entry logic.
-Of course you can take such exits as a rough guide but you must spend time developing
-suitable exits for the different entry or time scale.
+没有放之四海而皆准的最优出口! 如果您使用的是其他类型的系统或在其他时间尺度上, 则无法直接转换现有出口来匹配新的入口逻辑. 当然, 您可以将这些已有的出口作为大致的方向, 但您必须花时间基于不同的入口或时间尺度来开发合适的出口.
 
-没有放之四海而皆准的最优出口! 如果您使用的是其他类型的系统或在其他时间范围内，则无法将现有出口转移到其他入口逻辑。 当然，您可以将这些出口作为粗略指南，但您必须花时间为不同的入口或时间尺度开发合适的出口。
+为了找到上述策略的适当出口, 我们将对统计领域进行一次小规模的纵览. 我们分析单笔交易的过程, 以确定可用的止损水平和利润目标. 这个分析在开始时看起来有点异国情调. 但是, 只要您熟悉它, 您就会对您的交易系统及其适用的出口有一个很好的理解.
 
-To find appropriate exits for the strategy developed above we take a small excursion into
-the field of statistics. We analyse the course of the single trades in order to determine
-useful stop-levels and profit targets. This analysis looks a little bit exotic at the beginning.
-As soon as you are familiar with it, however, you’ll be rewarded with a good
-understanding of your trading system and its appropriate exits.
+#### The concept of Maximum Adverse Excursion (MAE 最大逆向偏移)
 
-为了找到上述策略的适当出口，我们将对统计领域进行一次小规模的游览。 我们分析单笔交易的过程，以确定有用的止损水平和利润目标。 这个分析在开始时看起来有点异国情调。 但是，只要您熟悉它，您就会对您的交易系统及其适当的出口有一个很好的理解。
+为了找到适合您系统的止损点, 您应该深入了解交易的分布并单独检查每笔交易. 当你这样做时, 你会发现它们之间既有相似之处, 也有自己的一套特征. 这些特征可以通过使用 John Sweeney 在不到十年前开发的最大逆向偏移(MAE)技术来检验. MAE 被定义为相对您的头寸的最大日内反向价格变动. 换句话说, 它是单笔交易在生命周期中的最低权益. MAE 概念允许您评估系统的个别交易, 从而决定将保护性止损设置在哪个价位或百分比.
 
-#### The concept of Maximum Adverse Excursion (MAE)
+让我们来看看我们交易系统的 MAE 图形(图 3.11). 该图显示了在测试期内产生的所有 902 笔交易. 对于每笔交易, 您都可以查看与每笔已实现的损益相关的亏损. 获利交易显示为绿色向上箭头, 亏损交易显示为红色向下箭头. 在 MAE 图的垂直 y 轴上, 您可以看到最终的利润, 而水平的 x 轴则显示每笔交易的日内亏损.
 
-In order to find proper stop points for your system you should take a deeper look into the
-distribution of trades and examine each trade individually. When you do so, you will
-discover that there are similarities between them, but that every trade also has its own set
-of characteristics. These characteristics can be examined by using the Maximum Adverse
-Excursion (MAE) technique developed by John Sweeney less than ten years ago [9].
-MAE is defined as the most intraday price movement against your position. In other
-words it’s the lowest open equity during the lifespan of a trade. The MAE concept allows
-you to evaluate your systems’ individual trades to determine at what dollar or percentage
-amount to place your protective stop.
-
-为了找到适合您系统的停止点，您应该深入了解交易的分布并分别检查每笔交易。 当你这样做时，你会发现它们之间有相似之处，但每个交易也都有自己的一套特征。 这些特征可以通过使用John Sweeney在不到十年前开发的最大逆向偏移（MAE）技术来检验[9]。 MAE被定义为对您的头寸的最大日内价格变动。 换句话说，它是交易生命周期中最低的开放资产。 MAE概念允许您评估系统的个别交易，以确定放置保护性止损的美元或百分比金额。
-
-Let’s take a look at the MAE graphic of our trading system (Figure 3.11). This graph
-shows all 902 trades that are produced within the tested period. For each trade you can
-see the amount of drawdown that occurred in relation to the realised profit or loss. The
-winning trades are shown as green up arrows and the losing trades are represented as red
-down arrows. On the vertical y-axis of the MAE diagram you see the final profit whereas
-the horizontal x-axis shows the intraday drawdown of each trade.
-
-让我们来看看我们交易系统的MAE图形（图3.11）。 该图显示了在测试期内产生的所有902笔交易。 对于每笔交易，您都可以
-查看与已实现的损益相关的减少金额。 获胜交易显示为绿色向上箭头，亏损交易显示为红色向下箭头。 在MAE图的垂直y轴上，您可以看到最终的利润，而水平的x轴则显示每笔交易的日内缩减。
-
-Since we are using this graphic to determine where to place our stops we have put all the
-winning and losing trades on the same cluster graph. This means that although trades A
-and B in Figure 3.11 appear to be similar they are in reality quite different. Trade A had
-a drawdown of $2400 and closed at a final loss of $1000. Trade B, on the other hand,
-suffered an even bigger drawdown of $2500 but recovered and managed to end with a
-gain of $1000. Whether the dollar amount indicated along the y-axis is a profit or loss is
-determined by the colour and the direction of the small triangles. Keeping the trades
-clustered on the same graph makes it easier to figure out how much unrealised loss must
-be incurred by a trade before it typically does not recover. In this way the MAE graphic
-tells you when to cut your loss because the risks associated with the trade are no longer
-justified. This gives you a valuable indication of where to place your protective stop.
-
-由于我们使用此图形来确定止损位置，因此我们将所有获胜和亏损交易放在同一个集群图上。 这意味着虽然交易A
-和图3.11中的B看似相似，它们实际上完全不同。 A股下跌2400美元，最终亏损1000美元。 另一方面，贸易B遭受了更大幅度的2500美元的缩减，但恢复并设法以1000美元的收益结束。 沿y轴指示的美元金额是利润还是损失取决于小三角形的颜色和方向。 保持交易聚集在同一图表上可以更容易地确定交易在通常无法恢复之前必须产生多少未实现的损失。 通过这种方式，MAE图形可以告诉您何时减少损失，因为与交易相关的风险不再合理。 这为您提供了保护性停止位置的有价值的指示。
+由于我们使用此图形来确定止损位置, 因此我们将所有盈利和亏损交易放在同一个集群图上. 这意味着虽然图 3.11 中交易 A 和 B 看起来相似, 但是实际上它们是完全不同的. 交易 A 最大亏损是 2400 美元, 平仓亏损 1000 美元. 另一方面, 交易 B 遭受了更大幅度的 2500 美元的缩减, 但最终恢复并以 1000 美元的收益平仓. 沿 y 轴指示的美元金额是利润还是损失取决于小三角形的颜色和方向. 保持交易聚集在同一图表上可以更容易地判断在通常情况下, 一笔交易在最终确认亏损前通常会产生多少权益上的损失. 通过这种方式, MAE 图形可以告诉您何时止损, 因为与交易相关的风险变得不再合理. 这为您确定保护性止损位置提供了有价值的指示.
 
 <p align="left"><font size=2>Figure 3.11: The MAE graph of LUXOR system. Green: winning trades, red: losing trades. System tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. Input parameters SLOW=44, FAST=1. Without exits, always in the market, including $30 S+C per RT. Diagram created with TradeStation 8.</font></p>
 
@@ -690,7 +642,7 @@ markets with big point value changes the advantages of the percentage based calc
 become obvious. In such conditions it is better to work with exits that are adapting to the
 current market value instead of staying fixed and inflexible.
 
-为了确定这个停止的位置，我们以百分比表示相同的MAE图（图3.12A）。 我们切换到百分比条款，因为显示百分比可以更好地适应不断变化的市场条件而非固定美元价值。 特别是在具有大点值变化的市场上，基于百分比的计算的优势变得显而易见。 在这种情况下，最好使用适应当前市场价值的出口，而不是保持固定和不灵活。
+为了确定止损位置, 我们以百分比单位展示相同的 MAE 图(图 3.12 A). 我们切换到百分比单位, 因为相对于美元单位, 百分比可以更好地适应不断变化的市场条件. 特别是在具有巨大点位变化的市场上, 基于百分比计算的优势变得显而易见. 在这种情况下, 最好使用适应当前市场价位的出口, 而不是保持固定和死板.
 
 <p align="left"><font size=2>Figure 3.12A: MAE graph in percentage terms. Green up arrows = winning trades, red down arrows = losing trades. Trend-following system British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. Input parameters SLOW=44, FAST=1. Without exits, always in the market, including $30 S+C per RT. Diagram created with TradeStation 8.</font></p>
 
@@ -700,32 +652,13 @@ current market value instead of staying fixed and inflexible.
 
 ![Maximum Adverse Excursion graph in percentage terms](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.12_B.png)
 
-Let us briefly explain some trades from the MAE diagram in order to become more
-familiar with it. First you see that the relative positions of trade A and B explained above
-have changed. Trade A is now on a higher position in y-direction since the two trades
-took place in different times when the market was trading at a different level. Because
-the calculation is now based on percentage of the underlying market, the same dollar
-values usually mean different percentage values.
+为了熟悉 MAE., 让我们简单解释 MAE 图中的一些交易. 首先你看到上面提到的交易 A 和 B 的相对位置发生了变化. 由于两笔交易发生不同时间, 对应的市场成交价也不同, 因此交易 A 现在处于 y 方向的较高位置. 由于现在计算基于相关市场的百分比, 因此相同的美元值通常意味着不同的百分比值.
 
-让我们简单解释MAE图中的一些交易，以便更熟悉它。 首先你看到上面解释的交易A和B的相对位置发生了变化。 由于两个交易发生在市场交易处于不同水平的不同时期，因此交易A现在处于y方向的较高位置。 由于计算现在基于相关市场的百分比，因此相同的美元值通常意味着不同的百分比值。
+在 MAE 图中观察所有这 902 笔交易时, 您可以看到交易系统的一些特征. 第一点是, 在图表的左侧, 您会发现盈利的交易比亏损交易更多. 这很明显, 因为盈利交易通常不会像亏损交易那样遭受如此大的亏损. 对你而言, "最好" 交易显然是那些表现如同交易 C 那样的交易 - 一开始就盈利, 在其生命周期中不会承受任何负面权益敞口, 并且位于靠近图表 y 轴的最左侧(盈利/亏损轴).
 
-When watching all these 902 trades in the MAE diagram you can see some characteristics
-of the trading system. The first point is that on the left side of the diagram you find more
-winning than losing trades. This is clear since winning trades usually don’t suffer such
-big drawdowns as losing trades. The “best” trades for you are obviously the ones which
-behave like trade C – trades that are profitable from the beginning without suffering any
-negative open equity in their lifetime and are placed on the very left side close to the y-
-axis of the diagram (profit/loss axis).
+<p align="left" style="color:red;"><font size=5><b>注: 权益敞口(open equity), 指账面上存在但未最终实现的盈利或亏损.</b></font></p>
 
-在MAE图中观察所有这902笔交易时，您可以看到交易系统的一些特征。 第一点是，在图表的左侧，您会发现比亏损交易更多的胜利。 这很明显，因为赢利交易通常不会像亏损交易那样遭受如此大的亏损。 对你而言，“最佳”交易显然是那些表现为交易C的交易 - 从一开始就有利可图而不会在其生命周期中遭受任何负面开放资产并且位于靠近图表y轴的最左侧 （盈利/亏损轴）。
-
-Another interesting area of trades is what we call the “loss diagonal”. On this
-characteristic line you can find a lot of losing trades. Like trade D all these trades ended
-with a loss which represents their biggest drawdowns. On the other hand, trades like E
-also exist. This trade suffered a big drawdown of over 3.5% from the entry-point but
-recovered from this position to a final loss of only about 0.5%.
-
-另一个有趣的交易领域是我们所谓的“亏损对角线”。 在这个特征线上你可以找到很多亏损的交易。 与交易D一样，所有这些交易都以亏损结束，这代表了他们最大的亏损。 另一方面，像E这样的交易也存在。 该交易从入场点大幅下跌超过3.5％，但从这一位置恢复到最终损失仅约0.5％。
+另一个有趣的交易领域是我们所谓的 "**亏损对角线**"(loss diagonal). 在这条特征线上你可以找到很多亏损的交易. 像交易 D 一样, 所有这些交易都以亏损结束, 同时平仓亏损也是他们的最大亏损. 另一方面, 也存在像 E 这样的交易. 该交易在入场点大幅下跌超过 3.5%, 但最终平仓损失确恢复到仅有约 0.5%.
 
 Now we want to place a protective stop loss at a certain distance (percentage of market
 value) away from the entry point in order to limit the risk of the trade. How does the
@@ -746,7 +679,7 @@ losses (red points) that are made smaller by this stop. But think about all the 
 trades. They are turned into a red spot, a loss of 0.3%, as soon as they reach the stop loss
 and never get the chance to become a winning trade.
 
-MAE图中的止损可以绘制为垂直线。 从理论上讲，这种止损会削减所有从进入中遭受更大损失的交易（图3.12B）。 在MAE图中，这意味着止损禁止0.3％线右侧的所有交易并将其移至此线。 对于因此停止而变小的所有损失（红点）而言，这听起来不错。 但想想所有获胜的交易。 一旦他们达到止损并且永远不会有机会成为赢利交易，他们就会变成红点，损失0.3％。
+MAE 图中的止损可以绘制为垂直线。 从理论上讲，这种止损会削减所有从进入中遭受更大损失的交易(图 3.12 B). 在 MAE 图中，这意味着止损禁止0.3％线右侧的所有交易并将其移至此线。 对于因此停止而变小的所有损失（红点）而言，这听起来不错。 但想想所有获胜的交易。 一旦他们达到止损并且永远不会有机会成为赢利交易，他们就会变成红点，损失0.3％。
 
 We try to place a stop in an area that captures the majority of winning trades while
 simultaneously limiting the strategy’s exposure to profit erosion. Obviously it is good to
@@ -763,7 +696,7 @@ early enough. But the more you move your stop loss to the left side, the more tr
 also cut which recovered from their biggest drawdowns or which even ended as winning
 trades.
 
-所以问题是如果你使止损小于0.6％，达到0.4％，0.3％甚至0.1％会发生什么？ 显然，你会越来越多地进行以亏损对角线结束的交易，并且止损在早期削减它们方面做得很好。 但是你将止损移动到左侧的次数越多，你所削减的交易就越多，这些交易从最大的亏损中恢复，或者甚至以赢得的交易结束。
+所以问题是如果你使止损小于 0.6%, 达到 0.4%, 0.3% 甚至 0.1% 会发生什么? 显然, 你会越来越多地进行以亏损对角线结束的交易, 并且止损在早期削减它们方面做得很好. 但是你将止损移动到左侧的次数越多, 你所削减的交易就越多, 这些交易从最大的亏损中恢复, 或者甚至以赢得的交易结束.
 
 #### Inserting a risk stop loss
 
