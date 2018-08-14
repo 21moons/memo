@@ -80,7 +80,7 @@ TradeStation 论坛
 
 #### 编程目标
 
-一个系统由一个入场公式, 一个离场公式和一个资金管理公式组成. 离场公式与 "风险管理" 有关, 即初始止损, 追踪止损, 目标退出, 通俗一点来讲就是我们承担多少风险以及在每一笔交易如何承担风险. "资金管理"关心的是我们在每笔交易中投资多少, 就是我们买或卖多少股票或期货合约. 系统交易的初学者不愿意相信的是, 只要积极地使用杠杆和资金管理技术, 回报就会是惊人的, 换句话来说, 如果没有合适的资金和风险管理工具, 即使交易系统优秀的令人屏息, 也不会成为可行的投资工具.
+一个系统由一个入场公式, 一个离场公式和一个资金管理公式组成. 离场公式与 "风险管理" 有关, 即初始止损, 移动止损, 目标退出, 通俗一点来讲就是我们承担多少风险以及在每一笔交易如何承担风险. "资金管理"关心的是我们在每笔交易中投资多少, 就是我们买或卖多少股票或期货合约. 系统交易的初学者不愿意相信的是, 只要积极地使用杠杆和资金管理技术, 回报就会是惊人的, 换句话来说, 如果没有合适的资金和风险管理工具, 即使交易系统优秀的令人屏息, 也不会成为可行的投资工具.
 
 #### 交易时机
 
@@ -635,14 +635,7 @@ LUXOR 交易系统现在看起来似乎毫无希望. 使用这个系统, 你与�
 
 ![The MAE graph of LUXOR system](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.11.png)
 
-In order to decide where to put this stop we show the same MAE graph in percentage
-terms (Figure 3.12A). We switch to percentage terms since the percentage display gives
-a better adaptation to changing market conditions than fixed dollar values. Especially on
-markets with big point value changes the advantages of the percentage based calculation
-become obvious. In such conditions it is better to work with exits that are adapting to the
-current market value instead of staying fixed and inflexible.
-
-为了确定止损位置, 我们以百分比单位展示相同的 MAE 图(图 3.12 A). 我们切换到百分比单位, 因为相对于美元单位, 百分比可以更好地适应不断变化的市场条件. 特别是在具有巨大点位变化的市场上, 基于百分比计算的优势变得显而易见. 在这种情况下, 最好使用适应当前市场价位的出口, 而不是保持固定和死板.
+为了确定止损位置, 我们以百分比单位展示相同的 MAE 图(图 3.12 A). 我们切换到百分比单位, 因为相对于美元单位, 百分比可以更好地适应不断变化的市场条件. 特别是在具有巨大点位变化的市场上, 基于百分比计算的优势变得显而易见. 在这种情况下, 最好灵活的选择匹配当前市场价位的出口, 而不是死板的保持固定点位.
 
 <p align="left"><font size=2>Figure 3.12A: MAE graph in percentage terms. Green up arrows = winning trades, red down arrows = losing trades. Trend-following system British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. Input parameters SLOW=44, FAST=1. Without exits, always in the market, including $30 S+C per RT. Diagram created with TradeStation 8.</font></p>
 
@@ -704,7 +697,7 @@ MAE 图中的止损可以绘制为垂直线. 从理论上讲, 这条垂直线会
 
 <p align="left" style="color:red;"><font size=5><b>注: 移动止损(trailing stop)</b></font></p>
 
-移动止损是适应当前市场价格的止损单. 在新开多头头寸的情况下, 它最初设定为低于入场价格的固定百分比. 如果市场价格上涨, 追踪止损价格按比例上涨, 但是如果价格下跌, 追踪止损价格则不会改变(图 3.15 A).
+移动止损是适应当前市场价格的止损单. 在新开多头头寸的情况下, 它最初设定为低于入场价格的固定百分比. 如果市场价格上涨, 移动止损价格按比例上涨, 但是如果价格下跌, 移动止损价格则不会改变(图 3.15 A).
 
 <p align="left"><font size=2>Figure 3.15A: The principle of a trailing stop. Chart example from British pound/US dollar (FOREX), 30 minute bars, September 2008. Chart from TradeStation 8</font></p>
 
@@ -712,120 +705,43 @@ MAE 图中的止损可以绘制为垂直线. 从理论上讲, 这条垂直线会
 
 空头头寸的移动止损类似. 此技术允许您在设置最大可能亏损限制的同时, 不对最大可能盈利造成影响. 接下来, 我们在现有的交易系统中添加移动止损. 在寻找合适的移动止损距离时, 我们保持 0.3% 的初始风险止损(initial risk stop). 如上一节所述, 初始风险止损的职责是控制最大亏损, 新增的移动止损旨在尽可能的保留利润而不是失去它.
 
-If you add such a trailing stop and vary its distance from 0.01% up to 1.5% in steps of
-0.01% you can plot the ratio of NP/DD as a function of the trailing stop distance (Figure
-3.15B). Similar to the risk stop loss, tiny trailing stops cut the profits too much, since
-they don’t give the trades enough room to develop. In particular, all trailing stop values 
-below 0.2% lead to a disaster. However from 0.2 to 0.5% the results increase steadily
-and between 0.5% and 1% you find a broad region of trailing stops which increase the
-system’s NP/DD ratio. If you set the trailing stops even wider then the ratio converges to
-the NP/DD ratio of the trading system without an added trailing stop. The stop distance
-becomes so big that fewer and fewer trades are affected by it.
-
-如果添加移动止损并以 0.01% 的步长将其距离从0.01％变化到1.5％，则可以绘制NP / DD的比率作为追踪止损距离的函数（图3.15B）。 与风险止损类似，微小的追踪止损削减了利润太多，因为它们没有给交易足够的发展空间。 特别是，所有追踪止损值低于0.2％都会导致灾难。 然而，从0.2％到0.5％，结果稳定地增加，在0.5％和1％之间，你会发现一个广泛的追踪止损区域，这会增加系统的NP / DD比率。 如果您将追踪止损设置得更宽，那么该比率会收敛到交易系统的NP / DD比率，而不会增加追踪止损。 止损距离变得如此之大，以至于交易的影响越来越少。
+如果添加移动止损并以 0.01% 的步长将其从 0.01% 变化到 1.5%, 则可以绘制 NP/DD 的比值作为移动止损距离的函数(图 3.15 B). 与风险止损类似, 微小的移动止损削减了太多的利润, 因为它们没有给交易足够的发展空间. 特别是, 所有低于 0.2% 的移动止损值都会导致一场灾难. 然而, 从 0.2% 到 0.5%, 系统盈利稳定地增加, 在 0.5% 和 1% 之间, 你会发现一个广阔的移动止损参数区域, 可以增加系统的 NP/DD 比率. 如果您将移动止损设置得更大一点, 那么 NP/DD 比率会收敛到没有加入移动止损之前的状态, 止损距离变得如此之大, 以至于很少交易受其影响.
 
 <p align="left"><font size=2>Figure 3.15B: Ratio of total net profit/maximum intraday drawdown as a function of the distance of an added trailing stop. Risk stop loss of 0.3% kept in place. LUXOR system tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT.</font></p>
 
 ![Ratio of total net profit/maximum intraday drawdown](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.15_B.png)
 
-It is worth mentioning that the NP/DD ratio (Figure 3.15B) is quite steady. Between 0.5%
-and 1% you find a broad region of values which lead to similar results. This increases
-the probability that the performed tests have a high predictive power for real trading. The
-trading figures (Table 3.4, on page 82, third column) reveal that a trailing stop of 0.8%
-(in the middle of the profitable area) leads to improvements, especially regarding
-profitability. The total net profit can be increased by the inserted trailing stop from
-$116,209 to $126,772 by nearly 10%. The average profit per trade increases by about the
-same percentage from $113 to $122. The risk figures are also slightly improved by the
-added trailing stop. The maximum drawdown of the trading system is further reduced
-from $11,266 to $10,292 and the percentage of time in the market is also now slightly
-lower (69.98%, compared to 73.56% before).
+值得一提的是, NP/DD 比值(图 3.15 B)非常稳定. 在 0.5% 和 1% 之间, 您会发现一个广泛的区域, 可以产生相近的 NP/DD 结果. 这增加了进行过的测试对于实际交易具有高预测能力的可能性. 交易数据(表格 3.4)显示, 0.8% 的移动止损(在盈利参数区域中间)能够改善系统, 特别是在盈利能力方面. 通过加入的移动止损, 总净利润可以从 116,209 美元增加到 126,772 美元, 增幅接近 10%. 每笔交易的平均利润从 113 美元增加到 122 美元, 增幅大致相同. 增加的移动止损也略微改善了风险数据. 交易系统的最大亏损额从 11,266 美元进一步下降至 10,292 美元, 入场时间比率现在也略微降低(69.98%, 而此前为 73.56%).
 
-值得一提的是，NP / DD比率（图3.15B）非常稳定。 在0.5％和1％之间，您会发现一个广泛的价值区域，从而产生类似的结果。 这增加了执行的测试对实际交易具有高预测能力的可能性。 交易数据（表格，第82页，第三栏）显示，0.8％的追踪止损（在盈利区域中间）导致改善，特别是在盈利能力方面。 通过插入的追踪止损，总净利润可以从116,209美元增加到126,772美元，增幅接近10％。 每笔交易的平均利润从113美元增加到122美元，增幅大致相同。 增加的追踪止损也略微改善了风险数据。 交易系统的最大亏损额从11,266美元进一步下降至10,292美元，市场上的时间百分比现在也略低（69.98％，而此前为73.56％）。
-
-With the two types of stops in place we will now check if inserting profit targets will
-further improve the trading system.
-
-有了两种类型的止损，我们现在将检查插入利润目标是否会进一步改善交易系统。
+有了两种类型的止损, 我们现在将检查加入的利润目标是否会进一步改善交易系统.
 
 #### Looking for profit targets: Maximum Favourable Excursion(MFE)
 
-John Sweeney’s concept of MFE is complementary to MAE. MFE is defined as the most
-positive price movement for your position. It therefore corresponds to the highest open
-equity within the lifespan of a trade. Whereas MAE was useful to investigate your trades’
-drawdowns and to set a good stop loss, MFE reveals their run-ups and helps to find useful
-profit targets (Figure 3.16).
+John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最大正向价格变动. 因此, 它对应于交易生命周期内的敞口资产的最高位. 虽然 MAE 对于研究您的交易回撤和设置良好的止损非常有用, 但 MFE 揭示了交易的最大市值并有助于找到有用的止盈目标(图 3.16).
 
-John Sweeney的MFE概念是对MAE的补充。 MFE被定义为您的头寸最积极的价格变动。 因此，它对应于交易生命周期内的最高开放资产。 虽然MAE对于调查您的交易下降和设置良好的止损非常有用，但MFE揭示了他们的准备并有助于找到有用的利润目标（图3.16）。
+<p align="left" style="color:red;"><font size=5><b>注: MFE 度量可从指定交易中获取的最大利润.  MAE 减小亏损(针对亏损交易止损), MFE 增大利润(针对盈利交易止盈). </b></font></p>
 
 <p align="left"><font size=2>Figure 3.16: The MFE graph shows the realised profit/loss vs. run-ups of all trades. Green: winning trades, red: losing trades. LUXOR system tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with 0.3% risk stop and 0.8% trailing stop. Input parameters SLOW=44, FAST=1, including $30 S+C per RT. Diagram created with TradeStation 8.</font></p>
 
 ![The MFE graph shows the realised profit/loss vs. run-ups of all trades](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.16.png)
 
-Like with MAE, the final profit (or loss) of the trades is shown on the vertical y-axis.
-Again winning and losing trades are drawn on this same axis with different colour (green
-points=winning trades, red points=losing trades). But in contrast to the MAE diagram,
-in the MFE diagram the horizontal x-axis represents the run-up, which means the highest
-profit a trade has had in its lifetime.
+与 MAE 一样, 交易的最终利润(或亏损)显示在垂直方向的 y 轴上. 输赢的交易再次在同一轴上绘制, 只是颜色不同(绿点=盈利交易, 红点=亏损交易). 但与 MAE 图形成对比的是, 在 MFE 图中, 水平 x 轴表示最大市值(run-up), 这意味着交易在其生命周期中获得的最高利润.
 
-与MAE一样，交易的最终利润（或亏损）显示在垂直y轴上。 再次输赢的交易在同一轴上绘制，颜色不同（绿点=获胜交易，红点=亏损交易）。 但与MAE图形成对比的是，在MFE图中，水平x轴表示启动，这意味着交易在其生命周期中获得的最高利润。
+从拥有两个出口(止损= 0.3%, 移动止损= 0.8%)的趋势跟踪系统的 MFE 图中, 您可以发现以下特征:
 
-From the MFE diagram of the original trend-following system with the two exits in place
-(stop loss=0.3%, trailing stop=0.8%) you can spot the following features:
+大多数盈利交易分布在盈利对角线(win diagonal)附近, 这标志着交易以盘中最高涨幅平仓. 最大盈利交易就是一个典型的例子. 盘中一度上涨 4.5%, 平仓价接近该最高值, 最终盈利略高于 4%. 此外, MFE 图显示了我们在上一节中加入的 0.8% 移动止损的影响: 所有获利超过 0.8% 的交易都保持盈利 - 移动止损确保高利润交易无法完全逆转他们的方向. MFE 图还显示亏损交易(红点)主要停留在最左侧, 这意味着他们通常只经历了很小的上涨.
 
-从原始趋势跟踪系统的MFE图中，两个出口就位（止损= 0.3％，尾随止损= 0.8％），您可以发现以下特征：
+这些研究结果表明, 利润目标对于我们的趋势跟踪系统来说不是非常有效, 因为两个止损点已经在工作了. 如果亏损的交易从未获得大的利润, 并且获胜的交易没有显著改变他们的方向, 那么利润目标将是无效的. 加入的利润目标(止盈)无法在交易转向之前从市场找到一个点出场, 从而留下利润.
 
-Most winning trades end near the win diagonal, which marks the points where a trade
-ended with the highest intraday run-up. The biggest profitable trade is a typical example.
-It had an intraday run-up of 4.5% and ended near this highest value with a final profit of
-just above 4%. Further, the MFE diagram shows the effect of the 0.8% trailing stop which
-we inserted in the last section: all trades that experienced a profit of more than 0.8% were
-kept profitable – the trailing stop makes sure that the highly profitable trades cannot
-completely reverse their direction. The MFE diagram also reveals that the losing trades
-(red points) stay mostly on the very left side. This means that they usually had only small
-run-ups.
+<p align="left" style="color:red;"><font size=5><b>注: 止盈是用在什么场景下呢, 主要还是波动巨大的交易, 但是风险止损会把这类交易剔除(先跌再涨), 移动止损(先涨再跌)一般来说会比盈利目标做的更好, 只有在很少部分的交易上, 止盈可能比移动止损做的更好(止盈 > 最高涨幅 - 移动止损), 所以止盈在有双止损(风险止损 + 移动止损)的系统上作用有限. </b></font></p>
 
-大多数获胜交易在胜利对角线附近结束，这标志着交易以盘中最高涨幅结束的点数。 最大的盈利交易就是一个典型的例子。 盘中一度上涨4.5％，收盘接近该最高值，最终盈利略高于4％。 此外，MFE图显示了我们在上一部分中插入的0.8％追踪止损的影响：所有获利超过0.8％的交易都保持盈利 - 追踪止损确保高利润交易无法完全逆转 他们的方向。 MFE图还显示亏损交易（红点）主要停留在最左侧。 这意味着他们通常只有很小的准备。
-
-These findings suggest that profit targets cannot be very effective for our trend following
-system with the two stops already at work. If a losing trade never comes into a big profit
-and if winning trades don’t significantly change their direction then a profit target will
-not be helpful. Inserted profit targets cannot find a point to skim profits out of the market
-before it turns.
-
-这些研究结果表明，利润目标对于我们的趋势跟踪系统来说不是非常有效，因为两个站点已经在运行。 如果亏损的交易从未获得大的利润，并且如果获胜的交易没有显着改变他们的方向，那么利润目标将没有帮助。 插入的利润目标无法在转向之前从市场中剔除利润。
-
-Let’s verify if these findings can stand further computer tests. We take our basic breakout
-system with the two stops and add a profit target. The target closes each trade immediately
-if a profit of x percent of the market value is reached (Figure 3.17). The figure shows
-that profit targets placed too closely, like stops that are too small, reduce the overall profits
-of the trading system. The closer you set the profit target the worse it gets. Only a small
-region of quite big profit targets around 2% (=4 cents or 400 pips conditions or $4000
-for one contract, with the pound trading at $2) lead to a profit bigger than our system
-with just the stops and no target in place. If you place the targets even higher than 2.5%
-away from the entry point you finally reach the result of the base system. The MFE
-diagram shows that this area of very high profits can only be reached by less than 10%
-trades. Therefore profit targets to exit a trade are only of small use for our entry set-up
-on the British pound/US dollar FOREX market.
-
-让我们验证这些发现是否可以进一步进行计算机测试。我们采用两站的基本突破系统并添加利润目标。如果达到市场价值x％的利润，目标会立即关闭每笔交易（图3.17）。该图显示，利润目标过于紧密，如止损太小，会降低交易系统的整体利润。您设置的利润目标越接近越差。只有一小部分相当大的利润目标在2％左右（= 4美分或400点的条件或一个合约4000美元，英镑交易价格为2美元）导致利润大于我们的系统只有止损而没有目标到位。如果您将目标放置在远离入口点的2.5％以上，则最终会达到基本系统的结果。 MFE图表显示，这个利润非常高的领域只能通过不到10％的交易达到。因此，退出交易的利润目标对于我们在英镑/美元外汇市场的进入设置来说只是很小的用途。
+让我们验证下这些发现是否可以支持进一步的计算机测试. 我们在采用两个止损的突破系统上, 加上利润目标. 如果利润达到市场价值的 x%, 盈利目标会立即对交易进行平仓(图 3.17). 该图显示, 利润目标设置太小时, 正如止损太小一样, 会降低交易系统的整体利润. 您设置的利润目标越小, 结果越差. 只有一小部分相当大的利润目标设置, 在 2% 左右(在英镑交易价格为 2 美元时, 等于 4 美分或 400 点, 或一个 4000 美元的合约)会让利润大于只有止损而没有利润目标的系统. 如果您将利润目标设置为 2.5% 以上, 则结果会与基本系统近似. MFE 图表显示, 这个利润非常高的领域只能不到 10% 的交易能达到. 因此, "通过利润目标离场" 对于我们在英镑/美元外汇市场的入场设置来说只有很小的作用.
 
 <p align="left"><font size=2>Figure 3.17: Ratio of total net profit/maximum intraday drawdown as a function of the distance of an added profit target. Risk stop loss of 0.3% and trailing stop of 0.8% are kept in place during tests. LUXOR system tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including. $30 S+C per RT.</font></p>
 
 ![Ratio of total net profit/maximum intraday drawdown](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.17.png)
 
-The tests confirmed what the MFE diagram showed: it is not possible to predict how far
-the breakout will lead the market. Therefore, except with targets between about 1.8% and
-2.4% away from the entry point, it is better not to set any profit targets but just let the
-market run as far it goes. Again, like with the stop loss, this conclusion may not hold true
-for other markets with the same trading system or for the British pound/US dollar FOREX
-on other time scales with completely different entry set-up. One example where profit
-targets are more rewarding is stock index futures, where changes in trend direction happen
-more often. Furthermore, profit targets become more valuable if they are set to significant
-points, e.g. at supports and resistances, gaps etc, where the market is more likely to turn.
-Another reason why profit targets are useful will be discussed at the end of this chapter
-in a short section on money management.
-
-测试证实了MFE图表显示的内容：无法预测突破将在多大程度上引领市场。 因此，除了远离入境点约1.8％至2.4％的目标之外，最好不要设定任何利润目标，而只是让市场尽可能地运行。 同样，与止损一样，这个结论可能不适用于具有相同交易系统的其他市场或其他具有完全不同的准入设置的其他时间尺度上的英镑/美元外汇。 利润目标更有价值的一个例子是股指期货，其中趋势方向的变化更频繁地发生。 此外，如果将利润目标设定为重要点，则利润目标变得更有价值，例 在支撑和阻力，差距等方面，市场更有可能转向。 利润目标有用的另一个原因将在本章末尾的资金管理简短部分讨论。
+测试证实了 MFE 图表显示的内容: 我们无法预测突破将在多大程度上引领市场(突破后走势会持续多久, 运行至多高/低). 因此, 除了距入场点约 1.8% 至 2.4% 的止盈之外, 最好不要设定任何其他利润目标, 而是让市场自由运行. 同样, 与止损一样, 这个结论可能不适用其他市场, 或在不同时间尺度上且具有完全不同入场设置的 "英镑/美元外汇市场". 利润目标的一个正面例子是股指期货, 该市场上趋势方向的变化频繁发生. 此外, 如果将利润目标设定为重要的点位, 则利润目标会变得更有价值, 例如在支撑位和阻力位, 跳空等等, 市场在这些位置有很大可能转向. 利润目标有效的另一个原因将在本章末尾的资金管理部分进行简要讨论.
 
 #### Summary: Result of the entry logic with the three added exits
 
@@ -841,7 +757,7 @@ you in one single chart all the trades’ intraday run-ups and drawdowns. In thi
 MAE/MFE method provides useful additional information about your trading system and
 complements the optimisation graphs.
 
-您可以使用经典优化测试单独确定交易系统中的止损和利润目标水平，如图3.13,3.15B和3.17所示。 这样的优化可以显示最佳的停止和目标水平，并为您提供有关我们找到的最佳参数稳定性的宝贵信息。 但是，这些图表并没有向您展示最终的净利润和缩减是如何产生的。 如果一个高利润交易或一百个小赢家负责您的交易系统的总净利润，您无法从这些图表中看到。 这些缺少有关所有交易分布的有价值信息仅由MAE / MFE图表提供。 他们在一张图表中向您显示所有交易的日内盘点和下跌。 通过这种方式，MAE / MFE方法提供了有关您的交易系统的有用的附加信息，并补充了优化图。
+您可以使用经典优化测试单独确定交易系统中的止损和止盈, 如图 3.13, 3.15B 和 3.17 所示. 这样的优化可以显示最佳的停止和目标水平, 并为您提供有关我们找到的最佳参数稳定性的宝贵信息. 但是, 这些图表并没有向您展示最终的净利润和缩减是如何产生的. 如果一个高利润交易或一百个小赢家负责您的交易系统的总净利润, 您无法从这些图表中看到. 这些缺少有关所有交易分布的有价值信息仅由 MAE/MFE 图表提供. 他们在一张图表中向您显示所有交易的日内盘点和下跌. 通过这种方式, MAE/MFE 方法提供了有关您的交易系统的有用的附加信息, 并补充了优化图.
 
 Therefore, in this chapter we used a combination of optimisation graphs and MAE/MFE
 diagrams in order to determine useful stop levels and profit targets for the LUXOR
@@ -852,7 +768,7 @@ necessary and helps just a little bit, if placed in the area around 2%. Let’s 
 the results of our trading system with all the above developed and discussed exits in place:
 0.3% risk stop, 0.8 trailing stop and 1.9% profit target (Figures 3.18A-C).
 
-因此，在本章中，我们使用优化图和MAE / MFE图的组合来确定LUXOR系统的有用停止水平和利润目标。 对于英镑/美元外汇市场，我们的测试表明止损和止损位置足够广泛，在降低系统风险的同时也略微增加了利润。 我们最终添加的利润目标是没有必要的，如果放在2％左右的区域，可以帮助一点点。 让我们看看我们的交易系统的结果，以及所有上述开发和讨论的退出：0.3％风险止损，0.8追踪止损和1.9％利润目标（图3.18A-C）。
+因此, 在本章中, 我们使用优化图和 MAE/MFE 图的组合来确定 LUXOR 系统的有用停止水平和利润目标. 对于英镑/美元外汇市场, 我们的测试表明止损和止损位置足够广泛, 在降低系统风险的同时也略微增加了利润. 我们最终添加的利润目标是没有必要的, 如果放在 2% 左右的区域, 可以帮助一点点. 让我们看看我们的交易系统的结果, 以及所有上述开发和讨论的退出: 0.3% 风险止损, 0.8 移动止损和 1.9% 利润目标(图 3.18 A-C).
 
 <p align="left"><font size=2>Figure 3.18: LUXOR system with all three exits in place: 0.3% risk stop, 0.8% trailing stop and 1.9% profit target, tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT. A: detailed equity curve, B: end of month equity curve, C: average profit per month. Charts created with TradeStation 8.</font></p>
 
@@ -875,7 +791,7 @@ trading system’s figures calculated with all the exits in place (Table 3.4, ri
 One remarkable point is that the 1.9% profit target reduced the largest winning trade from
 $7510 to $3900, but at the same time did not reduce the overall total net profit.
 
-如果将其与没有增加退出的权益曲线进行比较，详细的权益曲线似乎没有太大变化（图3.19A）。它看起来更稳定，减少的次数越来越少。最大的缩减现在是6％（相比之下没有退出的10％），系统总能在几周内迅速恢复到新的股票高点。任何缩编的最长恢复期为6个月。这也通过月末权益曲线得到确认，该曲线每月对交易货币的账户价值进行一次绘制。如果您按照从1月到12月的不同月份对利润进行排序，您可以看到交易系统在所有月份都有利可图（图3.18C），这是其可靠性的另一个证明。这些调查结果也在下面列出了交易系统的数据，并计算了所有出口（表3.4，右栏）。一个值得注意的是，1.9％的利润目标将最大的赢利交易从7510美元降至3900美元，但同时并未降低整体净利润总额。
+如果将其与没有增加退出的权益曲线进行比较, 详细的权益曲线似乎没有太大变化(图 3.19A). 它看起来更稳定, 减少的次数越来越少. 最大的缩减现在是 6%(相比之下没有退出的 10%), 系统总能在几周内迅速恢复到新的股票高点. 任何缩编的最长恢复期为 6 个月. 这也通过月末权益曲线得到确认, 该曲线每月对交易货币的账户价值进行一次绘制. 如果您按照从 1 月到 12 月的不同月份对利润进行排序, 您可以看到交易系统在所有月份都有利可图(图 3.18C), 这是其可靠性的另一个证明. 这些调查结果也在下面列出了交易系统的数据, 并计算了所有出口(表 3.4, 右栏). 一个值得注意的是, 1.9% 的利润目标将最大的赢利交易从 7510 美元降至 3900 美元, 但同时并未降低整体净利润总额.
 
 <p align="left"><font size=2>Table 3.4: How additional exits change the result of the LUXOR system; change of trading figures of the system tested on British pound/US dollar (FOREX), with one exit added after another, 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT.</font></p>
 
@@ -883,11 +799,156 @@ $7510 to $3900, but at the same time did not reduce the overall total net profit
 
 #### How exits are affected by money management
 
+The risk and money management of a trading system or of a whole portfolio of systems
+and markets can never be separated completely. The two components are highly
+dependent on each other. Therefore it is essential that your money management strategy
+is integrated into an overall approach to system design and development. Money
+management does not exist in a vacuum but is based on proper pre-calculated exits within
+your applied risk management schemes for every single trading system. In this section
+we will show the interplay of the two components on the practical example of our trend-
+following trading system LUXOR.
+
+交易系统或整个系统和市场组合的风险和资金管理永远不可能完全分开. 这两个组件高度依赖于彼此. 因此, 将资金管理策略整合到系统设计和开发的整体方法中至关重要. 资金管理并不存在于真空中, 而是基于适用于每个交易系统的风险管理方案中预先计算的出口. 在本节中, 我们将展示两个组件在我们的趋势跟踪交易系统 LUXOR 的实际示例中的相互作用.
+
+<p align="left"><font size=2>Figure 3.19: Scatter graph of profits for all generated trades of the LUXOR system. Tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT. A: without added exits. B: with 0.3% risk stop loss (red line), 1.9% profit target (green line) and 0.8% trailing stop. The exits act like borders for the trade distribution. Graphs created with TradeStation 8.</font></p>
+
+![without added exits](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.19_A.png)
+
+![with 0.3% risk stop loss](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.19_B.png)
+
+Figure 3.19 shows the profits and losses of all generated trades of the system. Whereas
+in Figure 3.19A you see the result of the trading system without added exits, Figure 3.19B
+shows the trades with the following exits in place: a profit target of 1.9%, a risk stop loss
+of 0.3% and a trailing stop of 0.8%.
+
+图 3.19 显示了系统所有生成交易的利润和损失. 在图 3.19A 中, 您可以看到没有添加退出的交易系统的结果, 图 3.19B 显示了具有以下退出的交易: 利润目标为 1.9%, 风险止损为 0.3%, 追踪止损为 0.8%.
+
+In contrast to the MAE/MFE graphs the scatter graphs show on the horizontal axis just
+the number of each trade. There is no more display of any drawdowns or run-ups that a
+trade has had within its lifetime. We start here with this simpler demonstration since it
+can show more clearly the effects of the applied exits. When you compare the scatter
+graphs of the generated trades without and with exits some interesting impacts of the
+exits become apparent.
+
+与 MAE/MFE 图形相比, 散点图在横轴上仅显示每笔交易的数量. 没有更多关于交易在其生命周期中有任何下降或准备的显示. 我们从这个简单的演示开始, 因为它可以更清楚地显示应用出口的效果. 当您比较没有和退出的生成交易的散点图时, 退出的一些有趣影响变得明显.
+
+The first point is that the difference between the biggest winning trades and the biggest
+losing trades becomes smaller with added exits. Whereas without any exits the trades are
+widespread between losses of over $2000 and gains of over $6000 they are pressed closer
+together by applied profit target and stops to an interval between about -$500 (largest
+losses) and $4000 (largest gains). The dark cloud of trades which somehow looks like a
+swarm of bees seems now to be captured between the ground (stop loss) and a roof (profit
+target). The two borders are not straight lines since we are using percentage based exits
+instead of fixed dollar exits. These dynamic types of exits adapt themselves to the point
+value of the traded British pound/US dollar market.
+
+第一点是, 最大的获胜交易和最大的亏损交易之间的差异随着增加的退出而变小. 在没有任何退出的情况下, 交易在损失超过 2000 美元和增加超过 6000 美元之间普遍存在, 它们被应用的利润目标压得更紧密, 并且停止在大约 - 500 美元(最大损失)和 4000 美元(最大收益)之间的区间. 看起来像一群蜜蜂的交易的乌云似乎现在被捕获在地面(止损)和屋顶(利润目标)之间. 这两个边界不是直线, 因为我们使用的是基于百分比的退出而不是固定的美元退出. 这些动态类型的出口适应交易的英镑/美元市场的点值.
+
+Concerning the stop loss you can see that not all of the trades near this line are really
+situated between the 1.9% profit target and the 0.3% stop loss. Four negative outliers
+lead to higher losses than the pre-calculated 0.3% since the stop loss is sometimes over-
+rolled by occurring gaps. As mentioned above the biggest losing trade is therefore about
+0.4% ($810) instead of 0.3% ($600). Keep in mind that in the reality of trading, especially
+when dealing with higher lots in non-liquid markets, bigger losses than your pre-
+calculated ones can always happen. They will not harm you much, however, if you
+consider them in advance and if your trading system is stable enough to produce the
+results which you have calculated nearly 100% of the time – like in the case we show
+here.
+
+关于止损, 您可以看到并非该线附近的所有交易实际上都位于 1.9% 的利润目标和 0.3% 的止损之间. 四个负异常值导致损失高于预先计算的 0.3%, 因为止损有时会因发生的间隙而过度滚动. 如上所述, 最大亏损交易因此约为 0.4%(810 美元)而不是 0.3%(600 美元). 请记住, 在交易的现实中, 尤其是在非流动性市场中处理较高的交易时, 损失比预先计算的损失总是会发生. 但是, 如果您事先考虑它们并且您的交易系统足够稳定以产生几乎 100% 时间计算的结果, 它们不会对您造成太大伤害 - 就像我们在此处显示的情况一样.
+
+In contrast to the permeable behaviour of the initial stop loss you find no trades above
+the 1.9% target line. Because the target is chosen very far away from the entry point only
+few trades are able to reach it and no trade manages to pass it by using a market gap. So
+the scatter graphs show the effects of the 0.3% risk stop loss and the 1.9% profit target.
+
+与初始止损的渗透行为相反, 您发现没有超过 1.9% 目标线的交易. 因为目标选择距离入口点非常远, 所以只有少数交易能够到达它, 并且没有交易通过利用市场缺口来设法通过它. 因此, 散点图显示 0.3% 风险止损和 1.9% 利润目标的影响.
+
+But what about the 0.8% trailing stop which is also in place? Whereas the primitive scatter
+graphs do not show the effect of the trailing stop, it can be made visible in the MFE
+diagram (Figure 3.20). The MFE scatter graph shows how the trailing stop (marked blue)
+affects both some of the losing trades (red points, left side) and some of the winning
+trades (right side). The trailing stop follows trades which have a big run-up and pulls the
+stop with a distance of 0.8% behind them in order to keep their profits. The diagram
+shows that this stop is very effective in most cases and was only over-rolled by a negative
+outlier trade in one case. On the left side of the MFE graphic you see again the effect of
+the risk stop loss with the four outliers mentioned above.
+
+但是 0.8% 的追踪止损也到位了呢? 虽然原始散点图不显示追踪止损的效果, 但它可以在 MFE 图中显示(图 3.20). MFE 散点图显示追踪止损(标记为蓝色)如何影响一些亏损交易(红点, 左侧)和一些获胜交易(右侧). 追踪止损跟随具有大幅上涨的交易, 并在止损位置后移动 0.8%, 以保持其利润. 该图显示, 在大多数情况下, 此止损非常有效, 并且仅在一个案例中由负离群值交易过度推销. 在 MFE 图形的左侧, 您可以再次看到上述四个异常值对风险止损的影响.
+
+<p align="left"><font size=2>Figure 3.20: How the Exits prepare for Money Management. MFE diagram of all trades. How risk stop loss and trailing stops affect the trade distribution and make trades more calculable. Graph created with TradeStation 8.</font></p>
+
+![How the Exits prepare for Money Management](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.20.png)
+
+The added exits make the risks of the LUXOR trading system more calculable. Although
+you do not know if the initiated position will be a winning or a losing trade, after having
+added the exits you know that it is very likely in the area between a 0.3% loss and a 1.9%
+win. You cannot tell this for sure, since there are some outlier trades which cannot always
+be stopped by your exits exactly at the pre-calculated values, but you can have fairly high
+confidence. This knowledge is useful in order to determine how much money you can
+spend on the next trade if you want to risk a certain percentage of your trading capital.
+This is an important step in order to apply a money management scheme which helps
+you to enhance your returns (see Chapter 7).
+
+增加的退出使 LUXOR 交易系统的风险更易于计算. 虽然您不知道发起的位置是赢还是输掉交易, 但在添加退出后, 您知道很可能在 0.3% 的损失和 1.9% 的赢额之间. 你无法确定这一点, 因为有一些离群值交易并不总是完全按照预先计算的值从你的出口停止, 但你可以有相当高的信心. 如果您想要冒一定比例的交易资金风险, 这些知识对于确定您可以在下一笔交易中花多少钱是有用的. 这是一个重要的步骤, 以便应用资金管理计划, 帮助您提高您的回报(见第 7 章).
+
 ### 3.6 Summary: Step-by-step development of a trading system
 
 ----------
 
+In this chapter we have shown in the example of the GBP/USD currency pair how to
+develop a new trading system step-by-step (Figure 3.21). Every trading system starts with
+an idea and a sound logic. The idea for our trading system LUXOR was taken from the
+STAD TradeStation Development Club but there are many other good sources of ideas
+including books, the internet and seminars. Once you have found the idea, you have to 
+test it and change it according to your needs. Therefore you should somehow transfer the
+idea into an algorithm, a sequence of rules, which you can apply to historic market data.
+During this test process you will find new ideas and you will face new problems, e.g.
+how to program your code correctly and how to handle weak points of your software.
+
+在本章中, 我们在 GBP/USD 货币对的例子中展示了如何逐步开发新的交易系统(图 3.21). 每个交易系统都以一个想法和一个合理的逻辑开始。 我们的交易系统LUXOR的想法来自STAD TradeStation发展俱乐部，但还有许多其他好的想法来源，包括书籍，互联网和研讨会。 一旦找到了想法，就必须对其进行测试并根据需要进行更改。 因此，您应该以某种方式将想法转换为算法，一系列规则，您可以将其应用于历史市场数据。 在此测试过程中，您将找到新的想法，您将面临新的问题，例如如何正确编写代码以及如何处理软件的弱点。
+
+Although this process is time-consuming it is valuable since you get a very detailed
+knowledge of your trading system. This knowledge is a key factor for your success when
+applying your system, since confidence and trust in your trading system is the most
+important factor. If you don’t trust your system, you will stop trading it when the first
+drawdown occurs. So all the tests – with and without slippage and commissions, with
+and without exits, with optimisations and stability tests – are later rewarded with a good
+expertise about what you are doing and why you are doing it. In this way you come up
+with a trading system that contains a reliable risk management and prepares you for
+money management since you get a better estimation of the outcome of the trades.
+
+虽然这个过程非常耗时，但是因为您对交易系统有了非常详细的了解，所以它很有价值。 这些知识是您在应用系统时取得成功的关键因素，因为您对交易系统的信心和信任是最重要的因素。 如果您不信任您的系统，您将在第一次缩减时停止交易。 因此，所有测试 - 无论是否有滑点和佣金，有无退出，优化和稳定性测试 - 都会获得关于您正在做什么以及为什么要这样做的良好专业知识。 通过这种方式，您可以建立一个包含可靠风险管理的交易系统，并为您进行资金管理做好准备，因为您可以更好地估算交易结果。
+
+<p align="left"><font size=2>Figure 3.21: Step-by-step development of a trading system. From an idea to a final system including entries, exits, trading costs etc.</font></p>
+
+![How the Exits prepare for Money Management](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.21.png)
+
 ## Chapter 4: Two methods for evaluating the system’s predictive power
+
+>"一旦你拥有了一个系统, 最大的障碍就是相信它."
+>汤姆.威尔斯
+
+In order to check the robustness of the LUXOR trading system we now perform the
+following two reliability tests.
+4.1 Timescale analysis. We keep the system’s input parameters unchanged while we
+change the bar length of the tested market.
+4.2 Monte Carlo analysis. Changing the order of the performed trades gives you valuable
+estimations about expected maximum drawdowns.
+Whereas Monte Carlo analysis is a well-known tool for anyone who has had experience
+with the evaluation of risks, timescale analysis is a new method which we have not seen
+in any publications so far. We find it a useful tool which can be easily performed with
+any standard software package that allows the bar compression of the used price data to
+be changed.
+
+为了检查LUXOR交易系统的稳健性，我们现在执行以下两个可靠性测试。
+
+4.1时间尺度分析。 当我们改变测试市场的条形长度时，我们保持系统的输入参数不变。
+
+4.2蒙特卡罗分析。 更改已执行交易的顺序可为您提供有关预期最大下降的有价值估计。
+
+蒙特卡洛分析对于有风险评估经验的人来说是一个众所周知的工具，而时间尺度分析是迄今为止我们在任何出版物中都没有看到过的新方法。 我们发现它是一个有用的工具，可以使用任何标准软件包轻松执行，允许更改使用价格数据的条形压缩。
+
 
 ### 4.1 Timescale analysis
 
