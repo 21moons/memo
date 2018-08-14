@@ -745,30 +745,9 @@ John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最
 
 #### Summary: Result of the entry logic with the three added exits
 
-You can determine your stop and profit target levels in your trading system alone with
-classical optimisation tests, as shown in Figures 3.13, 3.15B, and 3.17. Such optimisations
-show you optimal stop and target levels and give you valuable information about the
-stability of the optimal parameters we found. However, such diagrams do not show you
-how the final net profit and drawdown have emerged. You cannot see from such graphs
-if one single highly profitable trade or a hundred small winners are responsible for the
-total net profit of your trading system. This missing valuable information about the
-distribution of all your trades is only provided by the MAE/MFE diagrams. They show
-you in one single chart all the trades’ intraday run-ups and drawdowns. In this way the
-MAE/MFE method provides useful additional information about your trading system and
-complements the optimisation graphs.
+您可以使用经典优化测试分别确定交易系统中的止损和止盈, 如图 3.13, 3.15B 和 3.17 所示. 这样的优化可以显示最优的止损和止盈水平, 并为您提供关于我们找到的最佳参数稳定性的宝贵信息. 但是, 这些图表并没有向您揭示最终的净利润和回撤是如何发生的. 您无法从这些图表中看出, 是一笔高利润的交易还是一百笔低盈利的交易支撑了交易系统的总净利润. 这些缺失的, 有关所有交易分布的有价值信息仅由 MAE/MFE 图表提供. 他们在一张图表中向您显示所有交易的日内高点和回撤. 通过这种方式, MAE/MFE 方法提供了有关您交易系统的有用的附加信息, 并补充了优化图.
 
-您可以使用经典优化测试单独确定交易系统中的止损和止盈, 如图 3.13, 3.15B 和 3.17 所示. 这样的优化可以显示最佳的停止和目标水平, 并为您提供有关我们找到的最佳参数稳定性的宝贵信息. 但是, 这些图表并没有向您展示最终的净利润和缩减是如何产生的. 如果一个高利润交易或一百个小赢家负责您的交易系统的总净利润, 您无法从这些图表中看到. 这些缺少有关所有交易分布的有价值信息仅由 MAE/MFE 图表提供. 他们在一张图表中向您显示所有交易的日内盘点和下跌. 通过这种方式, MAE/MFE 方法提供了有关您的交易系统的有用的附加信息, 并补充了优化图.
-
-Therefore, in this chapter we used a combination of optimisation graphs and MAE/MFE
-diagrams in order to determine useful stop levels and profit targets for the LUXOR
-system. For the British pound/US dollar FOREX market our tests showed that stop losses
-and trailing stops placed widely enough did a good job in reducing the risks of the system
-while also slightly increasing its profits. The profit target which we added finally is not
-necessary and helps just a little bit, if placed in the area around 2%. Let’s have a look at
-the results of our trading system with all the above developed and discussed exits in place:
-0.3% risk stop, 0.8 trailing stop and 1.9% profit target (Figures 3.18A-C).
-
-因此, 在本章中, 我们使用优化图和 MAE/MFE 图的组合来确定 LUXOR 系统的有用停止水平和利润目标. 对于英镑/美元外汇市场, 我们的测试表明止损和止损位置足够广泛, 在降低系统风险的同时也略微增加了利润. 我们最终添加的利润目标是没有必要的, 如果放在 2% 左右的区域, 可以帮助一点点. 让我们看看我们的交易系统的结果, 以及所有上述开发和讨论的退出: 0.3% 风险止损, 0.8 移动止损和 1.9% 利润目标(图 3.18 A-C).
+因此, 在本章中, 我们使用优化图和 MAE/MFE 图的组合来确定 LUXOR 系统的有用止损水平和利润目标. 在英镑/美元外汇市场上的测试表明, 止损和移动止损位置具有足够宽广的领域, 在降低系统风险的同时也略微增加了利润. 我们最终添加的利润目标是没有必要的, 如果设置为 2% 左右的区域, 可以有一点点帮助. 让我们看看经过上面的开发和讨论后, 我们交易系统的所有出口: 0.3% 的风险止损, 0.8% 的移动止损和 1.9% 利润目标(图 3.18 A-C).
 
 <p align="left"><font size=2>Figure 3.18: LUXOR system with all three exits in place: 0.3% risk stop, 0.8% trailing stop and 1.9% profit target, tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT. A: detailed equity curve, B: end of month equity curve, C: average profit per month. Charts created with TradeStation 8.</font></p>
 
@@ -778,20 +757,7 @@ the results of our trading system with all the above developed and discussed exi
 
 ![average profit per month](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.18_C.png)
 
-The detailed equity curve seems not to have changed a lot if you compare it with the
-equity curve without added exits (Figure 3.19A). It just looks a bit steadier with fewer
-and less sharp drawdowns. The biggest drawdown is now 6% (compared with 10% with
-no exits in place) and the system always quickly recovers to new equity highs within
-some weeks. The longest recovery period from any drawdown was 6 months. This is also
-confirmed with the end of month equity curve which plots the account value of the traded
-money once per month. If you sort the profits by different months from January until
-December you can see that the trading system was profitable in all months (Figure 3.18C),
-which is another proof for its reliability. These findings are also underlined with the
-trading system’s figures calculated with all the exits in place (Table 3.4, right column).
-One remarkable point is that the 1.9% profit target reduced the largest winning trade from
-$7510 to $3900, but at the same time did not reduce the overall total net profit.
-
-如果将其与没有增加退出的权益曲线进行比较, 详细的权益曲线似乎没有太大变化(图 3.19A). 它看起来更稳定, 减少的次数越来越少. 最大的缩减现在是 6%(相比之下没有退出的 10%), 系统总能在几周内迅速恢复到新的股票高点. 任何缩编的最长恢复期为 6 个月. 这也通过月末权益曲线得到确认, 该曲线每月对交易货币的账户价值进行一次绘制. 如果您按照从 1 月到 12 月的不同月份对利润进行排序, 您可以看到交易系统在所有月份都有利可图(图 3.18C), 这是其可靠性的另一个证明. 这些调查结果也在下面列出了交易系统的数据, 并计算了所有出口(表 3.4, 右栏). 一个值得注意的是, 1.9% 的利润目标将最大的赢利交易从 7510 美元降至 3900 美元, 但同时并未降低整体净利润总额.
+如果将其与没有退出机制交易系统的权益曲线进行比较, 详细的权益曲线似乎没有太大变化(图 3.19A). 只不过它看起来更稳定, 伴有更少和幅度更小的回撤. 现在最大幅的回撤是 6%(相比之下没有退出机制的 10%), 而且系统总能在几周内迅速恢复到新的权益高点. 对于所有回撤, 最长的恢复期为 6 个月. 这也通过月末权益曲线得到确认, 该曲线每月对交易账户的市值进行一次绘制. 如果您按照从 1 月到 12 月的顺序对利润进行排序, 您可以看到交易系统在所有月份都是盈利的(图 3.18C), 这是其可靠性的另一个证明. 这些发现也在交易系统的数据中得到了强调, 该数据在计算时已包含了所有的出口(表 3.4, 右列). 一个值得注意的点是, 1.9% 的利润目标将最大赢利交易从 7510 美元降至 3900 美元, 但同时并未降低总体净利润.
 
 <p align="left"><font size=2>Table 3.4: How additional exits change the result of the LUXOR system; change of trading figures of the system tested on British pound/US dollar (FOREX), with one exit added after another, 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT.</font></p>
 
@@ -799,16 +765,7 @@ $7510 to $3900, but at the same time did not reduce the overall total net profit
 
 #### How exits are affected by money management
 
-The risk and money management of a trading system or of a whole portfolio of systems
-and markets can never be separated completely. The two components are highly
-dependent on each other. Therefore it is essential that your money management strategy
-is integrated into an overall approach to system design and development. Money
-management does not exist in a vacuum but is based on proper pre-calculated exits within
-your applied risk management schemes for every single trading system. In this section
-we will show the interplay of the two components on the practical example of our trend-
-following trading system LUXOR.
-
-交易系统或整个系统和市场组合的风险和资金管理永远不可能完全分开. 这两个组件高度依赖于彼此. 因此, 将资金管理策略整合到系统设计和开发的整体方法中至关重要. 资金管理并不存在于真空中, 而是基于适用于每个交易系统的风险管理方案中预先计算的出口. 在本节中, 我们将展示两个组件在我们的趋势跟踪交易系统 LUXOR 的实际示例中的相互作用.
+对于交易系统或多个系统和市场的组合来说, 风险和资金管理永远不可能完全分开. 这两个组件彼此高度依赖. 因此, 将资金管理策略整合到系统设计和开发中是至关重要的. 资金管理并不是凭空得出的, 而是基于风险管理方案中预先计算的出口, 这里的风险管理方案与每个交易系统是匹配的. 在本节中, 我们将基于趋势跟踪交易系统 LUXOR 的实际示例来展示两个组件的相互作用.
 
 <p align="left"><font size=2>Figure 3.19: Scatter graph of profits for all generated trades of the LUXOR system. Tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT. A: without added exits. B: with 0.3% risk stop loss (red line), 1.9% profit target (green line) and 0.8% trailing stop. The exits act like borders for the trade distribution. Graphs created with TradeStation 8.</font></p>
 
@@ -816,12 +773,7 @@ following trading system LUXOR.
 
 ![with 0.3% risk stop loss](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.19_B.png)
 
-Figure 3.19 shows the profits and losses of all generated trades of the system. Whereas
-in Figure 3.19A you see the result of the trading system without added exits, Figure 3.19B
-shows the trades with the following exits in place: a profit target of 1.9%, a risk stop loss
-of 0.3% and a trailing stop of 0.8%.
-
-图 3.19 显示了系统所有生成交易的利润和损失. 在图 3.19A 中, 您可以看到没有添加退出的交易系统的结果, 图 3.19B 显示了具有以下退出的交易: 利润目标为 1.9%, 风险止损为 0.3%, 追踪止损为 0.8%.
+图 3.19 显示了生成的系统所有交易的利润和亏损. 在图 3.19A 中, 您可以看到没有退出机制的交易系统最终的结果, 图 3.19B 显示了具有以下退出机制交易系统的结果: 利润目标为 1.9%, 风险止损为 0.3%, 移动止损为 0.8%.
 
 In contrast to the MAE/MFE graphs the scatter graphs show on the horizontal axis just
 the number of each trade. There is no more display of any drawdowns or run-ups that a
@@ -830,7 +782,7 @@ can show more clearly the effects of the applied exits. When you compare the sca
 graphs of the generated trades without and with exits some interesting impacts of the
 exits become apparent.
 
-与 MAE/MFE 图形相比, 散点图在横轴上仅显示每笔交易的数量. 没有更多关于交易在其生命周期中有任何下降或准备的显示. 我们从这个简单的演示开始, 因为它可以更清楚地显示应用出口的效果. 当您比较没有和退出的生成交易的散点图时, 退出的一些有趣影响变得明显.
+与 MAE/MFE 图形相比, 散点图在横轴上仅显示每笔交易的数量. 没有更多关于交易在其生命周期中有任何亏损或盈利的显示. 我们从这个简单的演示开始, 因为它可以更清楚地显示应用出口的效果. 当您比较没有和退出的生成交易的散点图时, 退出机制的一些有趣影响变得明显.
 
 The first point is that the difference between the biggest winning trades and the biggest
 losing trades becomes smaller with added exits. Whereas without any exits the trades are
@@ -941,14 +893,13 @@ in any publications so far. We find it a useful tool which can be easily perform
 any standard software package that allows the bar compression of the used price data to
 be changed.
 
-为了检查LUXOR交易系统的稳健性，我们现在执行以下两个可靠性测试。
+为了检查 LUXOR 交易系统的稳健性, 我们现在执行以下两个可靠性测试.
 
-4.1时间尺度分析。 当我们改变测试市场的条形长度时，我们保持系统的输入参数不变。
+4.1 时间尺度分析. 当我们改变测试市场的条形长度时, 我们保持系统的输入参数不变.
 
-4.2蒙特卡罗分析。 更改已执行交易的顺序可为您提供有关预期最大下降的有价值估计。
+4.2 蒙特卡罗分析. 更改已执行交易的顺序可为您提供有关预期最大下降的有价值估计.
 
-蒙特卡洛分析对于有风险评估经验的人来说是一个众所周知的工具，而时间尺度分析是迄今为止我们在任何出版物中都没有看到过的新方法。 我们发现它是一个有用的工具，可以使用任何标准软件包轻松执行，允许更改使用价格数据的条形压缩。
-
+蒙特卡洛分析对于有风险评估经验的人来说是一个众所周知的工具, 而时间尺度分析是迄今为止我们在任何出版物中都没有看到过的新方法. 我们发现它是一个有用的工具, 可以使用任何标准软件包轻松执行, 允许更改使用价格数据的条形压缩.
 
 ### 4.1 Timescale analysis
 
