@@ -782,32 +782,22 @@ can show more clearly the effects of the applied exits. When you compare the sca
 graphs of the generated trades without and with exits some interesting impacts of the
 exits become apparent.
 
-与 MAE/MFE 图形相比, 散点图在横轴上仅显示每笔交易的数量. 没有更多关于交易在其生命周期中有任何亏损或盈利的显示. 我们从这个简单的演示开始, 因为它可以更清楚地显示应用出口的效果. 当您比较没有和退出的生成交易的散点图时, 退出机制的一些有趣影响变得明显.
+与 MAE/MFE 图相比, 散点图在横轴上仅显示每笔交易的数量. 没有更多关于交易在其生命周期中有任何亏损或盈利的显示. 我们从这个简单的演示开始, 因为它可以更清楚地显示应用出口的效果. 当您比较没有和退出的生成交易的散点图时, 可以明显看出退出机制的一些有趣影响.
 
-The first point is that the difference between the biggest winning trades and the biggest
-losing trades becomes smaller with added exits. Whereas without any exits the trades are
-widespread between losses of over $2000 and gains of over $6000 they are pressed closer
-together by applied profit target and stops to an interval between about -$500 (largest
-losses) and $4000 (largest gains). The dark cloud of trades which somehow looks like a
-swarm of bees seems now to be captured between the ground (stop loss) and a roof (profit
-target). The two borders are not straight lines since we are using percentage based exits
-instead of fixed dollar exits. These dynamic types of exits adapt themselves to the point
-value of the traded British pound/US dollar market.
+第一点是, 最大交易盈利和最大交易亏损之间的差异在引入退出机制后变小(散点在垂直方向上分布的宽度变小). 在没有任何退出机制的情况下, 交易广泛分布在 -2000+ 美元(最大亏损)和 6000+ 美元(最大盈利)之间, 在采用止损和利润目标后, 它们被挤压得更紧密, 分布在 -500 美元(最大亏损)和 4000 美元(最大盈利)之间的区间. 看起来像一群蜜蜂的交易黑云似乎现在被捕获在地面(止损)和屋顶(利润目标)之间. 这两个边界不是直线, 因为我们使用的是基于百分比的出场, 而不是固定的美元点位. 这些动态类型的出场与英镑/美元市场中的点位相匹配.
 
-第一点是, 最大的获胜交易和最大的亏损交易之间的差异随着增加的退出而变小. 在没有任何退出的情况下, 交易在损失超过 2000 美元和增加超过 6000 美元之间普遍存在, 它们被应用的利润目标压得更紧密, 并且停止在大约 - 500 美元(最大损失)和 4000 美元(最大收益)之间的区间. 看起来像一群蜜蜂的交易的乌云似乎现在被捕获在地面(止损)和屋顶(利润目标)之间. 这两个边界不是直线, 因为我们使用的是基于百分比的退出而不是固定的美元退出. 这些动态类型的出口适应交易的英镑/美元市场的点值.
+<p align="left" style="color:red;"><font size=5><b>注: 动态类型的出场指出场点随着成交价格(止损百分比)或当前价格(移动止损)动态变化. </b></font></p>
 
-Concerning the stop loss you can see that not all of the trades near this line are really
-situated between the 1.9% profit target and the 0.3% stop loss. Four negative outliers
-lead to higher losses than the pre-calculated 0.3% since the stop loss is sometimes over-
-rolled by occurring gaps. As mentioned above the biggest losing trade is therefore about
-0.4% ($810) instead of 0.3% ($600). Keep in mind that in the reality of trading, especially
+ Keep in mind that in the reality of trading, especially
 when dealing with higher lots in non-liquid markets, bigger losses than your pre-
-calculated ones can always happen. They will not harm you much, however, if you
+calculated ones can always happen.
+
+ They will not harm you much, however, if you
 consider them in advance and if your trading system is stable enough to produce the
 results which you have calculated nearly 100% of the time – like in the case we show
 here.
 
-关于止损, 您可以看到并非该线附近的所有交易实际上都位于 1.9% 的利润目标和 0.3% 的止损之间. 四个负异常值导致损失高于预先计算的 0.3%, 因为止损有时会因发生的间隙而过度滚动. 如上所述, 最大亏损交易因此约为 0.4%(810 美元)而不是 0.3%(600 美元). 请记住, 在交易的现实中, 尤其是在非流动性市场中处理较高的交易时, 损失比预先计算的损失总是会发生. 但是, 如果您事先考虑它们并且您的交易系统足够稳定以产生几乎 100% 时间计算的结果, 它们不会对您造成太大伤害 - 就像我们在此处显示的情况一样.
+关于止损, 您可以看到并非所有该线附近的交易都位于 1.9% 的利润目标和 0.3% 的止损之间. 四个负异常值导致损失高于预先计算的 0.3%, 因为止损有时会因发生的跳空而越限. 如上所述, 最大交易亏损因此约为 0.4%(810 美元)而不是 0.3%(600 美元). 请记住, 在真实交易中, 尤其是在流动性较差的市场中处理较高的交易时, 实际损失超过预先计算的损失是常见的. 但是, 如果您事先考虑它们, 并且您的交易系统足够稳定以产生几乎 100% 时间计算的结果, 它们不会对您造成太大伤害 - 就像我们在此处展示的情况一样.
 
 In contrast to the permeable behaviour of the initial stop loss you find no trades above
 the 1.9% target line. Because the target is chosen very far away from the entry point only
@@ -816,9 +806,7 @@ the scatter graphs show the effects of the 0.3% risk stop loss and the 1.9% prof
 
 与初始止损的渗透行为相反, 您发现没有超过 1.9% 目标线的交易. 因为目标选择距离入口点非常远, 所以只有少数交易能够到达它, 并且没有交易通过利用市场缺口来设法通过它. 因此, 散点图显示 0.3% 风险止损和 1.9% 利润目标的影响.
 
-But what about the 0.8% trailing stop which is also in place? Whereas the primitive scatter
-graphs do not show the effect of the trailing stop, it can be made visible in the MFE
-diagram (Figure 3.20). The MFE scatter graph shows how the trailing stop (marked blue)
+The MFE scatter graph shows how the trailing stop (marked blue)
 affects both some of the losing trades (red points, left side) and some of the winning
 trades (right side). The trailing stop follows trades which have a big run-up and pulls the
 stop with a distance of 0.8% behind them in order to keep their profits. The diagram
@@ -826,7 +814,7 @@ shows that this stop is very effective in most cases and was only over-rolled by
 outlier trade in one case. On the left side of the MFE graphic you see again the effect of
 the risk stop loss with the four outliers mentioned above.
 
-但是 0.8% 的追踪止损也到位了呢? 虽然原始散点图不显示追踪止损的效果, 但它可以在 MFE 图中显示(图 3.20). MFE 散点图显示追踪止损(标记为蓝色)如何影响一些亏损交易(红点, 左侧)和一些获胜交易(右侧). 追踪止损跟随具有大幅上涨的交易, 并在止损位置后移动 0.8%, 以保持其利润. 该图显示, 在大多数情况下, 此止损非常有效, 并且仅在一个案例中由负离群值交易过度推销. 在 MFE 图形的左侧, 您可以再次看到上述四个异常值对风险止损的影响.
+但是 0.8% 的移动止损呢? 虽然原始散点图不显示移动止损的效果, 但它可以在 MFE 图中显示(图 3.20). MFE 散点图显示追踪止损(标记为蓝色)如何影响一些亏损交易(红点, 左侧)和一些获胜交易(右侧). 追踪止损跟随具有大幅上涨的交易, 并在止损位置后移动 0.8%, 以保持其利润. 该图显示, 在大多数情况下, 此止损非常有效, 并且仅在一个案例中由负离群值交易过度推销. 在 MFE 图形的左侧, 您可以再次看到上述四个异常值对风险止损的影响.
 
 <p align="left"><font size=2>Figure 3.20: How the Exits prepare for Money Management. MFE diagram of all trades. How risk stop loss and trailing stops affect the trade distribution and make trades more calculable. Graph created with TradeStation 8.</font></p>
 
