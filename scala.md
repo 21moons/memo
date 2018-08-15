@@ -506,10 +506,10 @@ Type "HELP" for help.
 
 symbol 在字面上写作 'ident, 其中 ident 可以是任何字母数字标识符. 此类文字映射到预定义类 scala.Symbol 的实例. 具体来说, literal'cymbal 将由编译器扩展为工厂方法调用: Symbol("cymbal"). symbol 通常在动态类型语言用作标识符. 例如, 您可能希望定义更新数据库中记录的方法:
 
-scala> def updateRecordByName(r: Symbol, value: Any) = {
-// code goes here
-}
-updateRecordByName: (Symbol,Any)Unit
+  scala> def updateRecordByName(r: Symbol, value: Any) = {
+  // code goes here
+  }
+  updateRecordByName: (Symbol,Any)Unit
 
 该方法将指示记录字段名称的 symbol 和用于更新记录中字段的值作为参数. 在动态类型语言中，您可以将未声明的字段标识符传递给方法, 但在 Scala 中, 这将无法通过编译:
 
@@ -519,15 +519,15 @@ updateRecordByName(favoriteAlbum, "OK Computer")
 
 相反, 几乎同样简洁, 您可以传递 symbol:
 
-scala> updateRecordByName('favoriteAlbum, "OK Computer")
+  scala> updateRecordByName('favoriteAlbum, "OK Computer")
 
 除了找出它的名字之外, 用符号做的事情并不多:
 
-scala> val s = 'aSymbol
-s: Symbol = 'aSymbol
+  scala> val s = 'aSymbol
+  s: Symbol = 'aSymbol
 
-scala> val nm = s.name
-nm: String = aSymbol
+  scala> val nm = s.name
+  nm: String = aSymbol
 
 另一件值得注意的事情是如果两次写入相同的 Symbol, 则两个表达式都将引用完全相同的 Symbol 对象.
 
@@ -535,8 +535,67 @@ nm: String = aSymbol
 
 ### 5.3 STRING INTERPOLATION
 
+Scala 包含一个灵活的字符串插值机制, 允许您在字符串中嵌入表达式. 它最常见的用例是为字符串连接提供简洁易读的替代方法. 这是一个例子:
 
+``` scala
+val name = "reader"
+println(s"Hello, $name!")
+```
 
+可以在字符串中的美元符号后面的大括号内放置表达式, 对于单变量表达式, 可以将变量名称放在美元符号后面(不需要大括号)
 
+  scala> s"The answer is ${6 * 7}."
+  res0: String = The answer is 42.
+
+除了 s 以外, Scala 默认提供另外两个字符串插值器: raw 和 f.
+
+raw 字符串插值器的行为类似于 s, 除了它不识别转义字符.
+
+  println(raw"No\\\\escape!") // prints: No\\\\escape!
+
+f 字符串插值器允许您将 printf 样式的格式化指令附加到嵌入式表达式.
+
+  scala> f"${math.Pi}%.5f"
+  res1: String = 3.14159
+
+如果没有为嵌入式表达式提供格式化指令, 则 f 字符串插值器将默认为 %s.
+
+  scala> val pi = "Pi"
+  pi: String = Pi
+  scala> f"$pi is approximately ${math.Pi}%.8f."
+  res2: String = Pi is approximately 3.14159265.
+
+在 Scala 中, 字符串插值是通过在编译时重写代码来实现的. 库和用户可以为其他目的自定义字符串插值器.
+
+### 5.4 OPERATORS ARE METHODS
+
+Scala 为其基本类型提供了丰富的运算符. 正如前面章节中提到的, 这些运算符实际上只是普通方法调用. 例如, 1 + 2 实际上与1.+(2) 相同. 换句话说, 类 Int 包含一个名为 + 的方法, 它接受一个 Int 并返回一个 Int 结果. 添加两个 Ints 时会调用  + 方法:
+  scala> val sum = 1 + 2 // Scala invokes 1.+(2)
+  sum: Int = 3
+
+实际上, Int 包含几个带有不同参数类型的重载 + 方法. 例如, Int 有另一个方法, 也叫做 +, 它接受 Long 类型的参数并返回一个 Long. 如果添加 Long 和 Int, 将调用此 + 方法, 如下所示:
+
+  scala> val longSum = 1 + 2L // Scala invokes 1.+(2L)
+  longSum: Long = 3
+
+<p align="left" style="color:red;"><font size=5><b>注: 算术运算都是方法调用. </b></font></p>
+
+符号 "+" 是一个运算符 - 一个特定的中缀运算符. scala 中的运算符不同于其他语言中的运算符, 您可以像使用运算符一样调用任何方法.
+
+<p align="left" style="color:red;"><font size=5><b>注: infix notation: 中缀表示法, 意味着调用的方法位于对象和您希望传递给方法的参数之间. </b></font></p>
+
+  scala> val s = "Hello, world!"
+  s: String = Hello, world!
+  scala> s indexOf 'o' // Scala invokes s.indexOf('o')
+  res0: Int = 4
+
+但是如果方法接受多个参数, 必须将这些参数放在括号中.
+
+  scala> s indexOf ('o', 5) // Scala invokes s.indexOf('o', 5)
+  res1: Int = 8
+
+**ANY METHOD CAN BE AN OPERATOR**
+
+除了中缀表示法外, Scala 还有另外两种运算符表示法: 前缀和后缀. 在前缀(prefix)表示法中, 将方法名称放在要调用方法的对象之前(例如, -7 中的  "-"). 在后缀(postfix)表示法中, 将方法放在对象之后(例如, "7 toLong" 中的 "toLong").
 
 

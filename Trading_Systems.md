@@ -895,19 +895,273 @@ be changed.
 
 #### Changing the compression of the price data
 
+In order to perform a test we need to have data that was not used during the building and
+the development of the trading system. This data is called out-of-sample data. The
+simplest way to get such out-of-sample data for your trading system is just apply it to the
+same market and the same data but to change the timescale. Although in this way the
+new timescale is not really different, its price structure changes a lot within diverse
+timescales. Therefore many valuable trading systems which work well on one timescale
+fail completely on another scale in the same market.
+
+为了执行测试，我们需要拥有在构建和开发交易系统期间未使用的数据。 该数据称为样本外数据。 获取交易系统的这种样本外数据的最简单方法是将其应用于相同的市场和相同的数据，但要更改时间表。 虽然通过这种方式新的时间表并没有真正不同，但其价格结构在不同的时间尺度内发生了很大的变化。 因此，许多在一个时间尺度上运行良好的有价值的交易系统在同一市场中完全失败。
+
+As far as the trading system LUXOR is concerned, for timescale analysis, you first
+develop and test a trading system step-by-step on one timescale, like we did on 30 minute
+data. You develop the entries, you add trading costs, then through optimisation and
+filtering you will arrive at a complete system with stops and profit targets. Then you just
+take this whole trading system and apply it like it is to the same market on different
+timescales. With today’s software platforms like TradeStation 8 such system tests can be
+performed very easily.
+
+就交易系统LUXOR而言，对于时间尺度分析，您首先在一个时间尺度上逐步开发和测试交易系统，就像我们在30分钟数据上所做的那样。 您开发条目，添加交易成本，然后通过优化和过滤，您将到达一个包含止损和利润目标的完整系统。 然后你就可以把这整个交易系统应用到不同时间尺度的同一个市场。 使用今天的软件平台，如TradeStation 8，可以非常轻松地执行此类系统测试。
+
+You keep all your applied strategies on the chart while changing the symbol properties:
+in this case you are changing the bar length from 30 minute to any other, for example 5
+minute, 10 minute, 120 minute, daily etc. If you perform such a change you see that the
+chart and the indicators which you use for signal generation look very similar, although
+you are working on different timescales (Figure 4.1). Since the indicators, in our case the
+two moving averages, are calculated on the basis of the chart bars, it does not matter very
+much if the bars are calculated every 5 minutes, 30 minutes or 120 minutes. But although
+the properties of some indicators look similar, the market in fact behaves very differently
+when looking at its different timescales in more detail. Keep in mind that on the 5 minute
+scale you watch the price data over 5 years much more closely than on larger timescales
+like the 120 minute timeframe.
+
+在更改符号属性时，您可以在图表上保留所有应用策略：在这种情况下，您将条形长度从30分钟更改为任何其他，例如5分钟，10分钟，120分钟，每天等。如果您执行此类操作 改变你看到你用于信号生成的图表和指标看起来非常相似，尽管你正在研究不同的时间尺度（图4.1）。 由于指标（在我们的例子中是两个移动平均线）是根据图表条计算的，因此如果每隔5分钟，30分钟或120分钟计算一条线，则无关紧要。 但是，尽管某些指标的属性看起来相似，但实际上市场在更详细地研究其不同的时间尺度时表现得非常不同。 请记住，在5分钟的比例范围内，您可以比在120分钟的时间范围内更大的时间尺度更密切地观察5年的价格数据。
+
+Whereas in the 120 minute timescale 120 bars mean half a month of price data, the same
+amount of bars on a 5 minute timescale just contains half a day (Figure 4.1).
+
+而在120分钟时间尺度中，120个柱子意味着半个月的价格数据，而5分钟时间尺度上的相同数量的柱子只包含半天（图4.1）。
+
+<p align="left"><font size=2>Figure 4.1 British pound/US dollar FOREX on different timescales: A: 5 minute bars, B: 30 minute bars, C: 120 minute bars. Chart examples from July 2008. The two moving averages like all other parameters for signal generation are kept the same while changing the timescale of the chart. Each of the three figures shows about 100-150 bars.</font></p>
+
+![5 minute bars](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.1_A.png)
+
+![30 minute bars](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.1_B.png)
+
+![120 minute bars](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.1_C.png)
+
 #### LUXOR tested on different bar compressions
+
+It is fascinating to check how a trading strategy changes on different timescales regarding
+its important system figures and equity lines. Let’s do such a timescale analysis for the
+LUXOR trading system. As you remember LUXOR was developed on 30 minute data
+of the British pound/US dollar FOREX market. Let’s have a look at the equity lines on
+different timescales (Figure 4.2). You see from these curves that our developed system
+logic gains steady profits on all the different timescales, starting from 5 minute up to 180
+minute bar calculations.
+
+检查交易策略在不同的时间尺度上如何改变其重要的系统数据和权益线是很有意思的。 让我们对LUXOR交易系统进行这样的时间尺度分析。 你还记得LUXOR是基于英镑/美元外汇市场的30分钟数据开发的。 让我们看看不同时间尺度的权益线（图4.2）。 从这些曲线可以看出，我们开发的系统逻辑在所有不同的时间尺度上获得稳定的利润，从5分钟到180分钟的条形计算。
+
+<p align="left"><font size=2>Figure 4.2 Detailed equity curves from system tests on different timescales – from 5 minute up to 180 minute bar calculations. Trend-following system British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. All three exits in place: 0.3% risk stop, 0.8 trailing stop and 1.9% profit target. Including $30 S+C per RT.</font></p>
+
+![Detailed equity curves](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.2.png)
+
+Although the trading system makes profits on all the different timescales, the shapes of
+the equity curves with their drawdown phases appear a bit different.
+
+虽然交易系统在所有不同的时间尺度上获利，但股权曲线的形状与其缩减阶段看起来有点不同。
 
 #### Net profit and maximum drawdown dependent on the traded bar length
 
+We’ll now have a closer look at the trading system’s behaviour by comparing important
+trading figures as a function of the chosen bar lengths.
+
+我们现在通过比较重要交易数据作为所选条形长度的函数，仔细研究交易系统的行为。
+
+When plotting the total net profit and the maximum intraday drawdown of the trading
+system for the test period as a function of the chosen timescale some interesting features
+are revealed (Figure 4.3). You see a very broad region of bar lengths between 5 and 35
+minutes which all produce relatively similar good returns with similar low drawdowns.
+The 30 minute timescale is the most profitable but it is well placed in an area of other
+useful timescales. However, you should pay attention to the fact that at about 40 minutes
+the profit decreases quite a lot. As a consequence of this graph it could be even safer to
+use the LUXOR system on smaller timeframes like 20 minutes or 25 minutes where you
+also have good results but you are further away from the less profitable timescales. As
+you can see when you go down to very small timescales, like 1 minute bars, the system
+is not profitable any more. For larger timescales above the most profitable region of 5-
+35 minute bars the gained total net profit goes further and further down until it diminishes
+completely for bar lengths above 210 minutes.
+
+当绘制测试期间交易系统的总净利润和最大日内缩幅作为所选时间尺度的函数时，会显示一些有趣的特征（图4.3）。您会看到一个非常宽的区域，长度在5到35分钟之间，所有这些都会产生相对类似的良好回报，并且具有类似的低水平下降。 30分钟的时间表是最有利可图的，但它可以放在其他有用的时间范围内。但是，你应该注意这样一个事实，即在大约40分钟时，利润会下降很多。由于这个图表，在较短的时间范围内使用LUXOR系统甚至可能更安全，例如20分钟或25分钟，您也可以获得良好的结果，但距离利润较低的时间尺度更远。正如您所看到的那样，当您进入非常小的时间尺度时，例如1分钟的条形图，系统就不再有利可图了。对于在5-35分钟柱的最有利可图区域之上的较大时间尺度，获得的总净利润进一步下降，直到其在210分钟以上的条长度完全减小。
+
+<p align="left"><font size=2>Figure 4.3: Timescale analysis. Total net profit and maximum drawdown as a function of the bar length. Trend-following system British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am- 1.30pm GMT. SLOW=44, FAST=1. All three exits in place: 0.3% risk stop, 0.8 trailing stop and 1.9% profit target. Including $30 S+C per RT.</font></p>
+
+![Timescale analysis](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.3.png)
+
 #### Explanation for the time dependency of the system
+
+What are the reasons for the system’s total net profit time dependency?
+
+系统总净利润时间依赖性的原因是什么？
+
+To understand this you need to remind yourself that the total net profit of a trading system
+is the number of all trades multiplied with the average profit per trade (Figure 4.4). For
+example let’s say that you have a trading system which generates 1000 trades. In this
+case an average profit per trade of $100 leads to a total net profit of $100,000 (1000 x
+$100).
+
+要理解这一点，您需要提醒自己，交易系统的总净利润是所有交易的数量乘以每笔交易的平均利润（图4.4）。 例如，假设您有一个交易系统，可以生成1000笔交易。 在这种情况下，每笔交易的平均利润为100美元，总净利润为100,000美元（1000 x 100美元）。
+
+<p align="left"><font size=2>Figure 4.4: The total net profit of a trading system is the product of two factors: number of trades and average profit per trade.</font></p>
+
+![two factors](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.4.png)
+
+Therefore to understand the total net profit of a trading system, you must investigate the
+two factors which contribute to it: number of trades and average profit per trade. If you
+first look at the number of trades which are generated within the test period 2002-2008
+you see that it strongly depends on the selected timeframe (Figure 4.5). The smaller you
+set the timeframe, the higher is the number of generated trades. On a 1 minute scale our
+trading logic generates over 14,000 trades in the 5 years whereas on a 210 minute basis
+only 210 trades are generated. In other words: on a 1 minute basis you get more than
+2000 trades per year or 10 trades per day whereas on a 120 minute basis you only get
+about 40 trades per year, which means about one per week. This is plausible because on
+a smaller time scale you have many more bars for calculation, as discussed above (see
+Figure 4.1).
+
+因此，要了解交易系统的总净利润，您必须调查导致它的两个因素：交易数量和每笔交易的平均利润。 如果您首先查看2002年测试期间生成的交易数量，您会发现它在很大程度上取决于所选的时间范围（图4.5）。 您设置的时间范围越小，生成的交易数量就越高。 在1分钟的范围内，我们的交易逻辑在5年内产生超过14,000笔交易，而在210分钟的基础上，仅产生210笔交易。 换句话说：在1分钟的基础上，您每年可获得超过2000笔交易或每天10笔交易，而在120分钟的基础上，您每年只能获得约40笔交易，这意味着每周约一笔交易。 这是合理的，因为在较小的时间尺度上，您有更多的计算条，如上所述（参见图4.1）。
+
+<p align="left"><font size=2>Figure 4.5: Timescale analysis. Number of generated trades as a function of the bar length. Trend-following system British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. All three exits in place: 0.3% risk stop, 0.8 trailing stop and 1.9% profit target. Including $30 S+C per RT.</font></p>
+
+![two factors](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.5.png)
+
+Let’s look at the second factor in the calculation of total net profit; the average profit per
+trade as a function of the selected timescale (Figure 4.6). You see that the smaller the
+timescale chosen, the smaller the profit per trade you get. The worst situation appears on
+the 1 minute timescale, where the profit per trade becomes negative. It seems that the
+statistical noise is too high within the very small timescales of 1 minute to 5 minute bars.
+Too many arbitrary movements take place there which are difficult to exploit
+systematically with our trading system. Furthermore, trading costs and slippage matter
+more on the very small timescales. If you stay away from the very small bar lengths and
+set them to values between 25 and 180 minutes then the system produces an average
+profit per trade between $80 and $120 (green area in Figure 4.6). This is really a
+remarkable result since you have to keep in mind how much the market structure changes
+when varying the timescale in this big range.
+
+让我们看一下计算总净利润的第二个因素;每笔交易的平均利润与所选时间表的函数关系（图4.6）。您看到所选择的时间尺度越小，您获得的每笔交易的利润就越小。最糟糕的情况出现在1分钟的时间尺度上，每笔交易的利润变为负值。在1分钟到5分钟的非常小的时间尺度内，统计噪声似乎太高了。在那里发生了太多的任意运动，这些运动难以与我们的交易系统系统地利用。此外，交易成本和滑点对非常小的时间尺度更重要。如果您远离非常小的条形长度并将它们设置为25到180分钟之间的值，那么系统产生的平均每笔交易利润在80美元到120美元之间（图4.6中的绿色区域）。这真是一个非常了不起的结果，因为在这个大范围内改变时间尺度时，你必须记住市场结构的变化。
+
+<p align="left"><font size=2>Figure 4.6: Timescale analysis. Average profit per trade as a function of the bar length. Trend-following system British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. All three exits in place: 0.3% risk stop, 0.8 trailing stop and 1.9% profit target. Including $30 S+C per RT.</font></p>
+
+![two factors](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.6.png)
+
+From the variation of the total number of trades and average profit per trade depending
+on the selected bar length you can conclude how the total net profit varies with changing
+timescale. On the very short timescales the total net profit suffers from a too low profit
+per trade. But already with timescales longer than 5 minutes the low average profit per
+trade can be compensated with the higher number of trades and leads the trading system
+to a high total net profit with low maximum drawdown. If you increase the timescale
+further, above 40 minutes and more, the total net profit becomes lower and lower since
+less and less trades are generated while the single trade profit does not increase. As a
+consequence our trading system works best in the medium timescales between 10 and
+35 minutes.
+
+根据所选择的条形长度，从交易总数和每笔交易的平均利润的变化，您可以得出总净利润如何随时间变化而变化。 在非常短的时间尺度上，总净利润受到每笔交易利润过低的影响。 但是，由于时间跨度超过5分钟，每笔交易的低平均利润可以通过较高的交易数量得到补偿，并导致交易系统获得较高的总净利润和较低的最大亏损。 如果您进一步增加时间表，超过40分钟或更长时间，总净利润会变得越来越低，因为在单一贸易利润不增加的情况下产生的交易越来越少。 因此，我们的交易系统在10到35分钟的中等时间段内效果最佳。
+
+Now what do all these findings mean for the predictive power of our trading system? The
+trading system which was developed and optimised on the 30 minute timescale shows
+promising results under variation of the timescale. From these results with the proven
+stability you can draw the conclusion that the trading logic has a good chance of standing
+up to further out-of-sample data tests and can be profitable in real trading.
+
+现在，所有这些发现对我们交易系统的预测能力意味着什么？ 在30分钟时间尺度上开发和优化的交易系统在时间尺度的变化下显示出有希望的结果。 从这些具有经过验证的稳定性的结果中，您可以得出结论：交易逻辑很有可能经得起进一步的样本外数据测试，并且可以在实际交易中获利。
 
 ### 4.2 Monte Carlo analysis
 
 ----------
 
+‘What is the last thing you do before you climb on a ladder? You shake it. And that
+is Monte Carlo simulation.’
+Sam Savage, Stanford University [10]
+
+>“在爬上梯子之前，你做的最后一件事是什么？ 你摇动它。 这就是蒙特卡罗模拟。
+>斯坦福大学 Sam Savage [10]
+
+Nearly everybody has heard of it, but nobody uses it. Many people are afraid that Monte
+Carlo analysis is such a complex method that in order to understand it you must be a
+professor in mathematics. However the truth is that it is not that difficult and it should be
+used by everybody who wants to do more than just to look at the gained equity lines of
+system back-tests.
+
+几乎每个人都听说过，但没有人使用它。 许多人担心蒙特卡洛分析是如此复杂的方法，为了理解它，你必须是数学教授。 然而事实是，并不是那么困难，每个想做更多事情的人都应该使用它，而不仅仅是看一下系统反测试所获得的权益线。
+
 #### The principle of Monte Carlo analysis
 
+But what does Sam Savage mean when he says that Monte Carlo analysis is just a
+technique to shake a ladder before climbing on it? To understand his sentence you first
+must know what the ladder is and what can be shaken on it.
+
+但是当Sam Savage说蒙特卡洛分析只是一种在攀爬之前摇动梯子的技术时，他的意思是什么？ 要理解他的句子，首先必须知道梯子是什么以及可以动摇什么。
+
+As you probably assume, in our case the ladder is a trading system. Figure 4.7 shows this
+ladder, the detailed equity curve of the trading system LUXOR, with all filters and exits
+applied as explained in Chapter 3.
+
+正如您可能认为的那样，在我们的例子中，梯子是一个交易系统。 图4.7显示了这个梯形图，交易系统LUXOR的详细权益曲线，所有过滤器和出口都按照第3章的说明进行了应用。
+
+<p align="left"><font size=2>Figure 4.7: Detailed Equity Curve of system LUXOR. Tested on British pound/US dollar(FOREX), 30 minute bars, 21/10/2002-4/7/2008. With entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. All three exits in place: 0.3% risk stop, 0.8% trailing stop and 1.9% profit target. Including $30 S+C per RT. Calculation based on one contract basis, results incl. $30 slippage and commissions per trade. Chart created with Market System Analyzer (see www.adaptrade.com).</font></p>
+
+![Detailed Equity Curve](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.7.png)
+
+This detailed equity curve represents all the 1051 trades performed by the trading system
+within the test period 21/10/2002-4/7/2008, one after another in a chronological order.
+
+该详细权益曲线代表交易系统在测试期间21/10 / 2002-4 / 7/2008中按时间顺序一个接一个地执行的所有1051交易。
+
+Now let’s shake the ladder as following: you keep all these 1051 trades (e.g. trade 1=$120
+win, trade 2=$90 loss, trade 3=$445 win … trade 1051=$150 loss) and you put them into
+a new order. Figure 4.8 shows an example of how you do this with a trading system that
+contains six trades: each of the six trades is kept but put into a new position.
+
+现在让我们按照以下步骤动摇：你保留所有这些1051交易（例如交易1 = 120美元赢，交易2 = 90美元损失，交易3 = 445美元赢...交易1051 = 150美元损失）然后你将它们放入新订单。 图4.8显示了如何使用包含六笔交易的交易系统执行此操作的示例：六笔交易中的每一笔都被保留但处于新的位置。
+
+<p align="left"><font size=2>Figure 4.8: The principle of Monte Carlo analysis: A trading system which contains six trades is "shaken" – this means that the positions of the six trades are exchanged accidentally.</font></p>
+
+![The principle of Monte Carlo analysis](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.8.png)
+
+You can do it in the same way with every arbitrary number of trades. The new positions
+of the trades are determined randomly. For example, in our system trade 1 is now in
+position 842, trade 2 in position 66, trade 1051 in position 980 etc. The important point
+is that every trade still exists like before – no trade is deleted and no trade is added. This
+permutation method is called “selection without replacement” 4 .
+
+您可以使用相同的方式对每个任意数量的交易执行此操作。 交易的新头寸是随机确定的。 例如，在我们的系统中，交易1现在位于第842位，交易2在第66位，交易1051在位置980等。重要的是每笔交易仍然像以前一样存在 - 没有交易被删除而且没有交易。 这种置换方法称为“无需替换的选择”4。
+
+Another possible permutation method is selection with replacement. The advantage of a selection
+without replacement is that it exactly duplicates the probability distribution of the input sequence,
+whereas selection with replacement may not. The drawback to selection without replacement is
+that the randomly sampled trade sequences are limited to the number of trades in the input
+sequence. Thus if you have a short sequence of trades (e.g. less than 50 trades), this may limit the
+accuracy of your calculations. The first method is similar to random selection with replacement
+with the advantage that the final list of trades will have the same statistical properties as the original
+list. The second method introduces more randomness into the trade sequence, which may be
+preferable if the expected trades in the future will likely be different than those of the original
+sequence.
+
+另一种可能的排列方法是选择替换。 没有替换的选择的优点在于它完全重复输入序列的概率分布，而替换的选择可能不是。 没有替换的选择的缺点是随机采样的交易序列限于输入序列中的交易数量。 因此，如果您有一个较短的交易顺序（例如少于50笔交易），这可能会限制您的计算准确性。 第一种方法类似于随机选择，具有替换的优点，即最终交易列表将具有与原始列表相同的统计属性。 第二种方法在交易序列中引入了更多随机性，如果未来的预期交易可能与原始序列的交易可能不同，则这可能是优选的。
+
 #### Exchanging the order of the performed trades
+
+The above example suggests that the final outcome of all trades must stay the same,
+independent of whatever new order the trades are placed in. Since the sum of your trades
+stays the same all new equity curves must reach the same amount in the end. But since
+the trades are now in a new order, the shape of the new equity lines and especially the
+occurring drawdowns become different (Figure 4.9).
+
+上面的例子表明，所有交易的最终结果必须保持不变，与交易所处的新订单无关。由于您的交易总和保持不变，所有新的权益曲线最终必须达到相同的金额。 但由于交易现在处于新秩序，新股权线的形状，特别是发生的下跌变得不同（图4.9）。
+
+<p align="left"><font size=2>Figure 4.9: Blue: detailed equity curve, Black: 15 permutations of the trades sequence("shaken trades"). Trend-following system LUXOR British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Calculation based on one contract basis, results including $30 slippage and commissions per trade.</font></p>
+
+![Figure 4.9](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.9.png)
+
+This figure shows the original trade sequence (thick blue line) and 15 permuted trade
+sequences (thin black lines). All the permutated equity curves have the same starting and
+ending points because we did not add or remove any trades but just changed the order of
+their appearance. The change of the trade orders leads to the effect that between the equity
+curves there are big variations with different drawdown phases that occur at different
+times.
+
+该图显示了原始交易顺序（粗蓝线）和15个置换交易序列（细黑线）。 所有排列的权益曲线都有相同的起点和终点，因为我们没有添加或删除任何交易，只是改变了它们的外观顺序。 贸易订单的变化导致股权曲线之间存在很大差异，不同时期出现不同的亏损阶段。
 
 #### Probabilities and confidence levels
 
