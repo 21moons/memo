@@ -1,5 +1,4 @@
-Programming in Scala Third Edition Martin Odersky, Lex Spoon, Bill Vennerss
-
+# 概要
 
 * scala 即 scalable language, 它是面向对象和函数式编程的融合
 
@@ -23,7 +22,6 @@ println = print line
 
 * Traits 类似于 java 中的 interface, can then be mixed together
 
-
 # Programming in Scala, 3rd Edition
 
 ### 1.3 WHY SCALA?
@@ -45,6 +43,7 @@ Packages in Scala are similar to packages in Java: They partition the global nam
 all of Java's primitive types have corresponding classes in the scala package.And when you compile your Scala code to Java bytecodes, the Scala compiler will use Java's primitive types where possible to give you the performance benefits of the primitive types.
 
 scala 有两种类型的变量:
+
 * val 声明的变量是不可变的 A val is similar to a final variable in Java. Once initialized, a val can never be reassigned.
 * var 声明的变量是可变的   A var can be reassigned throughout its lifetime.
 
@@ -60,7 +59,8 @@ def max(x: Int, y: Int): Int = {
 }
 ```
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/basic_form_of_a_function_definition.png)
+![basic_form_of_a_function_definition](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/basic_form_of_a_function_definition.png)
+
 <font size=2>Figure 2.1 - The basic form of a function definition in Scala.</font>
 
 如果函数是递归的, 必须显式的指定函数返回值的类型.
@@ -76,7 +76,7 @@ args.foreach((arg: String) => println(arg))
 args.foreach(println)
 ```
 
-![](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/syntax_of_a_function_literal.png)
+![syntax_of_a_function_literal](https://raw.githubusercontent.com/21moons/memo/master/res/img/scala/syntax_of_a_function_literal.png)
 <font size=2>Figure 2.2 - The syntax of a function literal in Scala.</font>
 
 ``` scala
@@ -431,6 +431,8 @@ object FallWinterSpringSummer extends App {
 
 ## Chapter 5 Basic Types and Operations
 
+-----------------------
+
 ### 5.1 SOME BASIC TYPES
 
 * Byte    8-bit signed two's complement integer (-27 to 27 - 1, inclusive)
@@ -596,6 +598,236 @@ Scala 为其基本类型提供了丰富的运算符. 正如前面章节中提到
 
 **ANY METHOD CAN BE AN OPERATOR**
 
-除了中缀表示法外, Scala 还有另外两种运算符表示法: 前缀和后缀. 在前缀(prefix)表示法中, 将方法名称放在要调用方法的对象之前(例如, -7 中的  "-"). 在后缀(postfix)表示法中, 将方法放在对象之后(例如, "7 toLong" 中的 "toLong").
+除了中缀表示法外, Scala 还有另外两种运算符表示法: 前缀和后缀. 在前缀(prefix)表示法中, 将方法名称放在要调用方法的对象之前(例如, -7 中的  "-"). 在后缀(postfix)表示法中, 将方法放在对象之后(例如, "7 toLong" 中的 "toLong"). 前缀和后缀运算符是一元的: 它们只需要一个操作数. 中缀运算符需要两个操作数.
+
+可用作前缀运算符的标识符是 "+", "-", "!", 和 "~". 因此, 如果定义名为 unary_! 的方法, 则可以使用前缀运算符表示法(例如 !p)对相应类型的值或变量调用该方法. 但是, 如果定义一个名为 unary_* 的方法, 则无法使用前缀运算符表示法, 因为 "*" 不是可用作前缀运算符的四个标识符之一. 您可以直接调用该方法, 如 inp.unary_*, 但如果您尝试通过 *p 调用它, Scala将解析为 *.p 一样, 这可不是您想要的!
+
+后缀运算符是在没有点或括号的情况下调用不带参数的方法. 在 Scala 中, 您可以在方法调用上不写空括号(没有参数时). 如果方法有副作用, 你可以包括括号, 例如 println(), 但如果方法没有副作用, 你可以不写, 例如在 String 上调用 toLowerCase:
+
+  scala> val s = "Hello, world!"
+  s: String = Hello, world!
+
+  scala> s toLowerCase
+  res4: String = hello, world!
+
+### 5.5 ARITHMETIC OPERATIONS
+
+当左右操作数都是整数类型(Int, Long, Byte, Short 或 Char)时, "/" 运算符将告诉您商的整数部分, 不包括任何余数. "%"运算符表示整数除法的余数.
+
+使用 "%" 获得的浮点余数不是 IEEE 754 标准定义的值. IEEE 754 余数在计算余数时使用舍入除法, 而不是截断除法, 因此它与整数余数运算完全不同. 如果您真的需要 IEEE 754 余数, 可以在 scala.math 上调用 IEEEremainder, 如下所示:
+
+ scala> math.IEEEremainder（11.0,4.0）
+ res14：Double = -1.0
+
+数字类型还提供一元前缀运算符 "+"(对应方法 unary_+)和 "-"(对应方法 unary_-), 它们允许您标识数字是正数还是负数, 如 -3 或 +4.0. 如果未指定一元运算符 "+" 或 "-", 则将数字默认为正数. 一元 - 也可用于反转变量. 这里有些例子:
+
+ scala> val neg = 1 + -3
+ neg：Int = -2
+
+ scala> val y = +3
+ y：Int = 3
+
+ scala> -neg
+ res15：Int = 2
+
+### 5.6 RELATIONAL AND LOGICAL OPERATIONS
+
+### 5.7 BITWISE OPERATIONS
+
+### 5.8 OBJECT EQUALITY
+
+如果要比较两个对象是否相等，可以使用 "==" 或其反向 "!=". 这些操作实际上适用于所有对象, 而不仅仅是基本类型.
+
+如您所见, "==" 经过精心设计, 因此在大多数情况下能够如你所愿. 这是通过一个非常简单的规则来完成的: 首先检查左侧是否为空. 如果它不为 null, 则调用 equals 方法. 由于 equals 是一种方法, 因此您获得的比较结果取决于左侧操作数的类型. 由于存在自动空检查, 因此您无需亲自进行检查.
+
+在 Java 中, 您可以使用 == 来比较原始类型和引用类型. 在原始类型上, Java "==" 比较的是它们的值, 就像在 Scala 中一样. 但是, 在引用类型上, Java 的 == 比较的是引用相等性, 这意味着两个变量是否指向 JVM 堆上的同一个对象. Scala 提供了一个用于比较引用相等性的工具, 名称为 eq. 但是, eq 及 ne 仅适用于直接映射到 Java 对象的对象. 有关 eq 和 ne 的完整详细信息, 请参见第 11.1 节和第 11.2 节. 另外, 请参阅第 30 章, 了解如何编写好的 equals 方法.
+
+### 5.9 OPERATOR PRECEDENCE AND ASSOCIATIVITY
+
+### 5.10 RICH WRAPPERS
+
+Table 5.4 - Some rich operations
+| Code | Result |
+| ---------- | ------------ |
+| 0 max 5    |          5   |
+| 0 min 5    |          0   |
+| -2.7 abs   |      2.7     |
+| -2.7 round |       -3L    |
+| 1.5 isInfinity       | false          |
+| (1.0 / 0) isInfinity |true            |
+| 4 to 6               |Range(4, 5, 6)  |
+| "bob" capitalize     |"Bob"           |
+| "robert" drop 2      |"bert"          |
+
+Table 5.5 - Rich wrapper classes
+
+| Basic type  | Rich wrapper |
+| ----------- | ------------ |
+|     Byte    | scala.runtime.RichByte |
+|     Short   | scala.runtime.RichShort  |
+|     Int     | scala.runtime.RichInt    |
+|     Long    | scala.runtime.RichLong   |
+|     Char    | scala.runtime.RichChar   |
+|     Float   | scala.runtime.RichFloat  |
+|     Double  | scala.runtime.RichDouble |
+|     Boolean | scala.runtime.RichBoolean |
+|     String  | scala.collection.immutable.StringOps |
+
+## Chapter 6 Functional Objects
+
+-----------------------
+
+### 6.1 A SPECIFICATION FOR CLASS RATIONAL
+
+### 6.2 CONSTRUCTING A RATIONAL
+
+**IMMUTABLE OBJECT TRADE-OFFS**
+
+不可变对象相对于可变对象提供了若干优点, 但也有一个潜在的缺点. 首先, 不可变对象通常比可变对象更容易推理, 因为它们没有随时间变化的复杂状态空间. 其次, 你可以非常自由地传递不可变对象, 而在传递可变对象时, 你可能需要制作防御性副本. 第三, 一旦正确构造了不可变对象, 两个线程同时访问不可变对象时就没有办法破坏它的状态, 因为没有线程可以改变不可变对象的状态. 第四, 不可变对象制作安全的哈希表键. 例如, 如果可变对象在放入 HashSet 后发生变化, 则下次查看 HashSet 时就可能找不到该对象.
+
+不可变对象的主要缺点在更新时它们有时需要复制大批对象. 在某些情况下, 这可能很难表达, 也可能导致性能瓶颈. 因此, 库为不可变类提供可变替代方案的情况并不少见. 例如, StringBuilder 类是对不可变类 String 的可变替代. 我们将在 18 章中为您提供有关在 Scala 中设计可变对象的更多信息.
+
+在 Java 中, 类的构造函数可以使用参数; 而在 Scala 中, 类可以直接获取参数. Scala 表示法更简洁, 参数可以直接在类的主体中使用; 没有必要定义字段并编写构造函数将参数赋值给字段.
+
+``` scala
+class Rational(n: Int, d: Int) {
+  println("Created " + n + "/" + d)
+}
+```
+
+### 6.3 REIMPLEMENTING THE TOSTRING METHOD
+
+``` scala
+class Rational(n: Int, d: Int) {
+  override def toString = n + "/" + d
+}
+```
+
+### 6.4 CHECKING PRECONDITIONS
+
+前提条件是对传递给方法或构造函数的值的约束, 这是调用者必须满足的要求.
+
+``` scala
+class Rational(n: Int, d: Int) {
+  require(d != 0)
+  override def toString = n + "/" + d
+}
+```
+
+### 6.5 ADDING FIELDS
+
+为了保持 Rational 的不可变特性, add 方法不能将传递的 Rational 添加到自身. 相反, 它必须创建一个新的 Rational 来保存总和, 然会返回.
+
+``` scala
+class Rational(n: Int, d: Int) { // This won't compile
+  require(d != 0)
+  override def toString = n + "/" + d
+  def add(that: Rational): Rational = new Rational(n * that.d + that.n * d, d * that.d)
+}
+```
+
+尽管类参数 n 和 d 在 add 方法的代码中可见, 但是只有对象内部的方法才能访问它们的值. 因此, 当您在 add 的实现中说 n 或 d 时, 编译器很乐意为您提供这些类参数的值. 但它不会让你说 that.n 或 that.d, 因为 that 并没有引用调用 add 的Rational 对象. 要访问其他类的 n 和 d, 您需要将它们放入类的定义中.
+
+``` scala
+class Rational(n: Int, d: Int) {
+  require(d != 0)
+  val numer: Int = n
+  val denom: Int = d
+  override def toString = numer + "/" + denom
+  def add(that: Rational): Rational =
+    new Rational(
+      numer * that.denom + that.numer * denom,
+      denom * that.denom
+    )
+}
+```
+
+<p align="left" style="color:red;"><font size=5><b>注: 类参数的可见性问题. </b></font></p>
+
+### 6.6 SELF REFERENCES
+
+this
+
+### 6.7 AUXILIARY CONSTRUCTORS
+
+在 Scala 中, 除主要构造函数之外的构造函数称为辅助构造函数(auxiliary constructors). Scala 中的辅助构造函数以 def this(...) 开头.
+
+``` scala
+class Rational(n: Int, d: Int) {
+
+  require(d != 0)
+
+  val numer: Int = n
+  val denom: Int = d
+
+  def this(n: Int) = this(n, 1) // auxiliary constructor
+
+  override def toString = numer + "/" + denom
+
+  def add(that: Rational): Rational =
+    new Rational(
+      numer * that.denom + that.numer * denom,
+      denom * that.denom
+    )
+}
+```
+
+在 Scala 中, 每个辅助构造函数必须首先调用同一个类中的其他构造函数. 换句话说, 每个 Scala 类中每个辅助构造函数中的第一个语句都将具有 "this(...)" 形式. 调用的构造函数可以是主构造函数(如 Rational 示例中所示), 也可以是另一个辅助构造函数. 此规则的效果是 Scala 中的每个构造函数调用最终都会调用类的主构造函数. 因此, 主构造函数是构建类的唯一入口点.
+
+在 Java 中, 构造函数必须调用同一个类的另一个构造函数, 或者直接调用超类的构造函数作为其第一个操作. 在 Scala 类中, 只有主构造函数可以调用超类构造函数.
+
+### 6.8 PRIVATE FIELDS AND METHODS
+
+### 6.9 DEFINING OPERATORS
+
+### 6.10 IDENTIFIERS IN SCALA
+
+字母数字标识符以字母或下划线开头, 后面可以跟其他字母, 数字或下划线. \$ 字符也算作一个字母; 但是, 它被保留, 用于 Scala 编译器生成的标识符. 用户程序中的标识符不应包含 \$ 字符, 即使它可以通过编译; 如果非要这样做, 这可能会导致与 Scala 编译器生成标识符的名称冲突.
+
+Scala 遵循 Java 使用 camel-case 标识符的惯例, 例如 toString 和 HasSet. 虽然下划线在标识符中是合法的, 但它们通常不会在 Scala 程序中使用, 部分是为了与 Java 保持一致, 还因为下划线在 Scala 代码中有许多其他非标识符用法. 因此, 最好避免使用 to_string, _init_ 或 name_ 等标识符. 字段, 方法参数, 局部变量和函数的 Camel-case 名称应以小写字母开头, 例如: length, flatMap 和 s. 类和 traits 的 Camel-case  名称应以大写字母开头, 例如: BigInt, List 和 UnbalancedTreeMap.
+
+在 Scala 中, 常量不仅仅意味着 val. 即使 val 在初始化后就保持不变, 它仍然是一个变量. 例如, 方法参数是 val, 但每次调用该方法时, 这些 val 可以包含不同的值.
+
+<p align="left" style="color:red;"><font size=5><b>注: val 是初始化不可变. 常量是编译时就已经不可变了. </b></font></p>
+
+在 Java 中, 惯例是将常量名称全部大写, 下划线分隔单词, 例如 MAX_VALUE 或 PI. 在 Scala 中, 约定仅仅将第一个字符大写.
+
+Scala 编译器将在内部 "修改" 运算符标识符, 将它们转换为嵌入了 \$ 字符的合法Java标识符. 例如, 标识符 :-> 将在内部表示为 \$colon\$minus\$greater. 如果您想从 Java 代码访问此标识符, 则需要使用此内部表示.
+
+由于 Scala 中的运算符标识符可以是任意长度, 因此 Java 和 Scala 之间存在细微差别. 在 Java 中, 输入 x<-y 将被解析为四个词法符号, 因此它将等同于 x < - y. 在 Scala 中, <- 将被解析为单个标识符, 给出 x <- y. 如果你想要第一个解释, 你需要用空格分隔 < 和 - 字符. 这在实践中不太可能成为问题, 因为很少有人会在 Java 中编写 x <- y 而不在运算符之间插入空格或括号.
+
+混合标识符由字母数字标识符组成, 后跟下划线和运算符标识符. 例如, 用作方法名称的 unary_+ 定义了一元 "+" 运算符. 或者, myvar_= 用作方法名称定义赋值运算符. 此外, 像 myvar_= 一样的混合标识符由 Scala 编译器生成以支持属性(更多内容见 18 章).
+
+文字标识符是 \`...\` 中包含的任意字符串. 文字标识符的一些示例是: \`x\` \`<clinit>\` \`yield\`
+
+我们的想法是, 您可以将运行时接受的任何字符串作为反引号之间的标识符. 结果始终是 Scala 标识符. 即使反引号中包含的名称是 Scala 保留字也可以工作. 一个典型的用例是访问 Java 的 Thread 类中的静态 yield 方法. 你不能写 Thread.yield() 因为 yield 是 Scala 中的保留字. 但是, 您仍然可以在反引号中命名方法, 例如 Thread.\`yield\`().
+
+### 6.11 METHOD OVERLOADING
+
+### 6.12 IMPLICIT CONVERSIONS
+
+您可以创建一个隐式转换, 在需要时自动将整数转换为有理数.
+
+  scala> implicit def intToRational(x: Int) = new Rational(x)
+
+  scala> val r = new Rational(2,3)
+  r: Rational = 2/3
+
+  scala> 2 * r
+  res15: Rational = 4/3
+
+要使隐式转换起作用, 它必须在 scope 内. 如果将隐式方法定义放在 Rational 类中, 它将不在解释器的范围内. 现在, 您需要直接在解释器中定义它.
+
+### 6.13 A WORD OF CAUTION
+
+正如本章所述, 使用运算符名称和定义隐式转换创建方法可以帮助您设计客户端代码简洁易懂的库. Scala 为您提供了设计这些易于使用的库的强大功能. 但请记住, 能力越强, 责任越大.
+
+如果使用不当, 操作符方法和隐式转换都会导致难以阅读和理解的客户端代码. 因为隐式转换是由编译器隐式应用的, 而不是在源代码中明确写出, 所以对于客户端程序员来说, 应用隐式转换是不感知的. 虽然运算符方法通常会使客户端代码更简洁, 但它们只会使客户端程序员能够识别并记住每个运算符的含义, 使其更具可读性.
+
+在设计库时, 您应该牢记的目标不仅仅是启用简洁的客户端代码, 而是可读, 易懂的客户端代码. 简洁性通常是可读性的重要组成部分, 但是你可以把它简洁做到极致. 通过设计能够实现高雅简洁且同时可理解的客户端代码的库, 从而帮助客户端程序员高效地工作.
+
+### 6.14 CONCLUSION
+
+## Chapter 7 Built-in Control Structures
 
 
