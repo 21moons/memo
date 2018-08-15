@@ -237,38 +237,43 @@ loans = new Vector();  //not valid
 - 构造代码块的作用是给对象进行初始化, 有对象建立, 才会运行构造代码块, 且优先于构造函数执行, 构造代码块中定义的是不同对象共性的初始化内容.
 - 静态代码块随着类的加载而执行, 只执行一次, 并优先于主函数, 静态代码块其实就是给类初始化的, 而构造代码块是给对象初始化的, 静态代码块中的变量是局部变量, 与普通函数中的局部变量性质没有区别, 一个类中可以有多个静态代码块.
 - Java 类初始化顺序:
-![Java类初始化顺序](https://raw.githubusercontent.com/21moons/memo/master/res/img/java/Java类初始化顺序.png)
+  ![Java类初始化顺序](https://raw.githubusercontent.com/21moons/memo/master/res/img/java/Java类初始化顺序.png)
 
+  1. 访问SubClass.main(),(这是一个 static 方法), 于是装载器就会为你寻找已经编译的 SubClass 类的代码(也就是 SubClass.class 文件). 在装载的过程中, 装载器注意到它有一个基类(也就是 extends 所要表示的意思), 于是它再装载基类. 不管你创不创建基类对象, 这个过程总会发生. 如果基类还有基类, 那么第二个基类也会被装载, 依此类推.
+  2. 执行根基类的 static 初始化, 然后是下一个派生类的 static 初始化, 依此类推. 这个顺序非常重要, 因为派生类的 "static 初始化" 有可能要依赖基类成员的正确初始化.
+  3. 当所有必要的类都已经装载结束, 开始执行 main() 方法体, 并用 new SubClass() 创建对象.
+  4. 类 SubClass 存在父类, 则调用父类的构造函数, 你可以使用 super 来指定调用哪个构造函数. 基类的构造过程以及构造顺序, 同派生类的相同. 首先基类中各个变量按照字面顺序进行初始化, 然后执行基类的构造函数的其余部分.
+  5. 对子类成员数据按照它们声明的顺序初始化, 执行子类构造函数的其余部分.
 - 为了避免父类的构造函数调用子类的多态方法, 一般可以将父类的同名函数声明为 private, 这样在父类构造函数中调用的就是自己的方法.
 
-```java
-public class Test1 {
-    public static void main(String[] args) {
-        A b = new B();
-        b.print();
-    }
-}
-
-class A {
-    public A(){
-        print();
-    }
-
-    public void print(){
-        System.out.println("A");
-    }
-}
-class B extends A{
-    int i = 1;
-    public B(){
-        print();
-    }
-
-    public void print(){
-        System.out.println("B" + i);
-    }
-}
-```
+  ```java
+  public class Test1 {
+      public static void main(String[] args) {
+          A b = new B();
+          b.print();
+      }
+  }
+  
+  class A {
+      public A(){
+          print();
+      }
+  
+      public void print(){
+          System.out.println("A");
+      }
+  }
+  class B extends A{
+      int i = 1;
+      public B(){
+          print();
+      }
+  
+      public void print(){
+          System.out.println("B" + i);
+      }
+  }
+  ```
 
 ---
 
