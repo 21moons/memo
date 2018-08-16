@@ -6,6 +6,7 @@
 
 - [算法图示](http://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
 - [算法学习笔记](https://brandeath.gitbooks.io/al/content/index.html)
+- [Monte Carlo Tree Search – beginners guide](https://int8.io/monte-carlo-tree-search-beginners-guide/#more-2250)
 
 ---
 

@@ -830,4 +830,505 @@ Scala 编译器将在内部 "修改" 运算符标识符, 将它们转换为嵌�
 
 ## Chapter 7 Built-in Control Structures
 
+您会注意到的一件事是, 几乎所有 Scala 的控制结构都会产生一些值. 这是函数式语言所采用的方法, 其中程序被视为值的计算, 因此程序的组件也应该计算值. 在命令式语言中, 函数调用可以返回一个值, 即使被调用函数更新作为参数传进来的输出变量也可以正常工作. 此外, 命令式语言通常具有三元运算符(ternary operator, 例如 C, C++ 和 Java 的 ?: 运算符), 其行为与 if 完全相同, 但会返回一个值. Scala 采用这种三元运算符模型, 只是将其称为 if. 换句话说, Scala 的 if 可以产生一个值. 除此以外, Scala 中的 for, try 和 match 也一样.
+
+程序员可以使用这些结果值来简化代码, 就像它们使用函数的返回值一样. 如果没有此工具, 程序员必须创建临时变量, 以保存在控制结构内计算的结果. 删除这些临时变量会使代码变得更简单, 并且它还可以防止在一个分支中设置变量但又忘记在另一个分支中设置变量的许多错误.
+
+### 7.1 IF EXPRESSIONS
+
+命令式风格:
+
+``` scala
+var filename = "default.txt"
+if (!args.isEmpty)
+  filename = args(0)
+```
+
+Scala 中 if 有返回值:
+
+``` scala
+val filename =
+  if (!args.isEmpty) args(0)
+  else "default.txt"
+```
+
+上例中使用 val 是一种函数式样式, 它可以像 Java 中的 final 变量一样帮助您. 它告诉读者变量永远不会改变, 从而使他们不必扫描变量范围内的所有代码, 看它是否会发生变化.
+
+使用 val 而不是 var 的第二个好处是它更好地支持等式推理(equational reasoning). 假设表达式没有副作用, 变量等于计算它的表达式. 因此, 无论何时你想用变量时, 您都可以用表达式来代替. 例如, 你可以写下这个, 而不是 println(filename):
+
+``` scala
+println(if (!args.isEmpty) args(0) else "default.txt")
+```
+
+### 7.2 WHILE LOOPS
+
+while 和 do-while 结构被称作 "循环", 而不是表达式, 因为它们不会产生有意义的值. "循环" 产生的结果类型是 Unit. 事实证明存在一个值(实际上只有一个值), 其类型为 Unit. 它被称为 unit value 并写做 (). () 的存在是 Scala Unit 与 Java void 的区别.
+
+  scala> def greet() = { println("hi") }
+  greet: ()Unit
+
+  scala> () == greet()
+  hi
+  res0: Boolean = true
+
+因为 greet 函数体中没有等号(没有求值操作), 所以 greet 被定义为返回类型为 Unit 的过程. 因此 greet 函数返回 unit value. 这在下一行中得到证实: 将 greet 函数的返回值与 () 进行比较, 结果为 true.
+
+返回 Unit 值的另一个结构是重新给变量赋值. 例如, 如果您尝试使用以下 while 循环来读取 Scala 中的行, 您将遇到麻烦:
+
+``` scala
+var line = ""
+while ((line = readLine()) != "") // This doesn't work!
+  println("Read: " + line)
+```
+
+编译此代码时, Scala 会给出一个警告, 即使用 != 比较 Unit 和 String 类型的值将始终为 true. 而在 Java 中, 赋值操作的结果总是得到所赋的值(在本例中是标准输入中的一行), 而在 Scala 赋值中总是得到 unit 值, (). 因此, 赋值 "line = readLine()" 的值将始终为 () 且永远不会为 "". 因此, 此 while 循环的条件永远不会为 false, 因此循环将永远不会终止.
+
+<p align="left" style="color:red;"><font size=5><b>注: scala 中, readLine() 返回的是 unit, 而不是 java 中的字符串. 感觉 scala 中所有 io 相关的函数返回的都是 unit. </b></font></p>
+
+因为 while 循环不返回任何值, 所以它常常被纯函数式语言排除在外. 这些语言只有表达式, 而不包括循环. 尽管如此, Scala 包含 while 循环, 因为有时候命令式解决方案可读性更强. 例如, 如果要编写一个重复某个过程直到某些条件发生变化的算法, while 循环可以直接表达它, 如果使用函数递归来代替, 对于某些读者来说可能是拗口的.
+
+例如，代码清单 7.4 显示了另一种确定两个数字的最大公约数的方法. 给定 x 和 y 的两个相同值, 清单 7.4 中显示的 gcd 函数将返回与 gcdLoop 函数相同的结果, 如清单 7.2 所示. 这两种方法的区别在于 gcdLoop 是以命令式的方式编写的, 使用了变量和 while 循环.
+
+而 gcd 是以更偏向函数式的风格编写的, 涉及递归(gcd 调用自身)并且不需要变量.
+
+``` scala
+def gcdLoop(x: Long, y: Long): Long = {
+  var a = x
+  var b = y
+  while (a != 0) {
+    val temp = a
+    a = b % a
+    b = temp
+  }
+  b
+}
+```
+
+``` scala
+def gcd(x: Long, y: Long): Long =
+  if (y == 0) x else gcd(y, x % y)
+```
+
+通常情况下, 我们建议您以与对待变量相同的方式来对待代码中的 while 循环. 实际上, 虽然循环和变量通常是齐头并进的. 因为虽然 while 循环不会产生值, 但为了控制程序跳出循环, while 循环通常需要更新变量或执行 I/O. 您可以在前面显示的 gcdLoop 示例中看到此操作. while 循环会更新变量 a 和 b. 因此, 我们建议您对代码中的 while 循环持怀疑态度. 如果没有使用 while 或 do-while 循环的良好理由, 试着找到一种方法来代替它们.
+
+### 7.3 FOR EXPRESSIONS
+
+**generator**
+
+``` scala
+val filesHere = (new java.io.File(".")).listFiles
+
+for (file <- filesHere)         //generator
+  println(file)
+```
+
+**Filtering**
+
+``` scala
+val filesHere = (new java.io.File(".")).listFiles
+
+for (file <- filesHere if file.getName.endsWith(".scala"))
+  println(file)
+```
+
+**Nested iteration**
+
+``` scala
+def fileLines(file: java.io.File) =
+  scala.io.Source.fromFile(file).getLines().toList
+
+def grep(pattern: String) =
+  for (
+    file <- filesHere
+    if file.getName.endsWith(".scala");
+    line <- fileLines(file)
+    if line.trim.matches(pattern)
+  ) println(file + ": " + line.trim)
+
+grep(".*gcd.*")
+```
+
+如果您愿意, 可以使用花括号而不是括号来围绕生成器和过滤器. 使用花括号的一个优点是你可以省略使用括号时所需的一些分号, 因为如第 4.2 节所述, Scala 编译器在括号内不会推断出分号.
+
+** Mid-stream variable bindings **
+
+``` scala
+def grep(pattern: String) =
+  for (
+    file <- filesHere
+    if file.getName.endsWith(".scala");
+    line <- fileLines(file)
+    trimmed = line.trim
+    if trimmed.matches(pattern)
+  ) println(file + ": " + trimmed)
+
+grep(".*gcd.*")
+```
+
+**Producing a new collection**
+
+``` scala
+def scalaFiles =
+  for {
+    file <- filesHere
+    if file.getName.endsWith(".scala")
+  } yield file
+```
+
+### 7.4 EXCEPTION HANDLING WITH TRY EXPRESSIONS
+
+**Catching exceptions**
+
+``` scala
+import java.io.FileReader
+import java.io.FileNotFoundException
+import java.io.IOException
+
+try {
+  val f = new FileReader("input.txt")
+// Use and close file
+} catch {
+  case ex: FileNotFoundException => // Handle missing file
+  case ex: IOException => // Handle other I/O error
+}
+```
+
+与 Java 不同, Scala 不要求您在 catch 中列出待检查的异常或在 throws 子句中声明它们. 如果您希望使用 @throws 注释, 则可以声明 throws 子句, 但这不是必需的.
+
+**Yielding a value**
+
+与在 Java 中一样, 如果 finally 子句包含显式返回语句或抛出异常, 则该返回值或异常将 "覆盖" 源自 try 块或其 catch 子句之一的任何先前子句.
+
+``` scala
+def f(): Int = try return 1 finally return 2
+```
+
+调用上面的函数将返回 2.
+
+``` scala
+def g(): Int = try 1 finally 2
+```
+
+调用上面的函数将返回 1.
+
+### 7.5 MATCH EXPRESSIONS
+
+``` scala
+val firstArg = if (args.length > 0) args(0) else ""
+firstArg match {
+  case "salt" => println("pepper")
+  case "chips" => println("salsa")
+  case "eggs" => println("bacon")
+  case _ => println("huh?")      // default case
+}
+```
+
+与 Java 的 switch 语句有一些重要的区别. 一个是在 Scala 中可以使用任何类型的常量以及其他东西, 而不仅仅是 Java  case 语句支持的整数类型, 枚举和字符串常量. 另一个区别是 case 的末尾都没有 break.
+
+``` scala
+val firstArg = if (!args.isEmpty) args(0) else ""
+val friend =
+  firstArg match {
+    case "salt" => "pepper"
+    case "chips" => "salsa"
+    case "eggs" => "bacon"
+    case _ => "huh?"
+  }
+
+println(friend)
+```
+
+### 7.6 LIVING WITHOUT BREAK AND CONTINUE
+
+最简单的方法是用布尔变量替换 break, 用 if 替换 continue.
+
+``` java
+int i = 0; // This is Java
+boolean foundIt = false;
+while (i < args.length) {
+  if (args[i].startsWith("-")) {
+    i = i + 1;
+    continue;
+  }
+  if (args[i].endsWith(".scala")) {
+    foundIt = true;
+    break;
+  }
+
+  i = i + 1;
+}
+```
+
+``` scala
+var i = 0
+var foundIt = false
+
+while (i < args.length && !foundIt) {
+  if (!args(i).startsWith("-")) {
+    if (args(i).endsWith(".scala"))
+      foundIt = true
+  }
+  i = i + 1
+}
+```
+
+``` scala
+def searchFrom(i: Int): Int =
+  if (i >= args.length) -1
+  else if (args(i).startsWith("-")) searchFrom(i + 1)
+  else if (args(i).endsWith(".scala")) i
+  else searchFrom(i + 1)
+
+val i = searchFrom(0)
+```
+
+Scala 编译器实际上不会将上面的代码编译成递归调用. 因为所有递归调用都处于函数末尾, 所以编译器的输出类似于使用 while 循环的代码. 每个递归调用的实现都是跳回函数的开头. 尾递归优化在 8.9 节讨论.
+
+``` scala
+import scala.util.control.Breaks._
+import java.io._
+
+val in = new BufferedReader(new InputStreamReader(System.in))
+
+breakable {
+  while (true) {
+    println("? ")
+    if (in.readLine() == "") break
+  }
+}
+```
+
+### 7.7 VARIABLE SCOPE
+
+### 7.8 REFACTORING IMPERATIVE-STYLE CODE
+
+``` scala
+// Returns a row as a sequence
+def makeRowSeq(row: Int) =
+  for (col <- 1 to 10) yield {
+    val prod = (row * col).toString
+    val padding = " " * (4 - prod.length)
+    padding + prod
+  }
+
+// Returns a row as a string
+def makeRow(row: Int) = makeRowSeq(row).mkString
+
+// Returns table as a string with one row per line
+def multiTable() = {
+
+  val tableSeq = // a sequence of row strings
+    for (row <- 1 to 10)
+    yield makeRow(row)
+
+  tableSeq.mkString("\n")
+}
+```
+
+### 7.9 CONCLUSION
+
+## Chapter 8 Functions and Closures
+
+### 8.1 METHODS
+
+``` scala
+import scala.io.Source
+
+object LongLines {
+
+  def processFile(filename: String, width: Int) = {
+    val source = Source.fromFile(filename)
+    for (line <- source.getLines())
+      processLine(filename, width, line)
+  }
+
+  private def processLine(filename: String,
+    width: Int, line: String) = {
+
+    if (line.length > width)
+      println(filename + ": " + line.trim)
+  }
+}
+```
+
+在方法中定义方法:
+
+``` scala
+def processFile(filename: String, width: Int) = {
+
+  def processLine(filename: String,
+    width: Int, line: String) = {
+  if (line.length > width)
+    println(filename + ": " + line.trim)
+  }
+
+  val source = Source.fromFile(filename)
+  for (line <- source.getLines()) {
+    processLine(filename, width, line)
+  }
+}
+```
+
+### 8.3 FIRST-CLASS FUNCTIONS
+
+  scala> increase = (x: Int) => x + 9999
+  increase: Int => Int = <function1>
+  
+  scala> increase(10)
+  res1: Int = 10009
+
+### 8.4 SHORT FORMS OF FUNCTION LITERALS
+
+  scala> someNumbers.filter((x) => x > 0)
+  res5: List[Int] = List(5, 10)
+
+### 8.5 PLACEHOLDER SYNTAX
+
+  scala> someNumbers.filter(_ > 0)
+  res7: List[Int] = List(5, 10)
+
+  scala> val f = (_: Int) + (_: Int)
+  f: (Int, Int) => Int = <function2>
+  scala> f(5, 10)
+  res9: Int = 15
+
+### 8.6 PARTIALLY APPLIED FUNCTIONS
+
+  scala> sum(1, 2, 3)
+  res10: Int = 6
+
+  scala> val a = sum _
+  a: (Int, Int, Int) => Int = <function3>
+
+  scala> a(1, 2, 3)
+  res11: Int = 6
+
+  scala> val b = sum(1, _: Int, 3)
+  b: Int => Int = <function1>
+
+  scala> b(2)
+  res13: Int = 6
+
+### 8.7 CLOSURES
+
+### 8.8 SPECIAL FUNCTION CALL FORMS
+
+**Repeated parameters**(可变参数)
+
+"String*" 实际上是 Array[String]
+
+  scala> def echo(args: String*) =
+           for (arg <- args) println(arg)
+  echo: (args: String*)Unit
+
+
+  scala> val arr = Array("What's", "up", "doc?")
+  arr: Array[String] = Array(What's, up, doc?)
+
+  scala> echo(arr)
+  <console>:10: error: type mismatch;
+  found : Array[String]
+
+  scala> echo(arr: _*)
+  What's
+  up
+  doc? 
+
+**Named arguments**
+
+  scala> def speed(distance: Float, time: Float): Float =
+           distance / time
+  speed: (distance: Float, time: Float)Float
+
+  scala> speed(100, 10)
+  res27: Float = 10.0
+
+  scala> speed(distance = 100, time = 10)
+  res28: Float = 10.0
+
+  scala> speed(time = 10, distance = 100)
+  res29: Float = 10.0
+
+也可以混合使用位置和命名参数. 在这种情况下, 位置参数首先出现. 命名参数最常与默认参数值结合使用.
+
+**Default parameter values**
+
+``` scala
+def printTime2(out: java.io.PrintStream = Console.out, divisor: Int = 1) =
+  out.println("time = " + System.currentTimeMillis()/divisor)
+```
+
+### 8.9 TAIL RECURSION
+
+尾调用优化仅限于方法或嵌套函数直接将其自身称为最后一个操作的情况, 而不通过函数值或其他中介.
+
+###　8.10 CONCLUSION
+
+foreach 方法定义在 Traversable trait 中
+
+## Chapter 9 Control Abstraction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
