@@ -1,5 +1,7 @@
 # 概要
 
+* scala.AnyRef 是所有类的父类
+
 * scala 即 scalable language, 它是面向对象和函数式编程的融合
 
 * 用 scala 编写的程序易裁剪, 因为很多数据结构和类型都是用库的方式实现的, 比如说 BigInt
@@ -8,6 +10,8 @@
   第一条的另外一种表述方法是方法没有任何 side effects, 他们仅仅从运行环境中获取参数和返回结果
 
 * scala 支持类型推断
+
+* scala 最常见的方式是匿名函数用 "=>" 定义, <- 主要是迭代里用, -> 主要是 map 里用, => 主要是匿名函数用.
 
 * 语法糖
 
@@ -1342,25 +1346,140 @@ def containsOdd(nums: List[Int]) = nums.exists(_ % 2 == 1)
 
 ### 9.4 WRITING NEW CONTROL STRUCTURES
 
+``` scala
+def withPrintWriter(file: File, op: PrintWriter => Unit) = {
+  val writer = new PrintWriter(file)
+  try {
+    op(writer)
+  } finally {
+    writer.close()
+  }
+}
 
+withPrintWriter(
+  new File("date.txt"),
+  writer => writer.println(new java.util.Date)
+)
+```
 
+这种技术称为贷款模式, 因为控制抽象函数(如 withPrintWriter)打开资源并将其 "贷款" 给函数. 例如, 在上一个示例中, withPrintWriter 将一个 PrintWriter 借给函数 op. 当函数完成时, 它表示它不再需要 "借用" 资源. 然后在 finally 块中关闭资源, 无论函数是正常返回还是抛出异常.
 
+``` scala
+def withPrintWriter(file: File)(op: PrintWriter => Unit) = {
+  val writer = new PrintWriter(file)
+  try {
+    op(writer)
+  } finally {
+    writer.close()
+  }
+}
 
+val file = new File("date.txt")
 
+withPrintWriter(file) { writer =>
+  writer.println(new java.util.Date)
+}
+```
 
+在此示例中, 第一个参数列表(包含一个 File 参数)被括号括起来. 第二个参数列表包含一个函数参数, 由大括号括起来.
 
+### 9.5 BY-NAME PARAMETERS(传名参数)
 
+传值参数在函数调用之前表达式会被求值, 例如 Int, Long 等数值参数类型; 传名参数在函数调用前表达式不会被求值, 而是会被包裹成一个匿名函数作为函数参数传递下去, 例如参数类型为无参函数的参数就是传名参数.
 
+在函数声明时, 参数类型中添加一个 =>, 参数的类型就变成了无参函数, 类型为 () => String, 按照 Scala 针对无参函数的简化规则, 可以省略 () 写作 => String. 因为参数的类型是无参函数, 所以此处是按名传递。
 
+如果参数类型是无参函数, 则按名传递, 否则按值传递. 注意, 如果参数类型是函数类型, 但不是无参函数, 还是按值传递.
 
+传值参数:
 
+``` scala
+object Test {
+  def invode(f: String => Int => Long) = {
+    println("call invoke")
+    f("1")(2)
+  }
+  def curry(s: String)(i: Int): Long = {
+    s.toLong + i.toLong
+  }
+  def main(args: Array[String]) {
+    invode{println("eval parameter expression");curry}
+  }
+}
+```
 
+传名参数:
 
+``` scala
+object Test {
+  def invode(f: => String => Int => Long) = {  // 参数 f 的类型有变化
+    println("call invoke")
+    f("1")(2)
+  }
+  def curry(s: String)(i: Int): Long = {
+    s.toLong + i.toLong
+  }
+  def main(args: Array[String]) {
+    invode{println("eval parameter expression");curry}
+  }
+}
+```
 
+## Chapter 10 Composition and Inheritance
 
+组合(Composition)意味着一个类引用另一个类, 使用引用的类来帮助它完成其任务. 继承是超类/子类关系.
 
+### 10.1 A TWO-DIMENSIONAL LAYOUT LIBRARY
 
+组合器(combinators)的参数都是一个函数, 这个函数的输入输出都是列表元素, 它们将某些域的元素组合成新元素.
 
+### 10.2 ABSTRACT CLASSES
+
+抽象类不能实例化, 抽象方法没有函数体, 不用 abstract 声明.
+
+``` scala
+abstract class Element {
+  def contents: Array[String]
+}
+```
+
+### 10.3 DEFINING PARAMETERLESS METHODS
+
+``` scala
+abstract class Element {
+  def contents: Array[String]              // 因为函数没有参数, 所以省略 ()
+  def height: Int = contents.length
+  def width: Int = if (height == 0) 0 else contents(0).length
+}
+```
+
+``` scala
+abstract class Element {
+  def contents: Array[String]
+  val height = contents.length
+  val width = if (height == 0) 0 else contents(0).length
+}
+```
+
+从客户的角度来看, 这两对定义完全相同. 唯一的区别是访问类的属性可能比调用类的方法稍快, 因为类的属性是在初始化类时算好的, 而不是在每次方法调用时都要重新计算. 另一方面, 属性在每个 Element 对象中需要额外的内存空间.
+
+如果函数没有副作用, 则可以用其结果替换函数调用, 而不改变程序的行为. 这意味着没有参数或副作用的函数在语义上等同于保存该函数返回值的 val. 由于这个特性, 随着类的发展, 程序员可能会在使用 val 或调用函数之间来回切换, 因为方便或效率的要求.
+
+由于您可以省略括号(parentheses), 这意味着调用类似 Element.height 的代码不需要知道也不关心 height 是函数还是 val. 因此, Element 类的实现者可以在两者之间自由地进行切换, 而无需更改任何调用代码(尽管需要重新编译). 它稳定了类的对外接口. 例如, 您可以通过调用 List 上的 size 方法来获取 size, 函数复杂度可能是 O(n), 然后出于效率的原因将 size 更改为 val.
+
+用空括号定义的方法, 例如 def height():Int, 称为 empty-paren 方法. 如果函数调用存在副作用, 约定建议保留括号, 以明确该类成员肯定是函数调用, 因此可能不是引用透明的. 了解函数是否产生副作用非常重要, 因此可以避免重复调用产生副作用. 如果你不关心它是否是一个函数, 你最好把它当成不是.
+
+总而言之, Scala 鼓励将不带参数且没有副作用的方法定义为无参数(parameterless)方法, 即省略空括号. 另一方面，您永远不应该定义一个没有括号的但有副作用的方法, 因为那个方法的调用看起来像一个字段选择.
+
+### 10.4 EXTENDING CLASSES
+
+``` scala
+class ArrayElement(conts: Array[String]) extends Element {
+  def contents: Array[String] = conts
+}
+```
+
+### 10.5 OVERRIDING METHODS AND FIELDS
 
 
 
