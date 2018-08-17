@@ -1268,6 +1268,82 @@ foreach 方法定义在 Traversable trait 中
 
 ## Chapter 9 Control Abstraction
 
+### 9.1 REDUCING CODE DUPLICATION
+
+高阶函数 - 将函数作为参数的函数 - 为您提供了压缩和简化代码的额外机会.
+
+``` scala
+def filesMatching(query: String, matcher: (String, String) => Boolean) = {
+  for (file <- filesHere; if matcher(file.getName, query))
+    yield file
+}
+```
+
+``` scala
+object FileMatcher {
+  private def filesHere = (new java.io.File(".")).listFiles
+
+  private def filesMatching(matcher: String => Boolean) =
+    for (file <- filesHere; if matcher(file.getName))
+      yield file
+
+  def filesEnding(query: String) =
+    filesMatching(_.endsWith(query))
+
+  def filesContaining(query: String) =
+    filesMatching(_.contains(query))
+
+  def filesRegex(query: String) =
+    filesMatching(_.matches(query))
+}
+```
+
+### 9.2 SIMPLIFYING CLIENT CODE
+
+``` scala
+def containsNeg(nums: List[Int]): Boolean = {
+  var exists = false
+  for (num <- nums)
+    if (num < 0)
+      exists = true
+  exists
+}
+```
+
+``` scala
+def containsNeg(nums: List[Int]): Boolean = {
+  var exists = false
+  for (num <- nums)
+    if (num % 2 == 1)
+      exists = true
+  exists
+}
+```
+
+``` scala
+def containsOdd(nums: List[Int]) = nums.exists(_ % 2 == 1)
+```
+
+### 9.3 CURRYING
+
+  scala> def plainOldSum(x: Int, y: Int) = x + y
+  plainOldSum: (x: Int, y: Int)Int
+
+  scala> plainOldSum(1, 2)
+  res4: Int = 3
+
+  scala> def curriedSum(x: Int)(y: Int) = x + y
+  curriedSum: (x: Int)(y: Int)Int
+
+  scala> curriedSum(1)(2)
+  res5: Int = 3
+
+当你调用柯里化后的 sum (curriedSum)时, 你实际上得到了两个传统的函数调用. 第一个函数调用采用名为 x 的单个 Int 参数, 并返回一个单参数的函数. 第二个函数采用 Int 参数 y.
+
+### 9.4 WRITING NEW CONTROL STRUCTURES
+
+
+
 
 
 
