@@ -1467,7 +1467,7 @@ abstract class Element {
 
 由于您可以省略括号(parentheses), 这意味着调用类似 Element.height 的代码不需要知道也不关心 height 是函数还是 val. 因此, Element 类的实现者可以在两者之间自由地进行切换, 而无需更改任何调用代码(尽管需要重新编译). 它稳定了类的对外接口. 例如, 您可以通过调用 List 上的 size 方法来获取 size, 函数复杂度可能是 O(n), 然后出于效率的原因将 size 更改为 val.
 
-用空括号定义的方法, 例如 def height():Int, 称为 empty-paren 方法. 如果函数调用存在副作用, 约定建议保留括号, 以明确该类成员肯定是函数调用, 因此可能不是引用透明的. 了解函数是否产生副作用非常重要, 因此可以避免重复调用产生副作用. 如果你不关心它是否是一个函数, 你最好把它当成不是.
+用空括号定义的方法, 例如 def height():Int, 称为 **empty-paren** 方法. 如果函数调用存在副作用, 约定建议保留括号, 以明确该类成员肯定是函数调用, 因此可能不是引用透明的. 了解函数是否产生副作用非常重要, 因此可以避免重复调用产生副作用. 如果你不关心它是否是一个函数, 你最好把它当成不是.
 
 总而言之, Scala 鼓励将不带参数且没有副作用的方法定义为无参数(parameterless)方法, 即省略空括号. 另一方面，您永远不应该定义一个没有括号的但有副作用的方法, 因为那个方法的调用看起来像一个字段选择.
 
@@ -1479,31 +1479,196 @@ class ArrayElement(conts: Array[String]) extends Element {
 }
 ```
 
+如果省略 extends 子句, Scala 编译器会隐式假设您的类继承自 scala.AnyRef, 它在 Java 平台上与类 java.lang.Object 相同.
+
 ### 10.5 OVERRIDING METHODS AND FIELDS
 
+在 Scala 中, 字段和方法属于同一名称空间. 这使得字段可以覆盖无参数方法. 另一方面, 在 Scala 中, 禁止在同一个类中定义具有相同名称的字段和方法, 而在 Java 中允许这样做.
+
+``` java
+// This is Java
+class CompilesFine {
+  private int f = 0;
+
+  public int f() {
+    return 1;
+  }
+}
+```
+
+``` scala
+class WontCompile {
+  private var f = 0 // Won't compile, because a field
+  def f = 1 // and method have the same name
+}
+```
+
+通常, Scala 只有两个用于定义的命名空间来, 而 Java 有四个. Java 的四个名称空间是字段, 方法, 类型和包. 相比之下, Scala 的两个名称空间是:
+
+* 值(字段, 方法, 包和单例对象)
+* 类型(class 和 trait 名称)
+
+正是为了让您可以使用 val 重载无参数方法, Scala 将字段和方法放入同一名称空间, 这是 Java 无法做到的.
+
+### 10.6 DEFINING PARAMETRIC FIELDS
+
+``` scala
+class ArrayElement(conts: Array[String]) extends Element {
+  def contents: Array[String] = conts
+}
+```
+
+``` scala
+class ArrayElement(val contents: Array[String]) extends Element
+```
+
+请注意, 现在 contents 参数以 val 为前缀. 这是一种速记, 它同时定义了具有相同名称的参数和字段. 具体来说, 类 ArrayElement 现在具有(不可重新分配的)字段内容, 可以从类外部访问. 该字段使用参数值初始化.
+
+您还可以使用 var 为 class 参数添加前缀, 在这种情况下, 相应的字段可以重新分配.
+
+``` scala
+class Cat {
+  val dangerous = false
+}
+
+class Tiger(
+  override val dangerous: Boolean,
+  private var age: Int
+) extends Cat
+```
+
+### 10.7 INVOKING SUPERCLASS CONSTRUCTORS
+
+### 10.8 USING OVERRIDE MODIFIERS
+
+Scala 要求覆盖父类中具体成员的所有成员使用此类修饰符(override). 如果类成员实现具有相同名称的抽象类成员, 则修饰符 override 是可选的. 如果类成员没有覆盖或实现基类中的某个类成员, 则禁止使用 override 修饰符.
+
+### 10.9 POLYMORPHISM AND DYNAMIC BINDING
+
+polymorphism 多态
+
+``` scala
+class UniformElement(
+  ch: Char,
+  override val width: Int,
+  override val height: Int
+) extends Element {
+  private val line = ch.toString * width
+  def contents = Array.fill(height)(line)
+}
+```
+
+``` scala
+val e1: Element = new ArrayElement(Array("hello", "world"))
+val ae: ArrayElement = new LineElement("hello")
+val e2: Element = ae
+val e3: Element = new UniformElement('x', 2, 3)
+```
+
+如果检查继承层次结构, 您会发现在上面代码中四个 val 定义语句中, 等号右侧的表达式类型在继承树中低于等号左侧初始化的 val 的类型.(父类可以转化为子类).
+
+然而, 故事的另一半是基于变量或表达式的方法调用是动态绑定(dynamically bound)的. 这意味着调用的实际方法是在运行时根据对象的类确定的, 而不是根据变量或表达式的类型. 为了演示这种行为, 我们将暂时从 Element 类中删除所有现有成员, 并将一个名为 demo 的方法添加到 Element. 我们将在 ArrayElement 和 LineElement 类中覆盖 demo 方法, 但不会覆盖 UniformElement 类:
+
+``` scala
+abstract class Element {
+  def demo() = {
+    println("Element's implementation invoked")
+  }
+}
+
+class ArrayElement extends Element {
+  override def demo() = {
+    println("ArrayElement's implementation invoked")
+  }
+}
+
+class LineElement extends ArrayElement {
+  override def demo() = {
+    println("LineElement's implementation invoked")
+  }
+}
+
+// UniformElement inherits Element's demo
+class UniformElement extends Element
+```
+
+``` scala
+def invokeDemo(e: Element) = {
+  e.demo()
+}
+```
+
+  scala> invokeDemo(new ArrayElement)
+  ArrayElement's implementation invoked
+
+  scala> invokeDemo(new LineElement)
+  LineElement's implementation invoked
+
+  scala> invokeDemo(new UniformElement)
+  Element's implementation invoked
+
+### 10.10 DECLARING FINAL MEMBERS
+
+final 确保子类不能覆盖成员函数 demo.
+
+``` scala
+class ArrayElement extends Element {
+  final override def demo() = {
+    println("ArrayElement's implementation invoked")
+  }
+}
+```
+
+final 确保 ArrayElement 类不能被继承.
+
+``` scala
+final class ArrayElement extends Element {
+  override def demo() = {
+    println("ArrayElement's implementation invoked")
+  }
+}
+```
+
+### 10.11 USING COMPOSITION AND INHERITANCE
+
+组合(Composition)和继承(inheritance)是根据一个现有类定义新类的两种方法. 如果你所追求的主要是代码重用, 你通常应该更喜欢组合而不是继承. 只有继承会受到脆弱基类问题的影响, 这个问题是指更改超类会无意中破坏子类.
+
+你可以问自己一个关于继承关系的问题 - 它是否模拟了一个 is-a 关系.例如, 可以合理地说 ArrayElement 是一个 Element. 另一个问题是客户端是否希望将子类类型视为超类类型. 对于 ArrayElement, 我们确实希望客户端希望将 ArrayElement 当成 Element 来使用.
+
+实际上, 我们将 LineElement 定义为 ArrayElement 的子类主要是为了重用 ArrayElement 的内容定义. 因此, 将 LineElement 定义为 Element 的直接子类可能会更好, 如下所示:
+
+改写成组合关系如下:
+
+``` scala
+class LineElement(s: String) extends Element {
+  val contents = Array(s)
+  override def width = s.length
+  override def height = 1
+}
+```
+
+### 10.12 IMPLEMENTING ABOVE, BESIDE, AND TOSTRING
 
 
 
 
 
+### 10.13 DEFINING A FACTORY OBJECT
 
 
+### 10.14 HEIGHTEN AND WIDEN
 
 
+### 10.15 PUTTING IT ALL TOGETHER
 
 
+### 10.16 CONCLUSION
 
 
+## Chapter 11 Scala's Hierarchy
 
 
-
-
-
-
-
-
-
-
+### 11.1 SCALA'S CLASS HIERARCHY
 
 
 
