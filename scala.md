@@ -1794,9 +1794,66 @@ Unit 大致对应于 Java 的 void 类型; Unit 有一个实例值, 写作().
 
 ### 11.2 HOW PRIMITIVES ARE IMPLEMENTED
 
+如果需要将整数视为(Java)对象, Scala 就会使用 "backup" 类 java.lang.Integer. 例如, 在整数上调用 toString 方法或将整数赋给 Any 类型的变量时会发生这种情况. Int 类型的整数将会透明地转换为 "boxed integers" 类型 java.lang.Integer.
 
+<p align="left" style="color:red;"><font size=5><b>注: int 与 Int 类的区别. </b></font></p>
+
+``` java
+// This is Java
+boolean isEqual(Integer x, Integer y) {
+  return x == y;
+}
+
+System.out.println(isEqual(421, 421)); // 因为 == 表示引用类型的引用相等, 而Integer是引用类型, 所以返回 false, 因为比较的是两个不同的 Int 实例
+```
+
+  scala> def isEqual(x: Any, y: Any) = x == y
+  isEqual: (x: Any, y: Any)Boolean
+
+  scala> isEqual(421, 421)
+  res11: Boolean = true
+
+Scala 中的相等操作 "==" 被设计为对于类型透明的. 对于值类型, 它是自然(数字或布尔)相等. 对于引用类型, 除了 Java 的 boxed 数字类型以外, "==" 被视为从 Object 继承的 equals 方法的别名. 该方法最初被定义为引用相等, 但被许多子类覆盖以实现它们的自然平等概念. 这也意味着在 Scala 中你永远不会陷入 Java 有关字符串比较的陷阱(Java 字符串比较用 equals).
+
+  scala> val x = "abcd".substring(2)
+  x: String = cd
+
+  scala> val y = "abcd".substring(2)
+  y: String = cd
+
+  scala> x == y
+  res12: Boolean = true
+
+但是, 在某些情况下, 您需要的是引用相等而不是用户定义的相等性. 例如, 在某些效率优先的场景下, 您希望复用缓存中已经创建的实例, 可以通过比较实例的引用是否与之前保留的引用相等来确认是否是需要的实例. 对于这类场景, 类 AnyRef 定义了一个额外的 eq 方法, 该方法不能被覆盖并实现为比较引用是否相等(即它在 Java 中的行为类似于引用类型). 还有一个方法是对 eq 的否定, 称为 ne. 例如:
+
+  scala> val x = new String("abc")
+  x: String = abc
+
+  scala> val y = new String("abc")
+  y: String = abc
+
+  scala> x == y
+  res13: Boolean = true
+
+  scala> x eq y
+  res14: Boolean = false
+
+  scala> x ne y
+  res15: Boolean = true
 
 ### 11.3 BOTTOM TYPES
+
+scala.Null 和 scala.Nothing
+
+Null 类是空引用的类型; 它是每个引用类的子类(每个引用类都继承自 AnyRef). Null 与值类型不兼容. 例如, 您不能将空值分配给整数变量:
+
+  scala> val i: Int = null
+  <console>:7: error: an expression of type Null is ineligible
+
+
+
+
+  
 
 ### 11.4 DEFINING YOUR OWN VALUE CLASSES
 
@@ -1807,6 +1864,248 @@ Unit 大致对应于 Java 的 void 类型; Unit 有一个实例值, 写作().
 ### 12.1 HOW TRAITS WORK
 
 ### 12.2 THIN VERSUS RICH INTERFACES
+
+### 12.3 EXAMPLE: RECTANGULAR OBJECTS
+
+### 12.4 THE ORDERED TRAIT
+
+### 12.5 TRAITS AS STACKABLE MODIFICATIONS
+
+### 12.6 WHY NOT MULTIPLE INHERITANCE?
+
+### 12.7 TO TRAIT OR NOT TO TRAIT?
+
+### 12.8 CONCLUSION
+
+## Chapter 13 Packages and Imports
+
+### 13.1 PUTTING CODE IN PACKAGES
+
+### 13.2 CONCISE ACCESS TO RELATED CODE
+
+### 13.3 IMPORTS
+
+### 13.4 IMPLICIT IMPORTS
+
+### 13.5 ACCESS MODIFIERS
+
+### 13.6 PACKAGE OBJECTS
+
+### 13.7 CONCLUSION
+
+## Chapter 14 Assertions and Tests
+
+### 14.1 ASSERTIONS
+
+### 14.2 TESTING IN SCALA
+
+### 14.3 INFORMATIVE FAILURE REPORTS
+
+### 14.4 TESTS AS SPECIFICATIONS
+
+### 14.5 PROPERTY-BASED TESTING
+
+### 14.6 ORGANIZING AND RUNNING TESTS
+
+### 14.7 CONCLUSION
+
+## Chapter 15 Case Classes and Pattern Matching
+
+### 15.1 A SIMPLE EXAMPLE
+
+### 15.2 KINDS OF PATTERNS
+
+### 15.3 PATTERN GUARDS
+
+### 15.4 PATTERN OVERLAPS
+
+### 15.5 SEALED CLASSES
+
+### 15.6 THE OPTION TYPE
+
+### 15.7 PATTERNS EVERYWHERE
+
+### 15.8 A LARGER EXAMPLE
+
+### 15.9 CONCLUSION
+
+## Chapter 16 Working with Lists
+
+### 16.1 LIST LITERALS
+
+### 16.2 THE LIST TYPE
+
+### 16.3 CONSTRUCTING LISTS
+
+### 16.4 BASIC OPERATIONS ON LISTS
+
+### 16.5 LIST PATTERNS
+
+### 16.6 FIRST-ORDER METHODS ON CLASS LIST
+
+### 16.7 HIGHER-ORDER METHODS ON CLASS LIST
+
+### 16.8 METHODS OF THE LIST OBJECT
+
+### 16.9 PROCESSING MULTIPLE LISTS TOGETHER
+
+### 16.10 UNDERSTANDING SCALA'S TYPE INFERENCE ALGORITHM
+
+### 16.11 CONCLUSION
+
+## Chapter 17 Working with Other Collections
+
+### 17.1 SEQUENCES
+
+### 17.2 SETS AND MAPS
+
+### 17.3 SELECTING MUTABLE VERSUS IMMUTABLE COLLECTIONS
+
+### 17.4 INITIALIZING COLLECTIONS
+
+### 17.5 TUPLES
+
+### 17.6 CONCLUSION
+
+## Chapter 18 Mutable Objects
+
+### 18.1 WHAT MAKES AN OBJECT MUTABLE?
+
+### 18.2 REASSIGNABLE VARIABLES AND PROPERTIES
+
+### 18.3 CASE STUDY: DISCRETE EVENT SIMULATION
+
+### 18.4 A LANGUAGE FOR DIGITAL CIRCUITS
+
+### 18.5 THE SIMULATION API
+
+### 18.6 CIRCUIT SIMULATION
+
+### 18.7 CONCLUSION
+
+## Chapter 19 Type Parameterization
+
+### 19.1 FUNCTIONAL QUEUES
+
+### 19.2 INFORMATION HIDING
+
+### 19.3 VARIANCE ANNOTATIONS
+
+### 19.4 CHECKING VARIANCE ANNOTATIONS
+
+### 19.5 LOWER BOUNDS
+
+### 19.6 CONTRAVARIANCE
+
+### 19.7 OBJECT PRIVATE DATA
+
+### 19.8 UPPER BOUNDS
+
+### 19.9 CONCLUSION
+
+## Chapter 20 Abstract Members
+
+### 20.1 A QUICK TOUR OF ABSTRACT MEMBERS
+
+### 20.2 TYPE MEMBERS
+
+### 20.3 ABSTRACT VALS
+
+### 20.4 ABSTRACT VARS
+
+### 20.5 INITIALIZING ABSTRACT VALS
+
+### 20.6 ABSTRACT TYPES
+
+### 20.7 PATH-DEPENDENT TYPES
+
+### 20.8 REFINEMENT TYPES
+
+### 20.9 ENUMERATIONS
+
+### 20.10 CASE STUDY: CURRENCIES
+
+### 20.11 CONCLUSION
+
+## Chapter 21 Implicit Conversions and Parameters
+
+### 21.1 IMPLICIT CONVERSIONS
+
+### 21.2 RULES FOR IMPLICITS
+
+### 21.3 IMPLICIT CONVERSION TO AN EXPECTED TYPE
+
+### 21.4 CONVERTING THE RECEIVER
+
+### 21.5 IMPLICIT PARAMETERS
+
+### 21.6 CONTEXT BOUNDS
+
+### 21.7 WHEN MULTIPLE CONVERSIONS APPLY
+
+### 21.8 DEBUGGING IMPLICITS
+
+### 21.9 CONCLUSION
+
+## Chapter 22 Implementing Lists
+
+### 22.1 THE LIST CLASS IN PRINCIPLE
+
+### 22.2 THE LISTBUFFER CLASS
+
+### 22.3 THE LIST CLASS IN PRACTICE
+
+### 22.4 FUNCTIONAL ON THE OUTSIDE
+
+### 22.5 CONCLUSION
+
+## Chapter 23 For Expressions Revisited
+
+### 23.1 FOR EXPRESSIONS
+
+### 23.2 THE N-QUEENS PROBLEM
+
+### 23.3 QUERYING WITH FOR EXPRESSIONS
+
+### 23.4 TRANSLATION OF FOR EXPRESSIONS
+
+### 23.5 GOING THE OTHER WAY
+
+### 23.6 GENERALIZING FOR
+
+### 23.7 CONCLUSION
+
+## Chapter 24 Collections in Depth
+
+## Chapter 25 The Architecture of Scala Collections
+
+## Chapter 26 Extractors
+
+## Chapter 27 Annotations
+
+## Chapter 28 Working with XML
+
+## Chapter 29 Modular Programming Using Objects
+
+## Chapter 30 Object Equality
+
+## Chapter 31 Combining Scala and Java
+
+## Chapter 32 Futures and Concurrency
+
+## Chapter 33 Combinator Parsing
+
+## Chapter 34 GUI Programming
+
+## Chapter 35 The SCells Spreadsheet
+
+
+
+
+
+
+
+
 
 
 
