@@ -1225,7 +1225,6 @@ def processFile(filename: String, width: Int) = {
            for (arg <- args) println(arg)
   echo: (args: String*)Unit
 
-
   scala> val arr = Array("What's", "up", "doc?")
   arr: Array[String] = Array(What's, up, doc?)
 
@@ -1649,30 +1648,165 @@ class LineElement(s: String) extends Element {
 
 ### 10.12 IMPLEMENTING ABOVE, BESIDE, AND TOSTRING
 
+``` scala
+abstract class Element {
+  def contents: Array[String]
 
+  def width: Int =
+    if (height == 0) 0 else contents(0).length
 
+  def height: Int = contents.length
 
+  def above(that: Element): Element =
+    new ArrayElement(this.contents ++ that.contents)
+
+  def beside(that: Element): Element =
+    new ArrayElement(
+      for (
+        (line1, line2) <- this.contents zip that.contents
+    ) yield line1 + line2
+  )
+
+  override def toString = contents mkString "\n"
+}
+```
 
 ### 10.13 DEFINING A FACTORY OBJECT
 
+您可以选择通过工厂对象隐藏类的层次结构.
+
+工厂对象包含构造其他对象的方法. 然后, 客户将使用这些工厂方法来构造对象, 而不是直接使用 new 来构造对象. 这种方法的一个优点是可以集中创建对象, 并且可以隐藏对象如何表示的细节. 这种隐藏将使您的库更易于被客户理解, 因为暴露的细节较, 并为您提供在不破坏客户端代码的情况下更改库的实现的机会.
+
+构建布局元素工厂的第一个任务是选择工厂方法的位置. 它们应该是单例对象的成员还是类的成员? 一个简单的解决方案是创建类 Element 的伴随对象, 并使其成为布局元素的工厂对象. 这样, 您只需要向客户公开 Element 的类/对象组合, 同时可以隐藏三个实现类 ArrayElement, LineElement 和 UniformElement.
+
+下面的代码是遵循此方案的 Element 对象的设计. Element 对象包含 elem 方法的三个重载变体. 每个都构造一种不同类型的布局对象.
+
+``` scala
+object Element {
+  def elem(contents: Array[String]): Element =
+    new ArrayElement(contents)
+
+  def elem(chr: Char, width: Int, height: Int): Element =
+    new UniformElement(chr, width, height)
+
+  def elem(line: String): Element =
+    new LineElement(line)
+}
+```
+
+随着这些工厂方法的出现, 更改类 Element 的实现以使其通过 elem 工厂方法而不是通过 new ArrayElement 显式创建实例是有意义的. 我们没有在类 Element 中直接使用 Element.elem 调用工厂方法, 而是导入 Element.elem, 然后通过简单名称 elem 调用工厂方法.
+
+``` scala
+import Element.elem
+
+abstract class Element {
+
+  def contents: Array[String]
+
+  def width: Int =
+    if (height == 0) 0 else contents(0).length
+
+  def height: Int = contents.length
+
+  def above(that: Element): Element =
+    elem(this.contents ++ that.contents)
+
+  def beside(that: Element): Element =
+    elem(
+      for (
+        (line1, line2) <- this.contents zip that.contents
+    ) yield line1 + line2
+  )
+
+  override def toString = contents mkString "\n"
+}
+```
+
+此外, 给定工厂方法, 子类, ArrayElement, LineElement 和 UniformElement 现在可以是私有的, 因为它们不再需要由客户端直接访问. 在 Scala 中, 您可以在其他类和单例对象内部定义类和单例对象. 使 Element 子类私有的一种方法是将它们放在 Element 单例对象中声明并指定它们是私有的.
+
+``` scala
+object Element {
+
+  private class ArrayElement(
+    val contents: Array[String]
+  ) extends Element
+
+  private class LineElement(s: String) extends Element {
+    val contents = Array(s)
+    override def width = s.length
+    override def height = 1
+  }
+
+  private class UniformElement(
+    ch: Char,
+    override val width: Int,
+    override val height: Int
+  ) extends Element {
+    private val line = ch.toString * width
+    def contents = Array.fill(height)(line)
+  }
+
+  def elem(contents: Array[String]): Element =
+    new ArrayElement(contents)
+
+  def elem(chr: Char, width: Int, height: Int): Element =
+    new UniformElement(chr, width, height)
+
+  def elem(line: String): Element =
+    new LineElement(line)
+}
+```
+
+<p align="left" style="color:red;"><font size=5><b>注: 将 Element 的子类都定义在 Element 类内部的原因可能还是为了可见性, 客户代码只能通过工厂方法创建对象. </b></font></p>
 
 ### 10.14 HEIGHTEN AND WIDEN
 
-
 ### 10.15 PUTTING IT ALL TOGETHER
-
 
 ### 10.16 CONCLUSION
 
-
 ## Chapter 11 Scala's Hierarchy
-
 
 ### 11.1 SCALA'S CLASS HIERARCHY
 
+scala 的根类 Any 中定义的方法如下:
+
+``` scala
+  final def ==(that: Any): Boolean
+  final def !=(that: Any): Boolean
+  def equals(that: Any): Boolean
+  def ##: Int
+  def hashCode: Int
+  def toString: String
+```
+
+== 方法与 equals 基本相同, 而且 !=  始终是 equals 的否定. 因此, 各个类可以通过重写 equals 方法来定制 == 或 != 的意思.
+
+Any 类有两个子类 AnyVal 和 AnyRef. AnyVal 是 Scala 中所有值类(value class)的父类. 虽然您可以定义自己的值类, 但 Scala 中内置了九个值类: Byte, Short, Char, Int, Long, Float, Double, Boolean 和 Unit. 前八个对应于 Java 中同名原始类型, 它们的值在运行时表示为 Java 的原始值.
+
+Unit 大致对应于 Java 的 void 类型; Unit 有一个实例值, 写作().
+
+请注意, 值类空间是扁平的; 所有值类都是 scala.AnyVal 的子类型, 但它们不是彼此子类. 相反, 不同的值类类型之间存在隐式转换. 例如, 类 scala.Int 的实例会在需要时自动扩展(通过隐式转换)为类 scala.Long 的实例.
+
+<p align="left" style="color:red;"><font size=5><b>注: 隐式转换并非一个好的特性, 容易导致出现不符合预期的结果, scala 应该提供机制将其关闭, 就像 C++ 那样. </b></font></p>
+
+根类 Any 的另一个子类是 AnyRef 类. 这是 Scala 中所有引用类的基类. 如前所述, 在 Java 平台看来, AnyRef 实际上只是类 java.lang.Object 的别名. 因此, 用 Java 编写的类以及用 Scala 编写的类都继承自 AnyRef. 可以将 java.lang.Object 视为 AnyRef 在 Java 平台上的实现. 虽然您可以在 Java 平台上的 Scala 程序中交替使用 Object 和 AnyRef, 但推荐的样式是在任何地方使用 AnyRef.
+
+### 11.2 HOW PRIMITIVES ARE IMPLEMENTED
 
 
 
+### 11.3 BOTTOM TYPES
+
+### 11.4 DEFINING YOUR OWN VALUE CLASSES
+
+### 11.5 CONCLUSION
+
+## Chapter 12 Traits
+
+### 12.1 HOW TRAITS WORK
+
+### 12.2 THIN VERSUS RICH INTERFACES
 
 
 
