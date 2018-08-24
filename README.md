@@ -66,6 +66,10 @@
 
 ---
 
+## python
+- [莫烦Python](https://morvanzhou.github.io/)
+---
+
 ## JAVA
 
 - [servlet-3-1-specification](https://waylau.gitbooks.io/servlet-3-1-specification/)
