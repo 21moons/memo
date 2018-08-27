@@ -600,7 +600,7 @@ Scala 为其基本类型提供了丰富的运算符. 正如前面章节中提到
   scala> s indexOf ('o', 5) // Scala invokes s.indexOf('o', 5)
   res1: Int = 8
 
-**ANY METHOD CAN BE AN OPERATOR**
+#### ANY METHOD CAN BE AN OPERATOR
 
 除了中缀表示法外, Scala 还有另外两种运算符表示法: 前缀和后缀. 在前缀(prefix)表示法中, 将方法名称放在要调用方法的对象之前(例如, -7 中的  "-"). 在后缀(postfix)表示法中, 将方法放在对象之后(例如, "7 toLong" 中的 "toLong"). 前缀和后缀运算符是一元的: 它们只需要一个操作数. 中缀运算符需要两个操作数.
 
@@ -685,7 +685,7 @@ Table 5.5 - Rich wrapper classes
 
 ### 6.2 CONSTRUCTING A RATIONAL
 
-**IMMUTABLE OBJECT TRADE-OFFS**
+#### IMMUTABLE OBJECT TRADE-OFFS
 
 不可变对象相对于可变对象提供了若干优点, 但也有一个潜在的缺点. 首先, 不可变对象通常比可变对象更容易推理, 因为它们没有随时间变化的复杂状态空间. 其次, 你可以非常自由地传递不可变对象, 而在传递可变对象时, 你可能需要制作防御性副本. 第三, 一旦正确构造了不可变对象, 两个线程同时访问不可变对象时就没有办法破坏它的状态, 因为没有线程可以改变不可变对象的状态. 第四, 不可变对象制作安全的哈希表键. 例如, 如果可变对象在放入 HashSet 后发生变化, 则下次查看 HashSet 时就可能找不到该对象.
 
@@ -917,7 +917,7 @@ def gcd(x: Long, y: Long): Long =
 
 ### 7.3 FOR EXPRESSIONS
 
-**generator**
+#### generator
 
 ``` scala
 val filesHere = (new java.io.File(".")).listFiles
@@ -926,7 +926,7 @@ for (file <- filesHere)         //generator
   println(file)
 ```
 
-**Filtering**
+#### Filtering
 
 ``` scala
 val filesHere = (new java.io.File(".")).listFiles
@@ -935,7 +935,7 @@ for (file <- filesHere if file.getName.endsWith(".scala"))
   println(file)
 ```
 
-**Nested iteration**
+#### Nested iteration
 
 ``` scala
 def fileLines(file: java.io.File) =
@@ -954,7 +954,7 @@ grep(".*gcd.*")
 
 如果您愿意, 可以使用花括号而不是括号来围绕生成器和过滤器. 使用花括号的一个优点是你可以省略使用括号时所需的一些分号, 因为如第 4.2 节所述, Scala 编译器在括号内不会推断出分号.
 
-** Mid-stream variable bindings **
+#### Mid-stream variable bindings
 
 ``` scala
 def grep(pattern: String) =
@@ -969,7 +969,7 @@ def grep(pattern: String) =
 grep(".*gcd.*")
 ```
 
-**Producing a new collection**
+#### Producing a new collection
 
 ``` scala
 def scalaFiles =
@@ -981,7 +981,7 @@ def scalaFiles =
 
 ### 7.4 EXCEPTION HANDLING WITH TRY EXPRESSIONS
 
-**Catching exceptions**
+#### Catching exceptions
 
 ``` scala
 import java.io.FileReader
@@ -999,7 +999,7 @@ try {
 
 与 Java 不同, Scala 不要求您在 catch 中列出待检查的异常或在 throws 子句中声明它们. 如果您希望使用 @throws 注释, 则可以声明 throws 子句, 但这不是必需的.
 
-**Yielding a value**
+#### Yielding a value
 
 与在 Java 中一样, 如果 finally 子句包含显式返回语句或抛出异常, 则该返回值或异常将 "覆盖" 源自 try 块或其 catch 子句之一的任何先前子句.
 
@@ -1217,7 +1217,7 @@ def processFile(filename: String, width: Int) = {
 
 ### 8.8 SPECIAL FUNCTION CALL FORMS
 
-**Repeated parameters**(可变参数)
+#### Repeated parameters(可变参数)
 
 "String*" 实际上是 Array[String]
 
@@ -1235,9 +1235,9 @@ def processFile(filename: String, width: Int) = {
   scala> echo(arr: _*)
   What's
   up
-  doc? 
+  doc?
 
-**Named arguments**
+#### Named arguments
 
   scala> def speed(distance: Float, time: Float): Float =
            distance / time
@@ -1254,7 +1254,7 @@ def processFile(filename: String, width: Int) = {
 
 也可以混合使用位置和命名参数. 在这种情况下, 位置参数首先出现. 命名参数最常与默认参数值结合使用.
 
-**Default parameter values**
+#### Default parameter values
 
 ``` scala
 def printTime2(out: java.io.PrintStream = Console.out, divisor: Int = 1) =
@@ -1849,13 +1849,56 @@ Null 类是空引用的类型; 它是每个引用类的子类(每个引用类都
 
   scala> val i: Int = null
   <console>:7: error: an expression of type Null is ineligible
+  for implicit conversion
+        val i: Int = null
 
+Nothing 类是 Scala 类层次结构的最底层; 它是所有其他类型的子类型. 但是, 不存在任何此类型的值. 为什么没有值的类型有意义? 如第 7.4 节所述, Nothing 的一个用途是它表示异常终止.
 
+例如, Scala 标准库的 Predef 对象中有 error 方法, 其定义如下:
 
+``` scala
+def error(message: String): Nothing =
+  throw new RuntimeException(message)
+```
 
-  
+返回类型的错误是 Nothing, 它告诉调用者该方法将不会正常返回(它会抛出异常). 因为 Nothing 是所有其他类型的子类型, 所以您可以非常灵活的方式使用错误等方法. 例如:
+
+``` scala
+def divide(x: Int, y: Int): Int =
+  if (y != 0) x/y
+  else error("can't divide by zero")
+```
+
+条件分支的返回值 x/y 是 Int 类型, 而 else 分支(调用 error 函数)返回的是 Nothing 类型. 因为 Nothing 是 Int 的子类型, 所以 divide 函数的返回值必然是 Int 类型的.
 
 ### 11.4 DEFINING YOUR OWN VALUE CLASSES
+
+如第 11.1 节所述, 您可以定义自己的值类来扩充内置的值. 与 scala 自带的值类一样, 值类的实例通常会编译成不使用包装类的 Java 字节码. 在需要包装器的上下文中, 例如使用泛型的代码, 该值将自动装箱并拆箱.
+
+只有某些类可以组成值类. 要使一个类成为值类, 它必须只有一个参数, 除了 defs 之外它必须没有任何内容. 此外, 其他类不能继承值类, 并且值类不能重新定义 equals 或 hashCode 方法.
+
+要定义一个值类, 先让其成为 AnyVal 的子类, 并且将 val 放在唯一的一个参数之前. 这是一个值类的示例:
+
+``` scala
+class Dollars(val amount: Int) extends AnyVal {
+  override def toString() = "$" + amount
+}
+```
+
+如第 10.6 节所述, val 前缀允许将 amount 参数作为字段进行访问. 例如, 以下代码创建值类的实例, 然后从中检索数量:
+
+  scala> val money = new Dollars(1000000)
+  money: Dollars = $1000000
+  scala> money.amount
+  res16: Int = 1000000
+
+在此示例中, money 指的是值类的实例. 它是 Scala 源代码中的 Dollars 类型, 但编译的 Java 字节码将直接使用 Int 类型.
+
+#### Avoiding a types monoculture
+
+
+
+
 
 ### 11.5 CONCLUSION
 
