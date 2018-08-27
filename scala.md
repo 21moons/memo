@@ -1972,11 +1972,98 @@ trait Philosophical {
 }
 ```
 
+trait 默认父类为 AnyRef. "extends" 和 "with" 关键字用来将 trait 混入类中.
+
+``` scala
+class Frog extends Philosophical {
+  override def toString = "green"
+}
+```
+
+  scala> val frog = new Frog
+  frog: Frog = green
+
+  scala> frog.philosophize()
+  I consume memory, therefore I am!
+
+trait 也定义了一个类型:
+
+  scala> val phil: Philosophical = frog
+  phil: Philosophical = green
+
+  scala> phil.philosophize()
+  I consume memory, therefore I am!
+
+phil 的类型是 Philosophical, 一个特征. 因此, 变量 phil 可以用任何混合了该接口的类的实例来初始化.
+
+如果想同时继承父类并混合 trait, 请参考下面的代码:
+
+``` scala
+class Animal
+trait HasLegs
+
+class Frog extends Animal with Philosophical with HasLegs {
+  override def toString = "green"
+}
+```
+
+``` scala
+class Animal
+
+class Frog extends Animal with Philosophical {
+  override def toString = "green"
+  override def philosophize() = {
+    println("It ain't easy being " + toString + "!")
+  }
+}
+```
+
+trait 的定义与类的定义有两个不同:
+
+* trait 定义时不能带参数.
+* 在类中, 父类函数的调用是静态绑定的, 而在 trait 中, 它们是动态绑定的. 如果在类中编写 "super.toString", 则确切地知道将调用哪个方法实现. 但是, 当您在 trait 中编写相同的内容时, 在定义 trait 时, 并不知道父类调用的具体实现. 相反, 每次将特征混合到具体类中时, 才能确定要调用的实现. 这种奇怪的父类调用机制是允许 traits 支持可堆叠修改的关键, 细节将在 12.5 节中描述. 解决父类调用的规则将在第 12.6 节中给出.
+
 ### 12.2 THIN VERSUS RICH INTERFACES
+
+这里是说 trait 可以定义抽象方法, 也可以定义方法实现, 所以比 java 的 interface 更易用, 不用像 java 一样 -- 每个继承了接口的类都重新实现一次接口中的方法(貌似现在 java 的 interface 也支持具体方法实现了).
 
 ### 12.3 EXAMPLE: RECTANGULAR OBJECTS
 
+``` scala
+abstract class Component {
+  def topLeft: Point
+  def bottomRight: Point
+  
+  def left = topLeft.x
+  def right = bottomRight.x
+  def width = right - left
+  // and many more geometric methods...
+}
+```
+
+``` scala
+trait Rectangular {
+  def topLeft: Point
+  def bottomRight: Point
+  def left = topLeft.x
+  def right = bottomRight.x
+  def width = right - left
+  // and many more geometric methods...
+}
+```
+
 ### 12.4 THE ORDERED TRAIT
+
+``` scala
+class Rational(n: Int, d: Int) {
+  // ...
+  def < (that: Rational) =
+    this.numer * that.denom < that.numer * this.denom
+  def > (that: Rational) = that < this
+  def <= (that: Rational) = (this < that) || (this == that)
+  def >= (that: Rational) = (this > that) || (this == that)
+}
+```
 
 ### 12.5 TRAITS AS STACKABLE MODIFICATIONS
 
