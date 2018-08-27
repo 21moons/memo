@@ -1896,15 +1896,81 @@ class Dollars(val amount: Int) extends AnyVal {
 
 #### Avoiding a types monoculture
 
+为了从 Scala 类层次结构中获得最大收益, 尝试为每个域概念(领域建模)定义一个新类, 即使可以重用相同的类来达成不同目的. 即使这样的类是没有方法或字段的所谓微类型, 多定义一些类也可以使编译器对您有所帮助.
 
+例如, 假设您正在编写一些代码来生成 HTML. 在 HTML 中, 样式名称表示为字符串. 锚标识符也是如此. HTML 本身也是一个字符串, 所以如果你愿意, 你可以定义帮助函数来表示所有这些字符串, 如下所示:
 
+``` scala
+def title(text: String, anchor: String, style: String): String =
+  s"<a id='$anchor'><h1 class='$style'>$text</h1></a>"
+```
 
+类型签名(参数和返回值)有四个字符串! 这种全都是字符串类型的代码从技术上来看是强类型的, 但由于所看到的一切都是 String 类型, 编译器无法感知到您的实际意图. 例如, 它不会阻止文本和锚点参数的误用:
+
+  scala> title("chap:vcls", "bold", "Value Classes")
+  res17: String = <a id='bold'><h1 class='Value
+    Classes'>chap:vcls</h1></a>
+
+这个 HTML 是错位的. 预期的显示文本 "Value Classes" 被用作样式类, 正在显示的文本是"chap.vcls", 它应该是一个锚点. 最重要的是, 实际的锚标识符是 "粗体", 它应该是一个样式类. 尽管有这种错误非常明显, 但是编译器是无法感知的.
+
+如果为每个域概念定义一个小类型, 编译器会更有帮助. 例如, 您可以为样式, 锚标识符, 显示文本和 HTML 定义一个小类. 由于这些类有一个参数而没有成员, 因此可以将它们定义为值类:
+
+``` scala
+class Anchor(val value: String) extends AnyVal
+class Style(val value: String) extends AnyVal
+class Text(val value: String) extends AnyVal
+class Html(val value: String) extends AnyVal
+```
+
+通过给定这些类, 可以编写具有更明确类型签名的 title 函数:
+
+``` scala
+def title(text: Text, anchor: Anchor, style: Style): Html =
+  new Html(
+    s"<a id='${anchor.value}'>" +
+      s"<h1 class='${style.value}'>" +
+      text.value +
+      "</h1></a>"
+)
+```
+
+如果您在调用该函数时参数顺序错误, 编译器现在可以检测到错误. 例如:
+
+  scala> title(new Anchor("chap:vcls"), new Style("bold"),
+             new Text("Value Classes"))
+  <console>:18: error: type mismatch;
+   found : Anchor
+   required: Text
+                new Anchor("chap:vcls"),
+                ^
+  <console>:19: error: type mismatch;
+   found : Style
+   required: Anchor
+                new Style("bold"),
+                ^
+  <console>:20: error: type mismatch;
+   found : Text
+   required: Style
+                new Text("Value Classes"))
+                ^
+
+<p align="left" style="color:red;"><font size=5><b>注: 说了半天就是用强类型来解决问题. </b></font></p>
 
 ### 11.5 CONCLUSION
 
 ## Chapter 12 Traits
 
+Traits 是 Scala 中代码重用的基本单元. 特征封装了方法和字段定义, 然后可以通过将它们混合到类中来重用它们. 与类只能从一个超类继承不同, 类可以混合任意数量的特征. 本章向您展示了traits的工作原理，并展示了两种最常用的方法：将瘦接口扩展为富接口，以及定义可叠加的修改。 它还显示了如何使用 Ordered trait, 并将 traits 与其他语言的多重继承特性进行比较.
+
 ### 12.1 HOW TRAITS WORK
+
+``` scala
+trait Philosophical {
+  def philosophize() = {
+    println("I consume memory, therefore I am!")
+  }
+}
+```
 
 ### 12.2 THIN VERSUS RICH INTERFACES
 
