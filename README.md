@@ -226,6 +226,8 @@ loans = new Vector();  //not valid
 - Class<T> 的完整定义为：
   public final class Class<T> extends Object implements Serializable, GenericDeclaration, Type, AnnotatedElement
   Class 类的实例表示正在运行的 Java 应用程序中的类和接口, 枚举是一种类, 注释是一种接口.
+- 类型擦除.
+  泛型是 Java 1.5 版本才引进的概念, 在这之前是没有泛型的概念的, 为了让泛型代码能够和之前版本的代码兼容. 泛型信息只存在于代码编译阶段,在 JVM 执行阶段, 与泛型相关的信息会被擦除掉, 专业术语叫做类型擦除. 泛型类被类型擦除的时候, 之前泛型类中的类型参数部分如果没有指定上限, 如 <T> 则会被转译成普通的 Object 类型, 如果指定了上限如 <T extends String> 则类型参数就被替换成类型上限. 利用类型擦除的原理,用反射的手段就绕过了正常开发中编译器不允许的操作限制.
 
 ### Java 编码注意事项
 

@@ -14,15 +14,14 @@
 * scala 最常见的方式是匿名函数用 "=>" 定义, <- 主要是迭代里用, -> 主要是 map 里用, => 主要是匿名函数用.
 
 * 语法糖
-
-val 声明的变量是不可变的
-var 声明的变量是可变的
-scala 的所有类都是从 any 类派生而来的
-scala 所有 value 都是 object, 所有运算符实际上都是方法
-scala 中无论类型如何, == 都表示基于值的引用
-!     actor 发送消息
-!!    调用外部命令
-println = print line
+  val 声明的变量是不可变的
+  var 声明的变量是可变的
+  scala 的所有类都是从 any 类派生而来的
+  scala 所有 value 都是 object, 所有运算符实际上都是方法
+  scala 中无论类型如何, == 都表示基于值的引用
+  !     actor 发送消息
+  !!    调用外部命令
+  println = print line
 
 * Traits 类似于 java 中的 interface, can then be mixed together
 
@@ -1960,7 +1959,7 @@ def title(text: Text, anchor: Anchor, style: Style): Html =
 
 ## Chapter 12 Traits
 
-Traits 是 Scala 中代码重用的基本单元. 特征封装了方法和字段定义, 然后可以通过将它们混合到类中来重用它们. 与类只能从一个超类继承不同, 类可以混合任意数量的特征. 本章向您展示了traits的工作原理，并展示了两种最常用的方法：将瘦接口扩展为富接口，以及定义可叠加的修改。 它还显示了如何使用 Ordered trait, 并将 traits 与其他语言的多重继承特性进行比较.
+Traits 是 Scala 中代码重用的基本单元. 特征封装了方法和字段定义, 然后可以通过将它们混合到类中来重用它们. 与类只能从一个超类继承不同, 类可以混合任意数量的特征. 本章向您展示了traits的工作原理，并展示了两种最常用的方法：将瘦接口扩展为富接口，以及定义可叠加的修改。 它还显示了如何使用排序 trait, 并将 traits 与其他语言的多重继承特性进行比较.
 
 ### 12.1 HOW TRAITS WORK
 
@@ -2055,17 +2054,35 @@ trait Rectangular {
 ### 12.4 THE ORDERED TRAIT
 
 ``` scala
-class Rational(n: Int, d: Int) {
+class Rational(n: Int, d: Int) extends Ordered[Rational] {
   // ...
-  def < (that: Rational) =
-    this.numer * that.denom < that.numer * this.denom
-  def > (that: Rational) = that < this
-  def <= (that: Rational) = (this < that) || (this == that)
-  def >= (that: Rational) = (this > that) || (this == that)
+  def compare(that: Rational) =
+    (this.numer * that.denom) - (that.numer * this.denom)
 }
 ```
 
+上面代码中的 Ordered trait 在混入类时需要指定一个类型参数(Type parameters, 19 章中讨论).
+
+>**类型擦除**
+>泛型是 Java 1.5 版本才引进的概念, 在这之前是没有泛型的概念的, 为了让泛型代码能够和之前版本的代码兼容. 泛型信息只存在于代码编译阶段,
+>在 JVM 执行阶段, 与泛型相关的信息会被擦除掉, 专业术语叫做类型擦除. 泛型类被类型擦除的时候, 之前泛型类中的类型参数部分如果没有指定上限,
+>如 <T> 则会被转译成普通的 Object 类型, 如果指定了上限如 <T extends String> 则类型参数就被替换成类型上限. 利用类型擦除的原理,用反射
+>的手段就绕过了正常开发中编译器不允许的操作限制.
+
+``` scala
+trait Ordered[T] {
+  def compare(that: T): Int
+  def <(that: T): Boolean = (this compare that) < 0
+  def >(that: T): Boolean = (this compare that) > 0
+  def <=(that: T): Boolean = (this compare that) <= 0
+  def >=(that: T): Boolean = (this compare that) >= 0
+}
+```
+
+请注意, Ordered trait 没有定义 equals 方法, 因为它无法执行此操作. 问题是实现 equals 需要预先检查传递对象的类型, 由于**类型擦除**, Ordered 本身不能进行此测试. 因此, 即使您继承了 Ordered, 也需要自己定义 equals 方法. 你将在第 30 章了解如何解决这个问题.
+
 ### 12.5 TRAITS AS STACKABLE MODIFICATIONS
+
 
 ### 12.6 WHY NOT MULTIPLE INHERITANCE?
 
