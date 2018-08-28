@@ -2083,10 +2083,87 @@ trait Ordered[T] {
 
 ### 12.5 TRAITS AS STACKABLE MODIFICATIONS
 
+Traits 允许您修改类的方法, 并且它们允许您相互堆叠这些修改.
+
+``` scala
+abstract class IntQueue {
+  def get(): Int
+  def put(x: Int)
+}
+```
+
+``` scala
+import scala.collection.mutable.ArrayBuffer
+
+class BasicIntQueue extends IntQueue {
+  private val buf = new ArrayBuffer[Int]   // Int 类型的 ArrayBuffer
+  def get() = buf.remove(0)
+  def put(x: Int) = { buf += x }
+}
+```
+
+``` scala
+trait Doubling extends IntQueue {
+  abstract override def put(x: Int) = { super.put(2 * x) }
+}
+```
+
+上面的 extends 声明意味着这个 trait 只能混合到 IntQueue 的子类中. 另外注意上面的 super 是动态绑定的.
+为了实现支持堆叠修改的 trait, 经常需要这种安排. 要告诉编译器您是故意这样做的, 您必须将这些方法标记为 abstract override. 这种修饰符的组合仅允许 trait 成员而不是类成员, 并且这意味着 trait 混入的类必须具有该方法的具体定义(这样才能覆盖).
+
+``` scala
+trait Incrementing extends IntQueue {
+  abstract override def put(x: Int) = { super.put(x + 1) }
+}
+trait Filtering extends IntQueue {
+  abstract override def put(x: Int) = {
+    if (x >= 0) super.put(x)
+  }
+}
+```
+
+  scala> val queue = (new BasicIntQueue with Incrementing with Filtering)
+  queue: BasicIntQueue with Incrementing with Filtering...
+
+  scala> queue.put(-1); queue.put(0); queue.put(1)
+
+  scala> queue.get()
+  res16: Int = 1
+
+  scala> queue.get()
+  res17: Int = 2
+
+mixin 的顺序很重要. 准确的规则将在下一节中给出, 但简单来讲, 最右边的 trait 优先生效. 调用类的方法时, 首先调用最右边的 trait 中的方法. 如果该方法调用了 super, 它将调用左侧 trait 中的方法, 依此类推. 在前面的示例中, 首先调用 Filtering 的 put, 因此它会删除负整数. 第二次调用 Incrementing 的 put, 它会为剩余的整数加一.
+
+  scala> val queue = (new BasicIntQueue with Filtering with Incrementing)
+  queue: BasicIntQueue with Filtering with Incrementing...
+
+  scala> queue.put(-1); queue.put(0); queue.put(1)
+
+  scala> queue.get()
+  res19: Int = 0
+
+  scala> queue.get()
+  res20: Int = 1
+
+  scala> queue.get()
+  res21: Int = 2
 
 ### 12.6 WHY NOT MULTIPLE INHERITANCE?
 
+trait 是继承多个类似类的构造的一种方式, 但它们与许多语言中存在的多重继承不同. 一个区别特别重要: super 的解释. 通过多重继承, 可以通过父调用中的函数名确认调用的是哪个父类的方法. 对于 trait, 调用的方法由类和混合到类中的 trait 来线性化(linearization)确定.
+
+线性化的意思是当您使用 new 实例化一个类时, Scala 会获取该类及其父类和父类混入的 trait, 并将它们放在一个线性顺序中. 然后, 每当你在其中一个类中调用 super 时, 调用的方法就是链中的下一个方法. 在任何线性化中, 类总是在其所有超类及混入的特征前面线性化. 因此, 当您编写一个调用 super 的方法时, 该方法肯定会修改超类及混入特征的行为.
+
 ### 12.7 TO TRAIT OR NOT TO TRAIT?
+
+每当您实现可重用的行为集合时, 您将必须决定是使用 trait 还是抽象类. 没有确定的规则, 但本节包含一些需要考虑的指导原则.
+
+* 如果不再重用该行为, 那么将其作为具体类. 毕竟这不是可重用的行为.
+* 如果它可以在多个不相关的类中重用, 那么将其作为 trait. 只有 trait 可以任意混入到类层次结构的不同部分.
+* 如果要在 Java 代码中继承它, 请使用抽象类. 由于具有方法具体实现的 trait 找不到类似的 Java 机制来模拟, 因此用 Java 类继承 trait 往往很尴尬. 同时, 继承 Scala 类就像从 Java 类继承一样. 作为一个例外, 只有抽象成员的 Scala 特征可以直接转换为 Java 接口, 因此如果您希望 Java 代码从 trait 中继承, 您应该这样定义 trait. 有关混合应用 Java 和 Scala 的更多信息, 请参见 31 章.
+* 如果您计划以编译形式分发它, 并且您希望外部组编写从其继承的类, 您可能倾向于使用抽象类. 问题是当 trait 获得或失去一个成员时, 任何从它继承的类都必须重新编译, 即使它们没有改变. 如果外部客户端只调用行为, 而不是继承它, 那么使用 trait 就可以了.
+* 如果您在排除上述情况后仍然不知道, 那么优先将其作为 trait. 您可以随时更改它, 通常使用 trait 会更灵活.
 
 ### 12.8 CONCLUSION
 
