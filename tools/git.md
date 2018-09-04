@@ -1,7 +1,6 @@
 * Git 简易指南
 http://www.bootcss.com/p/git-guide/
 
-
 * Git 合并多个 Commit
 https://www.jianshu.com/p/964de879904a
 
@@ -16,6 +15,13 @@ Git diff branch1 branch2                     //显示出所有有差异的文件
 
 * Git 查看某个文件的修改
 git log "文件路径\文件名"
+
+* Git 显示每个更新之间的差异
+git log -p
+
+* 通过提交说明中过滤出相关提交
+git log --grep "xxx"
+git log --grep "condition 1" --grep "condition 2" --all-match  // 多个条件
 
 * Git 查看指定提交下某个文件的修改
 git diff "CommitID" "文件路径\文件名"
