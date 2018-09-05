@@ -1,3 +1,5 @@
+## 通用快捷键
+
 Ctrl + N                 快速查看类
 Ctrl + Shift + N         快速查看文件
 Ctrl + Alt + Shift + N   快速查看符号
@@ -10,5 +12,22 @@ Ctrl + Shift + I         quickly review definition or content of the symbol at c
 Alt + Shift + C          快速浏览最新的修改
 
 ## 项目导入Jar包
+
 1. 打开 File –> Project Structure
-2. 再找到 Modules->Dependencies 
+2. 再找到 Modules->Dependencies
+
+## 查询选中的字符
+
+1. 选中字符后按下 Alt + F3
+
+## 重新编译
+
+ctrl + shift + F9
+
+## 运行
+
+ctrl + shift + F10
+
+## 中止运行
+
+ctrl + F2
