@@ -163,6 +163,7 @@
 - [HashedWheelTimer](https://zacard.net/2016/12/02/netty-hashedwheeltimer/)
 - [B 树](https://blog.csdn.net/v_JULY_v/article/details/6530142)
 - [trie 树, 又名 字典树, 前缀树](https://blog.csdn.net/hyman_yx/article/details/54410619)
+- [跳跃表, skiplist](https://zh.wikipedia.org/wiki/%E8%B7%B3%E8%B7%83%E5%88%97%E8%A1%A8)
 
 ---
 
