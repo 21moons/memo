@@ -68,7 +68,9 @@
 ---
 
 ## python
+
 - [莫烦Python](https://morvanzhou.github.io/)
+
 ---
 
 ## JAVA
@@ -84,6 +86,10 @@
 - [成为JavaGC专家(2)-如何监控Java垃圾回收机制](http://www.importnew.com/2057.html)
 - [成为JavaGC专家(3)-如何优化Java垃圾回收机制](http://www.importnew.com/3146.html)
 - [成为JavaGC专家(4)-Apache的MaxClients参数详解及其在Tomcat执行FullGC时的影响](http://www.importnew.com/3151.html)
+
+## Netty
+
+- [Netty高性能之道](http://www.infoq.com/cn/articles/netty-high-performance)
 
 ---
 
