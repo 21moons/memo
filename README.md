@@ -86,6 +86,7 @@
 - [成为JavaGC专家(2)-如何监控Java垃圾回收机制](http://www.importnew.com/2057.html)
 - [成为JavaGC专家(3)-如何优化Java垃圾回收机制](http://www.importnew.com/3146.html)
 - [成为JavaGC专家(4)-Apache的MaxClients参数详解及其在Tomcat执行FullGC时的影响](http://www.importnew.com/3151.html)
+- [JVMInternal](http://blog.jamesdbloom.com/JVMInternals.html)
 
 ## Netty
 
@@ -303,6 +304,7 @@ loans = new Vector();  //not valid
 
 ## docker
 
+- [Docker-Cookbook](http://pepa.holla.cz/wp-content/uploads/2016/10/Docker-Cookbook.pdf)
 - docker 要求必须部署在 64 位机器上
 - 容器内的数据是临时性的, 它会随着容器生命周期的结束而消失
 - 默认的 Docker volume (driver = ‘loclal’)不管是哪种形式, 本质上都是将容器所在的主机上的一个目录 mount 到容器内的一个目录, 因此, 它不具备可移植性.
