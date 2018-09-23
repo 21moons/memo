@@ -64,6 +64,7 @@
 - [effective C++](https://legacy.gitbook.com/book/wizardforcel/effective-cpp/details)
 - [C++模板的偏特化与全特化](https://harttle.land/2015/10/03/cpp-template.html)
 - [C++模板元编程](https://www.cnblogs.com/liangliangh/p/4219879.html)
+- [C++ 17](https://it-eb.com/high-performance-boost-optimize-performance-14/)
 
 ---
 
