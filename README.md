@@ -110,9 +110,10 @@
 ## 技术Blog
 
 - [martinfowler](https://martinfowler.com/)
+- [Christian Posta](http://blog.christianposta.com/)  微服务
 - [张逸](http://zhangyi.farbox.com/)
 - [阮一峰](http://www.ruanyifeng.com/blog/)
-- [结构之法](http://blog.csdn.net/v_july_v) 专注算法、机器学习
+- [结构之法](http://blog.csdn.net/v_july_v) 专注算法, 机器学习
 - [王垠](http://www.yinwang.org/)
 - [Trygve M. H. Reenskaug](http://heim.ifi.uio.no/~trygver/)
 
