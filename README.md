@@ -94,6 +94,7 @@
 - [成为JavaGC专家(3)-如何优化Java垃圾回收机制](http://www.importnew.com/3146.html)
 - [成为JavaGC专家(4)-Apache的MaxClients参数详解及其在Tomcat执行FullGC时的影响](http://www.importnew.com/3151.html)
 - [JVMInternal](http://blog.jamesdbloom.com/JVMInternals.html)
+- [java泛型的内部原理](https://blog.csdn.net/lonelyroamer/article/details/7868820)
 
 ## Netty
 
