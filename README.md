@@ -169,6 +169,7 @@
 
 ## 设计模式
 
+- [CQRS 命令查询职责分离](http://www.cnblogs.com/yangecnu/p/Introduction-CQRS.html)
 - [Domain-driven design](http://dddcommunity.org/)
 - [图说设计模式](http://design-patterns.readthedocs.io)
 
