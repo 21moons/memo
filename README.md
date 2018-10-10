@@ -161,6 +161,12 @@
 
 ---
 
+## 数学
+
+- [Functional Analysis An Introduction to Metric Spaces, Hilbert Spaces, and Banach Algebras](https://rd.springer.com/content/pdf/10.1007%2F978-3-319-06728-5.pdf)
+
+---
+
 ## 其他
 
 - [响应式编程](http://reactivex.io/)
