@@ -56,9 +56,15 @@
 
 ---
 
-## 论文
+## 学术论文
 
 - [arxiv 论文下载网站](https://arxiv.org/)
+- [sci-hub](https://sci-hub.org.cn/)
+- [springer](https://link.springer.com/)
+- [libgen](http://libgen.io/)
+- [booksee](http://en.booksee.org/)
+- [booksc](http://booksc.org/)
+- [b-ok](http://b-ok.org/)
 - [Concurrent Programming for Scalable Web Architectures](https://github.com/tpn/pdfs/blob/master/Concurrent%20Programming%20for%20Scalable%20Web%20Architectures%20-%20Benjamin%20Erb%20-%20Thesis%20(April%202012)%20(vts_8082_11772).pdf)
 
 ---
@@ -163,7 +169,7 @@
 
 ## 数学
 
-- [Functional Analysis An Introduction to Metric Spaces, Hilbert Spaces, and Banach Algebras](https://rd.springer.com/content/pdf/10.1007%2F978-3-319-06728-5.pdf)
+- [Functional Analysis An Introduction to Metric Spaces, Hilbert Spaces, and Banach Algebras](http://libgen.io/search.php?req=Functional%20analysis:%20an%20introduction%20to%20metric%20spaces,%20Hilbert%20spaces,%20and%20Banach%20algebras&open=0&res=25&view=simple&phrase=1&column=def)
 
 ---
 
