@@ -765,7 +765,7 @@ John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最
 
 #### How exits are affected by money management
 
-对于交易系统或多个系统和市场的组合来说, 风险和资金管理永远不可能完全分开. 这两个组件彼此高度依赖. 因此, 将资金管理策略整合到系统设计和开发中是至关重要的. 资金管理并不是凭空得出的, 而是基于风险管理方案中预先计算的出口, 这里的风险管理方案与每个交易系统是匹配的. 在本节中, 我们将基于趋势跟踪交易系统 LUXOR 的实际示例来展示两个组件的相互作用.
+对于交易系统或多个系统的组合来说, 风险和资金管理永远不可能完全分开. 这两个组件彼此高度依赖. 因此, 将资金管理策略整合到系统设计和开发过程中是至关重要的. 资金管理并不是凭空得出的, 而是基于风险管理方案中预先计算的出口, 这里的风险管理方案与每个交易系统是匹配的. 在本节中, 我们将基于趋势跟踪交易系统 LUXOR 的实际示例来展示两个组件的相互作用.
 
 <p align="left"><font size=2>Figure 3.19: Scatter graph of profits for all generated trades of the LUXOR system. Tested on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time window 9.30am-1.30pm GMT. SLOW=44, FAST=1. Including $30 S+C per RT. A: without added exits. B: with 0.3% risk stop loss (red line), 1.9% profit target (green line) and 0.8% trailing stop. The exits act like borders for the trade distribution. Graphs created with TradeStation 8.</font></p>
 
@@ -773,7 +773,7 @@ John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最
 
 ![with 0.3% risk stop loss](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_3.19_B.png)
 
-图 3.19 显示了生成的系统所有交易的利润和亏损. 在图 3.19A 中, 您可以看到没有退出机制的交易系统最终的结果, 图 3.19B 显示了具有以下退出机制交易系统的结果: 利润目标为 1.9%, 风险止损为 0.3%, 移动止损为 0.8%.
+图 3.19 显示了生成的系统所有交易的利润和亏损. 在图 3.19A 中, 您可以看到没有退出机制的交易系统最终的结果, 图 3.19B 显示了基于以下退出机制交易系统的输出结果: 利润目标为 1.9%, 风险止损为 0.3%, 移动止损为 0.8%.
 
 In contrast to the MAE/MFE graphs the scatter graphs show on the horizontal axis just
 the number of each trade. There is no more display of any drawdowns or run-ups that a
