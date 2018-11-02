@@ -775,14 +775,7 @@ John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最
 
 图 3.19 显示了生成的系统所有交易的利润和亏损. 在图 3.19A 中, 您可以看到没有退出机制的交易系统最终的结果, 图 3.19B 显示了基于以下退出机制交易系统的输出结果: 利润目标为 1.9%, 风险止损为 0.3%, 移动止损为 0.8%.
 
-In contrast to the MAE/MFE graphs the scatter graphs show on the horizontal axis just
-the number of each trade. There is no more display of any drawdowns or run-ups that a
-trade has had within its lifetime. We start here with this simpler demonstration since it
-can show more clearly the effects of the applied exits. When you compare the scatter
-graphs of the generated trades without and with exits some interesting impacts of the
-exits become apparent.
-
-与 MAE/MFE 图相比, 散点图在横轴上仅显示每笔交易的数量. 没有更多关于交易在其生命周期中有任何亏损或盈利的显示. 我们从这个简单的演示开始, 因为它可以更清楚地显示应用出口的效果. 当您比较没有和退出的生成交易的散点图时, 可以明显看出退出机制的一些有趣影响.
+与 MAE/MFE 图相比, 散点图的横轴显示的是交易的数量. 没有显示交易在其生命周期中的亏损或盈利的情况. 我们从这个简单的演示开始, 因为它可以清楚地显示应用退出机制后的效果. 当您比较没有退出机制和应用退出机制后的交易散点图时, 可以明显看出退出机制的一些有趣影响.
 
 第一点是, 最大交易盈利和最大交易亏损之间的差异在引入退出机制后变小(散点在垂直方向上分布的宽度变小). 在没有任何退出机制的情况下, 交易广泛分布在 -2000+ 美元(最大亏损)和 6000+ 美元(最大盈利)之间, 在采用止损和利润目标后, 它们被挤压得更紧密, 分布在 -500 美元(最大亏损)和 4000 美元(最大盈利)之间的区间. 看起来像一群蜜蜂的交易黑云似乎现在被捕获在地面(止损)和屋顶(利润目标)之间. 这两个边界不是直线, 因为我们使用的是基于百分比的出场, 而不是固定的美元点位. 这些动态类型的出场与英镑/美元市场中的点位相匹配.
 
