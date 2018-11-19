@@ -1,4 +1,4 @@
-# 1.向量代数
+# 1 向量代数
 
 ## 1.1 向量
 
@@ -65,7 +65,7 @@ v 在与 n 垂直的方向上的分量为 $w = v - p$
 
 * SSE2 (Streaming SIMD Extensions 2) 指令集
 
-# 2.矩阵代数
+# 2 矩阵代数
 
 3D计算机图形学中，我们使用各种矩阵来描述几何转换和在不同的frame中转换坐标
 矩阵可以被视为向量的集合
@@ -185,16 +185,16 @@ $p'M^{-1} = p$
 
 ### 3.1.1 定义
 
-对于向量 u, v，标量 k
+对于向量 u, v, 标量 k
 $u = (u_x, \,u_y, \,u_z)$
 $v = (v_x, \,v_y, \,v_z)$
 定义函数 $\tau (v)  = \tau(x, y, z) = (x', y', c')$, 该函数的输入和输出都是三维向量
 
-如果下面两个等式成立，那么我们把 τ 称为线性转换
+如果下面两个等式成立, 那么我们把 $\tau$ 称为线性转换
 $\tau(u + v) = \tau(u) + \tau(v)$
-$\tau(ku) = k\tau(u)$ 
+$\tau(ku) = k\tau(u)$
 
-公式推导, a,b,v 为标量, u,v,w 为向量:
+公式推导, a, b, v 为标量, u, v, w 为向量:
 $\tau(au + bv + cw) = \tau(au + (bv + cw)) $
 $\quad\quad\quad\quad\quad\quad\quad\,\,= a\tau(u) + \tau(bv + cw) $ 
 $\quad\quad\quad\quad\quad\quad\quad\,\, = a\tau(u) + b\tau(v) + c\tau(w) $
@@ -211,58 +211,60 @@ $u = (x, \,\,y, \,\,z)$
 $u = (x, \,\,y, \,\,z) = xi + yi + zk = x(1,0,0)+y(0,1,0)+z(0,0,1)$
 (上面公式的推导参考 2.2.2 向量与矩阵的乘法)
 
-该公式的意义是证明了三维空间中的任意向量都可以由三个向量的线性组合来表示，这里的 i, j, k 被称为 $\mathbb{R}^3$ (指所有三维向量的集合) 的 `单位基向量`(standard basis vector)
+该公式的意义是三维空间中的任意向量都可以由三个向量的线性组合来表示，这里的单位向量 i, j, k 被称为 $\mathbb{R}^3$ (所有三维向量的集合) 的 `标准基向量`(standard basis vector)
 
-标准基向量表示一组长度为1的基
-标准正交基表示一组长度为1且两两正交的基<br><br>
+标准基向量表示一组长度为 1 的基.
+标准正交基表示一组长度为 1 且两两正交的基.
 
 下面引入线性变换函数 $\tau(u)$ 的定义:
 
-$\tau(u) = x\tau(i) + y\tau(j) + z\tau(k) $
+$\tau(u) = \tau(xi + yj + zk) = x\tau(i) + y\tau(j) + z\tau(k) $
 
-如果<br>
+可以得到
+
+$\tau(u) =x\tau(i) + y\tau(j) + z\tau(k)=[x,y,z] \begin{pmatrix} \leftarrow \tau(i)\rightarrow \\ \leftarrow \tau(j)\rightarrow \\ \leftarrow \tau(k)\rightarrow \end{pmatrix}=[x,y,z] \begin{pmatrix} A_{11}&A_{12}&A_{13} \\ A_{21}&A_{22}&A_{23} \\ A_{31}&A_{32}&A_{33} \end{pmatrix}=\begin{pmatrix}xA_{11}+yA_{21}+zA_{31} \\ xA_{12}+yA_{22}+zA_{32}  \\ xA_{13}+yA_{23}+zA_{33} \end{pmatrix}=\begin{pmatrix}xA_{11} \\ xA_{12} \\ xA_{13} \end{pmatrix}+\begin{pmatrix}yA_{21} \\ yA_{22} \\ yA_{23} \end{pmatrix}+\begin{pmatrix}zA_{31} \\ zA_{32} \\ zA_{33} \end{pmatrix}$
+
+其中
+
 $\tau(i) = \left(A_{11},\,A_{12},\,A_{13}\right)$
 $\tau(j) = (A_{21},\,A_{22},\,A_{23})$
 $\tau(k) = (A_{31},\,A_{32},\,A_{33})$
 
-那么可以得到<br>
-
-$\tau(u) =uA=[x,y,z] \begin{pmatrix} \leftarrow \tau(i)\rightarrow \\ \leftarrow \tau(j)\rightarrow \\ \leftarrow \tau(k)\rightarrow \end{pmatrix}=[x,y,z] \begin{pmatrix} A_{11}&A_{12}&A_{13} \\ A_{21}&A_{22}&A_{23} \\ A_{31}&A_{32}&A_{33} \end{pmatrix}$ 
-<br>
-
 此时由行向量 $\tau(i),\,\,  \tau(j),\,\,  \tau(k)$ 组成的矩阵 A 称为线性变换的矩阵表达, 矩阵 A 在这里可以看做线性变换的系数,选定基底实际是选定坐标轴(不一定正交),三维空间中的任意向量都是基向量的线性组合。
 
-### 3.1.3 缩放
+### 3.1.3 缩放(显然缩放是线性变换)
 
 缩放操作的数学定义
+
 $S(x, y, z) = (s_{x}x, \;s_{y}y, \;s_{z}z)$
 $s_x, \; s_y, \; s_z$ 分别是 x, y, z 轴上的缩放单位，都是标量
 
-缩放交换律推导:
+缩放交换律推导(下面的 u, v 都是向量):
 
-$S(u+v)=\begin{pmatrix} S_x(u_x+v_x),&S_y(u_y+v_y),&S_z(u_z+v_z) \end{pmatrix}$
-$\quad\quad\quad\quad=\begin{pmatrix} S_xu_x+S_xv_x,&S_yu_y+S_yv_y),&S_zu_z+S_zv_z) \end{pmatrix}$
-$\quad\quad\quad\quad=\begin{pmatrix} S_xu_x,&S_yu_y,&S_zu_z \end{pmatrix} + \begin{pmatrix} S_xv_x,&S_yv_y,&S_zv_z \end{pmatrix}$
+$S(u+v)=\begin{pmatrix} s_x(u_x+v_x),&s_y(u_y+v_y),&s_z(u_z+v_z) \end{pmatrix}$
+$\quad\quad\quad\quad=\begin{pmatrix} s_xu_x+s_xv_x,&s_yu_y+s_yv_y,&s_zu_z+s_zv_z \end{pmatrix}$
+$\quad\quad\quad\quad=\begin{pmatrix} s_xu_x,&s_yu_y,&s_zu_z \end{pmatrix} + \begin{pmatrix} s_xv_x,&s_yv_y,&s_zv_z \end{pmatrix}$
 $\quad\quad\quad\quad=S(u) + S(v)$
 
-对于标量 k,则有<br>
-$S(ku)=\begin{pmatrix} S_xku_x,&S_yku_y,&S_zku_z \end{pmatrix}$
-$\quad\quad\;\;\;=k\begin{pmatrix} S_xku_x,&S_yku_y,&S_zku_z \end{pmatrix}$
+对于标量 k,则有
+
+$S(ku)=\begin{pmatrix} s_xku_x,&s_yku_y,&s_zku_z \end{pmatrix}$
+$\quad\quad\;\;\;=k\begin{pmatrix} s_xu_x,&s_yu_y,&s_zu_z \end{pmatrix}$
 $\quad\quad\;\;\;=kS(u)$
-<br>
+
 由上可知, S 也是线性的，并且存在矩阵表达:
-<br>
-$S(i)=\begin{pmatrix} S_x \cdot 1,&S_y \cdot 0,&S_z \cdot 0 \end{pmatrix}=\begin{pmatrix} S_x,0,0 \end{pmatrix}$
-$S(j)=\begin{pmatrix} S_x \cdot 0,&S_y \cdot 1,&S_z \cdot 0 \end{pmatrix}=\begin{pmatrix} 0,S_y,0 \end{pmatrix}$
-$S(k)=\begin{pmatrix} S_x \cdot 0,&S_y \cdot 0,&S_z \cdot 1 \end{pmatrix}=\begin{pmatrix} 0,0,S_z \end{pmatrix}$
+
+$S(i)=\begin{pmatrix} s_x \cdot 1,&s_y \cdot 0,&s_z \cdot 0 \end{pmatrix}=\begin{pmatrix} s_x,0,0 \end{pmatrix}$
+$S(j)=\begin{pmatrix} s_x \cdot 0,&s_y \cdot 1,&s_z \cdot 0 \end{pmatrix}=\begin{pmatrix} 0,s_y,0 \end{pmatrix}$
+$S(k)=\begin{pmatrix} s_x \cdot 0,&s_y \cdot 0,&s_z \cdot 1 \end{pmatrix}=\begin{pmatrix} 0,0,s_z \end{pmatrix}$
 <br>
 缩放操作的矩阵表达如下，又名缩放矩阵:
 <br>
-$\begin{pmatrix} S_x&0&0 \\ 0&S_y&0 \\ 0&0&S_z \end{pmatrix}$
+$\begin{pmatrix} s_x&0&0 \\ 0&s_y&0 \\ 0&0&s_z \end{pmatrix}$
 <br>
 缩放矩阵对应的逆矩阵为:
 <br>
-$\begin{pmatrix} 1/Sx&0&0 \\ 0&1/S_y&0 \\ 0&0&1/S_z \end{pmatrix}$
+$\begin{pmatrix} 1/sx&0&0 \\ 0&1/s_y&0 \\ 0&0&1/s_z \end{pmatrix}$
 <br>
 <br>
 
