@@ -36,7 +36,7 @@ $u=(u_x, \;u_y, \;u_z)$
 $v=(v_x, \;v_y, \;v_z)$
 $u \cdot v=u_xv_x+u_yv_y+u_zv_z$
 
-存在向量 v 和单位向量 n, 应用点乘方法求 v 在与 n 方向上的分量 p 
+存在向量 v 和单位向量 n, 应用点乘求 v 在 n 方向上的分量 p
 因为 $||n||=1$，存在标量 k 使得
 $p=kn=(||v||\cos\theta)n=(||v|| \cdot 1 \cos\theta)n=(||v||\,||n|| \cos\theta)n=(v \cdot n)n$
 得出标量公式 $k=v \cdot n$, 如果 n 不是单位向量, 那么我们可以得到上述公式更一般的形式:
