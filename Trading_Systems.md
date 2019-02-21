@@ -917,7 +917,7 @@ John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最
 
 #### Exchanging the order of the performed trades
 
-上面的例子表明, 所有交易的最终结果必须保持不变, 与交易排列后的新次序无关. 由于交易结果总和保持不变, 所以新权益线最终必然具有相同的值. 但由于交易秩序的变化, 新权益线的形状, 特别是回撤会变得不同(图 4.9).
+上面的例子表明, 所有交易的最终结果必须保持不变, 与交易排列后的新次序无关. 由于交易结果总和保持不变, 所以新老权益线最终必然具有相同的值. 但由于交易秩序的变化, 新权益线的形状, 特别是回撤会变得不同(图 4.9).
 
 <p align="left"><font size=2>Figure 4.9: Blue: detailed equity curve, Black: 15 permutations of the trades sequence("shaken trades"). Trend-following system LUXOR British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Calculation based on one contract basis, results including $30 slippage and commissions per trade.</font></p>
 
@@ -927,53 +927,115 @@ John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最
 
 #### Probabilities and confidence levels (概率和置信水平)
 
-现在您已经掌握了如何摇动您的交易系统, 我们需要更进一步了解蒙特卡洛分析. 你可以取样超过 15 次. 事实上, 1051 笔交易的集合意味着 1051! = 1051 * 1050 * 1049 * 1048 * ... * 3 * 2 * 1 种可能的排列, 令人难以置信的数量! 请记住, 即使是只有 200 笔交易 200!(200 * 199 * 198 ... * 3 * 2 * 1)也大于宇宙中存在的所有原子的数量！ 计算所有这些不同组合的工作, 是不可能由计算机在可容忍的时间内完成的. 因为蒙特卡罗分析中的这些实际问题, 您仅仅随机选择了数百或数千个这样的任意交易序列. 对结果进行排序, 并且可以从该分类列表中分配每个结果的概率. 下面的示例将演示如何确定此类概率:
+现在您已经掌握了如何摇动您的交易系统, 我们需要更进一步了解蒙特卡洛分析. 你可以取样超过 15 次. 事实上, 1051 笔交易的集合意味着 1051! = 1051 * 1050 * 1049 * 1048 * ... * 3 * 2 * 1 种可能的排列, 令人难以置信的数量! 请记住, 即使是只有 200 笔交易, 这些交易的全排列 200!(200 * 199 * 198 ... * 3 * 2 * 1)也大于宇宙中存在的所有原子的数量！ 计算所有这些不同组合的工作, 是不可能由计算机在有限的时间内完成的. 因为蒙特卡罗分析存在的这些实际问题, 您需要随机选择数百或数千个这样的任意交易序列. 对结果进行排序, 然后便可以从该分类列表中分配每个结果的概率. 下面的示例将演示如何确定此类概率:
 
-Consider flipping a coin 1000 times and estimating the amounts of heads and tails. If the
-coin is built completely symmetrically (which is not possible in real life but used by
-mathematicians who do statistical calculations) then you can call this coin “fair”. While
-it is likely that the number of heads and tails with such a fair coin will be close to 500, it
-is also unlikely that they will both be exactly 500. What is far more likely is that the
-number of heads will fall in some range around 500. Instead of getting a head exactly
-500 times and tails exactly 500 times you get a Gaussian distribution of values around
-500 (Figure 4.10). This leads us to the introduction of a so called “confidence level” and
-“confidence interval”.
+让我们考虑这样一个场景, 翻转硬币 1000 次, 并估算正面和背面的次数. 如果硬币完全对称地构建(这在现实生活中是不可能的, 但是由进行统计计算的数学家使用)那么你可以称这个硬币 "公平". 虽然这种公平硬币的正面/背面次数很可能接近 500, 但它们也不太可能恰好都是 500. 更有可能的是, 正面次数将在 500 某个范围内, 而不是正面和背面都恰好是 500 次, 你得到是一个以 500 为中轴的高斯分布(图 4.10). 这导致我们引入所谓的 "置信水平"(confidence level) 和 "置信区间"(confidence interval).
 
-考虑翻转硬币1000次并估算头尾数量。 如果硬币完全对称地构建（这在现实生活中是不可能的，但是由进行统计计算的数学家使用）那么你可以称这个硬币“公平”。 虽然这种公平硬币的头尾数量很可能接近500，但它们也不太可能都是500.更有可能的是，头数将落在某个范围内 大约500次而不是准确地获得头部500次并且正好500次，你得到的高斯分布值大约为500（图4.10）。 这导致我们引入所谓的“置信水平”和“置信区间”。
-
-These values describe the distribution of the experimentally gained data around the true
-parameter (in this case 500). The confidence level (95%) says how likely it is that the
-true parameter of 500 is placed within the confidence interval around your estimation.
-For the Gaussian distribution, which is applicable for this ideal experiment, you can be
-95% sure that the value 500 is accurate within 3.1%. This means that with 95% probability
-you will throw between 469 (500 times -3.1%) and 531 times (500 times +3.1%) a head
-from the 1000 trials.
-
-考虑翻转硬币1000次并估算头尾数量。 如果硬币完全对称地构建（这在现实生活中是不可能的，但是由进行统计计算的数学家使用）那么你可以称这个硬币“公平”。 虽然这种公平硬币的头尾数量很可能接近500，但它们也不太可能都是500.更有可能的是，头数将落在某个范围内 大约500次而不是准确地获得头部500次并且正好500次，你得到的高斯分布值大约为500（图4.10）。 这导致我们引入所谓的“置信水平”和“置信区间”。
+这些值描述了围绕真实参数(在这个例子中是 500)的实验数据的分布. 置信水平(95%)表示实际数据落到预估值周围置信区间内的可能性有多大. 假如实验的高斯分布是理想的, 您有 95% 的把握确定实际值会落在 3.1% 的区间内. 这意味着, 在 1000 次试验中, 正面的次数在 469(500次 - 3.1%)和 531 (500次 + 3.1%)之间的概率是 95%.
 
 <p align="left"><font size=2>Figure 4.10: Gaussian distribution of probabilities for flipping a coin 1000 times. You can tell with 95% confidence that the coin falls to heads between 469 and 531 times. Figure created with MATLAB.</font></p>
 
 ![Figure 4.10](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.10.png)
 
-These confidence levels (e.g. 95%, 99% confidence etc) are used in Monte Carlo analysis.
-
-这些置信水平（例如95％，99％置信度等）用于蒙特卡洛分析。
+置信水平(例如 95%,99% 置信度等)用于蒙特卡洛分析.
 
 #### Performing a Monte Carlo analysis with the LUXOR trading system
 
+让我们看看基于我们的交易系统 LUXOR 进行蒙特卡洛分析的具体例子(表4.1).
+
+<p align="left"><font size=2>Table 4.1: Monte Carlo analysis of 5000 permutations with worst case maximum drawdown and average drawdown as a function of confidence level. Trend-following system LUXOR British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Calculation based on one contract basis, results including $30 slippage and commissions per trade. Calculation performed with Market System Analyzer.</font></p>
+
+![Table 4.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_4.1.png)
+
+从上面的表格可以看出, 大多数交易系统数据在不同的置信水平下保持不变. 从上面的讨论可以清楚地看出这一点. 在执行蒙特卡洛分析的过程中, 您只需在摇动时更改每笔交易的顺序, 但您不会取消或添加任何交易, 因为在我们选择了 "没有替换的选择" 的方法. 因此，当您对 5000 笔交易进行重新排列时, 大部分交易数据, 如平均交易损益, 总净利润, 交易总数, 最终账户权益, 最大盈利交易, 最大亏损交易, 平均交易盈利等保持不变.
+
+蒙特卡洛分析最重要的作用是对于预期亏损的评估. 蒙特卡罗分析是一种用于检查最坏情况可能性的工具. 它寻找在交易逻辑运行过程中可能发生的最大亏损. 在我们的案例中, 交易系统的最大亏损额为 10,292 美元, 平均亏损额为 1976 美元(表 4.1). 蒙特卡罗分析的结果告诉您, 有 99% 概率, 我们交易系统在最坏情况下亏损不会超过 21,364 美元, 正常情况下平均亏损将在 2000 美元左右. 因此, 通过将所有交易进行 5000 次重新排序, 得出结论有 99% 的可能, 最坏情况下的亏损不会超过 21,364 美元.
+
+虽然这个数值是原系统的两倍多, 但最高预期亏损 21,364 美元不超过每年的平均利润(22,000 美元 = 132,000 美元/6年), 因此该值对于交易系统来说是可接受的. 但我们的计算结果仍然意味着, 当您第一次启动系统, 您必须做好在盈利前有 1% 的概率面对 21,000 美元的亏损. 请记住, 99% 的置信度是一个相当高的水平. 如果您使用较低的置信水平进行计算, 预期的最坏情况亏损和平均亏损都会显著降低.
+
 #### Limitations of the Monte Carlo method
 
+如果您想估计隐藏在性能表后面的实际风险, 蒙特卡洛分析是正确的方法. 但是, 当从蒙特卡罗计算中得出结论时, 您仍然必须牢记它们所基于的假设及其局限性. 对于蒙特卡洛分析来说危险的是, 您基于交易逻辑进行交易, 然后基于这些交易数据构建后向测试数据集. 但是，如果这种交易逻辑只是曲线拟合和过度优化呢? 蒙特卡洛分析无法感知这种情况! 由于它只需要你的系统的交易(可能是过拟合), 如果反向测试结果 ok, 它通常会显示结果良好. 换句话说, 只有当反向测试结果不好时才会显示不良结果.
+
+因此, 蒙特卡洛分析仅在正确应用时才有用, 不适用于过拟合的交易系统. 而且, 即使它被正确应用, 你也需要对结果谨慎解释. 有时市场上发生的事情是无法避免的:
+
+有些事件超出了模型的预测能力. 1998 年内爆的对冲基金 LongTerm Capital Management 的聪明人选采用了复杂的概率模型. 但是这些模型在俄罗斯违约引发的金融灾难中失败了. 这是一个警告, 这种高科技手段并非万无一失. 我担心的是人们正在使用蒙特卡罗作为确定性测试. 事实并非如此. 这只是一个概率测试.
+
+十年后我们知道, 与现在刚刚开始发生的情况相比, 1998 年的危机微不足道, 而任何数学模型都无法预测.
+
+请记住, 在蒙特卡洛分析中, 使用了以下假设: 市场回报遵循高斯正态分布, 如在理想情况下翻转硬币(图 4.10). 然而, 金融市场的现实是不同的! 图 4.11 显示了过去 20 年来英镑兑美元的每日变化. 虽然市场的一般行为可以通过高斯模型来描述, 但是有些日子里有非常大的百分比变化, 这些变化超出了高斯曲线.
+
+这样的日子是不可能预测的, 基于高斯分布的蒙特卡罗分析达到了极限. 为了在这种极端情况下获得更可靠的结果, 您必须选择比高斯分布更真实的分布, 从而引出了更复杂的数学模型, 这超出了本书的范围.
+
+<p align="left"><font size=2>Figure 4.11: Daily changes of the British pound vs. US dollar in percent from August 1988-August 2008. Biggest gain was 2.8%, biggest loss 3.3%. The Gaussian distribution cannot describe the daily changes exactly, especially for large gains and losses (encircled areas). Figure generated with MATLAB, data taken from TradeStation 8.</font></p>
+
+![Figure 4.11](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.11.png)
+
 ## Chapter 5: The factors around your system
+
+许多交易者认为代码是成为成功交易者的重要因素. 事实上, 代码是最不重要的, 因为还有许多其他因素在影响着交易系统. 本章将讨论这些因素.
+
+如果您是一名系统交易, 您可能已经拥有以下经验. 经过一些耗时的研究, 你偶然开发了一个交易系统. 它的回测结果看起来很有希望, 而且它的逻辑看似合理. 你决定用它开始交易, 但真正的表现不如你预期的那么好. 您的交易系统在实际交易中仍然存在轻微的向上偏差, 但它远离回测试显示的光明结果. 为什么会这样? 有没有办法避免这种情况, 并确保回测结果与实际交易结果一致? 虽然我们不想在本章中给出这些问题的最终答案, 但我们将尝试查明该主题的主要特征. 这个问题是复杂的, 遗憾的是, 并不存在一个简短易懂的公式, 读者可以通过遵循这个公式而轻易的得出结论. 因此, 我们关注的是您的交易系统对未来需要多大的预测能力, 并且我们试图找出交易系统的预测能力所依赖的因素.
+
+这项工作的大部分理论基础是由 David Aronson 的书 EvidencedBased Technical Analysis 提供的. 我们将此书作为我们的主要参考, 将从实践的角度通过交易系统的真实示例来看待该主题.
 
 ### 5.1 The market’s long/short bias
 
 ----------
 
+在开发交易系统时, 市场 "情绪" 是一个关键因素. 测试期间的市场处于向上, 横向(sideways)或向下的趋势时, 会有很大的不同. 在 1995 - 2000 年的牛市中, 许多交易系统在股票市场和期货上表现最好, 如富时 100 指数, 标准普尔 500 指数, 纳斯达克指数等. 当市场在 2001 年转向后, 这些系统破灭了. 虽然他们在 1997 年至 2000 年期间获得了巨额利润, 但他们在随后的熊市中遇到了严峻的困难.
+
 #### The trend is your friend?
+
+我们将以英镑/美元外汇为例讨论市场所谓的多头/空头趋势(图 5.1). 正如您所看到的, 市场在测试期间呈现整体上升趋势. 虽然六年前英镑的交易价格为 1.50 美元, 但在过去五年里它对美元的汇率变得非常强劲, 2008 年夏季的交易价格约为 2 美元. 如果您的交易系统在 2002 年入市并一直持有到 2008 年 7 月, 每张合约您将获利超过 50,000 美元(图 5.2). 但正如您所看到的, 这个简单系统的资产(=赚到的钱)走势与交易市场本走势完全相同.
+
+As you can imagine every only-long trading system with a similar result to this is almost useless. Since the market itself has an upward bias it is no big achievement of an onlylong trading system to gain money. On the other hand every system which enters only on the short side and has not lost any money within the test period 2002-2008 can be a useful trading logic for the future. It will probably earn money as soon as the market goes sideways or even reverses into a downward trend.
+
+正如你可以想象的那样, 每一个只有很长时间的交易系统都会有相似的结果。 由于市场本身具有上行趋势, 因此只有一个长期的交易系统才能获利。 另一方面, 在 2002-2008 测试期内，每个只进入空头并且没有损失任何资金的系统可能是未来有用的交易逻辑。 一旦市场横盘整理甚至逆转为下跌趋势, 它可能会赚钱.
+
+As you see from the underwater equity curve (Figure 5.2B) the only-long system, although it has good returns, is very risky. It stays in the market 100% of the time and therefore suffers huge drawdowns. Moreover the system needs nearly two years to recover from its biggest losing period.
+
+正如您从水下权益曲线中看到的那样(图 5.2B), 只有很长的系统虽然具有良好的回报，但风险很大。 它在100％的时间内保持在市场上，因此遭受巨大的下降。 此外，该系统需要将近两年的时间才能从最大的失败期中恢复过来。
+
+<p align="left"><font size=2>Figure 5.1: British pound/US dollar (FOREX), weekly bars, 1/7/2002-4/7/2008. A long entry signal is placed on 21/10/2002.</font></p>
+
+![Figure 5.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.1.png)
+
+<p align="left"><font size=2>Figure 5.2: Only long trading system for British pound/ US dollar (FOREX), 1/7/2002-4/7/2008. A long entry signal is placed on 21/10/2002 and the system stays in the market all the time. A: detailed equity curve; B: underwater equity curve showing all drawdowns</font></p>
+
+![Figure 5.2](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.2.png)
 
 #### Consequences for system development
 
+When developing a trading system you can compare its long side with this only-long system, as the minimum result to achieve. You know how much of the profit was earned simply by the market trend and the additional achievement of your trading logic compared with this market bias. The most important figure of your system tests is thereby the total percentage of time your trading system has been in the market. Only if the system was in the market 100% of time is the market bias 100% important. If you trade, however, a system which is only very seldom in the market, let’s say only 10%, the market bias becomes less important. Another reason to keep the time in the market low is to decrease the risk and exposure as discussed in Chapter 3.5 when we talked about exits and risk management.
+
+在开发交易系统时，您可以将其长边与这个只有很长的系统进行比较，作为实现的最小结果。 您知道，与市场偏见相比，市场趋势和交易逻辑的额外成就可以带来多少利润。 因此，系统测试中最重要的数字是您的交易系统进入市场的总时间百分比。 只有系统在市场上100％的时间是市场偏见100％重要。 然而，如果你交易一个只在市场上很少出现的系统，让我们说只有10％，那么市场偏见变得不那么重要了。 将时间保持在低水平的另一个原因是降低风险和风险，如第3.5章所述，当我们讨论退出和风险管理时。
+
+What other conclusions can you draw as a systematic trader or system developer from the long/short bias of markets? When you look at the trading systems which we present here you can see that most of them have a similar amount of short and long trades. Although in some cases (stocks and stock index futures) markets crash more quickly than they go upwards, we tend to build the systems without long or short bias. Most of our systems (like LUXOR) have a similar amount of long and short trades, although their profitability in a long or short direction may be different because the market has shown an uptrend. Since you do not know if this uptrend will continue in the future, your system is more stable and less adapted to this market bias if it produces the same amount of long and short signals.
+
+您可以从市场的长期/短期偏见中作为系统交易者或系统开发者得出哪些其他结论？ 当您查看我们在此处提供的交易系统时，您可以看到他们中的大多数都有类似的短期和长期交易。 虽然在某些情况下（股票和股指期货）市场崩盘的速度比上涨速度快，但我们倾向于建立没有长期或短期偏见的系统。 我们的大多数系统（如LUXOR）都有类似数量的多头和空头交易，尽管它们在多头或空头方向的盈利能力可能不同，因为市场呈现上升趋势。 由于您不知道未来这种上升趋势是否会持续，因此如果它产生相同数量的长短信号，您的系统会更稳定并且不太适应这种市场偏见。
+
 ### 5.2 Out-of-sample deterioration
+
+David Aronson stated a fact which we absolutely agree with from our own experience in
+systems’ evaluation [2]:
+
+Market behaviour is presumed to be a combination of systematic behaviour (recurring
+patterns) and random noise. It is always possible to improve the fit of a rule to a given segment
+of data by increasing its complexity. In other words, given enough complexity, it is always
+possible to fashion a rule that buys at every market low point and sells at every market high
+point. This is a bad idea. Perfect timing on past data can only be the result of a rule that is
+contaminated with noise. In other words, perfect signals or anything approaching them almost
+certainly means the rule is, to a disturbing degree, a description of past random behaviour
+(i.e. overfitted). Overfitting is manifested when the rule is applied to the test data segment.
+There, its performance will be worse than in the training data. This is because the legitimate
+patterns found in a training set recur in the test set, but the noise in the training set does not.
+It can be inferred that profitability in the training set that does not repeat in the testing set
+was most likely a consequence of over-fitting.
+
+This is a meaningful description of the concept of degrees of freedom as depicted more
+formally in Chapter 2. In this chapter we will have a look at a real example of such an
+over fitted system.
 
 ----------
 
