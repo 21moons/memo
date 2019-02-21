@@ -1112,21 +1112,39 @@ These obvious observations within the equity line are confirmed with the system 
 
 We suggest the following reasons and discuss their possible contribution:
 
+我们建议以下原因并讨论它们可能的贡献：
+
 A:  The  trading  logic  generates  less  than  100  trades,  therefore  the  results  are  not statistically significant.
+
+答：交易逻辑产生的交易少于100笔，因此结果无统计意义。
 
 We conducted the same experiment with the same trading system on a 30 minute basis. There the system generated 3000 trades in the training period and got a similar out-ofsample deterioration. So although 69 trades of the daily system are not enough to be statistically significant, the results shown here are typical and the low number of trades is certainly not the main reason for the system deterioration.
 
+我们在30分钟的基础上使用相同的交易系统进行了相同的实验。 该系统在训练期间产生了3000次交易，并且出现了类似的异常恶化。 因此，虽然日常系统的69个交易不足以具有统计显着性，但此处显示的结果是典型的，交易数量少当然不是系统恶化的主要原因。
+
 B: The system was published at the beginning of 2006 and the trading logic has been adopted by too many traders which destroyed its performance.
+
+B：该系统于2006年初发布，交易逻辑已经被太多交易者采用，从而破坏了其业绩。
 
 This explanation is believed by some traders who have found a new trading system or just an interesting idea. They believe that when their trading system is published the performance will suffer since other traders will immediately adopt the logic. Since many people now trade this system its good performance could diminish because of increasing slippage at first, and later because of a changing market structure since more and more people change their trading style towards the successful system. System developers try to prevent this from happening with their trading systems by hiding them in a strongbox for some years and not showing them to anybody until they lose their predictive power anyway. David Aronson writes about the topic of system disclosure in his book:
 
+一些交易者发现了新的交易系统或者只是一个有趣的想法，这种解释被认为。 他们认为，当他们的交易系统发布时，性能将受到影响，因为其他交易者将立即采用逻辑。 由于许多人现在交易这个系统，其良好的表现可能会因为开始时的滑点增加而减少，后来由于市场结构的变化，因为越来越多的人将交易方式改变为成功的系统。 系统开发人员试图通过将他们隐藏在保密箱中多年来防止这种情况发生在他们的交易系统中，并且在他们失去预测能力之前不向任何人展示它们。 David Aronson在他的书中写到了系统披露的主题：
+
 ‘This rationale also lacks plausibility. Even when numerous traders adopt similar rules, as in the case with futures trading funds that employ objective trend-following methods, reduced rule performance seems to be due to changes in market volatility that are not related to the usage of technical systems.’
 
+'这个理由也缺乏合理性。 即使许多交易者采用类似的规则，如采用客观趋势跟踪方法的期货交易基金，减少的规则表现似乎是由于市场波动的变化与技术系统的使用无关。
+
 In other words: although everybody knows that trend-following methods work they do still continue to work, so the disclosure of the system is not a big reason for its success or failure. Furthermore, this system has been open to the public since the day John Bollinger developed it, which was a long time before 2006.
+
+换句话说：虽然每个人都知道趋势跟踪方法的工作仍然可以继续工作，但系统的披露并不是其成功或失败的重要原因。 此外，该系统自John Bollinger开发之日起就向公众开放，这是2006年之前的很长一段时间。
 
 C: The market dynamics within the training data range is different from the one in the test data range.
 
 In our opinion this can be one part of the explanation for deterioration. We’ll discuss this extensively in the next section.
+
+C：训练数据范围内的市场动态不同于测试数据范围内的市场动态。
+
+我们认为这可能是恶化解释的一部分。 我们将在下一节中对此进行广泛讨论。
 
 D: The system has been adapted too much to market noise within the training period, i.e. curve over-fitting.
 
@@ -1202,17 +1220,25 @@ The conclusion is that it’s advisable to make the training period as long as p
 
 We now switch back to our trading system LUXOR which we presented in Chapter 3. When optimising a trading system the first point you must be sure of is that the trading logic is based on an idea which is concrete and profitable. For the trading system LUXOR we have already shown that the logic seems to be sound and profitable and additionally we have performed some stability tests with it. We now take this system and perform a step-by-step optimisation of its six input parameters. First we optimise the slow moving average, second the fast moving average, then the time window filter before we finally optimise the three applied exits one after another: risk stop loss, trailing stop and profit target (Figure 5.9).
 
+我们现在切换回我们在第3章中介绍的交易系统LUXOR。在优化交易系统时，您必须确定的第一点是交易逻辑基于具体且有利可图的想法。 对于交易系统LUXOR，我们已经证明逻辑似乎是合理且有利可图的，而且我们已经用它进行了一些稳定性测试。 我们现在采用该系统并对其六个输入参数进行逐步优化。 首先，我们优化慢速移动平均线，然后是快速移动平均线，然后是时间窗口滤波器，然后我们最终逐个优化三个应用出口：风险止损，追踪止损和利润目标（图5.9）。
+
 <p align="left"><font size=2>Figure 5.9: Step-by-step optimisation of the six input parameters of the LUXOR system 1. Slow moving average, 2. Fast moving average 3. Time window filter 4. Risk stop loss 5. Trailing stop 6. Profit target. Chart example from British pound/US dollar, 30 minute, FOREX from 26 December 2007.</font></p>
 
 ![Figure 5.9](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.9.png)
 
 To perform our tests we again use British pound/US dollar FOREX data but we return to the intraday 30 minute timescale. On this timescale we have nearly six years of intraday data available, from 21/10/2002 to 4/7/2008. From the above discussion of market data bias you know that it’s advisable to use as much data for the training period as possible. However, you must still have a big enough amount of data left for testing your strategy out-of-sample. As a compromise we use the period from 21/10/2002 to 28/02/2007 for training/optimisation and afterwards we check how the optimised system performs within the subsequent test period of more than one year from 1/3/2007 to 4/7/2008.
 
+为了执行我们的测试，我们再次使用英镑/美元外汇数据，但我们回到盘中30分钟的时间尺度。 在这个时间表上，我们有近6年的日内数据，从2002年10月21日到2008年4月7日。 从上面对市场数据偏差的讨论中，您知道建议尽可能多地使用培训期间的数据。 但是，您仍必须留下足够大的数据用于测试样本外的策略。 作为折衷方案，我们使用2002年10月21日至2007年2月28日期间进行培训/优化，然后我们检查优化系统在从2007年1月3日到4年的一年多的后续测试期间的表现如何/ 7/2008
+
 #### Results depending on the number of optimised parameters
 
 If you look at the equity lines during the training periods you can see that they improve more and more with the optimised parameters. Starting from a directionless equity line when no parameters are optimised the equity curve becomes more enticing as more input parameters of the trading system are optimised. This is not surprising since the system better adapts to the training market data the more degrees of freedom it has. Now the main question is how the trading system behaves within the test data area, depending on the number of optimised parameters. When no optimisation took place (i.e. the system operated with a slow moving average based on 30 bars and a fast moving average of 10 bars, no time filter and exits in place) the result within the test data is negative (Figure 5.10A).
 
+如果您在培训期间查看权益线，您可以看到它们通过优化的参数得到越来越多的改善。 当没有参数优化时，从无方向权益线开始，随着交易系统的更多输入参数被优化，权益曲线变得更加诱人。 这并不奇怪，因为系统更好地适应训练市场数据，它具有更多的自由度。 现在主要问题是交易系统在测试数据区域内的行为，具体取决于优化参数的数量。 当没有进行优化时（即系统使用基于30巴的慢速移动平均值和10巴的快速移动平均值操作，没有时间过滤器并且就地退出），测试数据内的结果是负的（图5.10A）。
+
 If you now optimise the first parameter (slow moving average set to 40) for total net profit in the training range the system result is much improved in the training region, however the equity curve of this optimised system improves only slightly in the test data range (Figure 5.10B). If you look at the trading figures (Table 5.3) you can see this result confirmed.
+
+如果您现在优化训练范围内总净利润的第一个参数（慢速移动平均值设置为40），则系统结果在训练区域得到很大改善，但此优化系统的权益曲线在测试数据范围内仅略有改善 （图5.10B）。 如果查看交易数据（表5.3），您可以看到此结果得到确认。
 
 <p align="left"><font size=2>Table 5.3: System figures for training and test area after optimisation for total net profit of one parameter after another. The optimised values are different from the gained values in chapter 3 since the optimisation period is shorter now, not the complete data range as before.</font></p>
 
@@ -1220,11 +1246,19 @@ If you now optimise the first parameter (slow moving average set to 40) for tota
 
 For example, the total net profit within the test data range improves only from -$12,569 to  -$9,736  and  the  average  trade  from  -$27  to  -$26  after  optimisation  of  the  first parameter. This means practically no change. If you optimise the second important parameter for the trading system’s entry, the fast moving average (to a value of 2), then you can see a further improvement within the training set. But now the improvement within the test data range is even bigger than for the training area. This is underlined with the system figures, e.g. the average trade within the test region improves from -$26 to a positive value of $34. This is even better than the value within the training region ($33).
 
+例如，在优化第一个参数后，测试数据范围内的总净利润仅从-12,569美元到-9,736美元以及平均交易从-27美元到-26美元。 这意味着几乎没有变化。 如果您优化交易系统的第二个重要参数，快速移动平均值（值为2），那么您可以在训练集中看到进一步的改进。 但是现在测试数据范围内的改进甚至比训练区域还要大。 用系统数字强调这一点，例如： 测试区域内的平均交易价格从26美元提高到34美元。 这甚至比训练区域内的价值（33美元）更好。
+
 If you now insert a third parameter into the trading system and optimise it (to a value of 9.30am-1.30pm) a dramatic change occurs. The system’s results improve greatly within both the training region and the testing region. Please note, however, that the result in the test region improves more than in the training region. For example, the average profit per trade becomes $200 in the testing period against $118 in the training period. We can summarise that for the first three input parameters every optimisation of the trading system within the training period also leads to an improvement in the testing period. Sometimes the improvement in the testing period is smaller (like with parameter 1: slow moving average), sometimes it is even bigger than in the training period (like with parameter  2  and  3:  fast  moving  average  and  time  filter).  If  you  now  continue  the optimisation of the trading system within the training period by adding suitable exits you get some really interesting findings.
+
+如果您现在将第三个参数插入交易系统并对其进行优化（到上午9:30至下午1:30），则会发生显着变化。系统的结果在训练区域和测试区域内都得到了极大的改善。但请注意，测试区域的结果比训练区域的结果更好。例如，测试期间每笔交易的平均利润为200美元，而培训期间为118美元。我们可以总结出，对于前三个输入参数，培训期内交易系统的每次优化也会导致测试期间的改善。有时测试期间的改善较小（如参数1：慢移动平均值），有时甚至比训练期间更大（如参数2和3：快速移动平均值和时间滤波器）。如果您现在通过添加合适的出口继续在培训期内优化交易系统，您将获得一些非常有趣的发现。
 
 Adding more optimised parameters in the training period can improve results in that area, but these additional parameters will not improve results in the testing period any more. This out-of-sample deterioration cannot be seen directly from the equity curves (Figures 5.10C-5.10G). All equity lines keep steadily growing within the test regions with every added optimised system parameter, and drawdowns stay low. However, if you have a closer look at the system’s report you see that in fact some hidden worsening takes place in the trading system (Table 5.3). The average profit per trade decreases from $200 to $126 after the optimised risk stop loss is inserted and stays in the area between $120 and $125  after  inserting  the  next  exits,  trailing  stop  and  profit  target.  There  is  similar behaviour for the maximum intraday drawdown. While the inserted risk stop loss reduces the drawdown from $10,097 to $8,448, the additional exits increase the drawdown again to nearly $10,000.
 
+在训练期间添加更多优化参数可以改善该区域的结果，但是这些附加参数不再能够改善测试期间的结果。 这种样本外的恶化不能直接从权益曲线中看出（图5.10C-5.10G）。 所有股权线在测试区域内保持稳定增长，每增加一个优化的系统参数，并且下降保持低水平。 但是，如果您仔细查看系统报告，您会发现事实上在交易系统中会发生一些隐藏的恶化（表5.3）。 在插入优化风险止损后，每笔交易的平均利润从200美元降至126美元，并在插入下一个出口，追踪止损和利润目标后保持在120美元至125美元之间。 最大盘中跌幅存在类似行为。 虽然插入的风险止损将减少从10,097美元减少到8,448美元，但额外的退出将再次下调至近10,000美元。
+
 The behaviour of the trading system within the different stages of optimisation for training and test area can be seen best when you plot trading system figures against number of optimised input parameters. If you do this for the total net profit you get a good insight of what happens during the different stages of system optimisation (Figure 5.11). The figure reveals how the total net profit within the training range (blue line) steadily increases with every added optimisation parameter, whereas the performance within the test range (green line) changes with increasing system complexity. With only a few parameters being optimised the net profit in the test range increases with every additional parameter, reaching its high with the third parameter (time window filter) and then being reduced with the fourth optimised parameter (risk stop loss). It then cannot be made bigger again with further optimised parameters.
+
+当您根据优化的输入参数数量绘制交易系统数据时，可以最好地看到交易系统在培训和测试区域优化的不同阶段中的行为。 如果您对总净利润这样做，您可以很好地了解系统优化的不同阶段会发生什么（图5.11）。 该图显示了训练范围内的总净利润（蓝线）如何随着每个增加的优化参数稳定增加，而测试范围内的性能（绿线）随着系统复杂性的增加而变化。 只有少数参数被优化，测试范围内的净利润随着每个附加参数而增加，通过第三个参数（时间窗口过滤器）达到其高，然后通过第四个优化参数（风险停止损失）减少。 然后，通过进一步优化的参数，它不能再变大。
 
 <p align="left"><font size=2>Figures 5.10 A-G: System LUXOR for British pound/US dollar (FOREX) training and test period. Training period 21/10/2002-28/2/2007 (white), test period 1/3/2007-4/7/2008 (green). One input parameter is optimised after another. A: No optimisation. B: Slow moving average: optimised value = 40. C: Fast moving average: optimised value = 2. D: Time window: optimised setting 9.30am-1.30pm GMT. E: Risk stop loss: optimised setting = 0.47% F: Trailing stop: optimised setting = 0.67%. G: Profit target: optimised setting = 2.25%. The optimised values are different from the gained values in chapter 3 since the optimisation period is shorter now, not the complete data range as before.</font></p>
 
@@ -1238,13 +1272,23 @@ The behaviour of the trading system within the different stages of optimisation 
 
 How can you now interpret this behaviour of the trading system?
 
+你现在怎么解释交易系统的这种行为？
+
 Let’s start within the diagram (Figure 5.11) from the left side when no system parameter is optimised. There the trading system has a very low complexity, since the applied rules are quite simple and not optimised at all. If you start to optimise the first parameter the system’s performance changes markedly. The raw and simple trading logic used so far can easily be made better. Interestingly when not many optimised parameters have been introduced the behaviour within the test range sometimes changes more than within the training range. The change can be much worse, but it can be better than the improvement that takes place in the training range. The reason for this behaviour is that a system that has only been optimised a little reacts very sensitively to parameter changes because there are not many parameters in place yet. The rule complexity and the predictability for your test set is low.
+
+当没有优化系统参数时，让我们从左侧开始（图5.11）。 交易系统的复杂性非常低，因为应用的规则非常简单，根本没有优化。 如果您开始优化第一个参数，系统的性能会发生显着变化。 到目前为止使用的原始和简单的交易逻辑可以很容易地变得更好。 有趣的是，当引入的优化参数不多时，测试范围内的行为有时会在训练范围内发生变化。 变化可能会更糟，但它可能比训练范围内的改善更好。 这种行为的原因是，只有一点点优化的系统对参数变化的反应非常敏感，因为还没有很多参数。 规则复杂性和测试集的可预测性很低。
 
 Furthermore, keep in mind that much of what happens in different market phases and areas is accidental and also depends on the market sample bias. It can be that the out-ofsample data period is more “friendly” to our trading system logic in a certain stage than the training data period. With further parameters being optimised or added the changes in the system’s reaction become smaller but still performance improves in the out-ofsample test data range. With the first three parameters being optimised our trading system reaches an important point: it reaches its optimal complexity.
 
+此外，请记住，不同市场阶段和领域发生的大部分事故都是偶然的，也取决于市场样本偏差。 可能是，在训练数据期间的某个阶段，异常数据周期对我们的交易系统逻辑更“友好”。 通过优化或添加其他参数，系统反应的变化变小，但在样本外测试数据范围内仍然可以提高性能。 随着前三个参数的优化，我们的交易系统达到了一个重点：它达到了最佳的复杂性。
+
 From this point on every further optimised parameter (risk stop, trailing stop, profit target) decreases the system’s performance in the test region although the results still improve in the training region. You now have the situation of curve over-fitting. Every new optimised parameter improves the fit of the system to the training area but what happens here is more an adjustment to the existing market noise than an improvement in predictive capability. Thus the net profit within the test region does not become bigger with further optimised parameters but instead it decreases from the fourth parameter onwards. You now again have an out-of-sample deterioration.
 
+从这一点开始，每个进一步优化的参数（风险停止，追踪止损，利润目标）都会降低系统在测试区域的表现，尽管结果在训练区域仍然有所改善。 你现在有曲线过拟合的情况。 每个新的优化参数都会改善系统对训练区域的适应性，但这里发生的更多是对现有市场噪声的调整，而不是预测能力的提高。 因此，测试区域内的净利润不会随着进一步优化的参数而变大，而是从第四个参数开始减小。 你现在再次出现样本外的恶化。
+
 It should be remembered that although the results in the out-of-sample area cannot be improved any more with these exits, they still have an important function. As discussed in Chapter 3.5 when talking about risk management, every stop loss leads to a better control of risk. We see the valuable function of the stops when we look at the largest losing trades which take place in the testing region – the added stop losses decrease this figure drastically from $2,631 to $1,023 (not shown in Table 5.3). Another figure which improves with inserted exits is the time the system stays in the market, which goes down from 100% to about 80%. With exits in place the outcome of trades is more predictable and this helps you to include the trading system into a bigger portfolio and to apply position sizing methods.
+
+从这一点开始，每个进一步优化的参数（风险停止，追踪止损，利润目标）都会降低系统在测试区域的表现，尽管结果在训练区域仍然有所改善。 你现在有曲线过拟合的情况。 每个新的优化参数都会改善系统对训练区域的适应性，但这里发生的更多是对现有市场噪声的调整，而不是预测能力的提高。 因此，测试区域内的净利润不会随着进一步优化的参数而变大，而是从第四个参数开始减小。 你现在再次出现样本外的恶化。...
 
 ### 5.5 Rule complexity explained with polynomial curve fitting
 
@@ -1254,7 +1298,11 @@ It should be remembered that although the results in the out-of-sample area cann
 
 You have just seen how a trading system’s predictive power for the future changes with the number of rules which are involved in the strategy. In our system these rules have been the fast and slow moving average, the very effective intraday time filter and finally the three exits we added. You have seen that a simpler trading system has more predictive power than a more optimised one. We can state that this result was not just gained by accident but it is well founded on statistical rules. We will explain these rules now with a short discussion on interpolating data points with polynomial functions.
 
+从这一点开始，每个进一步优化的参数（风险停止，追踪止损，利润目标）都会降低系统在测试区域的表现，尽管结果在训练区域仍然有所改善。 你现在有曲线过拟合的情况。 每个新的优化参数都会改善系统对训练区域的适应性，但这里发生的更多是对现有市场噪声的调整，而不是预测能力的提高。 因此，测试区域内的净利润不会随着进一步优化的参数而变大，而是从第四个参数开始减小。 你现在再次出现样本外的恶化。...
+
 Let’s assume that you have 10 data points as your sample data (Figure 5.12).
+
+假设您有10个数据点作为样本数据（图5.12）。
 
 <p align="left"><font size=2>Figure 5.12: Ten points of sample data, generated with a sinus function and random distances from it. Curve generated with MATLAB.</font></p>
 
@@ -1262,13 +1310,19 @@ Let’s assume that you have 10 data points as your sample data (Figure 5.12).
 
 In our case the 10 points were not chosen randomly but with a combination of a rule and random behaviour. We took a sinus function which is a normal oscillation and placed the 10 points around the sinus function with randomly taken distances. Here these are just mathematical points but as a trader you can imagine that these values could also be the prices of any financial markets, for example values of a tick chart of the FTSE 100 future or any stock you like. Thus our data point simulation is an approximation for financial markets in the way that you assume that the markets have a certain order or direction (at least during special times or events) but that around this order you have lots of random behaviour and market noise.
 
+在我们的例子中，10个点不是随机选择的，而是结合了规则和随机行为。 我们采用正常振荡的窦功能，并将窦功能周围的10个点随机取得距离。 这里只是数学点，但作为交易者，您可以想象这些价值也可能是任何金融市场的价格，例如富时100期货的价格图表或您喜欢的任何股票。 因此，我们的数据点模拟是对金融市场的近似，假设您认为市场具有某种顺序或方向（至少在特殊时期或事件期间），但在此顺序中您会有很多随机行为和市场噪音。
+
 To interpolate these 10 data points as well as possible you can use mathematic polynomial functions with different complexity. The higher the order of the polynom, the greater its complexity becomes. The easiest polynomial function (degree = 0) is a constant (Figure 5.13).
+
+要尽可能地插入这10个数据点，您可以使用具有不同复杂度的数学多项式函数。 多项式的阶数越高，其复杂性就越大。 最简单的多项式函数（degree = 0）是一个常数（图5.13）。
 
 <p align="left"><font size=2>Figure 5.13: Approximation of the ten data points with a polynomial function of degree = 0, a constant with value = 0. Curve generated with MATLAB.</font></p>
 
 ![Figure 5.13](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.13.png)
 
 You see that this horizontal function touches some data points, but other points are a long way from it. The next higher complexity level is to interpolate the 10 data points with a linear function, which is a polynomial of degree 1 (Figure 5.14). In the picture of a trading system this line could be a simple trend line. Since the results of the constant and the linear function are rather poor fits to the 10 data points, we have to increase the adaptive function’s complexity. The second order polynomial seems to give a quite good fit to the data points (Figure 5.15). This curve reaches more data points and comes quite close to all points, although not all are reached exactly. If we increase the degree of the polynomial function to 3 we already have a very nice fit to the data points and when we go to a much higher order of polynomial (degree = 9) we obtain a 100% fit to the training data (Figures 5.16 and 5.17). The polynomial of degree 9 passes exactly through each data point.
+
+你看到这个水平函数接触了一些数据点，但其他点距离它很远。 下一个更高的复杂度级别是使用线性函数对10个数据点进行插值，这是1次多项式（图5.14）。 在交易系统的图片中，这条线可能是一条简单的趋势线。 由于常数和线性函数的结果相当不适合10个数据点，我们必须增加自适应函数的复杂性。 二阶多项式似乎非常适合数据点（图5.15）。 该曲线可以达到更多的数据点并且非常接近所有点，尽管并非所有点都准确到达。 如果我们将多项式函数的次数增加到3，我们已经非常适合数据点，当我们进入更高阶的多项式（度= 9）时，我们获得了100％的训练数据拟合（图 5.16和5.17）。 9阶多项式准确地通过每个数据点。
 
 <p align="left"><font size=2>Figure 5.14: Approximation of the ten data points with a polynomial function of degree = 1, a linear function. Curve generated with MATLAB.</font></p>
 
@@ -1288,17 +1342,25 @@ You see that this horizontal function touches some data points, but other points
 
 You can also plot the results of these graphs in a table (Table 5.4). There you see how the average error of the fitness function becomes smaller with a higher degree of polynomial. Whereas the polynomial of degree 0 has a big standard deviation from the 10 data points (5.39), the 9th degree polynomial nearly reaches the points without any error (0.0003).
 
+您还可以在表格中绘制这些图表的结果（表5.4）。 在那里，您可以看到适应度函数的平均误差如何随着更高程度的多项式变得更小。 而0度多项式与10个数据点（5.39）的标准偏差较大，而9度多项式几乎达到没有任何误差的点（0.0003）。
+
 <p align="left"><font size=2>Table 5.4: Average error of fit to data points (standard deviation) as a function of the degree of the polynomial. The higher the degree of the polynomial, the better its fit to the data points, but the higher its rule complexity becomes.</font></p>
 
 ![Table 5.4](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_5.4.png)
 
 If you have a closer look at the result of the 9th degree polynomial fit you can see that the fitted curve oscillates wildly and gives only a very poor representation of the chosen sinus-function with the data points randomly around it. This 9th degree polynomial could stand for a very complex trading system with many components added until you have got a perfect fit of the trading logic to your market data.
 
+如果仔细观察9度多项式拟合的结果，您可以看到拟合曲线疯狂地振荡，并且只给出了所选择的正弦函数的非常差的表示，其中数据点随机地围绕它。 这个9度多项式可以代表一个非常复杂的交易系统，添加了许多组件，直到您将交易逻辑与市场数据完美契合。
+
 But what are the conclusions which you can draw from these fitness functions and what is the predictive power of the different polynomials for the future?
+
+但是，您可以从这些适应度函数中得出什么结论，以及未来不同多项式的预测能力是什么？
 
 #### Predictive power of the different polynomials
 
 Let’s see what happens if we add further data points by letting the sinus function continue into the future (Figure 5.18). You can see that the polynomial of degree 0 continues to go sideways with the sinus function. Thus the predictive power of this very simple function for the future is quite poor, but it is worth mentioning that it stays exactly the same as the result of the back-test of the ten data points.
+
+让我们看看如果我们通过让窦功能继续到未来来添加更多数据点会发生什么（图5.18）。 你可以看到0度的多项式继续与正弦函数一起侧向。 因此，这个非常简单的函数对于未来的预测能力非常差，但值得一提的是，它与十个数据点的反向测试结果完全相同。
 
 <p align="left"><font size=2>Figure 5.18: Predictive capability of the polynomial of degree =0 for unseen test data. Curve generated with MATLAB.</font></p>
 
@@ -1310,15 +1372,25 @@ Let’s see what happens if we add further data points by letting the sinus func
 
 In contrast to this simple approximation of the training data set, let’s have a look at the the polynomial of degree 9 (Figure 5.19). Obviously this complex polynomial (or trading system) does not have any predictive power for the future! The well curve fitted complex function misses the new points completely.
 
+与训练数据集的这种简单近似相反，让我们看一下9阶多项式（图5.19）。 显然，这个复杂的多项式（或交易系统）对未来没有任何预测能力！ 适合复杂功能的井曲线完全错过了新的点。
+
 You might expect the best solution somewhere in between these two extremes. But this is not true. In fact no polynom of degree higher than 0 is a good approximation for the data points which are placed near a sine curve. All polynoms (even with degree 1)  grow quickly away from the horizontal line around which the sine function oscillates. Thus all polynoms,  except  the  polynom  of  degree  0,  are  useless  concerning  for  making predictions! Although the polynom of degree 0 is poor it is the only robust one.
 
+您可能期望在这两个极端之间的某个地方找到最佳解决方案。 但是这是错误的。 实际上，没有高于0的多项式是对于放置在正弦曲线附近的数据点的良好近似。 所有多项式（即使是1度）都会快速远离水平线，正弦函数围绕该水平线振荡。 因此，除了0度的多项式之外的所有多项都无法用于预测！ 尽管0度的多项式很差，但它是唯一的强大的。
+
 What is the way out of this situation? Does it mean that you must stop trading system development completely and look at the trend of the markets with simple lines?
+
+出现这种情况的方法是什么？ 这是否意味着您必须完全停止交易系统开发并用简单的线条来看待市场趋势？
 
 #### Conclusions for trading system development
 
 What you have seen in this example is just that markets cannot be approached with pure mathematical methods. But this does not mean that all trading systems must be of zerocomplexity. Our mistake here was that we tried to approach a periodic sinus function with a non-periodic polynomial function. Like this we forced our algorithm to adapt to a situation for which it is not built. The polynomial function was not suited to the function we were trying to use it for because it is not the correct approximation for a periodic environment. The idea of periodicity was missing. The conclusion for you as a system developer and trader is that you must first have an idea of the market! Only when you have this can you start to code your idea and only like this will you get a code that makes sense. Just as it is useless to approach periodic functions with polynomials, it is useless to approach trendless markets with trend-following methods or to approach markets with no volatility with break-out systems. We know that this leads into further conflicts since markets are steadily changing, but using ideas and experience is the best approach you can take.
 
+你在这个例子中看到的只是市场不能用纯粹的数学方法来处理。但这并不意味着所有交易系统都必须具有零复杂性。我们这里的错误是我们试图用非周期多项式函数逼近周期性正弦函数。像这样，我们强制我们的算法适应它没有构建的情况。多项式函数不适合我们尝试使用它的函数，因为它不是周期环境的正确近似。缺乏周期性的想法。您作为系统开发人员和交易员的结论是，您必须首先了解市场！只有当你拥有这个时才能开始编写你的想法，只有这样你才能得到一个有意义的代码。正如利用多项式处理周期函数一样无用，使用趋势跟踪方法接近无趋势市场或通过突破系统接近没有波动性的市场是没有用的。我们知道，由于市场正在稳步变化，这会导致进一步的冲突，但使用创意和经验是您可以采取的最佳方法。
+
 Further consequences of these tests are that once you have a simple, robust logic with a proper risk management in place you can stop your system development process. It is often better to use just one or two indicators, or only the price itself, rather than several combined indicators. Adding more and more rules will just increase the adaptation of your trading system to past market data, but it will not increase its predictive power for real trading. Therefore it is better to save your time and invest it otherwise, for example in adding a money management scheme or by diversifying your strategy with further simple but robust systems within a portfolio.
+
+这些测试的进一步结果是，一旦您拥有一个简单，强大的逻辑并且具有适当的风险管理，您就可以停止系统开发过程。 通常最好只使用一个或两个指标，或仅使用价格本身，而不是几个综合指标。 添加越来越多的规则只会增加您的交易系统对过去市场数据的适应性，但它不会增加其对实际交易的预测能力。 因此，最好是节省您的时间并以其他方式进行投资，例如在添加资金管理计划或通过投资组合中的更简单但更强大的系统来分散您的策略。
 
 ## Chapter 6: Periodic re-optimisation and walk forward analysis
 
@@ -1536,27 +1608,164 @@ Let’s  start  with  the  result  of  the  LUXOR  trading  system  developed  i
 
 #### Maximum drawdown MM
 
+This method was used and described by Larry Williams [11]. The basic idea of this MM scheme is derived from risk management: you want to be sure you have enough equity in your account to withstand the worst-case drawdown the account has had in the past. At least, you would need enough equity to cover the size of the worst-case drawdown plus the margin requirement. This means that in order to trade one lot, you would need as a bottom line the one-lot margin requirement plus the worst-case one-lot drawdown. Larry Williams recommended, in order to make his MM a bit safer, to take 150% of the worst-case drawdown plus the margin for the first lot. Each subsequent lot is then added when the equity increases by 150% of the worst-case drawdown. This should ensure that you have enough equity to avoid losing everything even if the worst-case drawdown repeats itself. Let’s see what this simple MM scheme does with our trading system (Figure 7.3).
+
+Larry Williams [11]使用并描述了这种方法。 这个MM计划的基本思想来自风险管理：您希望确保您的账户中有足够的资产来抵御账户过去最糟糕的亏损。 至少，您需要足够的资产来弥补最坏情况下降的幅度加上保证金要求。 这意味着，为了交易一手，您需要作为底线的一手保证金要求加上最坏情况下的一手跌幅。 拉里·威廉姆斯建议，为了让他的MM更安全一点，拿掉150％的最坏情况下降加上第一手的保证金。 然后，当权益增加最坏情况下降的150％时，每个后续批次都会被添加。 这应该确保你有足够的资产，以避免失去一切，即使最坏情况缩编重演。 让我们看看这个简单的MM方案对我们的交易系统的作用（图7.3）。
+
+<p align="left"><font size=2>Figure 7.3: 150% maximum drawdown MM by Larry Williams. Upper blue line: equity curve. Lower black area: number of traded lots. Starting account size = $100,000. Trend-following system British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time filter and exits in place. Including $30 S+C per RT. An area with a recent drawdown is encircled. Chart created with Market System Analyzer.</font></p>
+
+![Figure 7.3](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_7.3.png)
+
+Instead of $120,000 profits without money management the system can now reach a final profit of $137 million with the applied MM scheme! But be careful. First of all the high number of 15,000 lots is not realistic. If you traded that much you certainly could not keep the same back-test result as with trading one lot. Even in the very liquid currency markets, such a high trading volume would change the market and lead to worse fills. Another point is the high risk of your trading system with the increased profits. Please note that the drawdown after the equity peak of $276 million is $139 million bigger than the left profit. So the higher gains have the price of higher risks. Let’s see how other MM methods perform.
+
+如果没有资金管理，系统现在可以通过应用MM方案获得1.37亿美元的最终利润，而不是12万美元的利润！ 不过要小心。 首先，大量的15,000手是不现实的。 如果你交易那么多，你肯定无法保持与交易一手相同的回测结果。 即使在非常流动的货币市场中，如此高的交易量也会改变市场并导致更糟糕的填充。 另一点是您的交易系统的高风险与增加的利润。 请注意，在2.76亿美元的股票高峰后的缩编比左边的利润高出1.39亿美元。 因此，较高的收益具有较高风险的代价。 让我们看看其他MM方法的表现。
+
 #### Fixed fractional MM
 
+Fixed fractional MM was developed by another trader and book author, Ralph Vince, at around the same time as Larry Williams’ maximum drawdown scheme [12]. Ralph Vince’s method is also known as fixed risk position sizing because it risks the same percentage or fraction of the account equity on each trade. For example, with an account value of $10,000 a fixed fractional MM of 2% means that you want to risk a maximum of $200 per transaction.
+
+固定的分数MM是由另一位交易员和书籍作者拉尔夫·文斯（Ralph Vince）在与拉里·威廉姆斯（Larry Williams）的最大缩编计划[12]同时开发的。 拉尔夫文斯的方法也被称为固定风险头寸规模，因为它在每笔交易中承担相同比例或部分的账户资产。 例如，如果帐户价值为10,000美元，则固定小数MM为2％意味着您希望每笔交易最多冒险200美元。
+
+But how do you set this risk of $200 in real trading? Let’s check what this means with the example of our trading system and the pound/dollar. To answer this question we must go  back  to  our  previous  findings,  the  strong  interaction  between  risk  and  money management, and to Chapter 3 where we looked for exits.
+
+但是，如何在实际交易中设置200美元的风险呢？ 让我们用我们的交易系统和英镑/美元的例子来检查这意味着什么。 要回答这个问题，我们必须回到我们之前的研究结果，风险和资金管理之间的强烈相互作用，以及我们寻找退出的第3章。
+
+We found an optimal stop loss value of 0.3% for the pound/dollar. With the pound/dollar trading at $2.00 the 0.3% stop loss would mean a risk of $600 for one lot (0.3% x $2.00 x 100,000) and this approach has not yet taken into account the slippage and the fact that even in the back-test the biggest loss was much bigger ($810). So obviously there is a dilemma. You cannot trade the pound/dollar currency pair with a $10,000 account equity with that 0.3% initial stop loss and a risk of 2%. The way out is to make changes to your money management or your risk management. You have to choose one of the following two possibilities:
+1. Change of risk management: you set a tighter stop to lower your risk per trade.
+2. Change of money management: you increase the account equity or you increase the risk.
+
+我们发现英镑/美元的最佳止损价值为0.3％。 当英镑/美元交易价格为2.00美元时，0.3％的止损将意味着一手的风险为600美元（0.3％x 2.00 x 100,000），这种方法尚未考虑到滑点和即使在后面的事实 - 测试最大的损失要大得多（810美元）。 显然存在两难问题。 您不能将英镑/美元货币对与10,000美元的账户净值进行交易，其初始止损为0.3％，风险为2％。 出路是改变您的资金管理或风险管理。 您必须选择以下两种可能之一：
+1.风险管理的变化：您设置更严格的止损以降低每笔交易的风险。
+2.资金管理变更：您增加账户资产或增加风险。
+
+There is a possibility that option 1 directly affects the trading logic. From all our findings about stops and profit targets we know that the trading system performance suffers with stops that are too tight. From the discussion in Chapter 3 you have seen that trades need enough room to develop. Tight stops remove this room and can turn a profitable strategy into a losing strategy. Since we do not want to change this risk management it means we must change our money management (possibility 2) and set the initial account value higher. Doing this is much easier to calculate but means in practice that you must have enough funds available. That’s one reason why single traders very seldom use MM schemes and why bigger funds are more successful in the long run.
+
+选项1有可能直接影响交易逻辑。 从我们关于止损和利润目标的所有发现中，我们都知道交易系统的表现受到了过于紧张的止损。 从第3章的讨论中可以看出，交易需要有足够的发展空间。 紧急停止移除这个房间，可以将盈利的策略变成失败的策略。 由于我们不想改变这种风险管理，这意味着我们必须改变我们的资金管理（可能性2）并将初始账户价值设置得更高。 这样做更容易计算，但在实践中意味着您必须有足够的资金。 这就是为什么单个交易者很少使用MM方案以及为什么更大的基金从长远来看更为成功的原因之一。
+
+Let’s calculate how much should be the minimum account. We want to risk 2% of our account with the next transaction. Since our risk with one lot is chosen by the preset stop loss of the trading system ($600), this means that the account must be at least $30,000, when trading one lot at this risk ($600 is 2% of $30,000). We take double this value to be sure not to conflict with our risk settings. So we trade one lot with $60,000. With a starting account value of $100,000 this means that one lot is allowed per transaction until the account value has reached $120,000 (= 2 x $60,000). The third lot can be traded when the account reaches $180,000 and so on. Please note that when the account equity decreases, the number of traded lots also has to be lowered accordingly. The result of this MM is shown in Figure 7.4A. You see that while the equity curve (blue line) is growing, more lots can be added (lower black area), until the highest account value of $790,000, reached in May 2008, when 14 lots are traded. When trading with so many lots the trading system comes into a drawdown phase (red encircled) which then leads to a bigger drawdown. Please note how this drawdown phase is huge compared with the original trading system traded with one fixed lot since now the drawdown is amplified by the 14 lots.
+
+让我们计算最低帐户应该是多少。我们希望在下一笔交易中承担2％的账户风险。由于我们通过交易系统的预设止损（600美元）选择一手的风险，这意味着当以一定风险交易一手（600美元是30,000美元的2％）时，该账户必须至少为30,000美元。我们将此值加倍，以确保不会与我们的风险设置发生冲突。所以我们以60,000美元交易一手。起始帐户值为100,000美元，这意味着每个交易允许一个批次，直到帐户价值达到$ 120,000（= 2 x $ 60,000）。当账户达到180,000美元时，第三批可以交易，依此类推。请注意，当账户净值减少时，交易手数也必须相应降低。该MM的结果如图7.4A所示。您可以看到，当权益曲线（蓝线）增长时，可以添加更多手数（较低的黑色区域），直到2008年5月达到最高账户价值790,000美元时，交易14手。当交易这么多手数时，交易系统进入亏损阶段（红色环绕），然后导致更大的缩减。请注意这个缩编阶段与原始交易系统相比是如何与一个固定手数交易相比，因为现在缩减被14个批次放大。
+
+It is worth finding out what happens when we increase the risk per transaction more and more, to 5%, 10% then even to 30% (Figures 7.4B-D). As you can see the biggest equity point reached in May 2008 gets dramatically higher and higher. Whereas the fixed fractional MM with 2% risk reaches a biggest equity peak of $790,000, the MM with 5% risk reaches over $22 million, the MM with 10% reaches $981 million and the MM with 30% risk reaches over $6 billion!
+
+值得一提的是，当我们将每笔交易的风险越来越高，达到5％，10％，甚至达到30％时，会发生什么（图7.4B-D）。 正如您所看到的，2008年5月达到的最大公平点变得越来越高。 风险为2％的固定分数MM达到790,000美元的最大股票峰值，风险为5％的MM超过2200万美元，10％的MM达到9.81亿美元，风险为30％的MM达到60亿美元以上！
+
+But as you know, “trees do not grow to the sky” and the high profits have a high price. With the 30% fixed fractional MM finally “only” $538 million is left from the $6 billion reached before. So the suffered drawdown from the equity peak of over $6 billion was ten times higher than the final profit! The more aggressive the MM that is chosen, the higher the equity peak, but the bigger the drawdown which the equity curve suffers thereafter. The fixed fractional MM scheme works like an amplifier of the gains but also of the losses. You see again from this simple example, as with the above shown maximum drawdown MM, that although an aggressive MM seems to be attractive at the first glance because it promises big profits, the risks behind it quickly become too high.
+
+但正如你所知，“树木不会长到天空”，高利润的代价很高。 随着30％的固定分数MM最终“仅”将从之前达到的60亿美元中留下5.38亿美元。 因此，超过60亿美元的股票峰值遭受的损失是最终利润的十倍！ 选择的MM越激进，股票峰值越高，但此后股票曲线遭受的跌幅越大。 固定分数MM方案的作用类似于增益的放大器，但也包括损耗的放大器。 你从这个简单的例子中再次看到，就像上面显示的最大缩幅MM一样，尽管咄咄逼人的MM乍一看似乎很有吸引力，因为它承诺了巨大的利润，但它背后的风险很快就会变得过高。
+
+<p align="left"><font size=2>Figure 7.4: Applying fixed fractional MM. The aggressiveness of the MM is increased from 2%, 5%, 10% up to 30%. Upper blue line: equity curve. Lower black area: number of traded lots. Starting account size = $100,000. Trend-following system British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time filter and exits in place. Including $30 S+C per RT. An area with a recent drawdown is encircled. Charts created with Market System Analyzer.</font></p>
+
+![Figure 7.4](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_7.4.png)
+
+So let’s see if there are more conservative methods out there.
+那么让我们看看是否有更保守的方法。
+
 #### Fixed ratio MM
+
+Fixed ratio MM was first introduced by Ryan Jones in his book The Trading Game in 1999 [13]. In the fixed ratio position sizing the key parameter is the so called “delta”. This delta is the dollar amount of profit per traded unit to increase the number of units by one. A delta of $10,000 means that if you’re currently trading one lot you would need to increase your account equity by $10,000 to start trading two lots. Once you get to two lots, you would need an additional profit of $20,000 to start trading three lots. Then, trading with three lots, you would need an additional profit of $30,000 to start trading four lots and so on. The base to calculate the number of traded lots in fixed ratio position sizing is the following equation:
+
+$N = 0.5 * [((2 * N_0 – 1)^2 + 8 * P/delta)^{0.5} + 1]$
+
+固定比率MM由Ryan Jones在其1999年的“交易游戏”一书中首次引入[13]。 在固定比率位置，调整关键参数是所谓的“delta”。 这个增量是每个交易单位的美元利润额，以便将单位数增加一个。 10,000美元的差值意味着如果您目前正在交易一手，您需要增加10,000美元的账户资产才能开始交易两手。 一旦你获得两个批次，你需要额外的20,000美元的利润才能开始交易三手。 然后，交易三手，您需要额外的30,000美元的利润才能开始交易四手，等等。 计算固定比率位置大小的交易手数的基数如下：
+
+N is the traded position size, N0 is the starting position size, P is the total closed trade profit, and delta is the parameter discussed above. As the mathematicians know x0.5 means “square root of x”.
+
+N是交易头寸大小，N0是起始头寸大小，P是总封闭交易利润，delta是上面讨论的参数。 正如数学家所知，x0.5的意思是“x的平方根”。
+
+A few points are worth mentioning. The profit P is the accumulated profit over all trades leading  up  to  the  one  for  which  you  want  to  calculate  the  number  of  lots.  As  a consequence the position size for the first trade is always N0 because you start with zero profits (P = 0). Please note that the account equity is not a factor in this equation, so changing the starting account size will not change the number of traded lots. Neither is the trade risk a factor in this equation – if trade risks are defined for the current sequence of trades, they will be ignored when fixed ratio position sizing is in effect. All that matters is the accumulated profit and the delta. The delta determines how quickly the lots are added or subtracted.
+
+有几点值得一提。 利润P是所有交易的累计利润，直至您想要计算的手数。 因此，第一笔交易的头寸规模始终为N0，因为您从零利润开始（P = 0）。 请注意，账户净值不是此等式中的一个因素，因此更改起始账户大小不会改变交易手数。 贸易风险也不是这个等式中的一个因素 - 如果贸易风险是针对当前的交易顺序定义的，那么当固定比率头寸规模生效时，它们将被忽略。 重要的是累计利润和增量。 增量确定添加或减少批次的速度。
+
+Ryan Jones’ position sizing rule leads to a MM scheme which is a bit more conservative than the fixed fractional MM by Ralph Vince which was shown above. You can simply compare the two MM schemes as following (Figure 7.5):
+Ralph Vince, fixed fractional lots = constant * account-size
+Ryan Jones, fixed ratio lots = constant * squareroot(account-size)
+
+Ryan Jones的位置大小规则导致MM方案比Ralph Vince的固定小数MM更保守，如上所示。 您可以简单地将两种MM方案进行比较，如下所示（图7.5）：
+Ralph Vince，固定小数手数=常数*账户大小
+Ryan Jones，固定比率很多=常数* squareroot（账户大小）
+
+So in contrast to the above situation with fixed fractional MM where the number of traded lots is linearly increased with the account size, with the fixed ratio MM the number of lots is increased like a square root function. This MM type is a bit more agressive in the beginning, but becomes more conservative and slower with more gained trading capital.
+
+因此，与具有固定分数MM的上述情况相反，其中交易批次的数量随账户大小线性增加，在固定比率MM中，批次数量增加，如平方根函数。 这种MM类型在开始时有点激进，但随着更多的交易资本获得更加保守和缓慢。
+
+<p align="left"><font size=2>Figure 7.5: Fixed Ratio vs. Fixed Fractional MM. As trading capital increases, the fixed ratio MM increases the number of lots more slowly, with a square root function, than the fixed fractional MM, which works linearly.</font></p>
+
+![Figure 7.5](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_7.5.png)
+
+To see how fixed ratio MM works let’s start with a delta of $100,000. This means that you can add the second lot only after your account value has increased by another $100,000 to $200,000 (Figure 7.6A). Obviously this MM is very slow and not much different from just trading one lot all the time so let’s make it a bit more aggressive. (Figures 7.6B and C).
+
+要了解固定比率MM如何运作，让我们从100,000美元的增量开始。 这意味着只有在您的帐户价值再增加100,000美元到200,000美元后才能添加第二批（图7.6A）。 显然这个MM非常慢，并且与一直交易一个批次没什么不同所以让我们让它更具侵略性。 （图7.6B和C）。
+
+<p align="left"><font size=2>Figure 7.6: Applying fixed ratio MM. The aggressiveness of the MM is increased from A to C. Upper blue line: equity curve. Lower black area: number of traded lots. Starting account size = $100,000. LUXOR system on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time filter and exits in place. Including $30 S+C per RT. An area with a recent drawdown is encircled. Chart created with Market System Analyzer.</font></p>
+
+![Figure 7.6](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_7.6.png)
+
+As with the fixed fractional MM the more aggressively you increase the lot size, the higher equity peaks you can reach, but also the bigger drawdowns you get in phases where the trading system shows some weakness. Compared with the fixed fractional MM the fixed ratio MM shows a better return/risk ratio as you can see when you have a closer look on the delta=$500 fixed ratio MM (Figure 7.6C). There you see that the equity high is $11.5 million and the drawdown is about $1.8 million. Although the drawdown is still excessive,  the  return/drawdown  ratio  is,  with  6.4  in  this  example,  better  than  the comparable 5% fixed fractional MM where you have an equity peak of $22 million but then a drawdown of $8 million leading to a return/drawdown ratio of 2.8.
+
+与固定分数MM一样，您可以更积极地增加手数，可以达到更高的股票峰值，但也可以在交易系统显示出一些弱点的阶段获得更大的下降。 与固定分数MM相比，固定比率MM显示更好的回报/风险比，您可以看到当您仔细观察delta = $ 500固定比率MM时（图7.6C）。 在那里你看到股票高点是1150万美元，而缩编是大约180万美元。 尽管亏损仍然过大，但回报/缩编比率（在本例中为6.4）优于可比较的5％固定分数MM，其中您的股票峰值为2200万美元，但随后是800万美元的缩减导致回报/ 缩编比为2.8。
 
 ### 7.3 Monte Carlo analysis of the position sized system
 
 ----------
 
+Position sizing increases your profits. But with the profits the risks also become higher. To get a better idea of how big the risks become we do a Monte Carlo analysis of the LUXOR system after position sizing and compare its results with the situation when no MM is applied (Table 7.1).
+
+头寸调整可以增加您的利润。 但随着利润的增加，风险也会变得更高。 为了更好地了解风险的大小，我们对位置大小后的LUXOR系统进行蒙特卡罗分析，并将其结果与未应用MM的情况进行比较（表7.1）。
+
+<p align="left"><font size=2>Table. 7.1: System figures without (green) and with money management (yellow). LUXOR system on British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time filter and exits in place. Including $30 S+C per RT.</font></p>
+
+![Table 7.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_7.1.png)
+
+This table shows that the $5000 fixed ratio MM trades up to 27 lots simultaneously. This MM leads to a total net profit of over $1.5 million, compared to the $132,000 when trading one fixed lot. The price for the higher gain is higher risk. The MM increases the largest losing trade to $15,418 (from $810) and the maximum drawdown to $229,560 (from $10,292). The Monte Carlo analysis reveals that the worst case drawdown which can happen with 1% probability (since with 99% it is avoided) is now $446,064 (from $21,364).
+
+该表显示5000美元的固定比率MM同时交易多达27手。 这个MM的净利润总额超过150万美元，相比之下，交易一个固定手数时的净利润为132,000美元。 更高收益的价格是更高的风险。 MM将最大亏损交易增加至15,418美元（从810美元起），最大亏损额为229,560美元（从10,292美元起）。 蒙特卡洛分析显示，最坏情况下的跌幅可能以1％的概率发生（因为避免了99％）现在是446,064美元（从21,364美元起）。
+
 ### 7.4 Conclusion
 
 ----------
+
+The type of MM to select depends on the risks which you are prone to take. MM works like an amplifier of your trading logic, independently of which method you chose for position sizing. If it is properly adjusted then it will increase the profits of your trading system, but never forget that the risks are increased too – even with the best MM. In order to increase profits and at the same time keep the risk low it is advantageous to combine different systems and markets. You will find some ideas about this topic in the following chapter.
+
+要选择的MM类型取决于您倾向于采取的风险。 MM的工作方式类似于交易逻辑的放大器，与您选择的头寸选择方法无关。 如果它被适当调整，那么它将增加您的交易系统的利润，但永远不会忘记风险也增加 - 即使有最好的MM。 为了增加利润并同时保持低风险，将不同的系统和市场结合起来是有利的。 您将在下一章中找到有关此主题的一些想法。
 
 # Part III: Systematic Portfolio Trading
 
 ## Chapter 8: Dynamic portfolio construction
 
+So far this book has shown methods to develop, test and evaluate single trading systems. This final section deals with the question of how to combine different trading systems and markets to construct a portfolio.
+
+到目前为止，本书已经展示了开发，测试和评估单一交易系统的方法。 最后一节讨论如何将不同的交易系统和市场结合起来构建投资组合的问题。
+
+The topic is too large to provide a complete overview in this book, but in Chapter 8 and the appendix we have provided some practical tips from our own experience.
+
+该主题太大，无法在本书中提供完整的概述，但在第8章和附录中，我们从我们自己的经验中提供了一些实用的技巧。
+
 ### 8.1 Introduction to portfolio construction
 
 ----------
 
+Even if many traders are aware of the notion that trading a portfolio of multiple systems on the same asset, or the same system on multiple assets, or both, smooths the overall equity line, few traders test and optimise a system with this perspective in mind. One motive for this in the past may have been that the most common technical analysis packages did not allow traders to produce a portfolio equity line easily. Nowadays things have changed and many software houses offer products that allow traders to test a multimarket multi-systems portfolio.
+
+即使许多交易者意识到在同一资产上交易多个系统的投资组合，或在多个资产上交易多个系统的组合，或两者兼而有之，这样可以平滑整体股权线，很少有交易者考虑到这一观点来测试和优化系统。。 过去的一个动机可能是，最常见的技术分析包不允许交易者轻松地创建投资组合股权线。 如今，情况发生了变化，许多软件公司都提供允许交易者测试多市场多系统产品组合的产品。
+
 #### A list of the main available software
+
+Market System Analyzer (www.adaptrade.com)
+
+This is cheap and smart software that for as little as $349 can do whatever you need in the way of portfolio testing. It allows you to import system report data from TradeStation in Excel format, even if you need to do it for every single stock or future in the portfolio, (and this is quite time-demanding.) It performs equity line crossovers, Monte Carlo analysis, trade dependency and portfolio analysis.
+
+MultiChart (www.tssupport.com)
+
+This is a product that costs $1497 for a lifetime licence. It has a huge choice among different data feeds and it is Easy Language compatible.  It can perform different optimisation and back-testing tests over a portfolio.
+
+Mechanica (www.mechanicasoftware.com)
+
+The former Trading Recipes has been updated and, after reshaping, has taken this new name. It has a standard edition that costs $3000 and a Professional Edition that costs $25,000. An upgrade from the old Trading Recipes costs $900.
+
+RINA Systems (www.rinasystems.com)
+
+This was the main portfolio software provider compatible with TradeStation for a long time. Portfolio Maestro (www.rinafinancial.com) is the flagship of Rina Systems and costs $10,000 per year. Portfolio Evaluator ($1295) is the first step in portfolio building for TradeStation users and in order to build a portfolio you simply need to shoot your system report into the Portfolio Evaluator platforms by pushing on the blue button in the TradeStation system report. Then you can build the portfolio by sticking together all the individual  system  reports.  Portfolio  Stream  ($4995  individual  purchase,  $9995 professional purchase) does a lot more than Portfolio Evaluator, such as Monte Carlo analysis and walk forward analysis.
 
 #### The role of correlations
 
