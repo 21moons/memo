@@ -913,41 +913,51 @@ John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最
 
 您可以使用相同的方式对任意数量的交易集合执行此操作. 交易的新顺序是随机确定的. 例如, 在我们的系统中, 交易 1 现在位于第 842 位, 交易 2 在第 66 位, 交易 1051 在位置 980 等. 重要的是每笔交易仍然像以前一样存在 - 没有删除交易且没有新增交易. 这种置换方法称为 "没有替换的选择"(selection without replacement).
 
- The drawback to selection without replacement is
-that the randomly sampled trade sequences are limited to the number of trades in the input
-sequence. Thus if you have a short sequence of trades (e.g. less than 50 trades), this may limit the
-accuracy of your calculations. The first method is similar to random selection with replacement
-with the advantage that the final list of trades will have the same statistical properties as the original
-list. The second method introduces more randomness into the trade sequence, which may be
-preferable if the expected trades in the future will likely be different than those of the original
-sequence.
-
-另一种可能的排列方法是"替换选择"(selection with replacement). "没有替换的选择"的优点在于它完全重复输入序列的概率分布, 而"替换选择"可能不是. "没有替换的选择"的缺点是随机采样的交易序列首先受限于输入序列中的交易数量. 因此, 如果您有一个较短的交易序列(例如少于 50 笔交易), 这可能会限制您的计算准确性. 第一种方法类似于随机选择, 具有替换的, 优点是最终交易序列将具有与原始序列相同的统计属性. 第二种方法在交易序列中引入了更多随机性, 如果未来的预期交易可能与原交易序列不同, 则第二种方法可能是更合适的.
+另一种可能的排列方法是"替换选择"(selection with replacement). "没有替换的选择"的优点在于它完全重复输入序列的概率分布, 而"替换选择"可能不是. "没有替换的选择"的缺点是随机采样的交易序列首先受限于输入序列中的交易数量. 因此, 如果您有一个较短的交易序列(例如少于 50 笔交易), 这可能会限制您的计算准确性. 第一种方法类似于随机替换选择, 优点是最终交易序列将具有与原始序列相同的统计属性. 第二种方法在交易序列中引入了更多随机性, 如果未来的预期交易可能与原交易序列不同, 则第二种方法可能是更合适的.
 
 #### Exchanging the order of the performed trades
 
-The above example suggests that the final outcome of all trades must stay the same,
-independent of whatever new order the trades are placed in. Since the sum of your trades
-stays the same all new equity curves must reach the same amount in the end. But since
-the trades are now in a new order, the shape of the new equity lines and especially the
-occurring drawdowns become different (Figure 4.9).
-
-上面的例子表明，所有交易的最终结果必须保持不变，与交易所处的新订单无关。由于您的交易总和保持不变，所有新的权益曲线最终必须达到相同的金额。 但由于交易现在处于新秩序，新股权线的形状，特别是发生的下跌变得不同（图4.9）。
+上面的例子表明, 所有交易的最终结果必须保持不变, 与交易排列后的新次序无关. 由于交易结果总和保持不变, 所以新权益线最终必然具有相同的值. 但由于交易秩序的变化, 新权益线的形状, 特别是回撤会变得不同(图 4.9).
 
 <p align="left"><font size=2>Figure 4.9: Blue: detailed equity curve, Black: 15 permutations of the trades sequence("shaken trades"). Trend-following system LUXOR British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008. Calculation based on one contract basis, results including $30 slippage and commissions per trade.</font></p>
 
 ![Figure 4.9](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.9.png)
 
-This figure shows the original trade sequence (thick blue line) and 15 permuted trade
-sequences (thin black lines). All the permutated equity curves have the same starting and
-ending points because we did not add or remove any trades but just changed the order of
-their appearance. The change of the trade orders leads to the effect that between the equity
-curves there are big variations with different drawdown phases that occur at different
-times.
+该图显示了原始交易顺序(粗蓝线)和 15 个置换交易序列(细黑线). 所有的权益线都有相同的起点和终点, 因为我们没有添加或删除任何交易, 只是改变了它们的顺序. 交易顺序的变化导致不同时期出现不同的亏损阶段, 权益线之间出现巨大差异.
 
-该图显示了原始交易顺序（粗蓝线）和15个置换交易序列（细黑线）。 所有排列的权益曲线都有相同的起点和终点，因为我们没有添加或删除任何交易，只是改变了它们的外观顺序。 贸易订单的变化导致股权曲线之间存在很大差异，不同时期出现不同的亏损阶段。
+#### Probabilities and confidence levels (概率和置信水平)
 
-#### Probabilities and confidence levels
+现在您已经掌握了如何摇动您的交易系统, 我们需要更进一步了解蒙特卡洛分析. 你可以取样超过 15 次. 事实上, 1051 笔交易的集合意味着 1051! = 1051 * 1050 * 1049 * 1048 * ... * 3 * 2 * 1 种可能的排列, 令人难以置信的数量! 请记住, 即使是只有 200 笔交易 200!(200 * 199 * 198 ... * 3 * 2 * 1)也大于宇宙中存在的所有原子的数量！ 计算所有这些不同组合的工作, 是不可能由计算机在可容忍的时间内完成的. 因为蒙特卡罗分析中的这些实际问题, 您仅仅随机选择了数百或数千个这样的任意交易序列. 对结果进行排序, 并且可以从该分类列表中分配每个结果的概率. 下面的示例将演示如何确定此类概率:
+
+Consider flipping a coin 1000 times and estimating the amounts of heads and tails. If the
+coin is built completely symmetrically (which is not possible in real life but used by
+mathematicians who do statistical calculations) then you can call this coin “fair”. While
+it is likely that the number of heads and tails with such a fair coin will be close to 500, it
+is also unlikely that they will both be exactly 500. What is far more likely is that the
+number of heads will fall in some range around 500. Instead of getting a head exactly
+500 times and tails exactly 500 times you get a Gaussian distribution of values around
+500 (Figure 4.10). This leads us to the introduction of a so called “confidence level” and
+“confidence interval”.
+
+考虑翻转硬币1000次并估算头尾数量。 如果硬币完全对称地构建（这在现实生活中是不可能的，但是由进行统计计算的数学家使用）那么你可以称这个硬币“公平”。 虽然这种公平硬币的头尾数量很可能接近500，但它们也不太可能都是500.更有可能的是，头数将落在某个范围内 大约500次而不是准确地获得头部500次并且正好500次，你得到的高斯分布值大约为500（图4.10）。 这导致我们引入所谓的“置信水平”和“置信区间”。
+
+These values describe the distribution of the experimentally gained data around the true
+parameter (in this case 500). The confidence level (95%) says how likely it is that the
+true parameter of 500 is placed within the confidence interval around your estimation.
+For the Gaussian distribution, which is applicable for this ideal experiment, you can be
+95% sure that the value 500 is accurate within 3.1%. This means that with 95% probability
+you will throw between 469 (500 times -3.1%) and 531 times (500 times +3.1%) a head
+from the 1000 trials.
+
+考虑翻转硬币1000次并估算头尾数量。 如果硬币完全对称地构建（这在现实生活中是不可能的，但是由进行统计计算的数学家使用）那么你可以称这个硬币“公平”。 虽然这种公平硬币的头尾数量很可能接近500，但它们也不太可能都是500.更有可能的是，头数将落在某个范围内 大约500次而不是准确地获得头部500次并且正好500次，你得到的高斯分布值大约为500（图4.10）。 这导致我们引入所谓的“置信水平”和“置信区间”。
+
+<p align="left"><font size=2>Figure 4.10: Gaussian distribution of probabilities for flipping a coin 1000 times. You can tell with 95% confidence that the coin falls to heads between 469 and 531 times. Figure created with MATLAB.</font></p>
+
+![Figure 4.10](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_4.10.png)
+
+These confidence levels (e.g. 95%, 99% confidence etc) are used in Monte Carlo analysis.
+
+这些置信水平（例如95％，99％置信度等）用于蒙特卡洛分析。
 
 #### Performing a Monte Carlo analysis with the LUXOR trading system
 
