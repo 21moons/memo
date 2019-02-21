@@ -987,15 +987,13 @@ John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最
 
 #### The trend is your friend?
 
-我们将以英镑/美元外汇为例讨论市场所谓的多头/空头趋势(图 5.1). 正如您所看到的, 市场在测试期间呈现整体上升趋势. 虽然六年前英镑的交易价格为 1.50 美元, 但在过去五年里它对美元的汇率变得非常强劲, 2008 年夏季的交易价格约为 2 美元. 如果您的交易系统在 2002 年入市并一直持有到 2008 年 7 月, 每张合约您将获利超过 50,000 美元(图 5.2). 但正如您所看到的, 这个简单系统的资产(=赚到的钱)走势与交易市场本走势完全相同.
+我们将以英镑/美元外汇为例讨论市场所谓的多头/空头趋势(图 5.1). 正如您所看到的, 市场在测试期间呈现整体上升趋势. 虽然六年前英镑的交易价格为 1.50 美元, 但在过去五年里它对美元的汇率变得非常强劲, 2008 年夏季的交易价格约为 2 美元. 如果您的交易系统在 2002 年入市并一直持有到 2008 年 7 月, 每张合约您将获利超过 50,000 美元(图 5.2). 但正如您所看到的, 这个简单系统的资产(=赚到的钱)走势与市场走势完全相同.
 
-As you can imagine every only-long trading system with a similar result to this is almost useless. Since the market itself has an upward bias it is no big achievement of an onlylong trading system to gain money. On the other hand every system which enters only on the short side and has not lost any money within the test period 2002-2008 can be a useful trading logic for the future. It will probably earn money as soon as the market goes sideways or even reverses into a downward trend.
+<p align="left" style="color:red;"><font size=5><b>注: 权益线与市场走势一致, 意味着交易系统没能放大盈利也没能减少反向亏损.</b></font></p>
 
-正如你可以想象的那样, 每一个只有很长时间的交易系统都会有相似的结果。 由于市场本身具有上行趋势, 因此只有一个长期的交易系统才能获利。 另一方面, 在 2002-2008 测试期内，每个只进入空头并且没有损失任何资金的系统可能是未来有用的交易逻辑。 一旦市场横盘整理甚至逆转为下跌趋势, 它可能会赚钱.
+正如你想象的那样, 每一个只做多的交易系统都会有相似的结果, 这个交易系统几乎可以说是没用. 由于市场本身具有上行趋势, 因此只有买入才能获利. 另一方面, 在 2002-2008 测试期内, 每个只做空并且没有损失任何资金的交易系统, 可能在未来会变成有用的交易逻辑. 一旦市场横盘整理甚至逆转为下跌趋势, 它可能会赚钱.
 
-As you see from the underwater equity curve (Figure 5.2B) the only-long system, although it has good returns, is very risky. It stays in the market 100% of the time and therefore suffers huge drawdowns. Moreover the system needs nearly two years to recover from its biggest losing period.
-
-正如您从水下权益曲线中看到的那样(图 5.2B), 只有很长的系统虽然具有良好的回报，但风险很大。 它在100％的时间内保持在市场上，因此遭受巨大的下降。 此外，该系统需要将近两年的时间才能从最大的失败期中恢复过来。
+正如您从水下权益曲线中看到的那样(图 5.2B), 只做多的系统虽然具有良好的回报, 但风险巨大. 它全天保持入市, 因此遭受巨大的回撤. 此外, 该系统经过了将近两年的时间才从最大亏损区中恢复过来.
 
 <p align="left"><font size=2>Figure 5.1: British pound/US dollar (FOREX), weekly bars, 1/7/2002-4/7/2008. A long entry signal is placed on 21/10/2002.</font></p>
 
@@ -1007,9 +1005,9 @@ As you see from the underwater equity curve (Figure 5.2B) the only-long system, 
 
 #### Consequences for system development
 
-When developing a trading system you can compare its long side with this only-long system, as the minimum result to achieve. You know how much of the profit was earned simply by the market trend and the additional achievement of your trading logic compared with this market bias. The most important figure of your system tests is thereby the total percentage of time your trading system has been in the market. Only if the system was in the market 100% of time is the market bias 100% important. If you trade, however, a system which is only very seldom in the market, let’s say only 10%, the market bias becomes less important. Another reason to keep the time in the market low is to decrease the risk and exposure as discussed in Chapter 3.5 when we talked about exits and risk management.
+ You know how much of the profit was earned simply by the market trend and the additional achievement of your trading logic compared with this market bias. The most important figure of your system tests is thereby the total percentage of time your trading system has been in the market. Only if the system was in the market 100% of time is the market bias 100% important. If you trade, however, a system which is only very seldom in the market, let’s say only 10%, the market bias becomes less important. Another reason to keep the time in the market low is to decrease the risk and exposure as discussed in Chapter 3.5 when we talked about exits and risk management.
 
-在开发交易系统时，您可以将其长边与这个只有很长的系统进行比较，作为实现的最小结果。 您知道，与市场偏见相比，市场趋势和交易逻辑的额外成就可以带来多少利润。 因此，系统测试中最重要的数字是您的交易系统进入市场的总时间百分比。 只有系统在市场上100％的时间是市场偏见100％重要。 然而，如果你交易一个只在市场上很少出现的系统，让我们说只有10％，那么市场偏见变得不那么重要了。 将时间保持在低水平的另一个原因是降低风险和风险，如第3.5章所述，当我们讨论退出和风险管理时。
+在开发交易系统时, 您可以将其做多交易与只做多的系统进行比较, 作为最低目标. 您知道，与市场偏见相比，市场趋势和交易逻辑的额外成就可以带来多少利润。 因此，系统测试中最重要的数字是您的交易系统进入市场的总时间百分比。 只有系统在市场上100％的时间是市场偏见100％重要。 然而，如果你交易一个只在市场上很少出现的系统，让我们说只有10％，那么市场偏见变得不那么重要了。 将时间保持在低水平的另一个原因是降低风险和风险，如第3.5章所述，当我们讨论退出和风险管理时。
 
 What other conclusions can you draw as a systematic trader or system developer from the long/short bias of markets? When you look at the trading systems which we present here you can see that most of them have a similar amount of short and long trades. Although in some cases (stocks and stock index futures) markets crash more quickly than they go upwards, we tend to build the systems without long or short bias. Most of our systems (like LUXOR) have a similar amount of long and short trades, although their profitability in a long or short direction may be different because the market has shown an uptrend. Since you do not know if this uptrend will continue in the future, your system is more stable and less adapted to this market bias if it produces the same amount of long and short signals.
 
@@ -1017,35 +1015,150 @@ What other conclusions can you draw as a systematic trader or system developer f
 
 ### 5.2 Out-of-sample deterioration
 
-David Aronson stated a fact which we absolutely agree with from our own experience in
-systems’ evaluation [2]:
-
-Market behaviour is presumed to be a combination of systematic behaviour (recurring
-patterns) and random noise. It is always possible to improve the fit of a rule to a given segment
-of data by increasing its complexity. In other words, given enough complexity, it is always
-possible to fashion a rule that buys at every market low point and sells at every market high
-point. This is a bad idea. Perfect timing on past data can only be the result of a rule that is
-contaminated with noise. In other words, perfect signals or anything approaching them almost
-certainly means the rule is, to a disturbing degree, a description of past random behaviour
-(i.e. overfitted). Overfitting is manifested when the rule is applied to the test data segment.
-There, its performance will be worse than in the training data. This is because the legitimate
-patterns found in a training set recur in the test set, but the noise in the training set does not.
-It can be inferred that profitability in the training set that does not repeat in the testing set
-was most likely a consequence of over-fitting.
-
-This is a meaningful description of the concept of degrees of freedom as depicted more
-formally in Chapter 2. In this chapter we will have a look at a real example of such an
-over fitted system.
-
 ----------
+
+David Aronson stated a fact which we absolutely agree with from our own experience in systems’ evaluation:
+
+Market behaviour is presumed to be a combination of systematic behaviour (recurring patterns) and random noise. It is always possible to improve the fit of a rule to a given segment of data by increasing its complexity. In other words, given enough complexity, it is always possible to fashion a rule that buys at every market low point and sells at every market high point. This is a bad idea. Perfect timing on past data can only be the result of a rule that is contaminated with noise. In other words, perfect signals or anything approaching them almost certainly means the rule is, to a disturbing degree, a description of past random behaviour(i.e. overfitted). Overfitting is manifested when the rule is applied to the test data segment. There, its performance will be worse than in the training data. This is because the legitimate patterns found in a training set recur in the test set, but the noise in the training set does not. It can be inferred that profitability in the training set that does not repeat in the testing set was most likely a consequence of over-fitting.
+
+This is a meaningful description of the concept of degrees of freedom as depicted more formally in Chapter 2. In this chapter we will have a look at a real example of such an over fitted system.
+
+David Aronson说明了一个事实，我们完全同意我们在系统评估方面的经验：
+
+市场行为被认为是系统行为（重复模式）和随机噪声的组合。通过增加其复杂性，始终可以改进规则对给定数据段的拟合。换句话说，给定足够的复杂性，总是可以制定在每个市场低点购买并在每个市场高点销售的规则。这是一个坏主意。过去数据的完美时机只能是受噪声污染的规则的结果。换句话说，完美的信号或接近它们的任何东西几乎肯定意味着规则是在令人不安的程度上描述过去的随机行为（即过度拟合）。当规则应用于测试数据段时，表现出过度拟合。在那里，它的表现将比训练数据更差。这是因为训练集中的合法模式在测试集中重现，但训练集中的噪声却没有。可以推断，在测试集中不重复的训练集中的盈利能力很可能是过度拟合的结果。
+
+这是对第2章中更正式描述的自由度概念的有意义的描述。在本章中，我们将看一个这种过度拟合系统的真实例子。
 
 #### A Bollinger Band system with logic and code
 
+We  will  stay  with  the  pound/dollar  FOREX  market  from  2002-2008  (Datafeed  = TradeStation 8) to test the system. We take a Bollinger Band system (Figure 5.4) and optimise all its main six input parameters for the entry and exit points on daily data within the training period between 30/04/2002 and 1/3/2006 (Figure 5.3). Please note that this Bollinger Band system allows a different optimisation of its input parameters concerning the long and the short side. For the upper and the lower Bollinger Band the length of the moving averages and their distance from the entry point can be varied. So you have four input parameters which you can optimise for the entries. Furthermore we insert two variable, percentage based exits, which can be optimised as well: a risk stop loss and a profit target.
+
+我们将继续使用2002年至2008年的英镑/美元外汇市场（Datafeed = TradeStation 8）来测试该系统。 我们采用布林带系统（图5.4），并在培训期间的30/04/2002至2006年1月3日期间针对每日数据的入口和出口点优化其所有主要六个输入参数（图5.3）。 请注意，此布林带系统允许对输入参数进行不同的优化，包括长边和短边。 对于上部和下部布林带，移动平均线的长度和它们与入口点的距离可以变化。 因此，您有四个输入参数可以针对条目进行优化。 此外，我们插入两个基于百分比的可变退出，也可以进行优化：风险止损和利润目标。
+
+<p align="left"><font size=2>Figure 5.3: British pound/US dollar, 30/04/2002-4/7/2008. The Bollinger Band trading system is optimised in six parameters within the training data range (30/04/2002-28/02/2006). Afterwards the results of this trading system are checked in the test data range (1/3/2006-4/7/2008).</font></p>
+
+![Figure 5.3](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.3.png)
+
+<p align="left"><font size=2>Figure 5.4A: Entry and exit logic of a Bollinger Band breakout system. Four parameters in the entry logic and two parameters in the exit logic can be optimised.</font></p>
+
+![Figure 5.4A](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.4_A.png)
+
+<p align="center"><font size=2>Figure 5.4B: Easy Language Code of a Bollinger Band breakout system with entry and exit logic. Four parameters in the entry logic and two parameters in the exit logic can be optimised.</font></p>
+
+>Entry logic: Bollinger Band system
+>inputs: LengthUp(18),
+>        NumDevsUp(2),
+>        LengthDn(20),
+>        NumDevsDn(2);
+>
+>vars:   UpperBand(0),
+>        LowerBand(0),
+>        Price(0);
+>
+>Price = (O+H+L+C)/4 ;
+>
+>//UpperBand = BollingerBand( Price, LengthUp, NumDevsUp ) ;
+>//LowerBand = BollingerBand( Price, LengthDn, -NumDevsDn ) ;
+>UpperBand = BollingerBandFC( Price, LengthUp, NumDevsUp ) ;
+>LowerBand = BollingerBandFC( Price, LengthDn, -NumDevsDn ) ;
+>
+>if CurrentBar > 1 and High crosses under UpperBand then
+>    Sell Short ( “BBandSE” ) next bar at UpperBand stop ;
+>
+>if CurrentBar > 1 and Low crosses over LowerBand then
+>    Buy ( “BBandLE” ) next bar at LowerBand stop ;
+>
+>Exit Logic:
+>
+>(for both long positions/short positions)
+>1) Place an initial stop loss x % below entry price (Opt value: x =1.9)
+>2) Place a profit target z % above entry price (Opt value: x =4.8)
+
 #### Optimising the Bollinger Band system
+
+If you optimise all these six input parameters together with an optimisation criteria focused on the highest net profit on daily data of the pound/dollar FOREX market in the period from 30/04/2002 to 28/2/2006 you get the following result (Figure 5.5).
+
+如果您在2002年4月30日至2006年2月28日期间优化所有这六个输入参数以及针对英镑/美元外汇市场每日数据的最高净利润的优化标准，您将获得以下结果（ 图5.5）。
+
+<p align="left"><font size=2>Figure 5.5: Bollinger Band system for British pound/dollar (FOREX), daily, all six input parameters optimised for maximum total net profit, 30/04/2002-28/2/2006. A: Detailed equity curve; B: Underwater equity curve showing all drawdowns.</font></p>
+
+![Figure 5.5](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.5.png)
+
+As you can see the gains of the system are steady. The drawdowns are not tiny (about 10%) but the system’s profitability is high. The trading system performs nearly as many short trades as long trades and so the long/short bias of the underlying market is under control, although the trading system has high market exposure, with it holding a position in the market 89% of the time.
+
+正如您所看到的，系统的收益是稳定的。 下降幅度不小（约10％），但系统的盈利能力很高。 交易系统执行的交易系统与长期交易一样多，因此基础市场的多头/空头偏见受到控制，尽管交易系统具有较高的市场风险，并且它在89％的时间内占据市场地位。
 
 #### Out-of-sample result
 
+Now let’s see what happens if you apply the optimised trading logic to test data on which no optimisation has taken place. In this test period of two years from 1/3/2006 to 4/7/2008 you keep the same input parameters as you found in the training period (Figure 5.6).
+
+现在让我们看看如果您应用优化的交易逻辑来测试没有进行优化的数据会发生什么。 在2006年1月3日至2008年4月7日的两年测试期间，您保留与训练期间相同的输入参数（图5.6).
+
+<p align="left"><font size=2>Figure 5.6: Detailed equity curve of Bollinger Band system for British pound/ dollar (FOREX), daily, training and test period. All six input parameters optimised for maximum total net profit within the training period 30/04/2002-28/02/2006. Test period from 1/3/2006-4/7/2008.</font></p>
+
+![Figure 5.6](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.6.png)
+
+As you can see the system has completely lost its bright performance. The smoothly increasing equity curve of the training period transformed itself into a directionless sideways movement. The steady equity curve of the training set suffers a big drawdown at the beginning of the test set, from which it needs nearly a two-year recovery period.
+
+正如您所看到的，系统已完全失去其明亮的性能。 培训期间平稳增加的公平曲线转变为无方向的横向运动。 在测试集开始时，训练集的稳定股权曲线遭受了大幅缩减，需要将近两年的恢复期。
+
+These obvious observations within the equity line are confirmed with the system report (Table 5.1). Whereas within the training period the system has a total net profit of $78,000, it was only $379 in the test period. From the big average profit per trade of $1131 in the training period, only $10 is left in the test period. Even the biggest intraday drawdown was worse in the small test period: $20,000 in the test period compared with $14,000 in the training period.
+
+系统报告确认了权益线内的这些明显观察结果（表5.1）。 在培训期内，该系统的总净利润为78,000美元，在测试期间仅为379美元。 从培训期间的每笔交易1131美元的平均利润来看，在测试期间只剩下10美元。 即便是最小的盘中跌幅在小测试期间也会更糟：测试期间为20,000美元，而培训期为14,000美元。
+
+<p align="left"><font size=2>Table 5.1: Bollinger Band system for British pound/US dollar (FOREX), daily, training and test period. All six input parameters optimised for maximum total net profit within the training period 30/04/2002-28/2/2006. Test period from 1/3/2006-4/7/2008.</font></p>
+
+![Table 5.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_5.1.png)
+
 #### Reasons for the out-of-sample deterioration
+
+We suggest the following reasons and discuss their possible contribution:
+
+A:  The  trading  logic  generates  less  than  100  trades,  therefore  the  results  are  not statistically significant.
+
+We conducted the same experiment with the same trading system on a 30 minute basis. There the system generated 3000 trades in the training period and got a similar out-ofsample deterioration. So although 69 trades of the daily system are not enough to be statistically significant, the results shown here are typical and the low number of trades is certainly not the main reason for the system deterioration.
+
+B: The system was published at the beginning of 2006 and the trading logic has been adopted by too many traders which destroyed its performance.
+
+This explanation is believed by some traders who have found a new trading system or just an interesting idea. They believe that when their trading system is published the performance will suffer since other traders will immediately adopt the logic. Since many people now trade this system its good performance could diminish because of increasing slippage at first, and later because of a changing market structure since more and more people change their trading style towards the successful system. System developers try to prevent this from happening with their trading systems by hiding them in a strongbox for some years and not showing them to anybody until they lose their predictive power anyway. David Aronson writes about the topic of system disclosure in his book:
+
+‘This rationale also lacks plausibility. Even when numerous traders adopt similar rules, as in the case with futures trading funds that employ objective trend-following methods, reduced rule performance seems to be due to changes in market volatility that are not related to the usage of technical systems.’
+
+In other words: although everybody knows that trend-following methods work they do still continue to work, so the disclosure of the system is not a big reason for its success or failure. Furthermore, this system has been open to the public since the day John Bollinger developed it, which was a long time before 2006.
+
+C: The market dynamics within the training data range is different from the one in the test data range.
+
+In our opinion this can be one part of the explanation for deterioration. We’ll discuss this extensively in the next section.
+
+D: The system has been adapted too much to market noise within the training period, i.e. curve over-fitting.
+
+The process of optimisation favours a set of rules which fit the training data better than the test data. Let’s assume that the training data, like all real market data, consists partially of recurrent patterns (predictable data) and random noise (unpredictable data). Now you take a trading system and you adapt it to this data which is partially random and partially contains a special pattern. If your trading system is simple enough but has a sound logic with valid rules, it is able to capture some parts of the recurrent predictable patterns but does not adjust itself to the market noise. In this way the trading system keeps a certain amount of predictability for the future. If you, however, add more and more rules to this system it adjusts itself more and more to the existing noise. At a certain point the system becomes over-fitted and loses its predictability for the test period, or for the future, since the noise will be different. This is probably the most important aspect of the sample deterioration and we will investigate it with a step-by-step case study in the final section of this chapter.
+
+You can also draw another conclusion from this thesis: all artificial market data, produced with computers by random processes, only consists of noise and are therefore useless for trading system development. If you develop a trading system based on this noisy data it will have no predictive part if applied to other data showing a different type of noise. What your trading system is trying to detect are the patterns which repeat themselves. These patterns are mainly produced by human behaviour like greed, fear and exaggeration and not by random, artificial mathematical processes.
+
+我们建议以下原因并讨论它们可能的贡献：
+
+答：交易逻辑产生的交易少于100笔，因此结果无统计意义。
+
+我们在30分钟的基础上使用相同的交易系统进行了相同的实验。该系统在训练期间产生了3000次交易，并且出现了类似的异常恶化。因此，虽然日常系统的69个交易不足以具有统计显着性，但此处显示的结果是典型的，交易数量少当然不是系统恶化的主要原因。
+
+B：该系统于2006年初发布，交易逻辑已经被太多交易者采用，从而破坏了其业绩。
+
+一些交易者发现了新的交易系统或者只是一个有趣的想法，这种解释被认为。他们认为，当他们的交易系统发布时，性能将受到影响，因为其他交易者将立即采用逻辑。由于许多人现在交易这个系统，其良好的表现可能会因为开始时的滑点增加而减少，后来由于市场结构的变化，因为越来越多的人将交易方式改变为成功的系统。系统开发人员试图通过将他们隐藏在保密箱中多年来防止这种情况发生在他们的交易系统中，并且在他们失去预测能力之前不向任何人展示它们。 David Aronson在他的书中写到了系统披露的主题：
+
+'这个理由也缺乏合理性。即使许多交易者采用类似的规则，如采用客观趋势跟踪方法的期货交易基金，减少的规则表现似乎是由于市场波动的变化与技术系统的使用无关。
+
+换句话说：虽然每个人都知道趋势跟踪方法的工作仍然可以继续工作，但系统的披露并不是其成功或失败的重要原因。此外，该系统自John Bollinger开发之日起就向公众开放，这是2006年之前的很长一段时间。
+
+C：训练数据范围内的市场动态不同于测试数据范围内的市场动态。
+
+我们认为这可能是恶化解释的一部分。我们将在下一节中对此进行广泛讨论。
+
+D：系统在训练期间过于适应市场噪声，即曲线过度拟合。
+
+优化过程有利于一组规则，这些规则比测试数据更适合训练数据。让我们假设训练数据与所有真实市场数据一样，部分包括循环模式（可预测数据）和随机噪声（不可预测数据）。现在你采用一个交易系统，然后你将它调整到这个部分随机的数据，部分包含一个特殊的模式。如果您的交易系统足够简单但具有有效规则的合理逻辑，则它能够捕获周期性可预测模式的某些部分，但不会根据市场噪声进行调整。通过这种方式，交易系统对未来保持一定的可预测性。但是，如果您为此系统添加越来越多的规则，它会对现有噪声进行越来越多的调整。在某一时刻，系统变得过度拟合并且在测试期间或将来失去其可预测性，因为噪声将是不同的。这可能是样本恶化的最重要方面，我们将在本章的最后一节中逐步进行案例研究。
+
+您还可以从本论文中得出另一个结论：所有通过随机过程用计算机生成的人工市场数据仅由噪声组成，因此对交易系统开发无用。如果您基于此噪声数据开发交易系统，则如果应用于显示不同类型噪声的其他数据，则它将没有预测部分。您的交易系统试图检测的是重复自己的模式。这些模式主要是由贪婪，恐惧和夸张等人类行为产生的，而不是由随机的人工数学过程产生的。
 
 ### 5.3 The market data bias
 
@@ -1053,7 +1166,35 @@ over fitted system.
 
 #### Expanding the training period
 
+Now the Bollinger Band trading system is optimised within a much longer training period of daily data from 1986 to 2006 (Figure 5.7). Afterwards the results are checked within the test data range which is the same as above, from 1/3/2006 to 4/7/2008 (Figure 5.8).
+
+现在布林通道交易系统在1986年至2006年的日常数据培训期间进行了优化（图5.7）。 然后在2006年1月3日至2008年4月7日的测试数据范围内检查结果，该范围与上述相同（图5.8）。
+
+As you can see, the result in the out-of-sample area (Test Set) is now positive and much better than in the test above with the optimised parameters from the short training range. A closer look at the trading figures confirms this observation (Table 5.2). You now get a total net profit of $16,757 in the test range and a good average trade net profit of nearly $600. Please note that the average monthly return within the test range is $591, which is even higher than the average monthly return of the long test data range of $321. However the risk of this trading system is still quite high, with a maximum drawdown of $16,939. This is nearly as much as the total net profit earned in the test period. We can summarise that the result of this out-of-sample test for the Bollinger Band system with the longer training period is much better than the one which had the shorter training period.
+
+正如您所看到的，样本外区域（测试集）的结果现在是正面的，并且比上面的测试中的结果更好，优化的参数来自短训练范围。 仔细研究交易数据证实了这一观察结果（表5.2）。 您现在在测试范围内获得的总净利润为16,757美元，平均贸易净利润接近600美元。 请注意，测试范围内的平均月回报为591美元，甚至高于长测试数据范围321美元的平均月回报。 然而，这种交易系统的风险仍然很高，最大亏损为16,939美元。 这几乎与测试期间的净利润总额相当。 我们可以总结一下，对于具有较长训练周期的布林带系统的这种样本外测试的结果比具有较短训练周期的那样好得多。
+
+<p align="left"><font size=2>Figure 5.7: British pound/US dollar, 03/03/1986-4/7/2008. The Bollinger Band trading system is now optimised within the long training data range 1986-2006. Afterwards the results of this trading system are checked in the test data range (green). See the shorter training range 2002-2006 which was used above.</font></p>
+
+![Figure 5.7](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.7.png)
+
+<p align="left"><font size=2>Figure 5.8: Bollinger Band system for British pound/US dollar (FOREX), daily, training and test period. All six input parameters are now optimised for maximum total net profit within a longer training period of 20 years: 03/03/1986-28/2/2006. Test period is kept the same, from 1/3/2006-4/7/2008. A: Detailed equity curve; B: Underwater equity curve showing all drawdowns.</font></p>
+
+![Figure 5.8](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.8.png)
+
+<p align="left"><font size=2>Table 5.2: Bollinger Band system for British pound/US dollar (FOREX), daily, training vs. test period. All six input parameters are now optimised for maximum total net profit within a longer training period of 20 years: 03/03/1986-28/2/2006. Test period is kept the same, from 1/3/2006-4/7/2008.</font></p>
+
+![Table 5.2](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_5.2.png)
+
 #### Conclusion: How to choose your training data
+
+The results of our trading system during the test period are more similar to the results of the longer training period of 1986 to 2006 than the results of the shorter training period from 2002 to 2006. Although you cannot see this from the chart of the GBP/USD itself, the market data has a different behaviour during the different years of the test. This behaviour manifests itself in volatility, in trend duration, in a different frequency of breakouts or patterns etc, which affects the “best” parameters of the Bollinger Band system in the different training periods.
+
+测试期间我们的交易系统的结果与1986年至2006年较长的培训期间的结果更相似，而不是2002年至2006年的较短培训期间的结果。虽然您无法从GBP /图表中看到这一点 美元本身，市场数据在不同的测试年份有不同的行为。 这种行为表现为波动性，趋势持续时间，突破或模式等不同频率，这影响了不同培训期间布林带系统的“最佳”参数。
+
+The conclusion is that it’s advisable to make the training period as long as possible. Since a longer period contains much more data, there is a higher probability that within this longer data range there are some periods which behave similarly to your test data range and therefore train your system better. The longer you make the training period for your trading system the better your chances for similar results in the out-of-sample tests and later in real trading. On the other hand, keep in mind that this rule is only valid if your market data contains a lot of different market phases. If you choose a market which is always in an upward trend (like the Long Gilt from 1980 to 2000) you can train on it any trading system with a long-entry bias but it will be of no use when the market changes its bullish behaviour. If you are aware of this however, and you are careful in choosing the right training data, you can avoid having to adapt your trading system to such market biases.
+
+结论是，建议尽可能长时间地进行培训。 由于较长的周期包含更多的数据，因此在这个较长的数据范围内，有一些周期与您的测试数据范围相似，从而更好地训练您的系统。 您为交易系统进行培训的时间越长，您在样本外测试和后续实际交易中获得类似结果的机会就越大。 另一方面，请记住，只有当您的市场数据包含许多不同的市场阶段时，此规则才有效。 如果你选择一个总是处于上升趋势的市场（如1980年至2000年的长期镀金），你可以对任何具有长期进入偏见的交易系统进行培训，但当市场改变其看涨行为时，它将毫无用处。 但是，如果您意识到这一点，并且在选择正确的培训数据时要小心，那么您可以避免让您的交易系统适应这种市场偏见。
 
 ### 5.4 Optimisation and over-fitting
 
