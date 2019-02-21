@@ -1202,9 +1202,51 @@ The conclusion is that it’s advisable to make the training period as long as p
 
 #### Step-by-step optimisation of the LUXOR system
 
+We now switch back to our trading system LUXOR which we presented in Chapter 3. When optimising a trading system the first point you must be sure of is that the trading logic is based on an idea which is concrete and profitable. For the trading system LUXOR we have already shown that the logic seems to be sound and profitable and additionally we have performed some stability tests with it. We now take this system and perform a step-by-step optimisation of its six input parameters. First we optimise the slow moving average, second the fast moving average, then the time window filter before we finally optimise the three applied exits one after another: risk stop loss, trailing stop and profit target (Figure 5.9).
+
+<p align="left"><font size=2>Figure 5.9: Step-by-step optimisation of the six input parameters of the LUXOR system 1. Slow moving average, 2. Fast moving average 3. Time window filter 4. Risk stop loss 5. Trailing stop 6. Profit target. Chart example from British pound/US dollar, 30 minute, FOREX from 26 December 2007.</font></p>
+
+![Figure 5.9](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.9.png)
+
+To perform our tests we again use British pound/US dollar FOREX data but we return to the intraday 30 minute timescale. On this timescale we have nearly six years of intraday data available, from 21/10/2002 to 4/7/2008. From the above discussion of market data bias you know that it’s advisable to use as much data for the training period as possible. However, you must still have a big enough amount of data left for testing your strategy out-of-sample. As a compromise we use the period from 21/10/2002 to 28/02/2007 for training/optimisation and afterwards we check how the optimised system performs within the subsequent test period of more than one year from 1/3/2007 to 4/7/2008.
+
 #### Results depending on the number of optimised parameters
 
+If you look at the equity lines during the training periods you can see that they improve more and more with the optimised parameters. Starting from a directionless equity line when no parameters are optimised the equity curve becomes more enticing as more input parameters of the trading system are optimised. This is not surprising since the system better adapts to the training market data the more degrees of freedom it has. Now the main question is how the trading system behaves within the test data area, depending on the number of optimised parameters. When no optimisation took place (i.e. the system operated with a slow moving average based on 30 bars and a fast moving average of 10 bars, no time filter and exits in place) the result within the test data is negative (Figure 5.10A).
+
+If you now optimise the first parameter (slow moving average set to 40) for total net profit in the training range the system result is much improved in the training region, however the equity curve of this optimised system improves only slightly in the test data range (Figure 5.10B). If you look at the trading figures (Table 5.3) you can see this result confirmed.
+
+<p align="left"><font size=2>Table 5.3: System figures for training and test area after optimisation for total net profit of one parameter after another. The optimised values are different from the gained values in chapter 3 since the optimisation period is shorter now, not the complete data range as before.</font></p>
+
+![Table 5.3](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_5.3.png)
+
+For example, the total net profit within the test data range improves only from -$12,569 to  -$9,736  and  the  average  trade  from  -$27  to  -$26  after  optimisation  of  the  first parameter. This means practically no change. If you optimise the second important parameter for the trading system’s entry, the fast moving average (to a value of 2), then you can see a further improvement within the training set. But now the improvement within the test data range is even bigger than for the training area. This is underlined with the system figures, e.g. the average trade within the test region improves from -$26 to a positive value of $34. This is even better than the value within the training region ($33).
+
+If you now insert a third parameter into the trading system and optimise it (to a value of 9.30am-1.30pm) a dramatic change occurs. The system’s results improve greatly within both the training region and the testing region. Please note, however, that the result in the test region improves more than in the training region. For example, the average profit per trade becomes $200 in the testing period against $118 in the training period. We can summarise that for the first three input parameters every optimisation of the trading system within the training period also leads to an improvement in the testing period. Sometimes the improvement in the testing period is smaller (like with parameter 1: slow moving average), sometimes it is even bigger than in the training period (like with parameter  2  and  3:  fast  moving  average  and  time  filter).  If  you  now  continue  the optimisation of the trading system within the training period by adding suitable exits you get some really interesting findings.
+
+Adding more optimised parameters in the training period can improve results in that area, but these additional parameters will not improve results in the testing period any more. This out-of-sample deterioration cannot be seen directly from the equity curves (Figures 5.10C-5.10G). All equity lines keep steadily growing within the test regions with every added optimised system parameter, and drawdowns stay low. However, if you have a closer look at the system’s report you see that in fact some hidden worsening takes place in the trading system (Table 5.3). The average profit per trade decreases from $200 to $126 after the optimised risk stop loss is inserted and stays in the area between $120 and $125  after  inserting  the  next  exits,  trailing  stop  and  profit  target.  There  is  similar behaviour for the maximum intraday drawdown. While the inserted risk stop loss reduces the drawdown from $10,097 to $8,448, the additional exits increase the drawdown again to nearly $10,000.
+
+The behaviour of the trading system within the different stages of optimisation for training and test area can be seen best when you plot trading system figures against number of optimised input parameters. If you do this for the total net profit you get a good insight of what happens during the different stages of system optimisation (Figure 5.11). The figure reveals how the total net profit within the training range (blue line) steadily increases with every added optimisation parameter, whereas the performance within the test range (green line) changes with increasing system complexity. With only a few parameters being optimised the net profit in the test range increases with every additional parameter, reaching its high with the third parameter (time window filter) and then being reduced with the fourth optimised parameter (risk stop loss). It then cannot be made bigger again with further optimised parameters.
+
+<p align="left"><font size=2>Figures 5.10 A-G: System LUXOR for British pound/US dollar (FOREX) training and test period. Training period 21/10/2002-28/2/2007 (white), test period 1/3/2007-4/7/2008 (green). One input parameter is optimised after another. A: No optimisation. B: Slow moving average: optimised value = 40. C: Fast moving average: optimised value = 2. D: Time window: optimised setting 9.30am-1.30pm GMT. E: Risk stop loss: optimised setting = 0.47% F: Trailing stop: optimised setting = 0.67%. G: Profit target: optimised setting = 2.25%. The optimised values are different from the gained values in chapter 3 since the optimisation period is shorter now, not the complete data range as before.</font></p>
+
+![Figure 5.10](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.10.png)
+
+<p align="left"><font size=2>Figure 5.11: Finding an optimal rule complexity for system LUXOR for British pound/US dollar (FOREX) training and test period. The system’s input parameters are optimised for maximum total net profit, from left to right, one after another, within the training period 21/10/2002-28/2/2007 (blue line = training results). Then results are checked in test data range 1/3/2007-4/7/2008 (green line = test results).</font></p>
+
+![Figure 5.11](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.11.png)
+
 #### The meaning of the trading system’s complexity
+
+How can you now interpret this behaviour of the trading system?
+
+Let’s start within the diagram (Figure 5.11) from the left side when no system parameter is optimised. There the trading system has a very low complexity, since the applied rules are quite simple and not optimised at all. If you start to optimise the first parameter the system’s performance changes markedly. The raw and simple trading logic used so far can easily be made better. Interestingly when not many optimised parameters have been introduced the behaviour within the test range sometimes changes more than within the training range. The change can be much worse, but it can be better than the improvement that takes place in the training range. The reason for this behaviour is that a system that has only been optimised a little reacts very sensitively to parameter changes because there are not many parameters in place yet. The rule complexity and the predictability for your test set is low.
+
+Furthermore, keep in mind that much of what happens in different market phases and areas is accidental and also depends on the market sample bias. It can be that the out-ofsample data period is more “friendly” to our trading system logic in a certain stage than the training data period. With further parameters being optimised or added the changes in the system’s reaction become smaller but still performance improves in the out-ofsample test data range. With the first three parameters being optimised our trading system reaches an important point: it reaches its optimal complexity.
+
+From this point on every further optimised parameter (risk stop, trailing stop, profit target) decreases the system’s performance in the test region although the results still improve in the training region. You now have the situation of curve over-fitting. Every new optimised parameter improves the fit of the system to the training area but what happens here is more an adjustment to the existing market noise than an improvement in predictive capability. Thus the net profit within the test region does not become bigger with further optimised parameters but instead it decreases from the fourth parameter onwards. You now again have an out-of-sample deterioration.
+
+It should be remembered that although the results in the out-of-sample area cannot be improved any more with these exits, they still have an important function. As discussed in Chapter 3.5 when talking about risk management, every stop loss leads to a better control of risk. We see the valuable function of the stops when we look at the largest losing trades which take place in the testing region – the added stop losses decrease this figure drastically from $2,631 to $1,023 (not shown in Table 5.3). Another figure which improves with inserted exits is the time the system stays in the market, which goes down from 100% to about 80%. With exits in place the outcome of trades is more predictable and this helps you to include the trading system into a bigger portfolio and to apply position sizing methods.
 
 ### 5.5 Rule complexity explained with polynomial curve fitting
 
@@ -1212,9 +1254,73 @@ The conclusion is that it’s advisable to make the training period as long as p
 
 #### Interpolating data points with polynomial functions
 
+You have just seen how a trading system’s predictive power for the future changes with the number of rules which are involved in the strategy. In our system these rules have been the fast and slow moving average, the very effective intraday time filter and finally the three exits we added. You have seen that a simpler trading system has more predictive power than a more optimised one. We can state that this result was not just gained by accident but it is well founded on statistical rules. We will explain these rules now with a short discussion on interpolating data points with polynomial functions.
+
+Let’s assume that you have 10 data points as your sample data (Figure 5.12).
+
+<p align="left"><font size=2>Figure 5.12: Ten points of sample data, generated with a sinus function and random distances from it. Curve generated with MATLAB.</font></p>
+
+![Figure 5.12](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.12.png)
+
+In our case the 10 points were not chosen randomly but with a combination of a rule and random behaviour. We took a sinus function which is a normal oscillation and placed the 10 points around the sinus function with randomly taken distances. Here these are just mathematical points but as a trader you can imagine that these values could also be the prices of any financial markets, for example values of a tick chart of the FTSE 100 future or any stock you like. Thus our data point simulation is an approximation for financial markets in the way that you assume that the markets have a certain order or direction (at least during special times or events) but that around this order you have lots of random behaviour and market noise.
+
+To interpolate these 10 data points as well as possible you can use mathematic polynomial functions with different complexity. The higher the order of the polynom, the greater its complexity becomes. The easiest polynomial function (degree = 0) is a constant (Figure 5.13).
+
+<p align="left"><font size=2>Figure 5.13: Approximation of the ten data points with a polynomial function of degree = 0, a constant with value = 0. Curve generated with MATLAB.</font></p>
+
+![Figure 5.13](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.13.png)
+
+You see that this horizontal function touches some data points, but other points are a long way from it. The next higher complexity level is to interpolate the 10 data points with a linear function, which is a polynomial of degree 1 (Figure 5.14). In the picture of a trading system this line could be a simple trend line. Since the results of the constant and the linear function are rather poor fits to the 10 data points, we have to increase the adaptive function’s complexity. The second order polynomial seems to give a quite good fit to the data points (Figure 5.15). This curve reaches more data points and comes quite close to all points, although not all are reached exactly. If we increase the degree of the polynomial function to 3 we already have a very nice fit to the data points and when we go to a much higher order of polynomial (degree = 9) we obtain a 100% fit to the training data (Figures 5.16 and 5.17). The polynomial of degree 9 passes exactly through each data point.
+
+<p align="left"><font size=2>Figure 5.14: Approximation of the ten data points with a polynomial function of degree = 1, a linear function. Curve generated with MATLAB.</font></p>
+
+![Figure 5.14](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.14.png)
+
+<p align="left"><font size=2>Figure 5.15: Approximation of the ten data points with a polynomial function of degree = 2, a parabolic function. Curve generated with MATLAB.</font></p>
+
+![Figure 5.15](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.15.png)
+
+<p align="left"><font size=2>Figure 5.16: Approximation of the ten data points with a polynomial function of degree = 3. The fitness to the data points increases but also the complexity of the function. Curve generated with MATLAB.</font></p>
+
+![Figure 5.16](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.16.png)
+
+<p align="left"><font size=2>Figure 5.17: Approximation of the ten data points with a complex polynomial function of degree = 9. Curve generated with MATLAB.</font></p>
+
+![Figure 5.17](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.17.png)
+
+You can also plot the results of these graphs in a table (Table 5.4). There you see how the average error of the fitness function becomes smaller with a higher degree of polynomial. Whereas the polynomial of degree 0 has a big standard deviation from the 10 data points (5.39), the 9th degree polynomial nearly reaches the points without any error (0.0003).
+
+<p align="left"><font size=2>Table 5.4: Average error of fit to data points (standard deviation) as a function of the degree of the polynomial. The higher the degree of the polynomial, the better its fit to the data points, but the higher its rule complexity becomes.</font></p>
+
+![Table 5.4](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_5.4.png)
+
+If you have a closer look at the result of the 9th degree polynomial fit you can see that the fitted curve oscillates wildly and gives only a very poor representation of the chosen sinus-function with the data points randomly around it. This 9th degree polynomial could stand for a very complex trading system with many components added until you have got a perfect fit of the trading logic to your market data.
+
+But what are the conclusions which you can draw from these fitness functions and what is the predictive power of the different polynomials for the future?
+
 #### Predictive power of the different polynomials
 
+Let’s see what happens if we add further data points by letting the sinus function continue into the future (Figure 5.18). You can see that the polynomial of degree 0 continues to go sideways with the sinus function. Thus the predictive power of this very simple function for the future is quite poor, but it is worth mentioning that it stays exactly the same as the result of the back-test of the ten data points.
+
+<p align="left"><font size=2>Figure 5.18: Predictive capability of the polynomial of degree =0 for unseen test data. Curve generated with MATLAB.</font></p>
+
+![Figure 5.18](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.18.png)
+
+<p align="left"><font size=2>Figure 5.19: Predictive capability of the polynomial of degree = 9 for unseen test data. Curve generated with MATLAB.</font></p>
+
+![Figure 5.19](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_5.19.png)
+
+In contrast to this simple approximation of the training data set, let’s have a look at the the polynomial of degree 9 (Figure 5.19). Obviously this complex polynomial (or trading system) does not have any predictive power for the future! The well curve fitted complex function misses the new points completely.
+
+You might expect the best solution somewhere in between these two extremes. But this is not true. In fact no polynom of degree higher than 0 is a good approximation for the data points which are placed near a sine curve. All polynoms (even with degree 1)  grow quickly away from the horizontal line around which the sine function oscillates. Thus all polynoms,  except  the  polynom  of  degree  0,  are  useless  concerning  for  making predictions! Although the polynom of degree 0 is poor it is the only robust one.
+
+What is the way out of this situation? Does it mean that you must stop trading system development completely and look at the trend of the markets with simple lines?
+
 #### Conclusions for trading system development
+
+What you have seen in this example is just that markets cannot be approached with pure mathematical methods. But this does not mean that all trading systems must be of zerocomplexity. Our mistake here was that we tried to approach a periodic sinus function with a non-periodic polynomial function. Like this we forced our algorithm to adapt to a situation for which it is not built. The polynomial function was not suited to the function we were trying to use it for because it is not the correct approximation for a periodic environment. The idea of periodicity was missing. The conclusion for you as a system developer and trader is that you must first have an idea of the market! Only when you have this can you start to code your idea and only like this will you get a code that makes sense. Just as it is useless to approach periodic functions with polynomials, it is useless to approach trendless markets with trend-following methods or to approach markets with no volatility with break-out systems. We know that this leads into further conflicts since markets are steadily changing, but using ideas and experience is the best approach you can take.
+
+Further consequences of these tests are that once you have a simple, robust logic with a proper risk management in place you can stop your system development process. It is often better to use just one or two indicators, or only the price itself, rather than several combined indicators. Adding more and more rules will just increase the adaptation of your trading system to past market data, but it will not increase its predictive power for real trading. Therefore it is better to save your time and invest it otherwise, for example in adding a money management scheme or by diversifying your strategy with further simple but robust systems within a portfolio.
 
 ## Chapter 6: Periodic re-optimisation and walk forward analysis
 
