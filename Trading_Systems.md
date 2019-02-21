@@ -1007,33 +1007,31 @@ John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最
 
  You know how much of the profit was earned simply by the market trend and the additional achievement of your trading logic compared with this market bias. The most important figure of your system tests is thereby the total percentage of time your trading system has been in the market. Only if the system was in the market 100% of time is the market bias 100% important. If you trade, however, a system which is only very seldom in the market, let’s say only 10%, the market bias becomes less important. Another reason to keep the time in the market low is to decrease the risk and exposure as discussed in Chapter 3.5 when we talked about exits and risk management.
 
-在开发交易系统时, 您可以将其做多交易与只做多的系统进行比较, 作为最低目标. 您知道，与市场偏见相比，市场趋势和交易逻辑的额外成就可以带来多少利润。 因此，系统测试中最重要的数字是您的交易系统进入市场的总时间百分比。 只有系统在市场上100％的时间是市场偏见100％重要。 然而，如果你交易一个只在市场上很少出现的系统，让我们说只有10％，那么市场偏见变得不那么重要了。 将时间保持在低水平的另一个原因是降低风险和风险，如第3.5章所述，当我们讨论退出和风险管理时。
+在开发交易系统时, 您可以关注那些做多的交易, 将其与只做多的系统进行比较, 作为最低目标. 您知道，与市场偏见相比，市场趋势和交易逻辑的额外成就可以带来多少利润。 因此，系统测试中最重要的数字是您的交易系统进入市场的总时间百分比。 只有系统在市场上100％的时间是市场偏见100％重要。 然而，如果你交易一个只在市场上很少出现的系统，让我们说只有10％，那么市场偏见变得不那么重要了。 将时间保持在低水平的另一个原因是降低风险和风险，如第3.5章所述，当我们讨论退出和风险管理时。
 
 What other conclusions can you draw as a systematic trader or system developer from the long/short bias of markets? When you look at the trading systems which we present here you can see that most of them have a similar amount of short and long trades. Although in some cases (stocks and stock index futures) markets crash more quickly than they go upwards, we tend to build the systems without long or short bias. Most of our systems (like LUXOR) have a similar amount of long and short trades, although their profitability in a long or short direction may be different because the market has shown an uptrend. Since you do not know if this uptrend will continue in the future, your system is more stable and less adapted to this market bias if it produces the same amount of long and short signals.
 
-您可以从市场的长期/短期偏见中作为系统交易者或系统开发者得出哪些其他结论？ 当您查看我们在此处提供的交易系统时，您可以看到他们中的大多数都有类似的短期和长期交易。 虽然在某些情况下（股票和股指期货）市场崩盘的速度比上涨速度快，但我们倾向于建立没有长期或短期偏见的系统。 我们的大多数系统（如LUXOR）都有类似数量的多头和空头交易，尽管它们在多头或空头方向的盈利能力可能不同，因为市场呈现上升趋势。 由于您不知道未来这种上升趋势是否会持续，因此如果它产生相同数量的长短信号，您的系统会更稳定并且不太适应这种市场偏见。
+作为系统交易者或系统开发者, 您可以从市场的上涨/下跌趋势中得到哪些其他结论? 当您查看我们在此处提供的交易系统时, 您可以看到他们中的大多数买入交易和卖出交易的数量都差不多. 虽然在某些情况下(股票和股指期货), 市场崩盘的速度比上涨速度快, 但我们倾向于建立没有买入或卖出倾向的系统. 我们的大多数系统(如 LUXOR)都有类似数量的多头和空头交易, 尽管它们在多头或空头方向的盈利能力可能不同, 因为市场呈现上升趋势. 由于您不知道未来这种上涨趋势是否会持续, 因此如果交易系统产生相同数量的买入/卖出信号, 可以认为您的系统更倾向于稳定性, 而并不十分适应这种市场趋势.
 
 ### 5.2 Out-of-sample deterioration
 
 ----------
 
-David Aronson stated a fact which we absolutely agree with from our own experience in systems’ evaluation:
-
-Market behaviour is presumed to be a combination of systematic behaviour (recurring patterns) and random noise. It is always possible to improve the fit of a rule to a given segment of data by increasing its complexity. In other words, given enough complexity, it is always possible to fashion a rule that buys at every market low point and sells at every market high point. This is a bad idea. Perfect timing on past data can only be the result of a rule that is contaminated with noise. In other words, perfect signals or anything approaching them almost certainly means the rule is, to a disturbing degree, a description of past random behaviour(i.e. overfitted). Overfitting is manifested when the rule is applied to the test data segment. There, its performance will be worse than in the training data. This is because the legitimate patterns found in a training set recur in the test set, but the noise in the training set does not. It can be inferred that profitability in the training set that does not repeat in the testing set was most likely a consequence of over-fitting.
+It is always possible to improve the fit of a rule to a given segment of data by increasing its complexity. In other words, given enough complexity, it is always possible to fashion a rule that buys at every market low point and sells at every market high point. This is a bad idea. Perfect timing on past data can only be the result of a rule that is contaminated with noise. In other words, perfect signals or anything approaching them almost certainly means the rule is, to a disturbing degree, a description of past random behaviour(i.e. overfitted). Overfitting is manifested when the rule is applied to the test data segment. There, its performance will be worse than in the training data. This is because the legitimate patterns found in a training set recur in the test set, but the noise in the training set does not. It can be inferred that profitability in the training set that does not repeat in the testing set was most likely a consequence of over-fitting.
 
 This is a meaningful description of the concept of degrees of freedom as depicted more formally in Chapter 2. In this chapter we will have a look at a real example of such an over fitted system.
 
-David Aronson说明了一个事实，我们完全同意我们在系统评估方面的经验：
+David Aronson 说明了一个事实, 根据我们在系统评估方面的经验, 我们完全同意:
 
-市场行为被认为是系统行为（重复模式）和随机噪声的组合。通过增加其复杂性，始终可以改进规则对给定数据段的拟合。换句话说，给定足够的复杂性，总是可以制定在每个市场低点购买并在每个市场高点销售的规则。这是一个坏主意。过去数据的完美时机只能是受噪声污染的规则的结果。换句话说，完美的信号或接近它们的任何东西几乎肯定意味着规则是在令人不安的程度上描述过去的随机行为（即过度拟合）。当规则应用于测试数据段时，表现出过度拟合。在那里，它的表现将比训练数据更差。这是因为训练集中的合法模式在测试集中重现，但训练集中的噪声却没有。可以推断，在测试集中不重复的训练集中的盈利能力很可能是过度拟合的结果。
+市场行为被认为是系统行为(重复模式)和随机噪声的组合. 通过增加规则的复杂性，始终可以改进规则对给定数据段的拟合。换句话说，给定足够的复杂性，总是可以制定在每个市场低点购买并在每个市场高点销售的规则。这是一个坏主意。过去数据的完美时机只能是受噪声污染的规则的结果。换句话说，完美的信号或接近它们的任何东西几乎肯定意味着规则是在令人不安的程度上描述过去的随机行为（即过度拟合）。当规则应用于测试数据段时，表现出过度拟合。在那里，它的表现将比训练数据更差。这是因为训练集中的合法模式在测试集中重现，但训练集中的噪声却没有。可以推断，在测试集中不重复的训练集中的盈利能力很可能是过度拟合的结果。
 
-这是对第2章中更正式描述的自由度概念的有意义的描述。在本章中，我们将看一个这种过度拟合系统的真实例子。
+这是对第 2 章中更正式描述的自由度概念的有意义的描述。在本章中，我们将看一个这种过度拟合系统的真实例子。
 
 #### A Bollinger Band system with logic and code
 
 We  will  stay  with  the  pound/dollar  FOREX  market  from  2002-2008  (Datafeed  = TradeStation 8) to test the system. We take a Bollinger Band system (Figure 5.4) and optimise all its main six input parameters for the entry and exit points on daily data within the training period between 30/04/2002 and 1/3/2006 (Figure 5.3). Please note that this Bollinger Band system allows a different optimisation of its input parameters concerning the long and the short side. For the upper and the lower Bollinger Band the length of the moving averages and their distance from the entry point can be varied. So you have four input parameters which you can optimise for the entries. Furthermore we insert two variable, percentage based exits, which can be optimised as well: a risk stop loss and a profit target.
 
-我们将继续使用2002年至2008年的英镑/美元外汇市场（Datafeed = TradeStation 8）来测试该系统。 我们采用布林带系统（图5.4），并在培训期间的30/04/2002至2006年1月3日期间针对每日数据的入口和出口点优化其所有主要六个输入参数（图5.3）。 请注意，此布林带系统允许对输入参数进行不同的优化，包括长边和短边。 对于上部和下部布林带，移动平均线的长度和它们与入口点的距离可以变化。 因此，您有四个输入参数可以针对条目进行优化。 此外，我们插入两个基于百分比的可变退出，也可以进行优化：风险止损和利润目标。
+我们将继续使用 2002 年至 2008 年的英镑/美元外汇市场(Datafeed = TradeStation 8)来测试该系统。 我们采用布林带系统（图5.4），并在培训期间的30/04/2002至2006年1月3日期间针对每日数据的入口和出口点优化其所有主要六个输入参数（图5.3）。 请注意，此布林带系统允许对输入参数进行不同的优化，包括长边和短边。 对于上部和下部布林带，移动平均线的长度和它们与入口点的距离可以变化。 因此，您有四个输入参数可以针对条目进行优化。 此外，我们插入两个基于百分比的可变退出，也可以进行优化：风险止损和利润目标。
 
 <p align="left"><font size=2>Figure 5.3: British pound/US dollar, 30/04/2002-4/7/2008. The Bollinger Band trading system is optimised in six parameters within the training data range (30/04/2002-28/02/2006). Afterwards the results of this trading system are checked in the test data range (1/3/2006-4/7/2008).</font></p>
 
@@ -1328,9 +1326,41 @@ Further consequences of these tests are that once you have a simple, robust logi
 
 ----------
 
+Let’s first remind ourselves of the “normal” optimisation process which we set out in Chapter 5. In order to optimise your system you take a fixed training data set (“in sample data”) and then you apply the system to previously unseen data: this is the so called “test set” or “out-of-sample data” (Figure 6.1). In our example the training data set was about four years and four months, from 21/10/2002 to 28/2/2007 and the test set was one year and four months from 1/3/2007 to 4/7/2008.
+
+让我们首先提醒自己我们在第5章中提出的“正常”优化过程。为了优化您的系统，您需要一个固定的训练数据集（“在样本数据中”），然后将系统应用于以前看不见的数据： 这就是所谓的“测试集”或“样本外数据”（图6.1）。 在我们的例子中，培训数据集大约是4年零4个月，从2002年10月21日到2007年2月28日，测试集是从2007年1月3日到2008年4月7日的一年零四个月。
+
+<p align="left"><font size=2>Figure 6.1: Equity curve of system LUXOR for British pound/US dollar (FOREX) training and test period, 30 minute data. Training period 21/10/2002-28/2/2007 (white), test period 1/3/2007-4/7/2008 (green).</font></p>
+
+![Figure 6.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_6.1.png)
+
+Obviously this well-known procedure of optimising your trading system on a special market has some disadvantages. You only have one in-sample and one out-of-sample area. The out-of-sample test range is usually the most recent data. The more data you have in the training set the more efficiently you can train your system to different market conditions  (compare  with  Chapter  5.2).  Further,  keep  in  mind  that  this  “normal” optimisation process can work well for sound trading systems for a certain time. But be aware that over a longer period of time the market structure could change. In such a case you will need to adapt the trading system as well. A purely static approach with the input parameters fixed forever will fail sooner or later. Since there is no system code which can work forever you have to change your system parameters from time to time. These are good reasons to look at more dynamic optimisation methods.
+
+显然，这种在特殊市场上优化交易系统的众所周知的程序有一些缺点。 您只有一个样本内和一个样本外区域。 样本外测试范围通常是最新的数据。 您在培训中获得的数据越多，您就可以更有效地将系统培训到不同的市场条件（与第5.2章相比）。 此外，请记住，这种“正常”优化过程可以在声音交易系统中使用一段时间。 但请注意，在较长一段时间内，市场结构可能会发生变化。 在这种情况下，您还需要调整交易系统。 输入参数永久固定的纯静态方法迟早会失败。 由于没有可以永久工作的系统代码，因此您必须不时更改系统参数。 这些是了解更多动态优化方法的好理由。
+
 ### 6.2 Anchored vs. rolling walk forward analysis (WFA)
 
 ----------
+
+If you take the above example but make the optimisation window bigger and bigger you arrive at an anchored WFA. The optimisation is anchored since it always starts at the same point of time (Figure 6.2A). This is the simplest form of WFA. It usually works best, like the static optimisation we examined above, when the tested market keeps its personality within the tested sample.
+
+如果你采用上面的例子，但是让优化窗口越来越大，你就会得到一个锚定的WFA。 优化是固定的，因为它始终在同一时间点开始（图6.2A）。 这是最简单的WFA形式。 当测试市场在测试样本中保持其个性时，它通常效果最好，就像我们上面检查的静态优化一样。
+
+<p align="left"><font size=2>Figure 6.2A: Anchored walk forward analysis. For every new optimisation run the in-sample optimisation window starts at the same point of time but its length is subsequently increased. The unseen out-of-sample data follows.</font></p>
+
+![Figure 6.2A](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_6.2_A.png)
+
+However, as you know, markets and their personalities can be complex. Sometimes a market will show an equity curve that has some very profitable and some not-veryprofitable intervals within the tested data ranges. If a market appears to have such a changing personality then the anchored WFA may be not the best method. In these cases it is necessary to perform an optimisation method which better adapts to changing market conditions, the rolling WFA (Figure 6.2B). The rolling WFA is particularly appropriate for short-term intraday systems.
+
+如果你采用上面的例子，但是让优化窗口越来越大，你就会得到一个锚定的WFA。 优化是固定的，因为它始终在同一时间点开始（图6.2A）。 这是最简单的WFA形式。 当测试市场在测试样本中保持其个性时，它通常效果最好，就像我们上面检查的静态优化一样。
+
+<p align="left"><font size=2>Figure 6.2B: Rolling walk forward analysis. Shifting in-sample optimisation window = 1 year and shifting unseen out-of-sample data = the 3 following months.</font></p>
+
+![Figure 6.2B](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_6.2_B.png)
+
+The better adaptation of the rolling WFA may mean it is more appropriate, and may yield results that walk forward better, in live trading than results obtained from an anchored WFA.
+
+滚动WFA的更好适应可能意味着它更合适，并且可能产生比实时交易更好的结果，而不是从锚定的WFA获得的结果。
 
 ### 6.3 Rolling WFA on the LUXOR system
 
@@ -1338,29 +1368,171 @@ Further consequences of these tests are that once you have a simple, robust logi
 
 #### Periodic optimisation of the two main system parameters
 
+Let’s try the rolling WFA on the LUXOR system with 30 minute data of the pound/dollar pair. So instead of optimising the code’s input settings within a fixed test data range, we now have to do a rolling re-optimisation of the two main system parameters, the fast and slow moving average. As seen in Chapter 5.4, the system is most reactive on these two moving averages that trigger the entry signals. During this re-optimisation process we keep all other system parameters (time filter and the three exits) constant with the values gained in Chapter 3. We optimise the two moving averages in periods of one year and shift this optimisation period three months further with every new run (Figure 6.2B). To complete the WFA and to check its results we apply the optimised values to the unseen data ranges. In this way we see how our periodically optimised system walks forward.
+
+让我们尝试在LUXOR系统上滚动WFA，使用30分钟的英镑/美元对数据。 因此，我们不必在固定的测试数据范围内优化代码的输入设置，而是必须对两个主要系统参数（快速和慢速移动平均值）进行滚动重新优化。 如第5.4章所示，系统在触发进入信号的这两个移动平均线上最具反应性。 在此重新优化过程中，我们将所有其他系统参数（时间过滤器和三个出口）与第3章中获得的值保持一致。我们在一年的时间内优化两个移动平均值，并将此优化周期进一步延长三个月 新运行（图6.2B）。 要完成WFA并检查其结果，我们将优化值应用于看不见的数据范围。 通过这种方式，我们可以看到我们定期优化的系
+
+With the rolling WFA we have a training set which is not static as before but which is moving forward as the time goes by. In our case we use one-year in-sample optimisation periods which move forward every three months. With each new optimisation you get two new optimal moving average values. For example, during the optimisation period between November 2002 and November 2003 you get an optimal fast moving average length of 3 bars and an optimal slow moving average length of 21 bars. If you shift the optimisation period by 3 months to February 2003 until February 2004 the parameter’s best values change to 1 (fast) and 39 (slow) for the moving averages. (Of course a “moving average” of length 1 is just the price itself.)
+
+在滚动的WFA中，我们有一个训练集，它不像以前那样是静态的，但随着时间的推移正在向前发展。 在我们的案例中，我们使用一年的样本内优化期，每三个月推进一次。 通过每次新的优化，您将获得两个新的最佳移动平均值。 例如，在2002年11月到2003年11月的优化期间，您将获得3巴的最佳快速移动平均长度和21巴的最佳慢速移动平均长度。 如果将优化周期从2003年2月的3个月更改为2004年2月，则参数的最佳值将更改为移动平均值的1（快）和39（慢）。 （当然，长度为1的“移动平均线”只是价格本身。）
+
+If you shift the optimisation window by 3 months again (now from May 2003 until May 2004) the two input parameters change again to 1 (fast) and 21 (slow) which is shown in (Table 6.1). So instead of the static optimisation you now have 19 optimisation runs for the two main input parameters within the training period. Please note that these 19 optimisation runs use nearly the whole market data range for both optimisation and for testing. Remember that the static optimisation from Chapter 5.4 just could use a small part of about one year of the data for the out-of-sample test. So you now get a much more detailed test of your trading system on much more data – not by having more data available (you still only have the 6 years from 2002 to 2008) but by using it in a cleverer way.
+
+如果再次将优化窗口移动3个月（现在从2003年5月到2004年5月），则两个输入参数再次变为1（快速）和21（慢速），如（表6.1）所示。 因此，您不再使用静态优化，而是在训练期内对两个主要输入参数进行了19次优化运行。 请注意，这19项优化运行几乎使用了整个市场数据范围进行优化和测试。 请记住，第5.4章中的静态优化只能使用大约一年的一小部分数据进行样本外测试。 因此，您现在可以在更多数据上更详细地测试您的交易系统 - 不是通过提供更多数据（您仍然只有2002年至2008年的6年），而是以更聪明的方式使用它。
+
+<p align="left"><font size=2>Table 6.1: Periodic re-optimisation of the trading system LUXOR on 30 minute data of the GBP/USD FOREX pair. The gained “best” parameters are applied subsequently to out-ofsample areas of 3-month test data.</font></p>
+
+![Table 6.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_6.1.png)
+
+If you plot the two optimised input parameters as a function of the start of the optimisation window you see their change within the five years (Figure 6.3). Please note that the two optimised parameters change rather slowly – an important aspect for the gained out-ofsample test results, which we will discuss now.
+
+如果将两个优化的输入参数绘制为优化窗口起点的函数，则可以看到它们在五年内的变化（图6.3）。 请注意，两个优化参数的变化相当缓慢 - 这是获得的样本外测试结果的一个重要方面，我们现在将讨论这些结果。
+
+<p align="left"><font size=2>Figure 6.3: Change of the optimal parameters for the fast and slow moving averages as a function of the shifting one year optimisation period. During the tests the following other parameters are kept in place: entry time window 9.30am-1.30pm GMT, exits: 0.3% risk stop, 0.8% trailing stop and 1.9% optimised for trading system LUXOR on 30 minute data of the GBP/USD FOREX pair.</font></p>
+
+![Figure 6.3](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_6.3.png)
+
 #### Out-of-sample test result
 
+Let’s apply the trading system with these optimised parameters to the unseen data. In Table 6.1 you can see that the optimal parameters 3 (fast) and 21 (slow) which have been gained in the first one-year optimisation window between 1 November 2002 and 1 November 2003 are applied to the subsequent three months from 1 November 2003 until 1 February 2004 of unseen data. The optimal parameters for the subsequent optimisation period (February 2003 until February 2004: fast moving average = 1 bar, slow moving average = 39 bars) are applied to the unseen data between 1 February 2004 and 1 May 2004 and so forth for all the other 17 periods. In this way you get a complete out-ofsample test of the trading system applied to previously unseen data. The result is shown in Figure 6.4.
+
+让我们将具有这些优化参数的交易系统应用于看不见的数据。 在表6.1中，您可以看到在2002年11月1日至2003年11月1日的第一个一年优化窗口中获得的最佳参数3（快速）和21（慢）适用于2003年11月1日的后续三个月 直到2004年2月1日的未见数据。 随后优化期间（2003年2月至2004年2月：快速移动平均值= 1 bar，慢速移动平均值= 39 bar）的最佳参数适用于2004年2月1日至2004年5月1日期间看不见的数据，等等所有其他参数 17个时期。 通过这种方式，您可以对应用于以前看不见的数据的交易系统进行完整的样本外测试。 结果如图6.4所示。
+
+<p align="left"><font size=2>Figure 6.4: Out-of-sample test for the periodically optimised values. System LUXOR for British pound/US dollar (FOREX) 2/11/2003-4/7/2008. During the tests the following other parameters are kept in place: entry time window 9.30am-130pm GMT, exits: 0.3% risk stop, 0.8% trailing stop and 1.9% optimised for trading system LUXOR on 30 minute data of the GBP/USD FOREX pair.</font></p>
+
+![Figure 6.4](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_6.4.png)
+
+The total net profit is slightly higher and the maximum drawdown lower than with the originally developed system. This is an astonishing result since this equity line is a 100% out-of-sample test for the two main input parameters, the fast and slow moving average. The explanation for this result can partially be given by Figure 6.3 and Table 6.1. There you can see that the two moving averages have had little need to change during the five years within the different optimisation windows. In other words the market conditions have not changed a lot and the system was fast enough to adapt to the changing market conditions which have lead to these profitable results.
+
+总净利润略高，最大亏损低于最初开发的系统。 这是一个令人惊讶的结果，因为该权益线是两个主要输入参数（快速和慢速移动平均值）的100％样本外测试。 图6.3和表6.1可以部分地给出对该结果的解释。 在那里你可以看到，在不同的优化窗口中，两个移动平均线几乎没有必要在五年内改变。 换句话说，市场条件没有太大变化，系统足够快，能够适应不断变化的市场条件，从而带来这些有利可图的结果。
+
 #### Conclusion
+
+The  30  minute  data  of  the  GBP/USD  pair  is  a  proper  example  of  a  periodic  reoptimisation working with the chosen optimisation window (1 year) and shifting period (every three months). Please note, however, that the right selection of this re-optimisation window and period is a complex topic of which you should be aware. The periodic walk forward optimisation is one of the most powerful tools available today, but like every method it has its pitfalls and needs to be applied correctly. As with every optimisation the settings of an appropriate walk forward analysis depend on the number of variables in your trading system.
+
+GBP / USD对的30分钟数据是使用所选优化窗口（1年）和轮换期（每三个月）进行周期性重新优化的正确示例。 但请注意，正确选择此重新优化窗口和期间是一个复杂的主题，您应该知道。 定期向前推进优化是当今最强大的工具之一，但是像每种方法一样，它存在缺陷，需要正确应用。 与每次优化一样，适当的前瞻性分析的设置取决于交易系统中的变量数量。
+
+As we saw in Chapter 5, the less rules your system contains, the more robust your strategy will be in real trading. A trading system with too much complexity leads to too much adaptation of your system to the data and therefore to curve over-fitting. This rule, which was found in “normal” optimisation with one training data and one test data set can be transferred to the periodic re-optimisation. However, with the periodic re-optimisation you have the advantage that your out-of-sample data range (the test data) is bigger and therefore an over-fitted system with too much complexity usually fails in the walk forward analysis more often than it does during the static system tests. Because of this you can trust your system more when it passes the WFA than “normal” static back-tests.
+
+正如我们在第5章中看到的那样，您的系统包含的规则越少，您的策略在实际交易中的稳健性就越强。 过于复杂的交易系统会导致系统对数据的适应性过大，从而导致曲线过度拟合。 在具有一个训练数据和一个测试数据集的“正常”优化中找到的该规则可以转移到周期性重新优化。 但是，通过定期重新优化，您的优势在于您的样本外数据范围（测试数据）更大，因此过度复杂的过度拟合系统通常会在前进分析中失败，而不是 在静态系统测试期间。 因此，当您通过WFA而不是“正常”静态反向测试时，您可以更信任您的系统。
 
 ### 6.4 The meaning of sample size and market structure
 
 ----------
 
+One point which is relevant during every optimisation process and especially of periodic re-optimisation is the question of how to choose your optimisation period. Do you reoptimise every day, every two weeks or every year? Your computer, with its limited power, may give an answer to this question but there are still other points there to investigate, one of which is the market’s inherent attributes, which we call “market structure”.
+
+在每个优化过程中，尤其是定期重新优化过程中，有一点是如何选择优化周期的问题。 你是每天，每两周还是每年重复一次？ 你的计算机功能有限，可能会给出这个问题的答案，但还有其他一些需要调查的地方，其中一个就是市场的固有属性，我们称之为“市场结构”。
+
+In our LUXOR system we had a rolling optimisation period of one year and a subsequent out-of-sample test period of three months. These chosen settings proved to be appropriate for our system/market combination. But what are good settings for other systems and markets? What if you work with daily data, with 10 minute data or with 1 minute data?
+
+在我们的LUXOR系统中，我们有一年的滚动优化期和随后的三个月的样本外测试期。 这些选择的设置证明适合我们的系统/市场组合。 但是对于其他系统和市场有什么好的设置呢？ 如果使用每日数据，10分钟数据或1分钟数据，该怎么办？
+
+On a TradeStation forum we recently found a double-edged comment about this topic: The problem is that if you use an inadequate sample size then your system is much more likely to get “blindsided” by price patterns that haven’t been previously observed when you implement it. Adequate sample size is the cheapest insurance a system trader can get. Unless a system is tested on an adequate sample of historical data, it is statistically impossible for it to walk forward reliably, no matter how good the test result looks. No amount of post-processing, analysis, walk-forward runs, out-of-sample testing or anything else can compensate for an inadequate historical data sample. If you sampled half a year of hourly wind speed data in Florida during a season when no hurricanes (or even any severe local thunderstorms) hit, you might come away with the impression that you had gathered a representative sample of Florida wind speeds.
+
+在TradeStation论坛上，我们最近发现了一个关于这个主题的双刃评论：问题是，如果你使用的样本量不合适，那么你的系统更容易被以前没有观察到的价格模式“蒙住” 你实现它。 足够的样本量是系统交易者可以获得的最便宜的保险。 除非系统在足够的历史数据样本上进行测试，否则无论测试结果有多好，它在统计上都不可能可靠地向前推进。 没有任何后处理，分析，前进运行，样本外测试或任何其他可以补偿不充分的历史数据样本。 如果您在没有飓风（甚至任何严重的局部雷暴）袭击的季节中在佛罗里达州采样半年的小时风速数据，您可能会得到一个印象，即您已经收集了佛罗里达风速的代表性样本。
+
+Let’s illustrate what this statement means. Figure 6.5 shows an artificial market as a function of time. As you can see our market is built in such a way that it has phases of slower  and  faster  oscillations. In this  case the structure of the market is a special oscillation or frequency. Of course markets can have hundreds of other typical attributes like opening gaps, trending behaviour, over-bought areas, etc. The fast and slow oscillation here is just a representation for a changing market structure.
+
+让我们来说明这个陈述的含义。 图6.5显示了作为时间函数的人工市场。 正如您所看到的，我们的市场以这样的方式构建，即它具有更慢和更快振荡的阶段。 在这种情况下，市场结构是特殊的振荡或频率。 当然，市场可能有数百种其他典型属性，如开放空白，趋势行为，过度买入区域等。这里的快速和慢速振荡只是市场结构变化的一种表现形式。
+
+<p align="left"><font size=2>Figure 6.5: The market changes as a function of the time. Every market has its special structure, frequency, trends etc.</font></p>
+
+![Figure 6.5](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_6.5.png)
+
+<p align="left"><font size=2>Figure 6.6: Optimisation window fits to the market structure. Ideal case: unseen data is same as data in optimisation window.</font></p>
+
+![Figure 6.6](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_6.6.png)
+
+<p align="left"><font size=2>Figure 6.7: Optimisation window fits to the market structure. Ideal case: unseen data is same as data in optimisation window.</font></p>
+
+![Figure 6.7](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_6.7.png)
+
+When you now apply your rolling WFA with shifting optimisation window and window of unseen out-of-sample data you can have the two extreme situations as shown in Figures 6.6 and 6.7. The optimisation window can catch a part of the market which contains all the information of the market (Figure 6.6) or it can be chosen in such a way that it just captures an area of market data which is completely different to the price structure which will follow (Figure 6.7). Obviously when doing WFA you will never have one situation or the other but always a mixture in between. What is ultimately suitable can only be discovered through a series of tests in order to gain the necessary experience of different scenarios.
+
+现在，当您使用具有移动优化窗口和不可见的样本外数据窗口的滚动WFA时，您可以处于两种极端情况，如图6.6和6.7所示。 优化窗口可以捕获包含市场所有信息的市场的一部分（图6.6），或者可以选择它只捕获市场数据的一个区域，这个区域与价格结构完全不同。 遵循（图6.7）。 显然，在做WFA时，你永远不会有一种情况或另一种情况，但总是混合在一起。 只有通过一系列测试才能发现最终合适的内容，以获得不同场景的必要体验。
+
+Imagine that you run walk-forward tests on the S&P500, FTSE or DAX with different out-of-sample exclusion percentages and stress test coefficients on that same short sample of data, in order to get a quantitative idea of the number of walk-forward run and out-ofsample exclusion percentages that work best when walk-forward analysing your system. And let’s also assume that you’re unlucky enough that everything you run passes all the logical tests for reliability above the accepted threshold and comes out looking OK. Unlucky, you say? Sure, because you can slice and dice your data until your computer goes obsolete but you’ll still never “see” the occasional market breakdown that occurs in the stock markets once in twenty years. That’s because you’re attempting to draw a set of complex statistical inferences out of a pathetically inadequate sample of data.
+
+想象一下，您对S＆P500，FTSE或DAX进行了前瞻性测试，在相同的短数据样本上使用不同的样本外排除百分比和压力测试系数，以便定量了解前进的数量 在向前分析系统时，运行和超出样例的排除百分比最有效。 而且我们还假设你运气不好，你运行的所有东西都通过了所有可靠性的逻辑测试，超过了可接受的阈值，看起来还不错。 不走运，你说呢？ 当然，因为你可以对你的数据进行切片和切块，直到你的计算机过时，但你仍然不会“看到”20年后股市偶尔发生的市场崩溃。 那是因为你试图从可怜的数据样本中抽取一组复杂的统计推断。
+
+The longer your sample, the higher the probability that it contains most of the conditions it’s likely to encounter in the future. It is human nature to want to curve fit a “beautiful” system to a short sample of data, but remember that sample sizing is a complex topic. There are high-risk but valid systems that trade very frequently, that may have a “shelf life” – the interval between re-optimisations – of a day or two and that might look at relatively short histories of data in n-tick or minute range timeframes. To a limited degree, data bars exhibit fractal properties. In other words, 20 years of daily data consists of about 5000 bars. A year of 15 minute cash session bars also consists of about 5000 bars. Both charts will exhibit similar patterns of trends, support and resistance, consolidations, double-bottoms, channel breakouts and other manifestations of the dynamic interaction of the group psychology of bulls and bears.
+
+样本越长，它包含将来可能遇到的大多数条件的概率就越高。 想要将“漂亮”系统曲线拟合到简短的数据样本是人类本性，但请记住，样本大小调整是一个复杂的主题。 存在高风险但有效的系统，这些系统非常频繁地交易，可能具有“保质期” - 重新优化之间的间隔 - 一两天，并且可能在n-tick或分钟中查看相对较短的数据历史 范围时间表。 在有限的程度上，数据条表现出分形特性。 换句话说，20年的每日数据包括约5000条。 一年15分钟的现金酒吧也包括约5000酒吧。 这两个图表将展示类似的趋势，支撑和阻力，整合，双底，渠道突破以及多头和空头集团心理的动态互动的其他表现形式。
+
+But does this mean that a year’s worth of 15 minute data is equivalent to 20 years of daily data? No, it doesn’t. The probability of recording a crash in six months’ of  data would not be any better if its sampling interval were three minutes instead of 60 minutes or daily bars. Be careful with short data samples regardless of timeframe or trading frequency. If your optimisation window is short, it is more likely you will miss important data outside of the window. You will be generalising on limited historical data, and this will lead to a weaker potential for predicting the future.
+
+但这是否意味着一年的15分钟数据相当于20年的每日数据？ 不，它没有。 如果采样间隔为3分钟而不是60分钟或每日柱，则在六个月的数据中记录崩溃的概率将不会更好。 无论时间范围或交易频率如何，都要小心短数据样本。 如果您的优化窗口很短，则您很可能会错过窗口外的重要数据。 您将对有限的历史数据进行推广，这将导致预测未来的潜力较弱。
+
 ## Chapter 7: Position sizing example, using the LUXOR system
+
+Steady money is not made by mysterious super trading systems, it is made by proper money management of average trading systems.
+
+稳定的资金不是由神秘的超级交易系统制造的，而是由平均交易系统的适当资金管理制成的。
 
 ### 7.1 Definitions: money management vs. risk management
 
 ----------
 
+In order to understand what money management really means, its relation towards risk management is essential. Thus we first of all want to work out the different meanings of the two terms.
+
+为了理解资金管理的真正含义，它与风险管理的关系至关重要。 因此，我们首先想要弄清楚这两个术语的不同含义。
+
 #### Risk management (RM)
 
+Within a single trading system the simplest form of risk management is the control of the distance between the entry and the exit. As a practical example see in Chapter 3.5 how different stops and targets are added to an entry logic and how this changes the risk figures like maximum drawdown, average losing trade and largest losing trade. This step is the first in risk management and it is the implementation of the quantified risk values into your trading strategy. The second level of RM is the permanent measurement of risk during active trading. By screening your trading systems regularly, e.g. every month, you have to check if they continue to behave in reality as calculated during testing. You have to watch carefully if markets change concerning point value or volatility: this could affect your calculated risk figures and can mean that adjustments are necessary.
+
+在单一交易系统中，最简单的风险管理形式是控制进入和退出之间的距离。 作为一个实际的例子，请参阅第3.5章，如何在条目逻辑中添加不同的止损和目标，以及这如何改变风险数据，如最大亏损，平均亏损交易和最大亏损交易。 此步骤是风险管理中的第一步，它是将量化风险值实施到您的交易策略中。 RM的第二个级别是在活跃交易期间永久性地衡量风险。 通过定期筛选您的交易系统，例如 每个月，你必须检查他们是否继续按照测试期间的计算行事。 您必须仔细观察市场是否有关于点值或波动性的变化：这可能会影响您计算的风险数据，并且可能意味着必须进行调整
+
 #### Money management (MM)
+
+In simpler words MM is called “position sizing”. It describes how to use your existing trading capital in the most efficient way and it provides answers to the following basic questions:
+1.     What percentage of the available funds should be totally invested?
+2.     What percentage of the available funds is it possible to risk in the next trade in a special market?
+3.     What leverage and market exposure should be chosen?
+
+简单来说，MM被称为“位置大小”。 它描述了如何以最有效的方式使用现有的交易资本，并提供以下基本问题的答案：
+1.应该投入多少百分比的可用资金？
+2.在特定市场的下一笔交易中，可用资金的百分比是多少？
+3.应选择什么样的杠杆和市场曝光？
+
+The success of a trading strategy is highly dependent on correct money management. With appropriate money management techniques the existing capital should not only be maintained but increased in an optimal way. With prudent money management the loss of a single trade is limited in such a way that even if the trade goes wrong often, there is trading capital remaining to try many additional successive similar trades. All MM schemes have one thing in common: they only work on the basis of a trading system with a positive expectancy. Although a proper MM decreases the lot size in unfavourable phases it can only make gains if the system comes back and shows a profit factor higher than 1 in the long run. Whether the profit factor is 1.5 or 1.001 is not that important. As long as it is higher than 1 and the system makes steady profits a good MM can improve the results of your trading system. You do not need to have an extraordinarily profitable trading system to gain money. In the long term it’s enough to have a stable strategy with a positive expectancy and proper money management.
+
+交易策略的成功在很大程度上取决于正确的资金管理。利用适当的资金管理技术，不仅应维持现有资本，还应以最佳方式增加资本。通过谨慎的资金管理，单一交易的损失是有限的，即使交易经常出现问题，仍有交易资金可以尝试许多额外的连续类似交易。所有MM计划都有一个共同点：它们只能在具有正预期的交易系统的基础上工作。虽然合适的MM在不利的阶段减少了批量，但只有系统回来并且从长远来看显示利润率高于1时才能获得收益。利润因子是1.5还是1.001并不重要。只要它高于1并且系统获得稳定的利润，一个好的MM可以改善您的交易系统的结果。您无需拥有一个非常有利可图的交易系统来赚钱。从长远来看，它足以拥有一个稳定的战略，具有良好的预期和适当的资金管理。
+
+From the above definitions of risk management and money management it is obvious that the two processes cannot be separated but they are highly dependent on each other(Figure 7.1).
+
+从上述风险管理和资金管理的定义来看，很明显这两个过程不能分开，但它们彼此高度依赖（图7.1）。
+
+<p align="left"><font size=2>Figure 7.1: The interaction of money and risk management. The goal of money management is to maximise your profits. The goal of risk management is to minimise your risks. The two different processes are connected with each other.</font></p>
+
+![Figure 7.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_7.1.png)
+
+The distance of your initial stops and therefore the risk of your trading system is important for  the  determination  of  the  number  of  lots  you  can  trade.  On  the  other  hand  the distribution of your trading capital is important in deciding how much you can risk in a single trade in a single market.
+
+您初始止损的距离以及交易系统的风险对于确定您可以交易的手数非常重要。 另一方面，您的交易资本的分配对于决定单一市场中单笔交易的风险程度非常重要。
 
 ### 7.2 Application of different MM schemes
 
 ----------
 
+It is time to go from theory to reality and check how MM affects the results of our trading system LUXOR on the pound/dollar FOREX pair within the last 5 years. To keep things comparable we again work with 30 minute data. All computer tests in this chapter are calculated with $30 slippage and commissions per round turn.
+
+现在是时候从理论走向现实，并检查MM在过去5年内如何影响我们的交易系统LUXOR对英镑/美元外汇对的结果。 为了保持可比性，我们再次使用30分钟数据。 本章中的所有计算机测试均以每轮30美元的滑点和佣金计算。
+
+You have probably heard about lots of different MM approaches like Kelly formula, Optimal F, Profit Risk Method, Martingale, Anti-Martingale etc. We do not want to indulge in an overview of all these methods with their pros and cons here. Instead we will choose only a few of them which we have found useful in our experience for real applications.
+
+您可能已经听说过许多不同的MM方法，如Kelly公式，最优F，利润风险方法，鞅，反鞅等。我们不想在这里利用它们的优点和缺点来纵容所有这些方法的概述。 相反，我们将只选择其中一些我们发现在实际应用中有用的经验。
+
 #### Reference: The system traded with one lot
+
+Let’s  start  with  the  result  of  the  LUXOR  trading  system  developed  in  Chapter  3, calculated with one fixed lot and a starting account equity of $100,000 (Figure 7.2). This equity curve is the simplest method of position sizing. It can be called “fixed size money management”, which means in other words that you simply choose the number of shares or lots which are used for each trade. The main purpose of this approach is to provide a good baseline for comparison with more sophisticated money management methods which we will now expound.
+
+让我们从第3章开发的LUXOR交易系统的结果开始，用一个固定的批次计算，起始账户净值为100,000美元（图7.2）。 此权益曲线是最简单的头寸调整方法。 它可以被称为“固定规模资金管理”，换句话说，您只需选择每笔交易所使用的股票数量。 这种方法的主要目的是为我们现在阐述的更复杂的资金管理方法提供一个良好的基线。
+
+<p align="left"><font size=2>Figure 7.2: Detailed equity curve. Traded with one fixed lot. Starting account size = $100,000. LUXOR system British pound/US dollar (FOREX), 30 minute bars, 21/10/2002-4/7/2008, with entry time filter and exits in place. Including $30 S+C per RT. An area with a recent small drawdown is encircled as a comparison for the following MM schemes. Chart created with Market System Analyzer.</font></p>
+
+![Figure 7.2](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_7.2.png)
 
 #### Maximum drawdown MM
 
