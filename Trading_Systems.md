@@ -1769,47 +1769,188 @@ This was the main portfolio software provider compatible with TradeStation for a
 
 #### The role of correlations
 
+Even though there are dozens of portfolio-building software programs available, the inclination to consider a single equity is still deeply rooted among traders. Nothing could be more wrong: with all the trading systems’ intricacies set aside, a mediocre system optimised on a bunch of assets will be likely to produce a reasonable portfolio equity line. This should always be kept in mind when you scan different assets’ prices with a newly-built trading system because what you are doing makes no sense if not included in a multi-market perspective. This is why we believe that approaching quantitative trading with a focus on a portfolio of assets, should they be stocks, futures, mutual funds or any other instrument, is a key element in surviving in the long run.
+
+Today there is a deep flaw in the difference between what commonly-accepted financial theory predicates about portfolio construction, and what you can do with an average technical analysis software in practice.
+
+Modern portfolio theory is built on the premise that in order to build an efficient portfolio you need to consider the correlations among the different assets. The more uncorrelated the assets the more efficient the portfolio, because if a position is losing, another position on a diverse asset will make money, dampening the overall effect on the portfolio equity line. The backbone of modern portfolio theory relies on the assumption that you cannot forecast the markets so that a systematic trader, who believes exactly the opposite, becomes confused on how to approach the topic.
+
+Correlation is indeed a pivotal question for a systematic trader because if, for example, you are using the same system on different markets and this system is trend-following, it is clear in order to have two different positions – one losing and the other winning – you need to have some markets that trend and other markets that stay choppy (a situation that often occurs). But let’s assume that you are trading multiple assets with two different systems, one trend-following and the other counter-trend. In this case you do not need all markets to be trending to have an upward sloping portfolio equity line. Some markets can trend and others can zig-zag with no definitive trend, and notwithstanding the overall portfolio will be profitable.
+
+Let’s move the reasoning a step ahead: let’s assume that we have both trend-following systems (prone to exploit trending markets) and counter-trend systems (prone to exploit choppy markets) applied over the same markets. How does correlation fit into this picture? It seems that a sane reply would be simply that when it boils down to building a real portfolio with real trading systems the complex traditional theory totters and it shows how difficult it is to move from a pure theoretical world to the everyday life of a systematic trader.
+
+Another critique of a portfolio approach based on correlation among assets is that correlation is not a stationary measure of the relative behaviour of two different assets. By stationary we mean that a form of correlation is not bound to last forever, economics change correlations among assets, so that presuming that in one year’s time correlation will be the same as today could be fatal. Let’s take the example of oil: economies were much more dependent on oil during the 1973-74 and 1979 shocks than during the 2008 bubble. So inflation perspectives during the 2008 bubble were much less imperative then 30 years earlier because Western economies were much less dependent on oil. The unfixed character of correlations is a controversial area that theoretical portfolio construction seems not to consider in an appropriate way.
+
 #### Publications and theoretical tools
+
+Among  academic  papers  there  is  a  shortage  of  good  publications  about  portfolio construction with an algorithmic approach. One author that tried to fight against this situation is Thomas Stridsman. He wrote two inspiring books, Trading Systems That Work and Trading Systems and Money Management, where even without arriving at a final conclusion he tried to address all the relevant topics of portfolio construction properly. The rest of the technical literature on trading systems is almost silent on this approach. So, at this point it is impossible to go ahead with the sure support of an authoritative author and we need to navigate in uncharted waters.
+
+Traders are often accused of being brutal and unfortunately we belong to this category. This is why our approach to portfolio construction is based on a practical approach that starts from a simple consideration: a trader, even a sophisticated one, should always be in  control  of  what  he  does. We  often  meet  professional  traders,  both  private  and institutional, that employ theoretical tools they do not fully understand or that they do not properly dominate. This is harmful when you come to real trading because markets are merciless. A trader, when using a trading system, needs to have total control of all its nuances. To employ complicated tools that require much time to be explored and understood is out of the reach of an average trader and portfolio manager. Time is short, markets are running all day long and you need to have a quick grasp of what to do without delving into complicated statistical problems.
 
 #### Portfolio trading in practice
 
+A sound approach to portfolio trading is something that is based on sound and prudent premises. Better, on sceptical premises. Scepticism in quantitative trading is the best rule you can apply since it lowers risk. It is hard to have doubts about everything but if you get accustomed to it you will arrive at the conclusion that there are just a few tenets that are really safe for a trader. We will now review some hard-earned lessons we have gained through experience:
+
+The more the better
+
+It would be unwise to dictate rules for the trading systems development field that should be abided only by traders who have huge programming and statistical skills or simply by professional traders that are backed by a powerful IT department. If you do not know how to make money in a discretionary way, every moderately good trading system (even a properly tested moving average crossover system) will be a better solution than merely following your gut feeling. Sometimes it can seem that to be a successful system trader you need to be a rocket scientist, though this is not the case at all. If you do not know how to make money in a discretionary way, whichever sound trading system you use will allow you to have an edge against the market.
+
+It is useless to wonder if it is better to use a simple profitable moving average crossover system carefully optimised on a portfolio or a complex breakout and counter-trend system optimised with a detailed walk forward analysis if you are only able to have the first one. You can only trade with the tools and systems available to you and not with the tools and systems you would have in an ideal world. Time is money and sometimes it could be more rewarding to trade with a simple system rather than spending years developing a more complex system that is beyond your reach. A situation that often recurs in this business  is  the  very  sophisticated  would-be  trader  that  decade  after  decade  keeps improving his system without ever applying it with real money, since it was not yet accomplished. Perfectionism is not a good quality in trading systems’ development.
+
+A price series is a price series and nothing more than a price series
+
+A trading system should produce good results on a price series and not forcedly on a precise number of other price series. Thomas Stridsman argues that he usually tests a system over 30-60 markets along 20 years and he wants it to perform moderately well on at least two-thirds of all markets (see [1]). We think that this is a sophisticated approach and we agree with it, but we have encountered only a few trading systems that were successful on all markets. In many cases systems usually work with the same efficiency on futures that belong to the same category: bonds, currencies, stock indexes, cereals, etc. As stated above, there is not a clear recipe for success and you can only trade with the systems you have at your disposal today. If your systems work on all the markets you will trade on all the markets, but if they just work on three different markets they should not be discarded just for this reason.
+
+We know what happened today but we have no means of knowing what will happen tomorrow
+
+Cancel every “estimate” from your dictionary when you build a trading systems’ portfolio. There are some authors that claim that you need to figure out your “estimated portfolio return  and  variance”  in  order  to  decide  money  management,  systems  and  markets selection. This is the wrong approach because the very reason we are using trading systems is because we do not know how to predict the future and neither the expected average returns and variance can be estimated.
+
+If we limit risks, profits will take care of themselves
+
+We cannot control the profit of a position which we entered without the support of an estimate. What we control is the risk; that is the difference between the entry price and the stop loss. This is what we need to analyse in order to protect our capital.
+
+This is a defensive approach to systematic portfolio trading and it must be clear that it does not exclude, once properly researched, other portfolio composition methodologies. As should be clear from the book, a trader should assess all the trading methodologies and tools the industry provides, but it is always prudent to apply only those methodologies that he can fully control and understand. The four points above are a kind of bottom line in systematic portfolio trading.
+
+In the literature about trading systems there are really few ideas on how to compose a portfolio; that is, which markets to trade and which systems to apply to which markets. Usually in our business, where there is a lack of information about a specific topic it means that some gold nuggets are hidden somewhere. Portfolio composition is one such area that for years has not been able to overcome some useless ideas such as the Wilder’s Commodity Selection Index or other more sophisticated approaches full of estimates, the origins of which nobody knows.
+
+Let’s look at some practical ways to build a systems portfolio. These approaches are real ones and have been applied either by us or by the best trading systems developers we have met in the last decade. We will not delve into the intricacies of each one because this would take us too far away from our path. Whichever method you decide upon, please test it carefully before trading. In this chapter we will pinpoint some hints about pros and cons you will encounter with every portfolio construction method.
+
+Unfortunately we do not have a definite word about this subject: we believe that portfolio composition method can often depend on which systems you are adopting, and over all it will be affected by whether you are trading many markets with the same systems, many markets with many systems or one market with many systems.
+
 #### Total vs. partial equity contribution
+
+Once the system is tested against a basket of stocks and futures, and results are moderately positive on almost all the markets, the pivotal question will be whether to trade all the markets or to trade just those instruments where the system was best performing and discard the others. If you just follow this path, you will surely have the best historical equity line you ever saw, but you will probably go bust after a few trades. The common tenet here is that you need to trade all the markets because you do not know what will happen tomorrow. The futures that were the best performing could become choppy or the underperforming futures could become volatile and it may be easier to make money on them. Obviously there is no way for you to pretend you know which futures will be volatile tomorrow. Everybody would agree with this tenet. But before sticking to it without discrimination it is better we understand that it relies on some basic premises.
+
+The first premise is that it assumes we just have a unique trend-following system or we just have a unique counter-trend system but not both of them. Only with one of these systems would we be worried if the market becomes respectively too choppy or too trendy. The second premise is that we need to apply the same system to all the same markets and not, for example, a counter-trend system to a traditionally choppy market and a trend-following system to a traditionally volatile market. If instead of having a single system to trade all the markets we have two different systems to trade all the markets this is surely a step ahead. We remind readers of our number 1 principle: the more the better. To arrive at a unique conclusion without specifying how many systems we have is impossible because we still need to make clear what the starting point is. If you just have a trend-following trading system it will be prudent to trade all the markets because you are not able to know in advance which market will trend and which market will be in congestion. If you have a trend-following system and a counter-trend system you can prudently trade all the markets or even apply the trend following system to the traditionally volatile markets and the counter trend to the traditionally choppy markets. This second solution is obviously more hazardous than the first but there are additional tools that can lower the risk.
+
+Partial equity contribution
+
+Another solution would be to test the systems on all the markets and then choose a fixed fraction of the best performing markets according to the broad category to which they belong: cereals, energies, currencies, stock indexes, bonds, etc. This portfolio is a kind of compromise between the total contribution and the all markets choice and it is neither too aggressive nor too defensive. This method could be the “golden middle”.
 
 ### 8.2 Correlation among equity lines
 
 ----------
 
+As we have seen, this is one of the sacred topics of portfolio trading: look for those markets that are negatively correlated and trade them. In this way you can smooth the resulting portfolio equity line. The premise of this approach is always that you need to have the same system, set with the same inputs, on all the markets. If you trade a trendfollowing system and a counter-trend system the logic would require you to trade the same market in order to be sure that, whether it is trendy or choppy, you have a tool at your disposal that will fit the market situation and will make more money than the other one you trade. But there is a lot more in store for this approach. Nobody understands why you should check correlations on the price series instead of on the equity line itself. If you are a systematic trade  you will not build your portfolio considering  the  price correlation among the assets, but you will only watch the equity lines and the correlations among them. If equity lines are growing it means that the systems are suitable to trade that market, if they are decreasing you would be better off to stop them.
+
+Correlation among assets varies according to the economic situation. These changes take a lot of time to shape but once they take root they go ahead for years. So there is no reason not to exploit them. What we believe is that equity lines are the most suitable indicators for checking correlations among systems and among markets. More precisely when we quote equity lines, ‘we want to measure the inter-correlations of daily equity changes among  the  different  market  systems’  [12].  Price  series  themselves  would  be  more important in terms of correlation if we were to manage assets using just fundamental analysis – their role in this case would be paramount in terms of asset allocation. It is not by accident that Portfolio Evaluator and Portfolio Maestro, the two flagship products of RINA Systems6, use a correlation matrix based on monthly equity lines to calculate correlations among the different markets, and this is also the same for Market System Analyzer7. As far as we are concerned we would advocate the use of a shorter measure of correlation in order to minimise drawdown (weekly correlation or some form of averaging and smoothing of daily correlation). In our experience it is very difficult to find negative correlations among futures’ monthly equity lines and even a negative correlation coefficient that amounts to -0.2 is really interesting in order to lower the portfolio drawdown (Figure 8.1).
+
+<p align="left"><font size=2>Figure 8.1: Matrix of linear correlations among monthly equity lines of one of our portfolios traded with real money.</font></p>
+
+![Figure 8.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_8.1.png)
+
+As you can see there is no negative correlation lower than -0.30. By the way, this is a portfolio multimarket multisystem dating to May 2008. The average starting period is 2001-2002 when electronic markets were launched, but many trading systems – on FGBL (German Bund Futures) for example – are much older. The more uncorrelated asset seems to be the 10 years Treasury Bill (TY) which has a negative correlation with at least 7 other equity lines out of 14 (50% of the markets). The second most uncorrelated are GC (Gold) and JY (Japanese Yen). The most correlated asset is Wheat which has no negative correlation with any other. In second place, Eurodollar (EC), Swiss Franc (SF) and Soybean Meal (SM) have a negative correlation just one market out of 14.
+
+The most common way to compose a portfolio with a matrix of correlation among equity lines is to attach more weight to those price series that are uncorrelated with the others in order to smooth the portfolio equity line. In the example of Figure 8.1 Eurodollar, Swiss Franc and Soybean Meal would be the price series with the lowest number of contracts to be traded while Gold and Treasury Bills should be weighed more than any other asset.
+
 ### 8.3 A dynamic approach: equity line crossover
 
 ----------
+
+Every trader is haunted by the obsession of the possible failure of the systems he is trading. This is the psychological burden systematic traders need to withstand in order to achieve success. A common way to gauge a system’s failure is drawdown or a multiple of the drawdown. We believe that, even if the drawdown figure is important, it is not the key element in evaluating the performances of a trading system. If you do not pretend that subsequent trades are dependent on preceding ones, drawdown is just one of the possible sequences of losing trades a system can encounter. Moreover, drawdown is the direct misfortune a trader can encounter in his job, not something that he could enjoy, and it would be inappropriate to use drawdown, or even worse a multiple of it, as a final threshold before stopping a system.
+
+So the idea is why not use a dynamic approach that indicates to the trader when the system starts faltering? And over all why not adopt a general objective approach that indicates not only which systems are stopped because they are out of synchronisation with the market but also which ones to activate because they start to be in synchronisation with the market? What we would like is to set criteria for discarding a system when it starts to lose money but also criteria for activating a dormant system when it fits the current market conditions. So the idea is to trade a system when the equity line crosses over the 15-30 period moving average of the equity line itself and stop trading with a system when the opposite is true (Figure 8.2). The same crossover rule could also be applied to the whole portfolio of systems as a second security measure after being applied to the single system. In this case it would be proper to distinguish between a portfolio of daily systems (it would not be advisable to exit a trade on a daily trading system simply because the portfolio equity line dropped below its average) and a portfolio of intraday trading systems.
+
+
+In our experience it is not a sure thing that this equity line crossover approach will work equally well on all systems and all markets. If the system is a good one, if it does not have too many rules and if it is properly optimised and equally properly re-optimised at periodic intervals, it is likely that the equity line crossover approach will never encounter a downward crossover. So if the system is too good, applying this approach will never improve the overall system results. However, applying the equity line crossover to the whole portfolio of systems with a whole portfolio equity line is a tool that can help the trader prevent the nightmare of the “black swan” when everything goes wrong.
+
+Usually the equity line crossover is a dynamic tool that reduces the risk more effectively than the use of the simple drawdown. Moreover, the simple drawdown rule or a multiple of it has no corresponding contrary rule to activate a “dormant” system, whereas our proposed security rule can give this indication.
+
+<p align="left"><font size=2>Figure 8.2: The blue line is the 30-period moving average and the red line is the 1-period equity line. At point A there was a down crossover and trading was stopped. At point B there was an upward crossover and trading was resumed.</font></p>
+
+![Figure 8.2](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_8.2.png)
 
 ### 8.4 Dynamic portfolio composition: the walk forward analysis activator
 
 ----------
 
+This is a brand new approach. It was developed by Fabrizio Bocca and Cristiano Raco, two brilliant Italian systematic traders, and has not been disclosed so far. Let’s look at an example on an intraday trading system which is put under periodic optimisation every 3-months  inside  a  process  of  walk  forward  analysis.  If  during  the  3  month  periodic re-optimisation the system has a walk forward efficiency ratio of more than 50% then it is traded in real time and conversely if the walk forward efficiency ratio goes under 50% then the system is momentarily stopped. In this way we can decide which trading systems in our trading systems’ farm are to be applied and which ones are to be suspended. Fabrizio Bocca classifies all his systems in relation to the walk forward ratio every 3 months and then he allocates his trading capital to those systems that have the highest rank.
+
+<p align="left"><font size=2>Figure 8.3: this is an example on how Fabrizio Bocca and Cristiano Raco rank their trading systems’ farm though WFA. On the right corner there is a column denominated RCD where the WFA results are condensed in a comprehensive index. If the index is positive the trading system is traded with real money, if it is negative (zero in the column) is it deactivated.</font></p>
+
+![Figure 8.3](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_8.3.png)
+
 ### 8.5 Largest losing trade/largest losing streak/largest drawdown
 
 ----------
 
+Another way to compose a portfolio of different markets and systems would be to normalise risk by the largest losing trade or drawdown. This is one of the most popular approaches. In this way the system with the highest losing trade, largest losing streak or largest losing drawdown will have the lowest number of contracts allotted to it and conversely the system with the smallest losing trade, losing streak or losing drawdown will have the highest number of contracts allotted. Obviously the loss figures on which this method is based make sense only if you do not consider WFA, otherwise these loss figures will vary with every WFA you periodically make. Moreover if you adopt this approach with largest losing streak or largest losing drawdown then you must believe that trade dependency has some value since otherwise it would be difficult to believe that the trade sequence will repeat itself in the future exactly as it did in the past. If the trade sequence varies drawdown will also vary. As for the use of the largest losing trade, you need to consider that a theoretical test will never encompass mistakes and slippages and in our experience these are the best candidates to be the largest losing trades. In any case, the largest losing trade, being precisely just one trade, has a low statistical significance but many traders use it because it is easy to grasp and apply. We have nothing against it, but – as with everything – it should be regarded with caution and the drawbacks it entails should be kept in mind.
+
 ### Conclusion
+
+The trading system’s code: is this the pivotal issue in quantitative trading? We believe that  programming  is  just one of the many factors involved in trading systems development. The proof of this statement comes from experience on the field: in 15 years we have seen many successful systematic traders but in only a few instances were they professional  programmers.  So  where  was  the  edge?  We  believe  the  edge  was  in understanding how and when to apply a system and understanding when to stop it. No system  is  forever.  Markets  change,  traders  change,  systems  change.  Nothing  is everlasting. Success is easy to reach with a code and a limited period, but really rare over 10 or 20 years. So if you think that systematic trading is a job for life please do not overrate the importance of programming skill.
+
+Let’s make a comparison with a lawyer: is the knowledge of law important for a lawyer? Of course it is. But also social relations, character and the family background are equally important. If you are a lawyer and you know the law perfectly, but you run your business in a little town, you will seldom become involved with a nationwide criminal case that will project you into the stratosphere. If your social environment is comprised of little shop-keepers and retired persons you will care about minor civil suits. If you play golf in New York with famous bankers and financial directors it is likely that you will care more about high-profile cases. The same applies with trading system development: it is important to have some basic programming capability but if you want to be successful a lot of other skills are required such as networking with other systematic traders, following publications and seminars on the topic, purchasing and trying new software and attending scientific meetings and the conferences of professional organisations, like those of I.F.T.A (International Federation of Technical Analysis).
+
+Now we know what you think: if your ideas are disclosed to a programmer then he will make money with them. But there are many points against this idea. The first is that if your programmer makes money with your ideas this will not prevent you from making money with them all the same. We have already discussed that you can publish your system in the Wall Street Journal and people will not trade it. So do not be scared about giving away some “secrets”, provided these are really such as you presume they are. Second, it is very rare that a programmer will have the time, the feeling or the capability to understand if a code is really important. Programming and testing are two different jobs. It often happens that testing is not done in a systematic way. All traders believe they have a feeling with some particular markets and timeframes and there are few traders that test a system over 70 markets and 10 timeframes. So even if the programmer has the intention to steal something it may be that he will not grasp what he is really stealing. To test a system over many markets and timeframes, to understand if something is missing, how to cure its shortcomings and how to improve its efficiency is something that is a big job on its own, far away from the programming skill.
+
+The best systems we developed were fixed by professional programmers that we are sure did not understand what they were programming. Then a last consideration: if you come up with two ideas per day and your programmer puts them into a code at the end of the year there will be so many ideas and codes that he will bored and he will never check anything more from you. Testing and fine-tuning a code is a really time consuming job, and very expensive also because you need to have many data sources and many data providers in order to easily cover all the markets and all the timeframes.
+
+A good systematic trader does not have a single code but dozens of viable trading systems’ codes that he selects and applies according to the current market conditions. So a really good systematic trader will never refuse to exchange cards with you. If you have 40  systems  and  you  exchange  some  systems  (it  is  better  not  to  exchange  the  best performing systems on sensible timeframes, e.g. 1-3 minutes), with some other systems you will end up with more systems and no harm to your systems farm. A mediocre systematic trader has just one or two systems and he thinks that their codes will bring him success, so he keeps them in a safe and he would prefer to die rather than give them away.
+
+The more complex the system the more easily it will be over-optimised with too many variables or inputs. If you are not a sophisticated programmer this could be good luck because you will never run the risk of writing codes that are too lengthy.
+
+Another point comes to mind when you are considering our professional activity in the last 15 years from a historical point of view: codes and ideas are almost the same, there is nothing really conceptually new in trading systems. You have tons of opening range breakout codes, pivot points, channel breakouts, etc. The same stories are oft-repeated but still work intermittently in today’s markets. You can find thousands of these formulas for free on the internet with little effort. You can even know that Jim Simons, the best quant trader around, who made a huge personal fortune with his Magellan Fund, is trading mostly with Markov chains and on an intraday basis. Would this be enough for you to emulate his success? No, it can help you in going in a precise direction but it will never allow you to have any practical tips on the feeling, the approach and the theory that lies in his trading systems. So the key point is not the code, the key point is how to adapt existing codes to the current market conditions, how to build a portfolio and how to know when the moment comes to stop a system and start another one.
+
+But let’s add another point which is more human than strictly technical. Like in many other human endeavours, persistence and determination are those qualities that sooner or later lead to success. The programming capability, the mathematical background, the creativity are all factors that surely help in algorithmic trading, but the most important thing will be the feeling you have with the markets, the trades and the systems. And this feeling is the relentless result of persistence and determination. To gauge systems, to develop systems, to evaluate quantitative trades it takes years. It could not be possible in any other way: success is always difficult to reach and for a systematic trader success is money.
+
+The thread that occurred to us during this book is very clear: do not think that a powerful trading platform can transform you into a successful trader, do not think that one piece of code instead of another will bring you to success. It will take a lot of hard work and a little bit of chance.
+
+This is why we did not merely write down our receipt for success, we did not fill the book with codes, and we did not use complex concepts to explain the simple steps for successful systematic trading. We recommend that you are always in control of what you do: do not listen to the sirens that pretend you will make money with their complicated software, their academic seminars and their 1000-page books. Be flexible, cynical and scared: a systematic trader is always sitting on the bomb that will sooner or later explode and kill him. As Thomas Stridsman put it, probabilities are that we all will go bust sooner or later. If you start from this point, chances are that you will survive a long time.
+
+Every methodology we highlighted in this book alone will not be the ultimate key for a profitable systematic trading but all put together they will paint a clearer picture in which you can move comfortably just owning a simple trading system’s code.
+
+Let’s review all the methodologies and try to summarise the pros and cons of each of them.
 
 #### Rule complexity
 
+It is better to trade with a system with few inputs, few variables and an equity line that is not historically exhilarating instead of 100 inputs or variables and a super equity line.
+
 #### Testing
+
+Do not put your focus on a bunch of markets and forget the other ones. Nobody could tell you that a system does not perform on a market but could be the winning tool for trading  the  remaining  50  markets.  Subscribe  to  a  data  vendor  such  as  CSI  data (www.csidata.com)  or  Pinnacle  data  (www.pinnacledata.com)  and  then  apply  your systems on at least 70 different futures daily price series before arriving at the conclusion that the code does not work.
 
 #### Optimisation
 
+Optimisation is good if it is performed in a savvy way. You should re-optimise regularly, after a fixed time period in order to keep the system in synchronisation with the market.
+
 #### Monte Carlo analysis
+
+This is a good process in order to check the stability of the system in a probabilistic way but its importance should not be over-stressed. If the systems is over-optimised the Monte Carlo analysis will be perfect but this does not mean anything.
 
 #### Portfolio building
 
+If you are trading an easy code like a channel breakout, or a moving average on a bunch of portfolios to choose the right prices series to be traded, this is a vital point for success. We depicted many ways to approach this problem, but the final solution will depend more on the experience of the trader than on a precise rule. 
+
 #### Dynamic risk management
+
+Do not rely on a fixed rule in order to activate or stop a system from trading. You need to run a farm of a dozen trading systems and then activate those that are fit for the current trading environment. The moving average equity line crossover is this kind of tool that can transform a mediocre system into a powerful trading machine.
 
 #### Money management
 
+This is one of the most important factors in trading, always keep your risk exposure less than 1% from the entry point per every trade, better to be 0.5% is you are able to afford such a low risk level.
+
+As you can see from the above mentioned points, the systematic trader has at his disposal a long list of tools that can overcome the would-be higher efficacy of the programming complexity without hurting the profit attractiveness of a trading system. And we stress that you should pay heed to this list in order to improve results.
+
 ## Appendices (Systems and ideas)
 
+In these appendices we have included three trading systems. We explained the first two in articles in Traders magazine and the third one was extensively treated within this book. These three systems can be used as a starting point to build portfolios with trading systems.
+
 ### Appendix 1: Bollinger Band system
+
+#### 1.1 Idea
+
+----------
+
+In this book we already used a Bollinger Band system to show the effect of out-of-sample deterioration (Chapter 5.2). The Bollinger Band which we use now to build a simple, but robust portfolio, was described in detail in an earlier article in Traders magazine [14]. Its trading logic is explained with Figure A1.1.
+
+The first third of the graph (August to October 2004) shows a phase of lower market activity. The volatility drops and the Bollinger Bands become narrower. During this period of lower volatility the market often tends sideways without any direction. Many market participants are unsure about the further development and stay on the sidelines.
+
+Such phases of decreasing interest of market participants form the base of succeeding considerable movements. The longer the indecisive phase is the stronger is the subsequent breakout (see Figure A1.1, mid-October until December 2004). After the breakout the Bollinger Bands widen and follow the trending price very quickly. From Figure A1.1 you can calculate the profit of the trade which uses this impulsive long breakout. It brings 6 cents (=7500 US dollars in the euro future) although some of the gains have been given away. Shortly after the long exit a short signal was triggered (February 2005) which turned out to be a false breakout and was soon exited by the moving average stop.
+
+#### 1.2 Entry logic and Easy Language code
+
+----------
 
 ### Appendix 2: The triangle system
 
