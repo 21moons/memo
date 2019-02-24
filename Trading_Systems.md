@@ -2036,5 +2036,170 @@ As mentioned, the system was not optimised concerning the input parameters for t
 
 Figure A2.1 shows a chart of the continuous, back-adjusted euro/dollar future contract (Globex)  at  the  end  of  January  2007. You  see  that  within  three  days  a  very  nice, symmetrical triangle developed. The triangle pattern is a very strong, profitable pattern since the logic behind it is sound.
 
+It uses a similar idea to the Bollinger system presented in Appendix A1. The triangle system is more exact in its entry however. Again, as with the Bollinger system, a phase of uncertainty leads at first to a compression in the market. The volatility decreases while the triangle pattern gets narrower. And again like in the Bollinger system, this phase of decreasing interest of the market participants is the reason for the succeeding movement. The longer the indecisive phase lasts, the stronger the subsequent breakout is. At a certain point,  when  the  consolidation  has  continued  for  a  longer  time  while  many  market participants are unsure about the further development, any distortion, e.g. a news event, can create a strong breakout. Many traders which had been standing on the sidelines before are now in a hurry to jump onto the driving train, and like this they amplify the emerging trend. This is underlined by the increasing volume when the breakout happens.
+
+#### 2.2 Programming and coding
+
+----------
+
+Please note that we do not disclose this code but just describe its logic.
+
+But,  as  you  might  have  recognised,  before  that  final  breakout  occurred  smaller movements out of the boundaries of the triangular figure took place. While a good discretionary trader might ignore the false breakouts, such “spikes” are difficult to program on a computer. First of all it is difficult to identify such a triangular pattern. Then if your algorithm has found it, to draw the legs of the triangle you must tell the PC where the triangle starts and which points define the legs. Will you ignore the spikes in your calculations  or  will  you  include  them?  This  will  be  different  for  each  situation. Furthermore when will the triangle end and how will you calculate the profit target from the triangular shape? For the discretionary trader these points are very easy to see, but on a PC it is a long list of programming tasks.
+
+To overcome these issues we took a different, more abstract approach. We add a simple moving average of the last 200 closing prices and a volatility indicator of the last 300 bars to the same euro, 5 minute chart (Figure A2.2). On this example you see how the symmetrical triangle can be programmed. The figure shows that shortly before the breakout occurred, at the position of the black vertical line (called “set-up point”), two conditions were true at the same time:
+1.     The volatility indicator of the last 300 bars has dropped to its lowest point.
+2.     The moving average of the last 200 closing prices is moving nearly horizontal.
+
+With these two clear simple conditions we can program the set-up of the triangle pattern, or better call it the low volatility/flat moving average pattern. Because like this we do not program a pattern recognition logic which is identifying symmetrical triangles. Instead we are only looking for low volatility phases and for phases in which the market tends sideways at the same time, described by the horizontal movement of the moving average. This is a much weaker condition than the exact pattern recognition but helps us to simplify our programmed trading system logic to put it into reality. Our two set-up conditions could well occur in other patterns, e.g. if the market consolidates within a rectangular small trading range.
+
+Now the entry logic can be completed as following. If our set-up with the two conditions is true we place a long entry stop order a fixed amount above the current market price and symmetrically a short entry stop order the same amount below the current market price. The long and short entry levels act as a natural stop loss and reversal point of our initiated positions. So if we have entered the market long and the market shortly after proves us wrong and changes to the down side, we exit our long position and enter the market in the opposite direction short. Thus our logic lets the market decide about its breakout direction and just follows it. We exit the position at a profit target which we determine from the difference of the high and the low within the last 300 bars (see yellow vertical lines in Figure A2.2). If the profit target is not reached shortly after the breakout we exit the position with a trailing stop instead.
+
+#### 2.3 Application to different liquid futures markets with same parameters
+
+----------
+
+We apply our gained system code to 5 minute data of four different markets from different liquid futures markets groups: the euro/dollar future as a currency market, the S&P 400 MidCap future as a stock index, the US-T-Bond-Future as a bond market and Light Crude Oil as a liquid commodity future. As data supplier we took the intraday data feed of TradeStation 8. We tested our system within the period of the last five years on backadjusted futures data from January 2002-January 2007 on all four markets with same system parameters. Our  computer simulation is calculated with $30 slippage and commissions per round turn ($30 S&C per RT).
+
+The equity curves all grow very steadily with only minor drawdowns (Figures A2.3a-d). The best equity line seems to be Light Crude Oil. Also very steady over the tested five years were S&P 400 MidCap and US T-Bond Future. On the other side the euro future had a sideway phase for the last two years with its biggest drawdown happening just recently, in January 2007 (-$4,575). Overall the equity line, which you get by adding all trades, is however still clearly positive. If you watch the equity curves of the single markets more closely you see that they look a bit like stairs. The reasons for this behaviour are long lasting, flat periods between the signals. The system is only about 1-2% of the total time in the market, the rest of the time it is flat.
+
+It is an important characteristic of our system that signals occur very seldom, but when trades are taken they tend to result in big profits.
+
+#### 2.4 Advantages in building a portfolio
+
+----------
+
+A very positive side effect of the system’s low market exposure is a very low correlation of the system’s results when applied to the four different markets simultaneously (Table A2.1). You can see that the correlations of all four systems’ results are nearly 0, they vary between a very small negative correlation of -0.002 and a small positive coefficient of 0.024. This practically uncorrelated behaviour of the four markets helps to build a high return/low risk portfolio when combining them. You can also see that while the maximum equity drawdowns of the four single markets vary between -$2,440 (S&P400 MidCap) and -$4,590 (US Treasury Bond Future) the maximum equity drawdown of the fourmarket portfolio is in the same area with -$3,275. So while the profit of the portfolio grows in a linear way with the added markets to over $58,000, the maximum drawdown is kept in the area of one single market. This results in a very steady portfolio equity curve (Figure A2.4). It is worth mentioning that even within the four-market portfolio the system is only in the market for 10% of the time. So the market exposure is very low, which would allow you to add further systems or markets to the portfolio.
+
+The trade statistics reveal that the gains of the system don’t come from a high winning percentage (53%), but from the fact that the average winning trade is a huge amount bigger (factor 1.4) than the average losing trade. Furthermore, the average time in trades is very small, at 0.3 days. This shows that the system captures mainly dynamic breakouts which happen very fast and only last for a short time.
+
+The system figures reveal a further quality of the triangle system: the equal weight of long and short trades. From the total 625 trades long and shorts nearly have the same number (322 vs. 303) and the profits are nearly divided equally between the long and short side. This applies for the single markets and as well for the combined portfolio. This feature is the result of the construction of the trading logic, which lets the market itself decide in which direction it goes and just follows it, with the same probability in the long and in the short direction.
+
+#### 2.5 Conclusion
+
+----------
+
+The example of the triangular pattern clearly shows the different tasks of discretionary and systematic traders. While discretionary traders can rely on their experiences and their ability to estimate the market correctly, systematic traders need to act in a different way. As many patterns which are easy visible with the human eye cannot be programmed directly, we took a different approach and simulated the pattern with common indicators:
+
+a moving average, the volatility and the price itself. With this approach we could not exactly simulate the triangular pattern but we created a trading system which comes close to the conditions which are true within such a triangle pattern: decreasing volatility and sideways  market  direction.  Like this our trading logic was gained by pure market observation and not by optimisation or curve fitting. We are rewarded with a very robust system which stays profitable over different markets with the same input parameters. At the first glance it seems to be a disadvantage that signals occur very rarely and that the time in the market is very low, but it is this fact which makes different markets completely uncorrelated for our trading logic and allows us to build a profitable low risk portfolio.
+
+<p align="left"><font size=2>Figure A2.1: Principle of the symmetrical triangle pattern, discretionary view. Euro, Globex, 5 Minute, 21-24 January 2007. A natural profit target can be derived from the width of the triangle. False breakouts usually occur which make triangles difficult to program for systematic trading. The final breakout takes place with volume increase and leads the price into the target region.</font></p>
+
+![Figure A2.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A2.1.png)
+
+<p align="left"><font size=2>Figure A2.2: Principle of programmed triangle system. At the point before the breakout occurs (set-up point) the volatility is extremely low and the moving average tends sideways. If these two conditions are true, a long stop and a short stop entry order is placed. These entry levels also work as natural initial stop and reverse points. A profit target is derived from recent highs and lows (yellow lines).</font></p>
+
+![Figure A2.2](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A2.2.png)
+
+<p align="left"><font size=2>Figures A2.3a-d: Result of triangle system on four different markets: 6/2/2002-6/2/2007, $30 S&C per RT, on a day-to-day basis.</font></p>
+
+<p align="left"><font size=2>A2.3a: Euro/dollar Future (TradeStation symbol @EC)</font></p>
+
+![Figure A2.3a](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A2.3a.png)
+
+<p align="left"><font size=2>A2.3b: S&P 400 MidCap Future (TradeStation symbol @EMD.D)</font></p>
+
+![Figure A2.3b](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A2.3b.png)
+
+<p align="left"><font size=2>A2.3c: US T-Bond Future (TradeStation symbol @US.P)</font></p>
+
+![Figure A2.3c](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A2.3c.png)
+
+<p align="left"><font size=2>A2.3d: Light Crude Oil Future (TradeStation symbol @CL.C)</font></p>
+
+![Figure A2.3d](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A2.3d.png)
+
+<p align="left"><font size=2>Figure A2.4: Equity curve of 4-market portfolio. Triangle system applied with same system parameters to the following markets: euro/dollar Future, S&P400 MidCap Future, US T-Bond Future and Light Crude Oil Future. Equally weighted on a one-contract basis, including $30 S&C per RT, Jan 2002-Jan 2007, calculated on a day-to-day basis. Chart created with RINA Systems.</font></p>
+
+![Figure A2.4](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A2.4.png)
+
+<p align="left"><font size=2>Table A2.1: Portfolio figures, Jan 2002-Jan 2007. Portfolio figures of Triangle system applied to the following markets: Euro/dollar Future, S&P400 MidCap future, US T-Bond-Future and Light Crude Oil Future. Same system parameters for all markets, $30 S&C per RT, calculated on a day-to-day basis.</font></p>
+
+![Table A2.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_A2.1.png)
 
 ### Appendix 3: Portfolios with the LUXOR trading system
+
+In Chapter 3 we presented the trend-following system called LUXOR and tested it extensively on the British pound/US dollar pair.
+
+Now we are going to check this trading logic on other markets. We will outline how this strategy works on various bond markets and how to use it to construct robust portfolios.
+
+#### 3.1 Idea
+
+----------
+
+Before trying to code an idea with the purpose of building a systematic trading methodology it is important to understand the inner nature of the different markets you are going to trade. The market most appreciated by traders is the equity indexes universe. Stocks, that are the components of the equity indexes, move more following psychology than real events. Just think how an event could impact a stock: it is always an indirect influence, very seldom a direct one. Oil prices are going up? An oil stock can benefit from this situation but it will benefit more or less depending on its corporate efficiency, from  the  relative  competitive  position  in  the  industry,  from  the  intelligence  of  its management, and so on. Surely it will benefit but how much it will benefit is always a matter of discussion. But if we are talking about oil, the true commodity, the real black gold, this is another story.
+
+Commodity prices are influenced by real demand and real offer. Psychology is still important but not dominant. If China is growing 10% per year in the following 10 years, the demand of all kinds of commodities will perhaps double or triple, nobody knows for sure. This is a direct effect: Chinese importers are bidding for oil on the international cash markets and prices are going up. Nothing is more easy to understand. This is why psychology will be more important on stocks than on commodities.
+
+But there will be another aspect to consider also. If we are talking about “indirect effects”, it means that there will be few events that everybody will agree will modify the picture of the equity indexes. On the equity indexes everything is smoothed by discussion, interpretation, indirect effects, and so on. When, on the contrary, news directly affects demands and offers, and the news is dramatic, there is no room for discussion and interpretation. Prices jump or they crash. Tertium non datur. So you will have limit up and limit down days, you will have huge price swings in one direction or another. But in this black and white world, in between psychology and real demand and offer, you have a third environment: bonds.
+
+Monetary policy has a steady nature, no climax, no sudden changes. Economic swings are slow and seldom do they surprise markets. In a period of economic recession interest rates will go down for months after months, in a period of economic expansion interest rates will go up smoothly. Take for example the 17 interest rate increases in the US: at a certain point the market discounted them and it was obvious that they would then have to go up once again. A misunderstanding could only really have occurred if you were at the very beginning of the 17 interest rate increases or at the end of them. Please note, though, that we are talking about two situations out of 17.
+
+In a more serious way we can say that elements of a macroeconomic series are quite autocorrelated, so that if they start rising they will go on for a while, if they will go down they will go continue down for a while. Monetary policy is not a kind of situation where one day you have an increase of 2% and tomorrow a decrease of 3% and then tomorrow again an increase of 1% and so on. This is why prices in bonds tend to follow the same direction without much noise and this is why moving averages on bonds are a good predictive tool, because they are simply able to catch this smoothing behaviour of prices.You should have no fear in trading bonds with moving averages. From all our performed quantitative tests and experience we can conclude: they work!
+
+#### 3.2 The trading logic
+
+----------
+
+You can find all the details on the logic of the LUXOR system in Chapter 3 of this book, so we won’t discuss it further here, but will focus on the results of the strategy.
+
+Please note that we do not apply any additional exits to the strategy at this point. Trades are only exited when the price crosses the slower moving average of the entry logic (in case of long positions). The system is built symmetrically concerning long and short trades.
+
+Of course you can and should add exits which meet your personal needs to the strategy. You will find the appropriate methods on how to adjust them in Chapter 3.5 of this book.
+
+#### 3.3 Results in the bond markets
+
+----------
+
+Let’s see how the LUXOR system works on the major bond markets. We want to check if bond markets really fit well with trend-following systems as we expected from our fundamental argumentation above.
+
+All the following tests are based on a one-contract basis and are performed with the following input parameters of the system (fast moving average length=7, slow moving average  length=26).  No  adaptation  of  the  parameters  to  the  different  markets  was performed in order to keep the results comparable and to avoid the effect of curve fitting.
+
+The strategy is applied to the daily data which was provided by CSI Unfair Advantage (csidata.com). The futures data was point-based back-adjusted to get rid of artificial gaps between different contract months. All results in the figures and tables are based on a one contract per market basis.
+
+If you apply the LUXOR system to the bond markets, you see that in all of them you get more or less steady equity curves (Figure A3.1). Some work better, like the US T-Bond, the US T-Note (10 years) and the German Bund, and some look a little bit worse, like the not so well known Australian 10-year Treasury Bond or the Korean 3-year Government Bond. But with all of them you get positive results.
+
+In order to add the results of all tested bond markets to a combined portfolio, you have different possibilities. You could first convert the point values and currency of each market and build a portfolio in US dollars. For this you must convert the Korean bond, Japanese bond etc, by using the dollar conversion rates $/won, $/yen etc and then add all equity-lines. To simplify these calculations we used another method here. We tested all the single bond markets in points. We made a simplification to add these point equity curves of all 12 markets to get a portfolio. This is not 100% mathematically correct but the result comes very close to what it would be if you were to use the exact currency conversion rates (for example 1 point in the Bund future is 1000 euro, 1 point in the US T-Bond and US T-Note is $1000 and so on).
+
+The equity line becomes very nice and steady, you only get minor draw downs (Figure A3.2). The most significant one happened in 1994 during the bond market crash, when all markets turned their trend from upside to downside more or less at the same time. But on the combined, long-term equity line it looks more like a small accident than a big issue.
+
+If you have the capability you could trade this portfolio in the three different time zones with all included markets. There is, however, one reason why we won’t advise you to do this, even if the equity line looks good enough: correlation! All the bond markets are so highly correlated that the possibility exists that the system might crash for all the markets at the same time, as happened partially in the year 1994 – just imagine if you were long in all 12 bond-markets and then they all go down at the same time. The high correlation increases the risk of your bond portfolio drastically.
+
+In order to build a high return/low risk portfolio, the concept should be as follows: take a mixture of different systems and apply them to different markets in different timeframes. For example you could choose some liquid markets from the bond group and apply a medium-term trend-following system, like the one described here. Then you would add, for example, swing-trading systems for the currencies and day-trading systems for the Mini S&P and so on. Various possibilities exist which you must fit to your personality and your trading style. The whole topic is too big to treat it seriously here.
+
+#### 3.4 Diversification with other market groups
+
+----------
+
+Here, to stay with our trend-following logic and to get a better feeling for it, we build a small portfolio of different market groups.
+
+We use two bond markets, the German Bund and the US T-Note (10 year) but add other markets from different market groups: the euro/dollar as a currency, the Mini S&P as a stock index plus Gold and Light Crude oil as famous commodities. So we have a portfolio in which the successful bond markets still build the core but which is diversified with less correlated markets. It is important to mention here that the Mini S&P produces a negative equity line, the Gold goes just sideways and the euro/dollar weakened in the last 3 years as well (the equity lines are not shown here).
+
+Even with these markets included the overall portfolio shows a steady upward equity line, since the two bond markets and the crude oil kept the portfolio running well. The equity line does not look as steady as for the complete bond portfolio, but that’s what we expected.
+
+The idea here is to have a portfolio of less correlated markets in which there are always one or two that have big gains that compensate the losses of other markets.
+
+Let’s have a look at the portfolio’s main figures (Table A3.1). The system figures which we get are typical for a trend-following system. Only 37% of all the 3168 performed have been profitable. The overall big gains of the system result from the high ratio of average win/average losing trade which is nearly 2.5. A very important fact to mention is the following: the system’s gains resulted from the 63 positive outlier trades. These outliers produced more profit ($606.487) than the final total net profit ($526.259)! This means that the extreme big winning trades made the profit of the system. This underlines again how important it is in trend-following systems to let the profits run. If you missed the positive outliers you would have no gain at all. The annoying point for you as a trader is, however, that such big gains occur very seldom, but when they do occur, you must catch them.
+
+An interesting fact of the system is also that the average time in winning trades is more than four times longer than the average time which the system stays in losing trades (25 days versus 6 days). This shows again how the trend-following logic cuts the losses short and lets the profits run.
+
+#### 3.5 Conclusion
+
+----------
+
+With the examples presented above we wanted to show you how important it is for successful trading to select the right systems for the right markets. With the bonds we have identified a group which could have been exploited perfectly with trend-following methods lasting recent decades. From the fundamental point of view the chances are good that they will continue to behave like this. We are aware that a trend-following system is not suited for every trader. It’s annoying to have only a small amount of profitable trades and to wait most of the time until the big moves take place but trend-following strategies work too well in bond markets to not use them. They are a key part in the most successful existing hedge funds. In our opinion they should be at least one component of your trading systems if you want to be successful in the long run.
+
+<p align="left"><font size=2>Figure A3.1: Equity Lines of 12 major bond markets, in points. Conversion from point values to base currency: German Bund: 1 point = 1000 euro; US T-Bond, US T-Note (10 year) and US T-Note (5 year): 1 point = $1000; US T-Note (2 year): 1 point = $2000; Eurodollar (3 month) 1 point = $2500; Long Gilts: 1 point = £1000; Canadian Government Bond (10 year): 1 point = C$1000; Canadian Bankers Acceptance (3 month): 1 point = C$2500; Japanese Government Bond (10 year): 1 point = 10000 yen; Australian Bond (10 year): 1 point = AU$1000; Korean Government Bond (3 year): 1 point = 1 million. Korean won. End of test period in all markets: April 2006. Charts created with TradeStation 2000i.</font></p>
+
+![Figure A3.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A3.1.png)
+
+<p align="left"><font size=2>Figure A3.2: Portfolio of 12 combined bond-markets. The system equities in points of the following markets were summarised: German Bund, Long Gilt, US T-Bond (30 year, electronic), US T-Note (10 year, electronic), US-T-Note (5 year, electronic), US-T-Note (2 year, electronic), Eurodollar (3 month, electronic), Canadian Government Bond (10 year), Canadian Bankers Acceptance (3 month), Australian 10 year Bond, Japanese Government Bond (10 year), Korean Government Bond (3 year). August 1977-April 2006. Chart created with RINA Systems.</font></p>
+
+![Figure A3.2](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A3.2.png)
+
+<p align="left"><font size=2>Figure A3.3: Portfolio of 2 bond markets and 4 markets of different groups: German Bund, US T-Note (10 year), Mini S&P, Gold, Light Crude Oil, euro/dollar. $30 slippage and commissions per trade subtracted. May 1972-April 2006. Chart created with RINA Systems.</font></p>
+
+![Figure A3.3](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A3.3.png)
+
+<p align="left"><font size=2>Table A3.1: System figures for the 6-market portfolio consisting of German Bund, US T-Note (10 year), Mini S&P, Gold, Light Crude Oil, euro/dollar. May 1972-April 2006. All numbers are calculated with $30 slippage and commissions per trade.</font></p>
+
+![Table A3.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_A3.1.png)
