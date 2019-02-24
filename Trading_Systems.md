@@ -1952,6 +1952,89 @@ Such phases of decreasing interest of market participants form the base of succe
 
 ----------
 
+>Long entry:
+>If the price crosses above the higher Bollinger Band. Enter the market intraday with a buy stop:
+>Enter long: next bar at HigherBand stop;
+>
+>
+>Short entry:
+>The short entry is symmetrical to the long entry, enter intraday if the price crosses below the lower Bollinger Band.
+>Enter short: next bar at LowerBand stop;
+>
+>
+>Exit:
+>Exit if the price crosses the moving average between the Bollinger Bands:
+>Exit: next bar at Average(Close,60) stop;
+
+The exact position of the higher and the lower Bollinger Band is determined by taking the simple moving average and adding (higher band) or subtracting (lower band) the following, volatility dependent amount: Distance * Standard deviation. The volatility dependent component is located within the standard deviation, whereas the distance is a fixed parameter which can be varied.
+
+The Easy Language Code is just some lines:
+
+>Inputs: Length(60), Distance(2);
+>Vars: HigherBand(0),LowerBand(0);
+>
+>
+>HigherBand = Average(Close, Length) + Distance * StdDev(Close, Length);
+>LowerBand = Average(Close, Length) - Distance * StdDev(Close, Length);
+>
+>
+>Buy next bar at HigherBand stop;
+>Sell next bar at LowerBand stop;
+>
+>
+>ExitLong next bar at Average(Close, Length) stop;
+>ExitShort next bar at Average(Close, Length) stop;
+
+The system has two input parameters, which are bold typed. One represents the length of the moving average, the other determines the distance (or width) of how far away from this moving average the Bollinger Bands are placed. Their default values are set to a length of 60 and distance of 2. By changing these parameters you can adjust the trade frequency. The smaller you set the length for the moving average, and the smaller you choose the distance of the Bollinger Bands, the faster the system will react to market changes and the more signals you will get. As well as this possibility to adjust the system code to your personal needs Bollinger Bands have further advantages for building mechanical trading systems. Due to their volatility-based component they can easily adapt to different market conditions. Additionally they provide a natural exit point by using the moving average between the Bollinger Bands.
+
+#### 1.3 Application of the strategy to seven markets with same parameters
+
+----------
+
+The strategy is now applied to daily data of seven markets from three different market groups:
+
+Three stock index futures:
+Nasdaq-MINI, EURO STOXX 50 and Swiss Market Index
+
+Two bond index futures:
+Bund, US-T-Note (10year)
+
+Two currency futures:
+Euro and Swiss Franc
+
+Daily data was taken from mid-1994 until mid-2005. Data source for the end-of-day data was CSI Unfair Advantage (csidata.com).
+
+For all the performed tests exactly the same parameters (default: length=60, distance=2) were taken in order to minimise the effect of curve fitting. All results are based on a one contract  per  market  basis  and  are  presented  without  subtraction  of  slippage  and commissions.
+
+#### 1.4 Results and conclusions
+
+----------
+
+The combined equity line of the seven markets looks like a good starting point for a viable trading system (Figure A1.2). For more detailed information have a look at the system figures (Table A1.1). You can take this system and combine it with other uncorrelated systems/markets within a bigger portfolio.
+
+As mentioned, the system was not optimised concerning the input parameters for the entries. More important to note, however, is that we have not inserted and optimised any special exits into the system. If you do this in the way it was shown in Chapter 3.5 of this book, results can be improved, especially concerning risks and drawdowns.
+
+<p align="left"><font size=2>Figure A1.1: Euro in US dollar, daily, with Bollinger Bands and 60-day moving average of closing prices. The entry and exit points are marked with circles. The crossing of the price and the Bollinger Bands generate the long and short entries. The crossing of the price and the moving average triggers the exits. Chart created with TradeStation 2000i.</font></p>
+
+![Figure A1.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A1.1.png)
+
+<p align="left"><font size=2>Figure A1.2: Combined equity line of the Bollinger Band system for the portfolio of seven markets, 08/1994-09/2005, for daily data. The figure shows the added net profit on a bar-bybar basis of all trades on these markets without slippage and commissions. Chart created with RINA Systems.</font></p>
+
+![Figure A1.2](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Figure_A1.2.png)
+
+<p align="left"><font size=2>Table A1.1: Key figures of the system tests based on end-of-day data. The second table below shows the main figures of the Bollinger Band system for the portfolio of seven markets, 08/1994-09/2005, applied to daily data. The table shows the added results of all trades on these markets without slippage and commissions.</font></p>
+
+![Table A1.1](https://raw.githubusercontent.com/21moons/memo/master/res/img/Trading_Systems/Table_A1.1.png)
+
 ### Appendix 2: The triangle system
+
+‘The symmetric triangle is one of the most profitable patterns for short-term trading.’
+
+#### 2.1 Idea
+
+----------
+
+Figure A2.1 shows a chart of the continuous, back-adjusted euro/dollar future contract (Globex)  at  the  end  of  January  2007. You  see  that  within  three  days  a  very  nice, symmetrical triangle developed. The triangle pattern is a very strong, profitable pattern since the logic behind it is sound.
+
 
 ### Appendix 3: Portfolios with the LUXOR trading system
