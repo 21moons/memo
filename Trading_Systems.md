@@ -1005,13 +1005,11 @@ John Sweeney 的 MFE 概念是对 MAE 的补充. MFE 被定义为您头寸的最
 
 #### Consequences for system development
 
- You know how much of the profit was earned simply by the market trend and the additional achievement of your trading logic compared with this market bias. The most important figure of your system tests is thereby the total percentage of time your trading system has been in the market. Only if the system was in the market 100% of time is the market bias 100% important. If you trade, however, a system which is only very seldom in the market, let’s say only 10%, the market bias becomes less important. Another reason to keep the time in the market low is to decrease the risk and exposure as discussed in Chapter 3.5 when we talked about exits and risk management.
+The most important figure of your system tests is thereby the total percentage of time your trading system has been in the market. Only if the system was in the market 100% of time is the market bias 100% important. If you trade, however, a system which is only very seldom in the market, let’s say only 10%, the market bias becomes less important. Another reason to keep the time in the market low is to decrease the risk and exposure as discussed in Chapter 3.5 when we talked about exits and risk management.
 
-在开发交易系统时, 您可以关注那些做多的交易, 将其与只做多的系统进行比较, 作为最低目标. 您知道，与市场偏见相比，市场趋势和交易逻辑的额外成就可以带来多少利润。 因此，系统测试中最重要的数字是您的交易系统进入市场的总时间百分比。 只有系统在市场上100％的时间是市场偏见100％重要。 然而，如果你交易一个只在市场上很少出现的系统，让我们说只有10％，那么市场偏见变得不那么重要了。 将时间保持在低水平的另一个原因是降低风险和风险，如第3.5章所述，当我们讨论退出和风险管理时。
+在开发交易系统时, 您可以关注那些做多的交易, 将其与只做多的交易系统进行比较, 将其作为最低目标. 通过这种比较, 您可以明白与基准相比, 市场趋势和交易逻辑的额外成就给你带来了多少利润. 因此, 系统测试中最重要的指标是交易系统的入场时间比. 只有系统在市场上 100% 的时间是市场偏见 100% 重要. 然而，如果你交易一个只在市场上很少出现的系统，让我们说只有10％，那么市场偏见变得不那么重要了。 将入场时间保持在低水平的另一个原因是降低风险和风险, 正如在第 3.5 章我们讨论退出和风险管理时所说的那样.
 
-What other conclusions can you draw as a systematic trader or system developer from the long/short bias of markets? When you look at the trading systems which we present here you can see that most of them have a similar amount of short and long trades. Although in some cases (stocks and stock index futures) markets crash more quickly than they go upwards, we tend to build the systems without long or short bias. Most of our systems (like LUXOR) have a similar amount of long and short trades, although their profitability in a long or short direction may be different because the market has shown an uptrend. Since you do not know if this uptrend will continue in the future, your system is more stable and less adapted to this market bias if it produces the same amount of long and short signals.
-
-作为系统交易者或系统开发者, 您可以从市场的上涨/下跌趋势中得到哪些其他结论? 当您查看我们在此处提供的交易系统时, 您可以看到他们中的大多数买入交易和卖出交易的数量都差不多. 虽然在某些情况下(股票和股指期货), 市场崩盘的速度比上涨速度快, 但我们倾向于建立没有买入或卖出倾向的系统. 我们的大多数系统(如 LUXOR)都有类似数量的多头和空头交易, 尽管它们在多头或空头方向的盈利能力可能不同, 因为市场呈现上升趋势. 由于您不知道未来这种上涨趋势是否会持续, 因此如果交易系统产生相同数量的买入/卖出信号, 可以认为您的系统更倾向于稳定性, 而并不十分适应这种市场趋势.
+作为系统交易者或系统开发者, 您可以从市场的上涨/下跌趋势中得出哪些其他结论? 当您查看我们在本书中提供的交易系统时, 您可以看到他们中的大多数生成的做多交易和做空交易的数量都差不多. 虽然在某些情况下(股票和股指期货), 市场崩盘的速度比上涨速度快, 但我们倾向于建立没有做多或做空倾向的系统. 我们的大多数系统(如 LUXOR)多头交易和空头交易的数量都差不多, 尽管当市场呈现上升趋势, 它们在做多或做空方向的盈利能力可能不同. 由于您不知道未来这种上涨趋势是否会持续, 因此如果交易系统产生相同数量的做多/做空信号, 可以认为您的系统稳定性较强, 而并不是与这种市场趋势过拟合.
 
 ### 5.2 Out-of-sample deterioration
 
